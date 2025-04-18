@@ -15,4 +15,8 @@
 
 **Specific Workflows:**
 
-*   **Implementing `apiconfig` Components:** Follow the structure, guidelines, and implementation steps outlined in `apiconfig-project-plan.md`. Ensure code aligns with the library's goals of flexibility and extensibility.
+*   **Implementing `apiconfig` Components:**
+    *   Follow the structure, guidelines, and implementation steps outlined in `/workspace/.roo/rules/apiconfig-project-plan.md`. Ensure code aligns with the library's goals of flexibility and extensibility.
+    *   **Code Extraction Source:** When extracting code from `crudclient` to `apiconfig`, the source code resides in the `crudclient` submodule, located at `/workspace/crudclient/crudclient/`.
+    *   **File Mapping:** You **must** refer to the "File Mapping from `crudclient` to `apiconfig`" table within `/workspace/.roo/rules/apiconfig-project-plan.md` to identify the correct source files and understand the required adaptations.
+    *   **Read-Only Submodule:** The `crudclient` submodule directory (`/workspace/crudclient/`) is **read-only**. Do **not** attempt to modify files within it directly. Your task is to read from it and implement the adapted code within the `apiconfig/` directory structure.

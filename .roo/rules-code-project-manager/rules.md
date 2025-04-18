@@ -23,6 +23,10 @@
 
 7.  **Reporting:** Report task status (success or blockers) accurately to the `orchestrator`, ensuring all prerequisites (especially passed checks) are met before reporting success. Use `attempt_completion` for the final report.
     *   Refer to `05_reporting.md` for detailed guidance and prohibitions.
+8.  **`crudclient` Submodule Context:** When managing tasks involving code extraction from `crudclient` for `apiconfig`, ensure `sr-code-python` is aware of:
+    *   The source location: `/workspace/crudclient/crudclient/`.
+    *   The requirement to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md`.
+    *   The read-only nature of the submodule. Verify that `sr-code-python` implements the *adapted* code in the `apiconfig/` directory.
 
 ### Project Board Interaction
 

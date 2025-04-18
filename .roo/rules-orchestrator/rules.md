@@ -15,7 +15,8 @@
 5.  **Transparency:** Keep the user informed about the overall progress, the current subtask being executed, the mode responsible, and the outcome of each step.
 6.  **Completion Process:** Follow the standard reporting process outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). This involves attempting a project board update (see [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md) for details) followed by using the `attempt_completion` tool.
 7.  **Completion:** Report the final success or failure of the overall task using `attempt_completion`.
+8.  **`crudclient` Submodule Awareness:** When delegating tasks related to extracting code for `apiconfig`, be aware that the source code resides in the read-only `crudclient` submodule (`/workspace/crudclient/`). Ensure delegated modes (like `sr-code-python`) are instructed to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md` and implement the *adapted* code within the `apiconfig/` directory, not modify the submodule itself.
 
 **Specific Workflows:**
 
-*   **Implementing `apiconfig` Components:** Delegate tasks like implementing authentication strategies, configuration providers, or utility functions according to the `apiconfig-project-plan.md`. Ensure delegation uses the detailed guidance from the referenced `.md` files (01, 02, 03).
+*   **Implementing `apiconfig` Components:** Delegate tasks like implementing authentication strategies, configuration providers, or utility functions according to the `apiconfig-project-plan.md`. Ensure delegation uses the detailed guidance from the referenced `.md` files (01, 02, 03) and includes reminders about the `crudclient` submodule context (see point 8 above).

@@ -66,7 +66,7 @@
         [
           "edit",
           {
-            "fileRegex": "(^\\.coveragerc$|^\\.editorconfig$|^\\.env\\.example$|^\\.gitattributes$|^\\.gitignore$|^poetry\\.toml$|^setup\\.cfg$|\\.github/workflows/.*\\.ya?ml|\\.devcontainer/.*\\.(json|yml|Dockerfile|sh)|hooks/.*\\.py|\\.pre-commit-config\\.yaml|pytest\\.ini|pyproject\\.toml|\\.dockerignore|Dockerfile|docker-compose\\.ya?ml)$",
+            "fileRegex": "(^\\.coveragerc$|^\\.editorconfig$|^\\.env\\.example$|^\\.gitattributes$|^\\.gitignore$|^poetry\\.toml$|^setup\\.cfg$|\\.github/workflows/.*\\.ya?ml|\\.devcontainer/.*\\.(json|yml|Dockerfile|sh)|hooks/.*\\.py|\\.pre-commit-config\\.yaml|pytest\\.ini|mypy\\.ini|pyproject\\.toml|\\.dockerignore|Dockerfile|docker-compose\\.ya?ml)$",
             "description": "DevOps related files (Root configs, GitHub Actions, Dev Container, Hooks, Docker, Poetry, Pytest configs)"
           }
         ],

@@ -22,11 +22,7 @@ All documentation should adhere to the following principles:
 
 ## Workflow
 
-Documentation changes follow the project's standard Gitflow process:
-
-1.  Create feature branches from the `develop` branch.
-2.  Commit your changes with clear messages.
-3.  Submit Pull Requests (PRs) targeting the `develop` branch for review.
+Documentation changes follow the project's standard Git workflow. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details on branching, commit messages, and Pull Requests.
 
 ## Full Guidelines
 

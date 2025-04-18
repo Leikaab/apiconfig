@@ -349,4 +349,3 @@ pyrightconfig.json
 # Ollama models
 .ollama/
 models/
-apiconfig-project-plan.md

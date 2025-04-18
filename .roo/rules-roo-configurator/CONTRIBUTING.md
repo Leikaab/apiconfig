@@ -8,15 +8,11 @@ As the Roo Configurator, your primary responsibility is managing the configurati
 
 ## Workflow Context
 
-All modifications to Roo modes or rules located within the `.roo/` directory must strictly adhere to the project's established Gitflow process:
-
-1.  Create feature branches based on the `develop` branch.
-2.  Commit your changes with clear, descriptive messages.
-3.  Submit Pull Requests (PRs) targeting the `develop` branch for review and merging.
+All modifications to Roo modes or rules located within the `.roo/` directory must strictly adhere to the project's established Git workflow. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details on branching, commit messages, and Pull Requests.
 
 ## Consistency
 
-It is crucial that any changes made to Roo configurations or rules are consistent with the overall project standards, established workflows, and the general contribution guidelines outlined in the main `CONTRIBUTING.md`.
+It is crucial that any changes made to Roo configurations or rules are consistent with the overall project standards, established workflows, and the general contribution guidelines outlined in the main `CONTRIBUTING.md`. See [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) for the standard reporting process.
 
 ## Full Guidelines
 

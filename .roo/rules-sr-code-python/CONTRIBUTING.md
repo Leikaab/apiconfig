@@ -4,17 +4,14 @@ This document provides a concise summary of contribution guidelines specifically
 
 ## Workflow Context
 
-*   The project follows the **Gitflow** branching model.
-*   All code implementation must occur on `feature/*` branches created from the `develop` branch.
-*   Pull Requests (PRs) containing new features or fixes should target the `develop` branch for review and merging.
+*   The project follows the standard Git workflow. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details on branching, commit messages, and Pull Requests.
+*   All code implementation must occur on `feature/*` branches and target the `develop` branch via Pull Requests (PRs).
 
 ## Coding Standards
 
 Adherence to the project's coding standards is mandatory:
 
-*   **Formatting:** Code must be formatted using **Black** and **isort**.
-*   **Linting:** Code must pass **Flake8** checks.
-*   **Type Checking:** Strict type hints are required and checked using **Mypy**.
+*   **Formatting, Linting, Type Checking:** Code must pass all checks defined in [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md).
 *   **Docstrings:** Clear and informative docstrings are required for all modules, classes, functions, and methods.
 
 ## Testing
@@ -24,9 +21,8 @@ Adherence to the project's coding standards is mandatory:
 
 ## Quality Checks
 
-*   **Pre-commit hooks** are configured to automatically enforce formatting and linting standards before commits.
-*   **Continuous Integration (CI)** checks, defined in `.github/workflows/tests.yaml`, automatically run tests and quality checks on PRs.
-*   Contributions **must pass** all pre-commit hooks and CI checks before they can be merged.
+*   Pre-commit hooks and Continuous Integration (CI) checks are configured to automatically enforce standards.
+*   Contributions **must pass** all quality checks before they can be merged. See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) for details.
 
 ## Full Guidelines
 

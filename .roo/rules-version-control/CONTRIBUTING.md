@@ -4,8 +4,8 @@ This document provides a concise summary of contribution guidelines specifically
 
 ## Key Responsibilities & Guidelines
 
-*   **Branching Model:** The project follows the Gitflow branching model (`main`, `develop`, `feature/*`, etc.). Your role involves executing Git commands related to this model, such as creating feature branches. Merging is typically handled via Pull Requests (PRs) reviewed by others.
-*   **Commit Standards:** All commit messages **must** adhere to the [Conventional Commits](https://www.conventionalcommits.org/) format. This is crucial for automated changelog generation and semantic versioning.
-*   **Pre-Commit Checks:** Before committing any changes, you **must** run all tests (`pytest`) and quality checks (`pre-commit run --all-files`). Commits **must not** proceed if any checks fail, unless explicitly instructed otherwise for specific setup or troubleshooting scenarios. Using the `--no-verify` flag (or similar) to bypass these checks is strictly prohibited.
+*   **Branching Model:** The project follows the standard Git workflow. Your role involves executing Git commands related to this model. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details. Merging is typically handled via Pull Requests (PRs).
+*   **Commit Standards:** All commit messages **must** adhere to the Conventional Commits format. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details. This is crucial for automated changelog generation and semantic versioning.
+*   **Pre-Commit Checks:** Before committing any changes, you **must** run and pass all mandatory quality checks. Using flags to bypass these checks is strictly prohibited. See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) and [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details.
 *   **Repository Integrity:** A primary focus of this role is maintaining the integrity and clarity of the repository's history through careful and accurate Git operations.
 *   **Full Guidelines:** For the complete contribution process, including detailed Gitflow instructions, the precise Conventional Commits format, testing procedures, and PR guidelines, please consult the main project [`/workspace/CONTRIBUTING.md`](/workspace/CONTRIBUTING.md).

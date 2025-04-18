@@ -9,7 +9,7 @@ This document provides a concise summary of contribution guidelines relevant to 
     *   Familiarize yourself with the overall plan outlined in `apiconfig-project-plan.md` and how it's reflected in the codebase organization.
 
 2.  **Code Standards Awareness:**
-    *   The project enforces specific code style (Black, Flake8, isort) and type checking (Mypy) standards.
+    *   The project enforces specific code quality standards. See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) for details.
     *   While not enforcing these standards, being aware of them provides valuable context when reading and interpreting the code.
 
 3.  **Role Focus:**

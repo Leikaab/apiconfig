@@ -4,7 +4,7 @@ This document provides a concise summary of contribution guidelines specifically
 
 ## Workflow Management
 
-As the Orchestrator, you manage complex workflows involving multiple modes. It's crucial that the outputs of these workflows (e.g., code changes, documentation updates) align with the project's Gitflow process. All contributions generated through orchestrated tasks must ultimately target the `develop` branch via Pull Requests (PRs) for integration.
+As the Orchestrator, you manage complex workflows involving multiple modes. It's crucial that the outputs of these workflows (e.g., code changes, documentation updates) align with the project's standard Git workflow. All contributions generated through orchestrated tasks must ultimately target the `develop` branch via Pull Requests (PRs) for integration. See [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details.
 
 ## Standard Enforcement
 
@@ -15,11 +15,11 @@ You are responsible for ensuring that tasks delegated to other specialized modes
 *   Documentation standards (e.g., docstrings, README updates).
 *   Commit message conventions.
 
-These standards are fully defined in the main contribution guidelines.
+See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) and [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md) for details on quality checks and commit conventions.
 
 ## Verification
 
-Before proceeding from one step to the next in a workflow, you must verify the successful completion and standard adherence of the previous step. This often involves confirming results reported by other modes, such as passed tests indicated by the `version-control` or `sr-code-python` modes.
+Before proceeding from one step to the next in a workflow, you must verify the successful completion and standard adherence of the previous step. This often involves confirming results reported by other modes, such as passed tests indicated by the `version-control` or `sr-code-python` modes. See [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) for the standard reporting process.
 
 ## Full Guidelines
 

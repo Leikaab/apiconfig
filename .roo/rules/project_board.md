@@ -1,19 +1,37 @@
-### Project Board Interaction
+### Project Board Interaction (Mandatory)
 
-The "APIConfig Implementation" project board (ID: 1, Owner: `Leikaab`) tracks overall progress via linked issues (#7-#48). Modes may be required to update the status of relevant items.
+Updating the "APIConfig Implementation" project board (ID: 1, Owner: `Leikaab`) is a **mandatory** step before completing a task, as outlined in `/workspace/.roo/rules/reporting.md`. Modes **must** use `gh` commands to autonomously manage project items.
 
-**Example Workflow (Conceptual):**
+**Workflow:**
 
-1.  **Find Item ID:** Get the internal ID of the project item linked to a specific issue URL.
+1.  **Identify Issue URL:** Determine the URL of the GitHub issue associated with the current task.
+
+2.  **Find Project Item ID:** Use `gh` and `jq` to find the project item ID linked to the issue URL.
     ```bash
     # Replace ISSUE_URL with the actual issue link
-    ITEM_ID=$(gh project item-list 1 --owner Leikaab --format json | jq -r '.items[] | select(.content.url == "ISSUE_URL") | .id')
+    ITEM_ID=$(gh project item-list 1 --owner Leikaab --format json | jq -r --arg url "$ISSUE_URL" '.items[] | select(.content.url == $url) | .id')
+    # Handle cases where the item might not be found
+    if [ -z "$ITEM_ID" ]; then echo "Error: Project item not found for $ISSUE_URL"; exit 1; fi
     ```
 
-2.  **Update Status Field:** Set the item's status (e.g., to 'In Progress', 'Done').
+3.  **Find 'Status' Field ID:** Dynamically determine the ID of the 'Status' field on the project board.
     ```bash
-    # NOTE: Requires finding the correct FIELD_ID for 'Status' and the OPTION_ID for the desired status value (e.g., 'Done')
-    # These IDs must be obtained by inspecting the project board's API details or UI configuration.
-    gh project item-edit --id $ITEM_ID --project-id 1 --owner Leikaab --field-id "YOUR_STATUS_FIELD_ID" --single-select-option-id "YOUR_DESIRED_OPTION_ID"
+    STATUS_FIELD_ID=$(gh project field-list 1 --owner Leikaab --format json | jq -r '.fields[] | select(.name == "Status") | .id')
+    if [ -z "$STATUS_FIELD_ID" ]; then echo "Error: 'Status' field not found on project board"; exit 1; fi
     ```
-**Important:** The specific `FIELD_ID` and `OPTION_ID` values must be determined beforehand.
+
+4.  **Find Target Status Option ID (e.g., 'Done'):** Dynamically determine the ID for the desired status option (e.g., "Done") within the 'Status' field.
+    ```bash
+    # Replace "Done" with the target status name if different
+    TARGET_STATUS_NAME="Done"
+    TARGET_OPTION_ID=$(gh project field-list 1 --owner Leikaab --format json | jq -r --arg field_id "$STATUS_FIELD_ID" --arg status_name "$TARGET_STATUS_NAME" '.fields[] | select(.id == $field_id) | .options[] | select(.name == $status_name) | .id')
+    if [ -z "$TARGET_OPTION_ID" ]; then echo "Error: '$TARGET_STATUS_NAME' option not found for 'Status' field"; exit 1; fi
+    ```
+    *Note: The exact `jq` query might need adjustment based on the output structure of `gh project field-list`.*
+
+5.  **Update Item Status:** Use the obtained IDs to update the project item's status.
+    ```bash
+    gh project item-edit --id "$ITEM_ID" --project-id 1 --owner Leikaab --field-id "$STATUS_FIELD_ID" --single-select-option-id "$TARGET_OPTION_ID"
+    ```
+
+**Self-Sufficiency:** Modes **must not** ask the user for `ITEM_ID`, `FIELD_ID`, or `OPTION_ID`. These values **must** be determined programmatically using `gh` commands as shown above. Error handling should be included to manage cases where IDs cannot be found.

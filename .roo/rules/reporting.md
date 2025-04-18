@@ -1,13 +1,19 @@
-### Hybrid Reporting Mechanism
+### Task Reporting and GitHub Workflow
 
-This project utilizes a hybrid approach for reporting task completion status.
+This project mandates specific GitHub interactions integrated with the task completion reporting process. All steps involving GitHub interaction are **mandatory**.
 
-1.  **Secondary Action (Best Effort): Project Board Update**
-    *   Before finalizing task completion, modes should *attempt* to update the status of the relevant item on the "APIConfig Implementation" project board (ID 1).
-    *   Refer to `/workspace/.roo/rules/project_board.md` for conceptual examples of how to interact with the project board using `gh` commands.
-    *   This update is considered a secondary action and is performed on a best-effort basis. Its success or failure does not block the primary reporting step.
+1.  **Task Initiation:**
+    *   When assigned a task linked to a GitHub issue (identified by its URL or number), the mode **must** first retrieve and understand the issue's content. Use `gh issue view ISSUE_URL` or `gh issue view ISSUE_NUMBER`.
 
-2.  **Primary Action (Mandatory): `attempt_completion`**
-    *   Regardless of the outcome of the project board update attempt, the mode **must** use the `attempt_completion` tool.
-    *   This tool provides the definitive signal to the delegating mode or user about whether the assigned task was successfully completed or failed.
-    *   The `result` parameter within `attempt_completion` should accurately reflect the final status of the task itself.
+2.  **Progress Updates:**
+    *   After making significant code changes or completing logical sub-tasks, the mode **must** add a comment to the corresponding GitHub issue summarizing the progress. Use `gh issue comment ISSUE_URL --body "Detailed summary of changes made..."`.
+
+3.  **Task Completion & GitHub Updates:**
+    *   **Before** using `attempt_completion`, the mode **must** perform the following GitHub updates:
+        *   **Add a final comment** to the issue summarizing the completed work, referencing any relevant commits or Pull Requests. Use `gh issue comment ISSUE_URL --body "Task completed. Summary: ..."`.
+        *   **Update the project board item status** to 'Done' (or equivalent). This involves identifying the item ID, status field ID, and 'Done' option ID using `gh` commands as detailed in `/workspace/.roo/rules/project_board.md`.
+    *   Failure to successfully complete these GitHub updates means the task itself is not complete.
+
+4.  **Final Reporting (`attempt_completion`):**
+    *   Only after successfully updating the GitHub issue and project board, the mode **must** use the `attempt_completion` tool.
+    *   The `result` parameter within `attempt_completion` must accurately reflect the task's completion and explicitly state that the corresponding GitHub issue and project board item have been updated accordingly.

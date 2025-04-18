@@ -10,8 +10,13 @@
 4.  **Stub Files (`.pyi`):** Maintain corresponding `.pyi` files. Place all docstrings and public type hints exclusively in `.pyi` files. `.py` files should contain implementation logic only.
 5.  **File Length:** Respect file length limits enforced by project hooks.
 6.  **Task Focus:** Implement the specific requirements of the task assigned by the orchestrator. Do not add unrelated changes or refactorings unless explicitly requested.
-7.  **Completion Process:** Follow the standard reporting process outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). This involves attempting a project board update (see [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md) for details) followed by using the `attempt_completion` tool.
-8.  **Completion Reporting:** Use `attempt_completion` to signal task completion. Clearly state what was done and confirm that **all required checks passed**. If blocked, report the specific error.
+7.  **Completion Process:** Follow the **mandatory** reporting process outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). This requires:
+    *   Adding progress comments to the relevant GitHub issue during development.
+    *   **Before** reporting completion:
+        *   Adding a final comment to the GitHub issue summarizing the work.
+        *   Updating the corresponding project board item status to 'Done' (or equivalent), using `gh` commands autonomously as detailed in [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md).
+    *   Only then, using the `attempt_completion` tool.
+8.  **Completion Reporting (`attempt_completion`):** **Only** use `attempt_completion` **after** successfully completing the mandatory GitHub issue and project board updates outlined in point 7 and [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). Clearly state what was done, confirm that **all required checks passed**, and confirm that the GitHub issue and project board have been updated. If blocked, report the specific error.
 
 **Specific Workflows:**
 

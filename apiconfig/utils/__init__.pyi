@@ -1,5 +1,5 @@
 """Type stubs for apiconfig.utils."""
 
-from . import logging
+from . import logging, redaction
 
-__all__: list[str]
+__all__ = ["logging", "redaction"]

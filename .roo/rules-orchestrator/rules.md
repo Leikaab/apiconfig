@@ -1,28 +1,40 @@
 # Orchestrator Mode Rules
 
-**Core Responsibility:** Manage complex workflows by breaking them down into subtasks and delegating them to specialized modes, ensuring adherence to project standards and successful completion.
+**Core Responsibility:** Manage complex workflows related to the `apiconfig` library by understanding project context from GitHub, breaking down tasks, delegating implementation and version control steps to specialized modes, and ensuring successful completion according to project standards.
 
-**Key Instructions & Constraints:**
+# Key Instructions & Constraints
 
-1.  **Workflow Management:** Decompose tasks, manage sequential execution, and process subtask results.
+1.  **Task Initiation & Context Gathering:**
+    *   When assigned a task linked to a GitHub issue (identified by URL or number), **first** retrieve and understand the issue's content using `gh issue view ISSUE_URL` or `gh issue view ISSUE_NUMBER`.
+    *   Use `gh issue list` or `gh project item-list` as needed to understand the broader project context and related tasks.
+2.  **Workflow Management:** Decompose the main task into logical subtasks suitable for delegation. Manage the sequential execution of these subtasks and process their results.
     *   Refer to `01_workflow_management.md` for detailed guidance.
-2.  **Mode Delegation:** Select the appropriate specialized mode (`sr-code-python`, `version-control`, `doc-writer`, `code-project-manager`, `ask`, etc.) for each subtask based on its requirements. Avoid using the generic `code` mode.
-3.  **Clear Instructions:** Provide detailed and unambiguous instructions to the delegated mode.
-    *   Include goal, context, constraints, documentation references, and completion criteria.
-    *   **Crucially, instructions MUST explicitly state the mandatory reporting requirements:** Delegated modes **must** follow the GitHub workflow outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) and [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md), including adding issue comments and updating the project board *before* using `attempt_completion`.
-    *   For `sr-code-python`, follow the specific guidance in `02_sr_code_python_guidance.md`.
-4.  **Verification of Subtask Completion:** Before considering a delegated subtask complete, **verify** that the delegated mode's `attempt_completion` result explicitly confirms that the mandatory GitHub issue comments and project board updates were successfully performed. If confirmation is missing or the subtask failed, treat it as a failure and proceed with error handling.
-5.  **Error Handling & Debugging:** Identify and handle subtask failures, including failures related to GitHub updates.
+3.  **Mode Delegation:** Select the appropriate specialized mode for each subtask:
+    *   **Code Implementation:** Delegate to `sr-code-python`.
+    *   **Testing, Committing, GitHub Updates:** Delegate to `version-control`.
+    *   **Documentation:** Delegate to `doc-writer`.
+    *   **Other specific tasks:** Delegate to `code-project-manager`, `ask`, etc., as appropriate.
+    *   Avoid using the generic `code` mode.
+4.  **Clear Instructions for Delegation:** Provide detailed and unambiguous instructions to the delegated mode.
+    *   Include goal, context (e.g., relevant issue URL), constraints, documentation references (like `apiconfig-project-plan.md`), and completion criteria.
+    *   **Instructions for `sr-code-python`:** Must explicitly state that it should implement the code, stage changes (`git add .`), and then delegate testing to `version-control`. It **must not** commit or perform final GitHub updates.
+    *   **Instructions for `version-control`:** Must explicitly state the required actions (e.g., run tests, commit staged changes, add final issue comment, update project board). Reference the specific rules within `.roo/rules-version-control/` (e.g., `quality_checks.md`, `reporting.md`, `project_board.md`, `github_project_update_guide.md`).
+5.  **Verification of Subtask Completion:** Before considering a delegated subtask complete, **verify** the result from the delegated mode's `attempt_completion`.
+    *   For `sr-code-python`, verify it confirms code implementation and successful delegation of testing.
+    *   For `version-control`, verify it confirms successful execution of requested actions (tests passed, commit made, GitHub issue/board updated).
+    *   If confirmation is missing or the subtask failed, treat it as a failure and proceed with error handling.
+6.  **Error Handling & Debugging:** Identify and handle subtask failures. If `sr-code-python` causes test failures reported by `version-control`, delegate the fixes back to `sr-code-python`.
     *   Refer to `03_error_handling_debugging.md` for detailed guidance.
-6.  **Transparency:** Keep the user informed about the overall progress, the current subtask being executed, the mode responsible, the outcome of each step, and the verification status of GitHub updates.
-7.  **Orchestrator Completion Process:** Follow the **mandatory** reporting process outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) for the *overall* task assigned to the orchestrator. This requires:
-    *   Ensuring all subtasks, including their mandatory GitHub updates, have been successfully completed and verified.
-    *   Adding a final comment to the main GitHub issue summarizing the overall work.
-    *   Updating the main project board item status to 'Done' (or equivalent), using `gh` commands autonomously as detailed in [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md).
-    *   Only then, using the `attempt_completion` tool for the overall task.
-8.  **Overall Task Completion (`attempt_completion`):** **Only** use `attempt_completion` **after** successfully completing and verifying all subtasks and performing the mandatory GitHub updates for the overall task (as outlined in point 7). Report the final success or failure of the overall task, confirming that all necessary GitHub updates (for subtasks and the main task) were completed.
-9.  **`crudclient` Submodule Awareness:** When delegating tasks related to extracting code for `apiconfig`, be aware that the source code resides in the read-only `crudclient` submodule (`/workspace/crudclient/`). Ensure delegated modes (like `sr-code-python`) are instructed to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md` and implement the *adapted* code within the `apiconfig/` directory, not modify the submodule itself.
+7.  **Transparency:** Keep the user informed about the overall progress, the current subtask being executed, the mode responsible, and the outcome of each step (including verification of delegated actions like testing and GitHub updates).
+8.  **Overall Task Completion:** The orchestrator's task is considered complete **only when the final subtask delegated to `version-control` (which includes testing, committing, and GitHub updates) reports successful completion.**
+9.  **Orchestrator Reporting (`attempt_completion`):** Use `attempt_completion` **only after** the final `version-control` subtask has successfully completed and reported its success (including confirmation of GitHub updates). Your report should summarize the overall workflow execution and confirm the final successful outcome reported by `version-control`.
+10. **`crudclient` Submodule Awareness:** When delegating tasks related to extracting code for `apiconfig`, be aware that the source code resides in the read-only `crudclient` submodule (`/workspace/crudclient/`). Ensure `sr-code-python` is instructed to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md` and implement the *adapted* code within the `apiconfig/` directory, not modify the submodule itself.
 
 **Specific Workflows:**
 
-*   **Implementing `apiconfig` Components:** Delegate tasks like implementing authentication strategies, configuration providers, or utility functions according to the `apiconfig-project-plan.md`. Ensure delegation uses the detailed guidance from the referenced `.md` files (01, 02, 03) and includes reminders about the `crudclient` submodule context (see point 8 above).
+*   **Implementing `apiconfig` Components:**
+    1.  Understand the task from the GitHub issue (`gh issue view`).
+    2.  Delegate code implementation to `sr-code-python`, providing context and referencing `apiconfig-project-plan.md`. Instruct it to stage changes and delegate testing.
+    3.  Upon `sr-code-python` success, delegate testing, committing, and final GitHub updates (issue comment, board status) to `version-control`, providing the issue URL and referencing the relevant rules in `.roo/rules-version-control/`.
+    4.  Verify `version-control`'s successful completion report.
+    5.  Report overall task completion using `attempt_completion`.

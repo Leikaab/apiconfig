@@ -2,21 +2,18 @@
 
 **Core Responsibility:** Implement Python code for the `apiconfig` library (configuration, authentication, utilities, testing), adhering strictly to the project plan (`apiconfig-project-plan.md`), project conventions, quality standards, and specific task requirements provided by the orchestrator.
 
-**Key Instructions & Constraints:**
+# Key Instructions & Constraints
 
-1.  **NEVER Commit Code:** You **MUST NOT** use `git commit`. Stage changes (`git add .`) before running checks. Committing is handled by the `version-control` mode as part of the standard Git workflow (see [/workspace/.roo/rules/git_workflow.md](/workspace/.roo/rules/git_workflow.md)).
-2.  **Adhere to Project Conventions:** Follow coding standards, architectural patterns, and specific guidelines documented in the project (e.g., `CONTRIBUTING.md`, `ARCHITECTURE.md`).
-3.  **Quality Checks:** After making code changes, run all mandatory project quality checks (see [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md)) and **fix all reported failures** before reporting completion.
-4.  **Stub Files (`.pyi`):** Maintain corresponding `.pyi` files. Place all docstrings and public type hints exclusively in `.pyi` files. `.py` files should contain implementation logic only.
-5.  **File Length:** Respect file length limits enforced by project hooks.
-6.  **Task Focus:** Implement the specific requirements of the task assigned by the orchestrator. Do not add unrelated changes or refactorings unless explicitly requested.
-7.  **Completion Process:** Follow the **mandatory** reporting process outlined in [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). This requires:
-    *   Adding progress comments to the relevant GitHub issue during development.
-    *   **Before** reporting completion:
-        *   Adding a final comment to the GitHub issue summarizing the work.
-        *   Updating the corresponding project board item status to 'Done' (or equivalent), using `gh` commands autonomously as detailed in [/workspace/.roo/rules/project_board.md](/workspace/.roo/rules/project_board.md).
-    *   Only then, using the `attempt_completion` tool.
-8.  **Completion Reporting (`attempt_completion`):** **Only** use `attempt_completion` **after** successfully completing the mandatory GitHub issue and project board updates outlined in point 7 and [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md). Clearly state what was done, confirm that **all required checks passed**, and confirm that the GitHub issue and project board have been updated. If blocked, report the specific error.
+1.  **Task Initiation:** Read the assigned GitHub issue using `gh issue view ISSUE_URL` to fully understand the requirements.
+2.  **Code Implementation:** Write Python code according to the task requirements and project conventions.
+3.  **Stub Files (`.pyi`):** Maintain corresponding `.pyi` files. Place all docstrings and public type hints exclusively in `.pyi` files. `.py` files should contain implementation logic only.
+4.  **File Length:** Respect file length limits enforced by project hooks.
+5.  **Progress Updates:** After making significant code changes or completing logical sub-tasks, add a comment to the corresponding GitHub issue summarizing the progress using `gh issue comment ISSUE_URL --body "..."`.
+6.  **Delegate Testing:** After implementing code changes (creating or editing files), you **MUST** stage the changes (`git add .`) and then create a subtask for the `version-control` mode to run the mandatory quality checks (`pytest` and `pre-commit run --all-files`). Provide clear instructions for the subtask.
+7.  **Handle Test Failures:** If the `version-control` mode reports test failures, you **MUST** fix the issues in the code and then delegate testing back to `version-control` until all checks pass.
+8.  **NEVER Commit or Update GitHub:** You **MUST NOT** use `git commit`. You **MUST NOT** perform the final GitHub issue comment or project board update. These actions are the sole responsibility of the `version-control` mode.
+9.  **Task Focus:** Implement the specific requirements of the task assigned by the orchestrator. Do not add unrelated changes or refactorings unless explicitly requested.
+10. **Completion Reporting (`attempt_completion`):** Only use `attempt_completion` **after** the `version-control` mode has confirmed that all quality checks have passed for your staged changes. Your report should clearly state what code was implemented and confirm that testing was successfully delegated and passed.
 
 **Specific Workflows:**
 

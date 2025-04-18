@@ -1,0 +1,9 @@
+{
+    "python.defaultInterpreterPath": "/usr/local/bin/python",
+    "editor.formatOnSave": false,
+    "[python]": {
+        "editor.formatOnSave": true
+    },
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: 1-3.12-bullseye
+
+    volumes:
+      - ..:/workspace:cached # Mount the whole workspace read-write
+      - ../crudclient:/workspace/crudclient:ro # Overlay the crudclient subdir as read-only
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Commented out the env file so it does not crash the container build, if not present
+    #env_file:
+    #  - ../.env

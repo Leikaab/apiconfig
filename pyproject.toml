@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "tripletex"
+version = "0.1.1"
+description = "An efficient and user-friendly Python library crafted specifically for seamless integration with Tripletex's accounting and financial management APIs."
+authors = ["Leikaab <nordavindltd@gmail.com>"]
+license = "Proprietary"
+readme = "README.md"
+homepage = "https://github.com/Leikaab/tripletex"
+repository = "https://github.com/Leikaab/tripletex"
+documentation = "https://github.com/Leikaab/tripletex#readme"
+keywords = ["crud", "api", "client", "rest", "tripletex", "accounting", "financial", "management"]
+classifiers = [
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+pytest-cov = "*"
+pytest-xdist = "^3.5.0"
+isort = "*"
+requests-mock = "^1.12.1"
+autopep8 = "*"
+black = "*"
+yapf = "*"
+bandit = "*"
+flake8 = "*"
+mypy = "*"
+pycodestyle = "*"
+pydocstyle = "*"
+pylint = "*"
+pre-commit = "*"
+types-requests = "*"
+ipython = "*"
+ipykernel = "*"
+autoflake = "^2.3.1"
+types-PyYAML = "*"
+python-dotenv = "^1.1.0"
+bravado-core = "^6.1.1"
+httpx = "^0.28.1"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/Leikaab/tripletex/issues"

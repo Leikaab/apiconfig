@@ -1,0 +1,51 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12']  # Include Python 3.10 and 3.11
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}  # Use matrix version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --no-interaction --no-ansi --with dev
+
+      - name: Run forced std
+        run: |
+          poetry run autoflake --remove-all-unused-imports --check --recursive .
+          poetry run isort --check --profile black .
+          poetry run black --check .
+          poetry run flake8
+          poetry run mypy
+
+      - name: Run tests
+        env:
+          ONEFLOW_API_KEY: ${{ secrets.ONEFLOW_API_KEY }}
+          ONEFLOW_USER_EMAIL: ${{ secrets.ONEFLOW_USER_EMAIL }}
+          FIKEN_ACCESS_TOKEN: ${{ secrets.FIKEN_ACCESS_TOKEN }}
+          TRIPLETEX_TEST_CONSUMER_NAME: ${{ secrets.TRIPLETEX_TEST_CONSUMER_NAME }}
+          TRIPLETEX_TEST_CONSUMER_TOKEN: ${{ secrets.TRIPLETEX_TEST_CONSUMER_TOKEN }}
+          TRIPLETEX_TEST_EMPLOYEE_TOKEN: ${{ secrets.TRIPLETEX_TEST_EMPLOYEE_TOKEN }}
+        run: |
+          poetry run pytest --cov=apiconfig
+

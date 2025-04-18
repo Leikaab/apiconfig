@@ -1,0 +1,53 @@
+{
+	"name": "tripletex Dev Container",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "os-provided"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/aws-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/node:1": {
+            "nodeGypDependencies": true,
+            "installYarnUsingApt": true,
+            "version": "18",
+            "nvmVersion": "latest"
+        }
+	},
+	"customizations": {
+		"vscode": {
+			"settings": "./settings.json",
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"github.vscode-github-actions",
+				"me-dutour-mathieu.vscode-github-actions",
+				"GitHub.vscode-pull-request-github",
+                "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-renderers",
+				"tamasfe.even-better-toml",
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	},
+	"forwardPorts": [
+		5051 // forward custom liveserver port for coverage
+	],
+
+	"portsAttributes": {
+		"5051":{
+			"label": "Coverage - Live Server",
+			"onAutoForward": "notify"
+		}
+	},
+	"postCreateCommand": "chmod +x ./.devcontainer/postCreateCommand.sh; sh -c ./.devcontainer/postCreateCommand.sh",
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+	"remoteUser": "root",
+	"initializeCommand": "chmod +x ./.devcontainer/initializeCommand.sh && ./.devcontainer/initializeCommand.sh"
+}
+

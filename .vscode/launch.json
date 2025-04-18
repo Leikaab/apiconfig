@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: module",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "apiconfig",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
+            "name": "Python: Debug Tests",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pytest",
+            "args": [
+                "-s",
+                "--disable-warnings"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}

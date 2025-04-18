@@ -1,0 +1,66 @@
+# See https://pre-commit.com/ for usage and config
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+        stages: [pre-commit]
+
+  - repo: local
+    hooks:
+      - id: autoflake
+        name: autoflake
+        stages: [pre-commit]
+        language: system
+        entry: poetry run autoflake --remove-all-unused-imports --in-place --recursive
+        types: [python]
+
+      - id: isort
+        name: isort
+        stages: [pre-commit]
+        language: system
+        entry: poetry run isort --profile black
+        types: [python]
+
+      - id: black
+        name: black
+        stages: [pre-commit]
+        language: system
+        entry: poetry run black .
+        types: [python, pyi]
+
+      - id: flake8
+        name: flake8
+        stages: [pre-commit]
+        language: system
+        entry: poetry run flake8
+        types: [python]
+        exclude: setup.py
+
+      - id: mypy
+        name: mypy
+        stages: [pre-commit]
+        language: system
+        entry: poetry run mypy
+        types: [python, pyi]
+        require_serial: true
+
+      - id: pytest
+        name: pytest (all tests)
+        stages: [pre-commit]
+        language: system
+        entry: poetry run pytest tests/ -v --no-header --durations=5
+        types: [python]
+        files: ^(apiconfig/|tests/).*\.py$ # Trigger hook on changes in these files
+        pass_filenames: false # Do not pass filenames directly to pytest
+        verbose: true
+
+      - id: pytest-cov
+        name: pytest with coverage
+        stages: [pre-push]
+        language: system
+        entry: poetry run pytest tests/unit/ --cov --cov-report=term-missing --cov-branch --no-header --durations=5
+        types: [python]
+        pass_filenames: false
+        verbose: true

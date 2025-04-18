@@ -1,0 +1,77 @@
+name: Publish to PyPI
+
+on:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    if: github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --no-root --without dev --no-interaction --no-ansi
+
+      - name: Get current version
+        id: get_version
+        run: |
+            echo "version=$(poetry version -s)" >> $GITHUB_OUTPUT
+            echo "Current version is $CURRENT_VERSION"
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+            echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+            echo "Latest tag is $LATEST_TAG"
+
+      - name: Check if version bump is required
+        id: check_version
+        run: |
+          CURRENT=${{ steps.get_version.outputs.version }}
+          TAG=${{ steps.get_tag.outputs.tag }}
+          if [ "$(echo "$CURRENT $TAG" | awk '{print ($1 > $2)}')" = "1" ]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version has not been bumped. Skipping publish."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build with Poetry
+        if: steps.check_version.outputs.should_publish == 'true'
+        run: poetry build
+
+      - name: Publish to PyPI
+        if: steps.check_version.outputs.should_publish == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
+
+      - name: Create new tag
+        if: steps.check_version.outputs.should_publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.get_version.outputs.version }}
+          git push origin --tags

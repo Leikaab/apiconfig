@@ -1,0 +1,45 @@
+name: Test DevContainer Build
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - '.devcontainer/**' #only trigger if changes are made to the .devcontainer folder
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }} #using matrix to create one similar job for each OS.
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # dropping testing on win and macOS for now
+      fail-fast: false # Ensures other jobs in the matrix continue running even if one fails
+
+    continue-on-error: false # Ensures each job within the OS fails completely if any step fails
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask docker
+          open --background -a Docker
+          while ! docker system info > /dev/null 2>&1; do
+            echo "Waiting for Docker to start..."
+            sleep 10
+          done
+
+
+      - name: Set up Devcontainer CLI
+        run: |
+          npm install -g @devcontainers/cli
+
+      - name: Build and Test DevContainer
+        run: |
+          devcontainer up --workspace-folder . --skip-post-create
+
+      - name: Validate DevContainer
+        run: |
+          devcontainer exec --workspace-folder . /usr/local/py-utils/bin/poetry --version

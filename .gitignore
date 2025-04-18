@@ -326,8 +326,8 @@ pyrightconfig.json
 
 # VS Code AI configurations
 .rooconfig
-.roomodes
-.roo
+#.roomodes
+#.roo
 
 # VS Code AI conversation files
 *.room

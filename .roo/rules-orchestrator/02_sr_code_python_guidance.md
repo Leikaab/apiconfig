@@ -1,0 +1,31 @@
+# Orchestrator Guidance for Instructing `sr-code-python`
+
+When delegating implementation tasks to `sr-code-python`, provide clear, specific instructions including the following project-specific guidance:
+
+1.  **Task Specifics:**
+    *   Clearly state the goal (e.g., implement `GET /v2/project/{id}`).
+    *   Provide necessary context: required parameters, expected response structure (referencing `specs/swagger.json`), relevant documentation (`docs/create_new_endpoints/`).
+
+2.  **`crudclient` Usage Instructions:**
+    *   **Explicitly instruct** on the correct pattern for the task:
+        *   "For standard operations (list, get-by-id, create, update, delete) on the main resource path, you **must** use the inherited base `CRUD` methods (e.g., `self.list()`, `self.get(id=...)`)."
+        *   "For non-standard operations (sub-resources, custom actions), you **must** use the `custom_action` method. Specify the `action` path segment, `method`, and `params`/`data`."
+    *   **Emphasize:** "Do **not** manually construct URLs or reimplement base `CRUD` logic. Use the provided base methods."
+
+3.  **Stub File (`.pyi`) Instructions:**
+    *   Remind: "All docstrings and public type hints belong **only** in the `.pyi` file. Keep the `.py` file for implementation logic."
+
+4.  **Tripletex API Quirk Reminders (If Applicable):**
+    *   If the task involves endpoints known to have quirks, **proactively remind** `sr-code-python`:
+        *   "Be aware of potential non-standard `fields` parameter syntax (e.g., `fields=*,parent(*)`) for this endpoint."
+        *   "Remember the 10,000 record pagination limit if fetching large datasets."
+        *   "Watch for contextual validation errors (e.g., `organizationNumber` based on country) not defined in Swagger."
+        *   "Ensure only the `id` field is included when sending nested object references in payloads."
+
+5.  **Mandatory Quality Checks:**
+    *   Specify the **exact** checks `sr-code-python` **must** run and pass before reporting completion (e.g., `mypy .`, `pre-commit run --all-files`, `pytest tests/unit/test_your_endpoint.py`, `pytest tests/integration/test_your_endpoint.py`).
+    *   Instruct: "You **must** confirm that **all** these checks pass without errors in your completion report."
+
+6.  **Completion Criteria:**
+    *   State the expected output (e.g., working endpoint method, passing tests).
+    *   Instruct `sr-code-python` to use `attempt_completion` and explicitly confirm all specified checks passed.

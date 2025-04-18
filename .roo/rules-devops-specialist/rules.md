@@ -15,8 +15,29 @@
     *   For Shell scripts: Ensure syntax is correct.
     *   For `pyproject.toml`: Ensure TOML syntax is correct. If modifying dependencies, ensure `poetry lock --no-update` runs successfully.
     *   For `pytest.ini` or `.pre-commit-config.yaml`: Ensure changes are consistent with the tools being configured.
-5.  **Output:** Use `attempt_completion` when your modifications are complete and validated. Clearly state:
+5.  **Project Board Update (Attempt):** After validating changes and before final reporting, *attempt* to update the status of the relevant item on the "APIConfig Implementation" project board (ID 1) to reflect task completion (e.g., 'Done'). Use the conceptual `gh project item-edit` command example below. **Crucially, proceed to the next step (reporting completion) immediately afterward, regardless of whether this command succeeds or fails.**
+6.  **Output:** Use `attempt_completion` when your modifications are complete and validated. Clearly state:
     *   Which files were changed.
     *   A summary of the changes made.
     *   What validation steps were performed (e.g., "Validated YAML syntax", "Checked Dockerfile syntax").
     *   Explicitly state that the changes are ready for handoff to `version-control`.
+
+### Project Board Interaction
+
+The "APIConfig Implementation" project board (ID: 1, Owner: `Leikaab`) tracks overall progress via linked issues (#7-#48). Modes may be required to update the status of relevant items.
+
+**Example Workflow (Conceptual):**
+
+1.  **Find Item ID:** Get the internal ID of the project item linked to a specific issue URL.
+    ```bash
+    # Replace ISSUE_URL with the actual issue link
+    ITEM_ID=$(gh project item-list 1 --owner Leikaab --format json | jq -r '.items[] | select(.content.url == "ISSUE_URL") | .id')
+    ```
+
+2.  **Update Status Field:** Set the item's status (e.g., to 'In Progress', 'Done').
+    ```bash
+    # NOTE: Requires finding the correct FIELD_ID for 'Status' and the OPTION_ID for the desired status value (e.g., 'Done')
+    # These IDs must be obtained by inspecting the project board's API details or UI configuration.
+    gh project item-edit --id $ITEM_ID --project-id 1 --owner Leikaab --field-id "YOUR_STATUS_FIELD_ID" --single-select-option-id "YOUR_DESIRED_OPTION_ID"
+    ```
+**Important:** The specific `FIELD_ID` and `OPTION_ID` values must be determined beforehand.

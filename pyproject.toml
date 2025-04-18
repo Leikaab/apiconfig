@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "tripletex"
+name = "apiconfig"
 version = "0.1.1"
-description = "An efficient and user-friendly Python library crafted specifically for seamless integration with Tripletex's accounting and financial management APIs."
+description = "api config library"
 authors = ["Leikaab <nordavindltd@gmail.com>"]
 license = "Proprietary"
 readme = "README.md"
-homepage = "https://github.com/Leikaab/tripletex"
-repository = "https://github.com/Leikaab/tripletex"
-documentation = "https://github.com/Leikaab/tripletex#readme"
-keywords = ["crud", "api", "client", "rest", "tripletex", "accounting", "financial", "management"]
+homepage = "https://github.com/Leikaab/apiconfig"
+repository = "https://github.com/Leikaab/apiconfig"
+documentation = "https://github.com/Leikaab/apiconfig#readme"
+keywords = ["api", "config", "apiauth"]
 classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
     "Programming Language :: Python :: 3",
@@ -52,4 +52,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/Leikaab/tripletex/issues"
+"Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"

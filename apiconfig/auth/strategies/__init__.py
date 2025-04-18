@@ -2,5 +2,6 @@
 
 
 from .basic import BasicAuth
+from .bearer import BearerAuth
 
-__all__ = ["BasicAuth"]
+__all__ = ["BasicAuth", "BearerAuth"]

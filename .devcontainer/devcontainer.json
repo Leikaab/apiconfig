@@ -1,5 +1,5 @@
 {
-	"name": "tripletex Dev Container",
+	"name": "apiconfig Dev Container",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",

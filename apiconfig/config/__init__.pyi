@@ -1,6 +1,26 @@
 # -*- coding: utf-8 -*-
-"""Configuration handling for apiconfig (stub)."""
+"""
+Configuration handling for apiconfig (stub).
 
-from .manager import ConfigManager
+This module provides the base configuration class (`ClientConfig`),
+configuration management (`ConfigManager`), and various configuration
+providers (environment, file, memory).
+"""
 
-__all__: list[str]
+from typing import List
+
+from .base import ClientConfig as ClientConfig
+from .manager import ConfigManager as ConfigManager
+from .providers import (
+    EnvProvider as EnvProvider,
+    FileProvider as FileProvider,
+    MemoryProvider as MemoryProvider,
+)
+
+__all__: List[str] = [
+    "ClientConfig",
+    "ConfigManager",
+    "EnvProvider",
+    "FileProvider",
+    "MemoryProvider",
+]

@@ -1,6 +1,6 @@
 """Utilities module for apiconfig."""
 
 # Import submodules to make them available when importing 'apiconfig.utils'
-from . import logging, redaction
+from . import http, logging, redaction, url
 
-__all__ = ["logging", "redaction"]
+__all__ = ["http", "logging", "redaction", "url"]

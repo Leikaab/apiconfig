@@ -17,4 +17,20 @@ from .config import ConfigProviderError as ConfigProviderError
 from .config import InvalidConfigError as InvalidConfigError
 from .config import MissingConfigError as MissingConfigError
 
-__all__: list[str]
+__all__: list[str] = [
+    # Base exceptions
+    "APIConfigError",
+    "ConfigurationError",
+    "AuthenticationError",
+    # Auth exceptions
+    "InvalidCredentialsError",
+    "ExpiredTokenError",
+    "MissingCredentialsError",
+    "TokenRefreshError",
+    "AuthStrategyError",
+    # Config exceptions
+    "InvalidConfigError",
+    "MissingConfigError",
+    "ConfigLoadError",
+    "ConfigProviderError",
+]

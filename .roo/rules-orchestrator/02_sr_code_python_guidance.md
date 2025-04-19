@@ -19,12 +19,6 @@ When delegating implementation tasks to `sr-code-python`, provide clear, specifi
     *   Clearly state the goal (e.g., implement `GET /v2/project/{id}`).
     *   Provide necessary context: required parameters, expected response structure (referencing `specs/swagger.json`), relevant documentation (`docs/create_new_endpoints/`).
 
-2.  **`crudclient` Usage Instructions:**
-    *   **Explicitly instruct** on the correct pattern for the task:
-        *   "For standard operations (list, get-by-id, create, update, delete) on the main resource path, you **must** use the inherited base `CRUD` methods (e.g., `self.list()`, `self.get(id=...)`)."
-        *   "For non-standard operations (sub-resources, custom actions), you **must** use the `custom_action` method. Specify the `action` path segment, `method`, and `params`/`data`."
-    *   **Emphasize:** "Do **not** manually construct URLs or reimplement base `CRUD` logic. Use the provided base methods."
-
 3.  **Stub File (`.pyi`) Instructions:**
     *   Remind: "All docstrings and public type hints belong **only** in the `.pyi` file. Keep the `.py` file for implementation logic."
 

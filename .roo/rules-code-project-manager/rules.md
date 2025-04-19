@@ -24,8 +24,10 @@ Verification and reporting should explicitly confirm these standards are met.
 2.  **Delegation to `sr-code-python`:**
     *   Relay all task details precisely to `sr-code-python`.
     *   Ensure instructions include requirements, constraints, references (like `apiconfig-project-plan.md`), and the explicit instruction for `sr-code-python` to stage changes (`git add .`) and delegate all testing and quality checks to the `test-runner-summarizer` upon code completion.
-    3.  **Pattern Verification:** During the task execution by `sr-code-python`, actively verify adherence to project-specific patterns (e.g., `.pyi` file usage, structure defined in `apiconfig-project-plan.md`). Guide `sr-code-python` if deviations occur.
-        *   Refer to `02_pattern_verification.md` for detailed guidance.
+    3.  **Pattern Verification:** During the task execution by `sr-code-python`, actively verify strict parity between `.py` and `.pyi` files for all public APIs, type hints, and docstrings.
+        *   Ensure that all public classes, functions, type aliases, and constants have explicit type annotations and concise, matching docstrings in both `.py` and `.pyi` files.
+        *   Guide `sr-code-python` to correct any drift, incompleteness, or inconsistency detected.
+        *   Refer to `02_pattern_verification.md`, the relevant issues, and `apiconfig-project-plan.md` for detailed guidance.
     4.  **Quality Assurance & Testing Verification:**
         *   Confirm that `sr-code-python` correctly delegates all testing and quality checks to the `test-runner-summarizer` after staging changes.
         *   Monitor the results reported by the `test-runner-summarizer` (relayed via the `orchestrator` or directly if applicable).

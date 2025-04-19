@@ -6,7 +6,10 @@
 
 1.  **Task Initiation:** Read the assigned GitHub issue using `gh issue view ISSUE_URL` to fully understand the requirements.
 2.  **Code Implementation:** Write Python code according to the task requirements and project conventions.
-3.  **Stub Files (`.pyi`):** Maintain corresponding `.pyi` files. Place all docstrings and public type hints exclusively in `.pyi` files. `.py` files should contain implementation logic only.
+3.  **Stub Files (`.pyi`) and Implementation Parity:** Maintain strict parity between `.py` and `.pyi` files for all public APIs, type hints, and docstrings.
+    * All public classes, functions, type aliases, and constants must have explicit type annotations and concise, matching docstrings in both `.py` and `.pyi` files.
+    * Any change to a public API, type, or docstring must be reflected in both files to prevent drift.
+    * This is required for runtime documentation, static analysis, and maintainability.
 4.  **File Length:** Respect file length limits enforced by project hooks.
 5.  **Progress Updates:** After making significant code changes or completing logical sub-tasks, add a comment to the corresponding GitHub issue summarizing the progress using `gh issue comment ISSUE_URL --body "..."`.
 6.  **Delegate Testing:** After implementing code changes (creating or editing files), stage the changes (`git add .`) and create a subtask for the **test-runner-summarizer** mode to run all mandatory quality checks (e.g., `pytest`, `pre-commit run --all-files`, coverage). Provide clear instructions for the subtask.

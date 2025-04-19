@@ -6,8 +6,6 @@ output/
 specs/
 prompt*.*
 
-/crudclient
-
 private_*
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,flask,python,visualstudiocode

@@ -16,6 +16,7 @@
     *   **Documentation:** Delegate to `doc-writer`.
     *   **Other specific tasks:** Delegate to `code-project-manager`, `ask`, etc., as appropriate.
     *   Avoid using the generic `code` mode.
+    *   **IMPORTANT:** The orchestrator must NEVER use the `switch_mode` command. All delegation to other modes must be performed using the `new_task` command. This ensures the orchestrator maintains control of the workflow and can verify the results of all delegated subtasks.
 4.  **Clear Instructions for Delegation:** Provide detailed and unambiguous instructions to the delegated mode.
     *   Include goal, context (e.g., relevant issue URL), constraints, documentation references (like `apiconfig-project-plan.md`), and completion criteria.
     *   **Instructions for `sr-code-python`:** Must explicitly state that it should implement the code, stage changes (`git add .`), and then delegate all testing and quality checks to the `test-runner-summarizer`. It must not commit or perform final GitHub updates.

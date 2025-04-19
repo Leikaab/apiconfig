@@ -1,6 +1,5 @@
 from typing import Any, Dict
 
-
 class EnvProvider:
     """
     Loads configuration values from environment variables.

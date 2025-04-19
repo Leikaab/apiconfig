@@ -14,7 +14,9 @@ class EnvProvider:
 
         for key, value in os.environ.items():
             if key.startswith(self._prefix):
-                config_key = key[prefix_len:]  # Keep original case after removing prefix
+                config_key = key[
+                    prefix_len:
+                ]  # Keep original case after removing prefix
                 # Basic type inference (can be expanded later)
                 if value.isdigit():
                     try:

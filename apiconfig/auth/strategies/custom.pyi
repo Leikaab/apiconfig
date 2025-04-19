@@ -2,7 +2,6 @@ from typing import Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
-
 class CustomAuth(AuthStrategy):
     """
     Implements custom authentication logic using provided callback functions.

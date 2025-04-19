@@ -1,6 +1,5 @@
 """Authentication strategies for apiconfig."""
 
-
 from .api_key import ApiKeyAuth
 from .basic import BasicAuth
 from .bearer import BearerAuth

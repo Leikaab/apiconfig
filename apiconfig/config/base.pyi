@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 _TClientConfig = TypeVar("_TClientConfig", bound="ClientConfig")
 
-
 class ClientConfig:
     """
     Base configuration class for API clients.

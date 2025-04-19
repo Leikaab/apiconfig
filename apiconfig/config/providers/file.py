@@ -26,7 +26,9 @@ class FileProvider:
                 )
             return config_data
         except FileNotFoundError as e:
-            raise ConfigLoadError(f"Configuration file not found: {self._file_path}") from e
+            raise ConfigLoadError(
+                f"Configuration file not found: {self._file_path}"
+            ) from e
         except json.JSONDecodeError as e:
             raise ConfigLoadError(
                 f"Error decoding JSON from configuration file: {self._file_path}"

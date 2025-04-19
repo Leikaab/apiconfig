@@ -10,7 +10,6 @@ DEFAULT_SENSITIVE_HEADER_PREFIXES: Final[Tuple[str, ...]]
 # Placeholder value for redacted headers
 REDACTED_VALUE: Final[str]
 
-
 def redact_headers(
     headers: Mapping[str, str],
     sensitive_keys: Set[str] = ...,

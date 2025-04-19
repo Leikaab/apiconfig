@@ -1,7 +1,6 @@
 import pathlib
 from typing import Any, Dict, Union
 
-
 class FileProvider:
     """
     Loads configuration data from a file.

@@ -1,6 +1,5 @@
 """Type stubs for authentication strategies."""
 
-
 from .api_key import ApiKeyAuth
 from .basic import BasicAuth
 from .bearer import BearerAuth

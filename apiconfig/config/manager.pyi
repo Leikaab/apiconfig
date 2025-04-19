@@ -8,7 +8,6 @@ ConfigProvider = Any
 
 logger: logging.Logger
 
-
 class ConfigManager:
     """
     Manages loading configuration from multiple providers.
@@ -17,6 +16,7 @@ class ConfigManager:
     from various sources (like environment variables, files, or in-memory dictionaries)
     and merging them into a single configuration dictionary.
     """
+
     _providers: Sequence[ConfigProvider]
 
     def __init__(self, providers: Sequence[ConfigProvider]) -> None:

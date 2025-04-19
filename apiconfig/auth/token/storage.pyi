@@ -1,7 +1,6 @@
 import abc
 from typing import Any, Dict, Optional
 
-
 class TokenStorage(abc.ABC):
     """Abstract base class for token storage mechanisms."""
 
@@ -36,7 +35,6 @@ class TokenStorage(abc.ABC):
         """
         ...
 
-
 class InMemoryTokenStorage(TokenStorage):
     """Stores tokens in an in-memory dictionary.
 
@@ -47,7 +45,6 @@ class InMemoryTokenStorage(TokenStorage):
     _storage: Dict[str, Any]
 
     def __init__(self) -> None: ...
-
     def store_token(self, key: str, token_data: Any) -> None:
         """Store token data in the internal dictionary.
 

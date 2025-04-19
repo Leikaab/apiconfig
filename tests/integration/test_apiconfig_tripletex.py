@@ -14,7 +14,9 @@ from dotenv import load_dotenv
 
 from apiconfig.config.providers.env import EnvProvider
 
-load_dotenv(dotenv_path=".env", override=True)  # Explicitly load .env from workspace root and override existing vars
+load_dotenv(
+    dotenv_path=".env", override=True
+)  # Explicitly load .env from workspace root and override existing vars
 # Configure logging for debugging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -83,14 +85,20 @@ def get_session_token(config: Dict[str, str]) -> Optional[str]:
             if response.status == 200:
                 data = json.loads(response.read().decode("utf-8"))
                 token_data = data.get("value", {})
-                token = token_data.get("token") if isinstance(token_data, dict) else None
+                token = (
+                    token_data.get("token") if isinstance(token_data, dict) else None
+                )
                 # Ensure token is a non-empty string before returning
                 if isinstance(token, str) and token:
                     logger.info("Successfully obtained session token.")
                     return token
                 elif token is not None:
                     # Log if token exists but is not a string or is empty
-                    logger.error("Invalid or empty token received: %s (type: %s)", token, type(token).__name__)
+                    logger.error(
+                        "Invalid or empty token received: %s (type: %s)",
+                        token,
+                        type(token).__name__,
+                    )
                     return None
                 else:  # token is None
                     logger.error("Session token not found in response: %s", data)
@@ -119,7 +127,9 @@ def get_session_token(config: Dict[str, str]) -> Optional[str]:
         return None
 
 
-def list_countries(config: Dict[str, str], session_token: str) -> Optional[List[Dict[str, Any]]]:
+def list_countries(
+    config: Dict[str, str], session_token: str
+) -> Optional[List[Dict[str, Any]]]:
     """Lists countries using the obtained session token."""
     base_url = f"{config['hostname']}/{TRIPLETEX_API_VERSION}"
     url = f"{base_url}/country"
@@ -168,6 +178,7 @@ def list_countries(config: Dict[str, str], session_token: str) -> Optional[List[
 
 
 # --- Test Function ---
+
 
 def test_tripletex_auth_and_list_countries(tripletex_config: Dict[str, str]) -> None:
     """

@@ -1,6 +1,5 @@
 from typing import Any, Mapping
 
-
 class MemoryProvider:
     """
     A simple configuration provider that stores configuration in memory.

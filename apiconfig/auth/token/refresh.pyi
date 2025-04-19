@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional
 
-
 def refresh_oauth2_token(
     refresh_token: str,
     token_url: str,

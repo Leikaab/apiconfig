@@ -17,7 +17,11 @@ def _redact_recursive(data: Any, pattern: re.Pattern) -> Any:
     """Recursively redact sensitive data in dictionaries and lists."""
     if isinstance(data, dict):
         return {
-            key: REDACTED_VALUE if pattern.search(key) else _redact_recursive(value, pattern)
+            key: (
+                REDACTED_VALUE
+                if pattern.search(key)
+                else _redact_recursive(value, pattern)
+            )
             for key, value in data.items()
         }
     elif isinstance(data, list):
@@ -102,7 +106,9 @@ def redact_body(
 
     except (json.JSONDecodeError, TypeError, ValueError):
         # If parsing fails, return original string/bytes or placeholder
-        return body_str if body_str is not None else body  # Or consider REDACTED_BODY_PLACEHOLDER
+        return (
+            body_str if body_str is not None else body
+        )  # Or consider REDACTED_BODY_PLACEHOLDER
 
     # 4. If not JSON or form, or if parsing failed, return original/placeholder
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.

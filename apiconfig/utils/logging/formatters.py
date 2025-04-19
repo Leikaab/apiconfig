@@ -1,5 +1,6 @@
 import logging
 import textwrap
+from typing import Literal  # Add Literal import
 
 
 class DetailedFormatter(logging.Formatter):
@@ -9,7 +10,7 @@ class DetailedFormatter(logging.Formatter):
         self,
         fmt: str | None = None,
         datefmt: str | None = None,
-        style: logging._FormatStyle = "%",
+        style: Literal["%", "{", "$"] = "%",  # Correct the type hint
         validate: bool = True,
         *,
         defaults: dict | None = None,
@@ -41,7 +42,9 @@ class DetailedFormatter(logging.Formatter):
             # We assume the core message starts after the initial metadata.
             metadata_len = first_line.find(record.getMessage().split("\n", 1)[0])
             if metadata_len == -1:
-                metadata_len = len(first_line) - len(record.getMessage().split("\n", 1)[0])
+                metadata_len = len(first_line) - len(
+                    record.getMessage().split("\n", 1)[0]
+                )
 
             # Indent message lines
             message_lines = record.getMessage().split("\n")
@@ -55,7 +58,8 @@ class DetailedFormatter(logging.Formatter):
                 )
                 # Reconstruct the first line with potentially modified message part
                 lines[0] = first_line.replace(
-                    record.getMessage().split("\n", 1)[0], indented_message.split("\n", 1)[0]
+                    record.getMessage().split("\n", 1)[0],
+                    indented_message.split("\n", 1)[0],
                 )
 
             # Indent any extra lines added by the formatter (like file/line info)

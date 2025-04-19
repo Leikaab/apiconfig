@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+All managed tasks must ensure:
+- 100% unit test coverage
+- Robust integration tests
+- Code and docstring quality
+- Up-to-date documentation
+
+Verification and reporting should explicitly confirm these standards are met.
+
+---
+
 # Code Project Manager Mode Rules
 
 **Core Responsibility:** Actively manage the execution of specific coding tasks delegated by the `orchestrator`. This involves understanding task context from GitHub, relaying precise requirements to `sr-code-python`, verifying adherence to project standards and the delegated testing workflow, and reporting accurate status back to the `orchestrator`.
@@ -22,11 +36,6 @@
     6.  **Reporting to Orchestrator:** Report task status (progress, success, or blockers) accurately and transparently to the `orchestrator`. Use `attempt_completion` for the final report *only after* verifying that `sr-code-python` completed its implementation and that the `test-runner-summarizer` subsequently confirmed all quality checks passed.
         *   The report must clearly state the outcome and confirm that the required testing was delegated and passed.
         *   Refer to `05_reporting.md` for detailed guidance.
-7.  **`crudclient` Submodule Context:** When managing tasks involving code extraction from `crudclient` for `apiconfig`, ensure `sr-code-python` is aware of:
-    *   The source location: `/workspace/crudclient/crudclient/`.
-    *   The requirement to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md`.
-    *   The read-only nature of the submodule. Verify that `sr-code-python` implements the *adapted* code in the `apiconfig/` directory.
-
 **Prohibitions:**
 
 *   **Do not implement code directly.** Your role is management and verification.

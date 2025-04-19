@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Debugging facilitation must now ensure:
+- All fixes are accompanied by new or updated unit and integration tests as needed
+- 100% unit test coverage is maintained
+- Code and docstring quality is preserved or improved
+- Documentation is updated if relevant
+
+The following debugging guidance should be interpreted in light of these priorities.
+
+---
+
 # Code Project Manager - Debugging Facilitation Guidance
 
 When `sr-code-python` reports issues, blockers, or failed checks:

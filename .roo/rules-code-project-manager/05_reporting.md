@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Reporting must now ensure:
+- 100% unit test coverage is achieved and maintained
+- Robust integration tests are in place and passing
+- Code and docstring quality is confirmed
+- Documentation is up to date
+
+Completion reports should explicitly confirm these standards are met, in addition to all required checks passing.
+
+---
+
 # Code Project Manager - Reporting Guidance
 
 Accurate and timely reporting to the `orchestrator` is crucial.

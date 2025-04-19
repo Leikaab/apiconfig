@@ -1,3 +1,16 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Error handling and debugging must now ensure:
+- All fixes are accompanied by new or updated unit and integration tests as needed
+- 100% unit test coverage is maintained
+- Documentation is updated if relevant
+
+Verification after fixes should confirm these standards are met.
+
+---
+
 # Orchestrator Error Handling & Debugging Guidance
 
 1.  **Failure Detection:**

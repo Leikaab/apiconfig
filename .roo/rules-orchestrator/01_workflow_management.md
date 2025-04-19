@@ -1,3 +1,16 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Workflow management must now ensure:
+- All subtasks and delegations support 100% unit test coverage
+- Robust integration tests are included and verified
+- Documentation is comprehensive and up to date
+
+The Orchestrator should verify these standards are met at each step.
+
+---
+
 # Orchestrator Workflow Management Guidance
 
 1.  **Workflow Decomposition:**

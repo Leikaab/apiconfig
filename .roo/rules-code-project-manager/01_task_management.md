@@ -1,3 +1,18 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+All task management and delegation should prioritize:
+- Achieving and maintaining 100% unit test coverage
+- Developing robust integration tests
+- Conducting design and pattern reviews
+- Reviewing and improving docstrings and code comments
+- Ensuring comprehensive user and API documentation
+
+The following guidance should be interpreted in light of these priorities.
+
+---
+
 # Code Project Manager - Task Management & Delegation Guidance
 
 1.  **Task Intake:**

@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+DevOps work must now ensure:
+- CI/CD, tooling, and environments support 100% unit test coverage
+- Robust integration tests are automated and reliable
+- Code and docstring quality is enforced
+- Documentation is up to date and accessible
+
+All improvements should facilitate these goals.
+
+---
+
 # DevOps Specialist Contribution Guidelines (Summary)
 
 This document provides a concise overview of contribution guidelines specifically relevant to the DevOps Specialist role. For comprehensive details on Gitflow, testing, dependencies, and environment setup, please refer to the main [`/workspace/CONTRIBUTING.md`](/workspace/CONTRIBUTING.md).

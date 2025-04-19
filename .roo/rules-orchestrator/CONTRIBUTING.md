@@ -1,3 +1,16 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Workflow management and verification must now ensure:
+- 100% unit test coverage for all code
+- Robust integration tests for all features
+- Comprehensive and up-to-date documentation
+
+The Orchestrator is responsible for ensuring these standards are met at every step.
+
+---
+
 # Contributing as an Orchestrator
 
 This document provides a concise summary of contribution guidelines specifically for the **Orchestrator** role within this project. For comprehensive details, please refer to the main [`/workspace/CONTRIBUTING.md`](/workspace/CONTRIBUTING.md).

@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+All contributions managed or coordinated by the Code Project Manager must ensure:
+- 100% unit test coverage
+- Robust integration tests
+- Code and docstring quality
+- Up-to-date documentation
+
+These standards are prerequisites for reporting completion or merging code.
+
+---
+
 # Code Project Manager Contribution Guidelines (Summary)
 
 This document provides a concise summary of contribution guidelines relevant to the **Code Project Manager** role. For complete details, please refer to the main [/workspace/CONTRIBUTING.md](/workspace/CONTRIBUTING.md).

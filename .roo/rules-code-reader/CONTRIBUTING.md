@@ -1,3 +1,15 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Code reading and summaries should now:
+- Highlight areas lacking 100% unit test coverage
+- Note missing or weak integration tests
+- Identify unclear or incomplete docstrings and documentation
+- Point out code or design weaknesses
+
+---
+
 # Code Reader Contribution Summary
 
 This document provides a concise summary of contribution guidelines relevant to the **Code Reader** role. For comprehensive details, please refer to the main [`/workspace/CONTRIBUTING.md`](/workspace/CONTRIBUTING.md).

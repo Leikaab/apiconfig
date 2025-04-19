@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Quality assurance must now ensure:
+- 100% unit test coverage for all code
+- Robust integration tests for real-world scenarios
+- Code and docstring quality (clarity, completeness, consistency)
+- Adherence to documentation and best practices
+
+The following QA guidance should be interpreted in light of these priorities.
+
+---
+
 # Code Project Manager - Quality Assurance Guidance
 
 **Mandatory Check Verification:** Your primary role in QA is to ensure `sr-code-python` delegates and passes *all* required checks via the `test-runner-summarizer` before you report completion.

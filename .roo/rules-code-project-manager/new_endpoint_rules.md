@@ -1,3 +1,17 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+All new endpoint implementation phases must ensure:
+- 100% unit test coverage for new code
+- Robust integration tests for new endpoints
+- Code and docstring quality
+- Up-to-date documentation
+
+Verification and reporting should explicitly confirm these standards are met.
+
+---
+
 # Code Project Manager Rules for Adding New Endpoints
 
 **Objective:** Manage the implementation and verification of a specific **endpoint implementation phase** (e.g., Models, API Logic, Tests) delegated by the main Orchestrator. Ensure detailed context is passed to workers, manage the verification loop with failure tolerance, and report concise status back.

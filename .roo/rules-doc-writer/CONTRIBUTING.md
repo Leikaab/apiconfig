@@ -1,3 +1,14 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+Documentation is now a top priority. Writers should:
+- Ensure all user guides, API docs, and migration guides are comprehensive and up to date
+- Reflect 100% unit test coverage and robust integration in documentation
+- Maintain clarity, accuracy, and best practices throughout
+
+---
+
 # Contributing as a Documentation Writer
 
 This document provides a concise summary of contribution guidelines specifically for the **Documentation Writer** role within this project. For comprehensive details, please refer to the main [`/workspace/CONTRIBUTING.md`](/workspace/CONTRIBUTING.md).

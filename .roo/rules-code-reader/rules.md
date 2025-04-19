@@ -1,3 +1,15 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+When reading code, also:
+- Highlight areas lacking 100% unit test coverage
+- Note missing or weak integration tests
+- Identify unclear or incomplete docstrings and documentation
+- Point out code or design weaknesses
+
+---
+
 # Code Reader Rules
 
 **Objective:** Read specified code files and provide information, summaries, or answers to specific questions about the code content.

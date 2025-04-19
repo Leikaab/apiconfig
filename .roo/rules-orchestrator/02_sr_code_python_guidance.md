@@ -1,3 +1,16 @@
+# Current Project Focus: Polish, Test Coverage, Integration, and Documentation
+
+**As of April 2025, the apiconfig project is in its finalization phase.**
+
+All instructions to sr-code-python must ensure:
+- 100% unit test coverage for all code
+- Robust integration tests for all features
+- Comprehensive and up-to-date documentation
+
+Completion criteria should explicitly confirm these standards are met.
+
+---
+
 # Orchestrator Guidance for Instructing `sr-code-python`
 
 When delegating implementation tasks to `sr-code-python`, provide clear, specific instructions including the following project-specific guidance:

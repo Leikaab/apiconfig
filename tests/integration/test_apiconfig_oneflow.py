@@ -68,10 +68,12 @@ def test_oneflow_apiconfig_setup(
         assert client_config.auth_strategy is None
 
     if user_email:
+        assert client_config.headers is not None
         assert "x-oneflow-user-email" in client_config.headers
         assert client_config.headers["x-oneflow-user-email"] == user_email
     else:
-        assert "x-oneflow-user-email" not in client_config.headers
+        if client_config.headers is not None:
+            assert "x-oneflow-user-email" not in client_config.headers
 
 
 def test_oneflow_api_users(

@@ -2,6 +2,7 @@ import logging
 import sys
 from typing import IO, Optional
 
+
 class ConsoleHandler(logging.StreamHandler[IO[str]]):
     """
     A custom logging handler that writes log records to a stream (like stderr).
@@ -19,3 +20,9 @@ class ConsoleHandler(logging.StreamHandler[IO[str]]):
             stream: The stream to write log records to. Defaults to `sys.stderr`.
         """
         ...
+
+
+class RedactingStreamHandler(logging.StreamHandler[IO[str]]):
+    """Type stub for RedactingStreamHandler."""
+    # Placeholder - inherits methods from logging.StreamHandler
+    ...

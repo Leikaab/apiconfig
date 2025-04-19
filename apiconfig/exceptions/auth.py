@@ -2,6 +2,15 @@
 
 from .base import AuthenticationError
 
+__all__ = [
+    "AuthenticationError",
+    "InvalidCredentialsError",
+    "ExpiredTokenError",
+    "MissingCredentialsError",
+    "TokenRefreshError",
+    "AuthStrategyError",
+]
+
 
 class InvalidCredentialsError(AuthenticationError):
     """Raised when provided credentials are invalid."""

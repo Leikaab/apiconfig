@@ -16,7 +16,7 @@ def redact_headers(
     headers: Mapping[str, str],
     sensitive_keys: Set[str] = ...,
     sensitive_prefixes: Tuple[str, ...] = ...,
-    sensitive_name_pattern: Optional[re.Pattern] = ...,
+    sensitive_name_pattern: Optional[re.Pattern[str]] = ...,
 ) -> Dict[str, str]:
     """
     Redacts sensitive information from HTTP headers.

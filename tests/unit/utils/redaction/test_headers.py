@@ -138,8 +138,8 @@ def test_redact_headers(
     expected_headers: Dict[str, str],
     sensitive_keys: Set[str],
     sensitive_prefixes: Tuple[str, ...],
-    sensitive_name_pattern: re.Pattern | None,
-):
+    sensitive_name_pattern: re.Pattern[str] | None,
+) -> None:
     """Tests the redact_headers function with various inputs."""
     result = redact_headers(
         headers=input_headers,
@@ -152,7 +152,7 @@ def test_redact_headers(
 # Test that defaults are used correctly
 
 
-def test_redact_headers_defaults():
+def test_redact_headers_defaults() -> None:
     """Tests that default sensitive keys and prefixes are used."""
     input_headers = {"Authorization": "Bearer 123", "X-API-Key": "secret"}
     expected_headers = {"Authorization": REDACTED_VALUE, "X-API-Key": REDACTED_VALUE}
@@ -162,7 +162,7 @@ def test_redact_headers_defaults():
 # Test that input dictionary is not modified
 
 
-def test_redact_headers_immutable():
+def test_redact_headers_immutable() -> None:
     """Tests that the original headers dictionary is not modified."""
     input_headers = {"Authorization": "Bearer 123", "Content-Type": "application/json"}
     input_copy = input_headers.copy()

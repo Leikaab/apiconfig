@@ -7,9 +7,9 @@ import pytest
 from apiconfig.utils.redaction.body import (
     DEFAULT_SENSITIVE_KEYS_PATTERN,
     REDACTED_BODY_PLACEHOLDER,
-    REDACTED_VALUE,
     redact_body,
 )
+from apiconfig.utils.redaction.headers import REDACTED_VALUE  # Import from headers
 
 # --- Test Data ---
 
@@ -180,7 +180,7 @@ def test_redact_body(
     key_pattern: Pattern[str],
     value_pattern: Optional[Pattern[str]],
     expected_output: Union[str, bytes, Any],
-):
+) -> None:
     """Tests the redact_body function with various inputs and patterns."""
     result = redact_body(
         body=body,
@@ -192,9 +192,9 @@ def test_redact_body(
     # Handle comparison for JSON strings where key order might differ
     if isinstance(expected_output, str) and content_type == "application/json" and expected_output.startswith(("{", "[")):
         try:
-            assert json.loads(result) == json.loads(expected_output)  # type: ignore
+            assert json.loads(result) == json.loads(expected_output)
         except (json.JSONDecodeError, TypeError):
-            pytest.fail(f"Failed to compare JSON: result={result}, expected={expected_output}")  # Should not happen if expected is valid JSON
+            pytest.fail(f"Failed to compare JSON: result={result!r}, expected={expected_output!r}")  # Should not happen if expected is valid JSON
     # Handle comparison for form-urlencoded strings where param order might differ
     elif isinstance(expected_output, str) and content_type == "application/x-www-form-urlencoded":
         # Simple comparison works if urlencode produces consistent order,
@@ -223,16 +223,16 @@ def test_redact_body(
         assert result == expected_output
 
 
-def test_redact_body_defaults():
+def test_redact_body_defaults() -> None:
     """Tests redact_body uses default key pattern."""
     body = '{"password": "secret", "user": "test"}'
     content_type = "application/json"
     expected = f'{{"password": "{REDACTED_VALUE}", "user": "test"}}'
     result = redact_body(body=body, content_type=content_type)
-    assert json.loads(result) == json.loads(expected)  # type: ignore
+    assert json.loads(result) == json.loads(expected)
 
 
-def test_redact_body_no_content_type_json_like():
+def test_redact_body_no_content_type_json_like() -> None:
     """Tests redaction when body is dict/list and content_type is None."""
     body = {"session_token": "abc", "data": [1, 2]}
     expected = {"session_token": REDACTED_VALUE, "data": [1, 2]}
@@ -240,7 +240,7 @@ def test_redact_body_no_content_type_json_like():
     assert result == expected
 
 
-def test_redact_body_no_content_type_string():
+def test_redact_body_no_content_type_string() -> None:
     """Tests no redaction when body is string and content_type is None."""
     body = '{"password": "secret"}'  # Looks like JSON, but no content type
     expected = '{"password": "secret"}'

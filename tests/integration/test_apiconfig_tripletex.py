@@ -57,11 +57,16 @@ def tripletex_config() -> Dict[str, str]:
 
 
 def create_expiration_date() -> str:
-    """Creates an expiration date string for the session token (tomorrow)."""
-    tomorrow = (datetime.now(timezone.utc) + timedelta(days=1)).replace(
+    """
+    Creates an expiration date string for the session token that is always a valid future date.
+
+    Sets the expiration date to two days ahead at 23:59:59 UTC to ensure it is always in the future,
+    regardless of when the test is run.
+    """
+    two_days_ahead = (datetime.now(timezone.utc) + timedelta(days=2)).replace(
         hour=23, minute=59, second=59, microsecond=0
     )
-    return tomorrow.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    return two_days_ahead.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
 def get_session_token(config: Dict[str, str]) -> Optional[str]:

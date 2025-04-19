@@ -32,13 +32,13 @@ from .exceptions.auth import (
     MissingCredentialsError as MissingCredentialsError,
     TokenRefreshError as TokenRefreshError,
 )
-from .exceptions.base import APIConfigError as APIConfigError, ConfigurationError as ConfigurationError  # Import ConfigurationError from base
+from .exceptions.base import APIConfigError as APIConfigError, ConfigurationError as ConfigurationError
 from .exceptions.config import (
     ConfigLoadError as ConfigLoadError,
     ConfigProviderError as ConfigProviderError,
     InvalidConfigError as InvalidConfigError,
     MissingConfigError as MissingConfigError,
-)  # Remove ConfigurationError import from config
+)
 from .types import (
     AuthCredentials as AuthCredentials,
     ConfigDict as ConfigDict,

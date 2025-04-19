@@ -9,7 +9,7 @@ from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.config.manager import ConfigManager
-from apiconfig.config.providers.env import EnvProvider  # Corrected import
+from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.file import FileProvider
 
 # Type alias for the custom auth callable used in tests
@@ -43,14 +43,14 @@ def file_provider(temp_config_file: Path) -> FileProvider:
 
 
 @pytest.fixture(scope="function")
-def env_provider(monkeypatch: MonkeyPatch) -> EnvProvider:  # Corrected type hint
+def env_provider(monkeypatch: MonkeyPatch) -> EnvProvider:
     """Provides an EnvProvider with predefined env vars."""
     ...
 
 
 @pytest.fixture(scope="function")
 def config_manager(
-    file_provider: FileProvider, env_provider: EnvProvider  # Corrected type hint
+    file_provider: FileProvider, env_provider: EnvProvider
 ) -> ConfigManager:
     """Provides a ConfigManager instance with file and env providers."""
     ...

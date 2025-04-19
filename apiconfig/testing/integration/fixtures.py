@@ -121,5 +121,3 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
         return CustomAuth(auth_callable=auth_callable)
 
     return _factory
-
-# Removed the old placeholder mock_api_server fixture as httpserver is used directly.

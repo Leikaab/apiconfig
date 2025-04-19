@@ -23,8 +23,8 @@ from .exceptions.auth import (
     MissingCredentialsError,
     TokenRefreshError,
 )
-from .exceptions.base import APIConfigError, ConfigurationError  # Import ConfigurationError from base
-from .exceptions.config import (  # Remove ConfigurationError import from config
+from .exceptions.base import APIConfigError, ConfigurationError
+from .exceptions.config import (
     ConfigLoadError,
     ConfigProviderError,
     InvalidConfigError,

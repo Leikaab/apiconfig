@@ -6,9 +6,14 @@
      - `pytest` (unit/integration tests)
      - `pytest tests/integration/test_xyz.py` (specific test files)
      - `pre-commit run --all-files` (all pre-commit hooks)
-     - `coverage run -m pytest` and `coverage report`
+     - `pytest --cov apiconfig` (test coverage for apiconfig)
+     - `coverage report`
      - Any other project-defined quality check commands
-   - Use the `execute_command` tool to run each command exactly as provided.
+    - Use the `execute_command` tool to run each command exactly as provided.
+
+    **Note:**
+    Do **not** use `coverage run -m pytest` for collecting coverage with pytest, as it does not correctly gather coverage data for pytest-based projects.
+    Always use `pytest --cov apiconfig` to ensure accurate coverage reporting for the `apiconfig` codebase.
 
 2. **Analyze, Summarize, and Debug**
    - For each command, determine:

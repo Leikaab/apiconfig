@@ -17,4 +17,4 @@ This project follows the Gitflow branching model:
 
 **Commit Verification:**
 
-*   Using `git commit --no-verify` to bypass pre-commit hooks is **strictly prohibited**. All checks must pass before committing.
+*   Using `git commit --no-verify` to bypass pre-commit hooks is **strictly prohibited**. All checks must be reported as passed by the `test-runner-summarizer` before committing.

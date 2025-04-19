@@ -24,4 +24,4 @@ When `sr-code-python` reports issues, blockers, or failed checks:
 
 6.  **Follow Up:**
     *   Track the debugging progress.
-    *   Ensure fixes are followed by re-running **all** required checks (as per `03_quality_assurance.md`).
+    *   Ensure fixes are followed by re-delegating **all** required checks to the `test-runner-summarizer` (as per `03_quality_assurance.md`). Do not attempt to run or analyze these checks directly.

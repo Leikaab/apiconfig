@@ -9,7 +9,7 @@
         *   Specific methods/operations (e.g., `GET`, `POST`).
         *   Relevant Swagger definitions (`specs/swagger.json`, including specific paths and schemas).
         *   Pointers to specific sections in project documentation (e.g., `docs/create_new_endpoints/03c_api_logic.md`).
-        *   List of **all** required quality checks (e.g., `mypy`, `pre-commit run --all-files`, `pytest tests/unit/test_projects.py`, `pytest tests/integration/test_projects.py`).
+        *   List of **all** required quality checks (e.g., `mypy`, `pre-commit run --all-files`, `pytest tests/unit/test_projects.py`, `pytest tests/integration/test_projects.py`). Instruct `sr-code-python` to delegate all test, lint, and quality check execution and analysis to the `test-runner-summarizer` and not to run or analyze these checks directly.
 
 3.  **Active Oversight:**
     *   Monitor `sr-code-python`'s progress.

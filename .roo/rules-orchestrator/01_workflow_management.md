@@ -6,7 +6,8 @@
     *   Typical subtasks might include:
         *   Implement endpoint logic (`sr-code-python`).
         *   Write/update documentation (`doc-writer`).
-        *   Run tests and commit (`version-control`).
+        *   Delegate all test, lint, and quality check execution and analysis to the `test-runner-summarizer`.
+        *   Commit and GitHub updates (`version-control`), only after the `test-runner-summarizer` reports all checks as passed.
         *   Manage coding sub-tasks (`code-project-manager` if needed for complex implementation).
 
 2.  **Mode Delegation:**
@@ -18,7 +19,7 @@
     *   Manage the flow of subtasks sequentially, respecting dependencies.
     *   Upon regaining control after a subtask completes:
         *   Process its result. Check for explicit 'PASS'/'FAIL' status or tool execution errors.
-        *   **Crucially, verify that success criteria were met**, especially confirmation of passed checks from `sr-code-python` or `version-control`. Do not proceed if checks failed or were not confirmed passed.
+        *   **Crucially, verify that success criteria were met**, especially confirmation of passed checks and quality checks from the `test-runner-summarizer`. Do not proceed if checks failed or were not confirmed passed.
         *   Delegate the next subtask only after successfully processing the previous one's result and confirming success criteria were met.
 
 4.  **Transparency:**

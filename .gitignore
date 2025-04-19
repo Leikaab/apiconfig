@@ -4,6 +4,7 @@ src/testing.ipynb
 logs/
 output/
 specs/
+prompt*.*
 
 /crudclient
 

@@ -23,8 +23,8 @@ When delegating implementation tasks to `sr-code-python`, provide clear, specifi
         *   "Ensure only the `id` field is included when sending nested object references in payloads."
 
 5.  **Mandatory Quality Checks:**
-    *   Specify the **exact** checks `sr-code-python` **must** run and pass before reporting completion (e.g., `mypy .`, `pre-commit run --all-files`, `pytest tests/unit/test_your_endpoint.py`, `pytest tests/integration/test_your_endpoint.py`).
-    *   Instruct: "You **must** confirm that **all** these checks pass without errors in your completion report."
+    *   Specify the **exact** checks `sr-code-python` **must** delegate to the `test-runner-summarizer` mode before reporting completion (e.g., `mypy .`, `pre-commit run --all-files`, `pytest tests/unit/test_your_endpoint.py`, `pytest tests/integration/test_your_endpoint.py`).
+    *   Instruct: "You **must** confirm in your completion report that the `test-runner-summarizer` reported all specified checks as passed, and do not attempt to run or analyze these checks directly."
 
 6.  **Completion Criteria:**
     *   State the expected output (e.g., working endpoint method, passing tests).

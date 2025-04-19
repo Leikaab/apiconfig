@@ -18,11 +18,13 @@ Adherence to the project's coding standards is mandatory:
 
 *   Comprehensive **unit tests** using `pytest` are required for all new or modified code. Place unit tests in the `tests/unit/` directory.
 *   **Integration tests** should be added in `tests/integration/` where applicable to test interactions between components.
+*   **Note:** All test, lint, and quality check execution and analysis must be delegated to the `test-runner-summarizer` mode. Do not attempt to run or analyze tests or quality checks directly.
 
 ## Quality Checks
 
 *   Pre-commit hooks and Continuous Integration (CI) checks are configured to automatically enforce standards.
 *   Contributions **must pass** all quality checks before they can be merged. See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) for details.
+*   All quality check execution and reporting is handled by the `test-runner-summarizer` mode.
 
 ## Full Guidelines
 

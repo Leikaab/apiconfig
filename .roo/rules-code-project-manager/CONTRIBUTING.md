@@ -11,6 +11,7 @@ This document provides a concise summary of contribution guidelines relevant to 
 
 *   All contributions must adhere to the project's established quality standards. See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_checks.md) for details on required checks (formatting, linting, type checking, testing).
 *   Pre-commit hooks and Continuous Integration (CI) checks are in place to automatically enforce these standards.
+*   All test, lint, and quality check execution and analysis must be delegated to the `test-runner-summarizer` mode. The Code Project Manager is responsible for verifying that the `test-runner-summarizer` has reported all checks as passed before reporting completion or merging code.
 
 ## 3. Role Responsibility
 

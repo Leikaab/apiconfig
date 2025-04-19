@@ -3,7 +3,7 @@
 1.  **Failure Detection:**
     *   Identify failures when a subtask's final tool use results in an execution error.
     *   Identify failures when a subtask explicitly reports a 'FAIL' status.
-    *   Identify failures when a subtask (especially `sr-code-python` or `version-control`) completes but does *not* confirm that all required checks passed.
+    *   Identify failures when a subtask (especially `sr-code-python` or `test-runner-summarizer`) completes but does *not* confirm that all required checks passed.
 
 2.  **Failure Analysis:**
     *   Analyze the failure report provided by the sub-mode. Look for specific error messages, tracebacks, or reasons for failed checks.
@@ -23,4 +23,4 @@
         *   If blocked, report the situation, the error, and steps taken to the user.
 
 5.  **Verification After Fix:**
-    *   If a fix is implemented, ensure the previously failed checks (or relevant new checks) are re-run and confirmed passed before proceeding with the workflow.
+    *   If a fix is implemented, ensure the previously failed checks (or relevant new checks) are re-delegated to the `test-runner-summarizer` and confirmed passed before proceeding with the workflow.

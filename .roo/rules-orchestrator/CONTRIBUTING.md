@@ -19,7 +19,7 @@ See [/workspace/.roo/rules/quality_checks.md](/workspace/.roo/rules/quality_chec
 
 ## Verification
 
-Before proceeding from one step to the next in a workflow, you must verify the successful completion and standard adherence of the previous step. This often involves confirming results reported by other modes, such as passed tests indicated by the `version-control` or `sr-code-python` modes. See [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) for the standard reporting process.
+Before proceeding from one step to the next in a workflow, you must verify the successful completion and standard adherence of the previous step. This often involves confirming results reported by other modes, such as passed tests and quality checks indicated by the `test-runner-summarizer` mode. All test, lint, and quality check execution and analysis must be delegated to the `test-runner-summarizer`. See [/workspace/.roo/rules/reporting.md](/workspace/.roo/rules/reporting.md) for the standard reporting process.
 
 ## Full Guidelines
 

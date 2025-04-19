@@ -9,19 +9,19 @@
     *   Read the GitHub issue (`gh issue view ISSUE_URL`) to fully understand the requirements and context.
 2.  **Delegation to `sr-code-python`:**
     *   Relay all task details precisely to `sr-code-python`.
-    *   Ensure instructions include requirements, constraints, references (like `apiconfig-project-plan.md`), and the explicit instruction for `sr-code-python` to stage changes (`git add .`) and delegate testing to `version-control` upon code completion.
-3.  **Pattern Verification:** During the task execution by `sr-code-python`, actively verify adherence to project-specific patterns (e.g., `.pyi` file usage, structure defined in `apiconfig-project-plan.md`). Guide `sr-code-python` if deviations occur.
-    *   Refer to `02_pattern_verification.md` for detailed guidance.
-4.  **Quality Assurance & Testing Verification:**
-    *   Confirm that `sr-code-python` correctly delegates the testing task to `version-control` after staging changes.
-    *   Monitor the results reported by `version-control` (relayed via the `orchestrator` or directly if applicable).
-    *   **Crucially:** Do not consider the coding subtask complete until `version-control` confirms that all quality checks (`pytest`, `pre-commit`) have passed.
-    *   Refer to `03_quality_assurance.md` for the verification process.
-5.  **Debugging Facilitation:** If `version-control` reports test failures, gather information, relay details between `sr-code-python` and the `orchestrator`, and facilitate the debugging process until `sr-code-python` provides fixes and testing is re-delegated and passes.
-    *   Refer to `04_debugging_facilitation.md` for detailed guidance.
-6.  **Reporting to Orchestrator:** Report task status (progress, success, or blockers) accurately and transparently to the `orchestrator`. Use `attempt_completion` for the final report *only after* verifying that `sr-code-python` completed its implementation and that `version-control` subsequently confirmed all quality checks passed.
-    *   The report must clearly state the outcome and confirm that the required testing was delegated and passed.
-    *   Refer to `05_reporting.md` for detailed guidance.
+    *   Ensure instructions include requirements, constraints, references (like `apiconfig-project-plan.md`), and the explicit instruction for `sr-code-python` to stage changes (`git add .`) and delegate all testing and quality checks to the `test-runner-summarizer` upon code completion.
+    3.  **Pattern Verification:** During the task execution by `sr-code-python`, actively verify adherence to project-specific patterns (e.g., `.pyi` file usage, structure defined in `apiconfig-project-plan.md`). Guide `sr-code-python` if deviations occur.
+        *   Refer to `02_pattern_verification.md` for detailed guidance.
+    4.  **Quality Assurance & Testing Verification:**
+        *   Confirm that `sr-code-python` correctly delegates all testing and quality checks to the `test-runner-summarizer` after staging changes.
+        *   Monitor the results reported by the `test-runner-summarizer` (relayed via the `orchestrator` or directly if applicable).
+        *   **Crucially:** Do not consider the coding subtask complete until the `test-runner-summarizer` confirms that all quality checks (e.g., `pytest`, `pre-commit`, coverage) have passed.
+        *   Refer to `03_quality_assurance.md` for the verification process.
+    5.  **Debugging Facilitation:** If the `test-runner-summarizer` reports test failures, gather information, relay details between `sr-code-python` and the `orchestrator`, and facilitate the debugging process until `sr-code-python` provides fixes and testing is re-delegated and passes.
+        *   Refer to `04_debugging_facilitation.md` for detailed guidance.
+    6.  **Reporting to Orchestrator:** Report task status (progress, success, or blockers) accurately and transparently to the `orchestrator`. Use `attempt_completion` for the final report *only after* verifying that `sr-code-python` completed its implementation and that the `test-runner-summarizer` subsequently confirmed all quality checks passed.
+        *   The report must clearly state the outcome and confirm that the required testing was delegated and passed.
+        *   Refer to `05_reporting.md` for detailed guidance.
 7.  **`crudclient` Submodule Context:** When managing tasks involving code extraction from `crudclient` for `apiconfig`, ensure `sr-code-python` is aware of:
     *   The source location: `/workspace/crudclient/crudclient/`.
     *   The requirement to consult the file mapping in `/workspace/.roo/rules/apiconfig-project-plan.md`.

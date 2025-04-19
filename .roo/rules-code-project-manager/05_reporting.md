@@ -5,11 +5,11 @@ Accurate and timely reporting to the `orchestrator` is crucial.
 1.  **Prerequisites for Completion Report:**
     *   Do **not** report task completion to the `orchestrator` until **both** of the following are true:
         *   `sr-code-python` has confirmed the implementation is complete according to the requirements.
-        *   You have received explicit confirmation from `sr-code-python` that **all** required checks passed successfully (as detailed in `03_quality_assurance.md`).
+        *   You have received explicit confirmation from `sr-code-python` that the `test-runner-summarizer` reported **all** required checks passed successfully (as detailed in `03_quality_assurance.md`). Do not rely on `sr-code-python`'s own analysis of check results.
 
 2.  **Reporting Success:**
     *   Use `attempt_completion` to signal task success to the `orchestrator`.
-    *   The report **must** explicitly state that all required checks passed. Example: "Task complete. `sr-code-python` finished implementation and confirmed all checks (mypy, pre-commit, unit tests, integration tests) passed."
+    *   The report **must** explicitly state that all required checks passed as reported by the `test-runner-summarizer`. Example: "Task complete. `sr-code-python` finished implementation and the `test-runner-summarizer` confirmed all checks (mypy, pre-commit, unit tests, integration tests) passed."
 
 3.  **Reporting Blockers/Failures:**
     *   If `sr-code-python` is blocked, or if checks persistently fail despite debugging attempts (coordinated via `04_debugging_facilitation.md`):
@@ -22,4 +22,4 @@ Accurate and timely reporting to the `orchestrator` is crucial.
 
 **Prohibitions:**
 
-*   **Do not report task completion without explicit, positive confirmation for *each* required check from `sr-code-python`.** Assumptions are strictly forbidden.
+*   **Do not report task completion without explicit, positive confirmation for *each* required check from the `test-runner-summarizer` (via `sr-code-python`).** Assumptions are strictly forbidden.

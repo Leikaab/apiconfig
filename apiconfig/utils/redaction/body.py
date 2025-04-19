@@ -13,21 +13,30 @@ DEFAULT_SENSITIVE_KEYS_PATTERN = re.compile(
 REDACTED_BODY_PLACEHOLDER = "[REDACTED BODY]"
 
 
-def _redact_recursive(data: Any, pattern: re.Pattern) -> Any:
+def _redact_recursive(
+    data: Any,
+    key_pattern: re.Pattern,
+    value_pattern: Optional[re.Pattern] = None,
+) -> Any:
     """Recursively redact sensitive data in dictionaries and lists."""
     if isinstance(data, dict):
-        return {
-            key: (
-                REDACTED_VALUE
-                if pattern.search(key)
-                else _redact_recursive(value, pattern)
-            )
-            for key, value in data.items()
-        }
+        redacted_dict = {}
+        for key, value in data.items():
+            if key_pattern.search(key):
+                redacted_dict[key] = REDACTED_VALUE
+            else:
+                redacted_dict[key] = _redact_recursive(
+                    value, key_pattern, value_pattern
+                )
+        return redacted_dict
     elif isinstance(data, list):
-        return [_redact_recursive(item, pattern) for item in data]
+        return [
+            _redact_recursive(item, key_pattern, value_pattern) for item in data
+        ]
+    elif isinstance(data, str) and value_pattern and value_pattern.search(data):
+        return REDACTED_VALUE
     else:
-        # Only redact if the value itself is sensitive? For now, only keys.
+        # Not a dict, list, or sensitive string value
         return data
 
 
@@ -35,17 +44,21 @@ def redact_body(
     body: Union[str, bytes, Any],
     content_type: Optional[str] = None,
     sensitive_keys_pattern: re.Pattern = DEFAULT_SENSITIVE_KEYS_PATTERN,
+    sensitive_value_pattern: Optional[re.Pattern] = None,
 ) -> Union[str, bytes, Any]:
     """
     Redacts sensitive information from request or response bodies.
 
     Attempts to parse JSON or form-urlencoded bodies and recursively redacts
-    values associated with keys matching the sensitive_keys_pattern.
+    values associated with keys matching `sensitive_keys_pattern` or string
+    values matching `sensitive_value_pattern`.
 
     Args:
         body: The request or response body (str, bytes, or already parsed).
         content_type: The Content-Type header value (e.g., 'application/json').
         sensitive_keys_pattern: A compiled regex pattern to identify sensitive keys.
+        sensitive_value_pattern: An optional compiled regex pattern to identify
+                                 sensitive string values.
 
     Returns:
         The body with sensitive information redacted, or the original body
@@ -89,7 +102,9 @@ def redact_body(
         if is_json:
             if parsed_body is None and body_str is not None:
                 parsed_body = json.loads(body_str)
-            redacted_data = _redact_recursive(parsed_body, sensitive_keys_pattern)
+            redacted_data = _redact_recursive(
+                parsed_body, sensitive_keys_pattern, sensitive_value_pattern
+            )
             # Return in original format (parsed dict/list or JSON string)
             return json.dumps(redacted_data) if body_str is not None else redacted_data
         elif is_form and body_str is not None:
@@ -99,8 +114,17 @@ def redact_body(
                 if sensitive_keys_pattern.search(key):
                     redacted_form[key] = [REDACTED_VALUE] * len(values)
                 else:
-                    # Although values could be sensitive, we focus on keys for now
-                    redacted_form[key] = values
+                    # Check individual values if a value pattern is provided
+                    if sensitive_value_pattern:
+                        redacted_values = [
+                            REDACTED_VALUE
+                            if sensitive_value_pattern.search(v)
+                            else v
+                            for v in values
+                        ]
+                        redacted_form[key] = redacted_values
+                    else:
+                        redacted_form[key] = values
             # Return re-encoded form data
             return urlencode(redacted_form, doseq=True)
 

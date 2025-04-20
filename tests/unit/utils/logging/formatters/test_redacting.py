@@ -9,6 +9,7 @@ from apiconfig.utils.logging.formatters import RedactingFormatter
 @pytest.fixture
 def log_record_factory() -> Callable[..., logging.LogRecord]:
     """Factory for creating LogRecord objects with various parameters."""
+
     def make(
         msg: Any = "test message",
         args: tuple[Any, ...] = (),
@@ -32,6 +33,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
             sinfo=stack_info,
         )
         return record
+
     return make
 
 
@@ -45,6 +47,7 @@ def test_redacting_formatter_basic(
 
 def test_redacting_formatter_class_and_docstring() -> None:
     from apiconfig.utils.logging.formatters import RedactingFormatter
+
     assert RedactingFormatter.__doc__ is not None
     fmt = RedactingFormatter()
     assert isinstance(fmt, RedactingFormatter)
@@ -125,6 +128,7 @@ def test_redacting_formatter_plain_string_secret(
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     import re
+
     secret_pattern = re.compile(r"secret_[a-z0-9]+", re.IGNORECASE)
     fmt = RedactingFormatter(body_sensitive_value_pattern=secret_pattern)
     record = log_record_factory(msg="this is a secret_abc123 and should be redacted")
@@ -165,13 +169,15 @@ def test_redacting_formatter_fallback_branch(
     class WeirdObj:
         def __str__(self) -> str:
             return "weird"
+
     record = log_record_factory(msg=WeirdObj())
     output = fmt.format(record)
     assert "weird" in output
 
 
 def test_redacting_formatter_redact_headers_exception(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="headers test")
@@ -181,6 +187,7 @@ def test_redacting_formatter_redact_headers_exception(
 
     def bad_redact_headers(*a: Any, **kw: Any) -> dict[str, str]:
         raise RuntimeError("fail")
+
     monkeypatch.setattr(
         "apiconfig.utils.logging.formatters.redact_headers", bad_redact_headers
     )
@@ -191,13 +198,15 @@ def test_redacting_formatter_redact_headers_exception(
 
 
 def test_redacting_formatter_redact_structured_exception(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"foo": "bar"})
 
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
+
     monkeypatch.setattr(
         "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
     )
@@ -220,13 +229,15 @@ def test_redacting_formatter_structured_dict_list_coverage(
 
 
 def test_redacting_formatter_structured_string_json_exception(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg='{"token": "abc"}')
 
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
+
     monkeypatch.setattr(
         "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
     )
@@ -236,13 +247,15 @@ def test_redacting_formatter_structured_string_json_exception(
 
 
 def test_redacting_formatter_structured_dict_exception(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"token": "abc"})
 
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
+
     monkeypatch.setattr(
         "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
     )
@@ -258,6 +271,7 @@ def test_redacting_formatter_fallback_branch_strmsg(
     class OddType:
         def __str__(self) -> str:
             return "odd"
+
     record = log_record_factory(msg=OddType())
     output = fmt.format(record)
     assert "odd" in output
@@ -271,7 +285,8 @@ def test_redacting_formatter_is_structured_dict_list() -> None:
 
 
 def test_redacting_formatter_redact_structured_dict_from_string(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Test that _redact_structured correctly handles dict return from redact_body."""
     fmt = RedactingFormatter()
@@ -287,12 +302,13 @@ def test_redacting_formatter_redact_structured_dict_from_string(
 
     # Verify json.dumps was called (line 200)
     import json
+
     expected = json.dumps({"redacted": True, "original": False}, ensure_ascii=False)
     assert result == expected
 
 
 def test_redacting_formatter_redact_structured_list_from_string_direct(
-    monkeypatch: pytest.MonkeyPatch
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Test that directly targets line 220 in _redact_structured."""
     fmt = RedactingFormatter()
@@ -315,6 +331,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
 
         # Verify json.dumps was called (line 220)
         import json
+
         expected = json.dumps([{"redacted": True}], ensure_ascii=False)
         assert result == expected
     finally:
@@ -323,7 +340,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
 
 
 def test_redacting_formatter_redact_structured_other_type_direct(
-    monkeypatch: pytest.MonkeyPatch
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Test that directly targets line 224 in _redact_structured."""
     fmt = RedactingFormatter()
@@ -352,7 +369,8 @@ def test_redacting_formatter_redact_structured_other_type_direct(
 
 
 def test_redacting_formatter_redact_message_dict_json_dumps_direct(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Test that directly targets lines 143-144 in _redact_message."""
     fmt = RedactingFormatter()
@@ -377,6 +395,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
         # Verify the message was converted to a JSON string (lines 143-144)
         assert isinstance(record.msg, str)
         import json
+
         expected = json.dumps(redacted_dict, ensure_ascii=False)
         assert record.msg == expected
     finally:
@@ -386,7 +405,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
 
 def test_redacting_formatter_unknown_type_fallback_direct(
     log_record_factory: Callable[..., logging.LogRecord],
-    monkeypatch: pytest.MonkeyPatch
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Test that directly targets line 138 in _redact_message."""
     fmt = RedactingFormatter()
@@ -417,7 +436,8 @@ def test_redacting_formatter_unknown_type_fallback_direct(
 
 
 def test_redacting_formatter_redact_structured_string_exception_fallback(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Test the exception fallback for string input in _redact_structured."""
     fmt = RedactingFormatter()
@@ -455,7 +475,7 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
         lineno=42,
         msg=obj,
         args=(),
-        exc_info=None
+        exc_info=None,
     )
 
     # Override all the condition methods to ensure we hit the fallback branch
@@ -481,14 +501,21 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
     redacted_dict = {"form_data": "[REDACTED]"}
 
     # Override redact_body to return our dict using monkeypatch
-    monkeypatch.setattr(fmt, "_redact_body", lambda msg, **kwargs: redacted_dict if msg == string_input else msg)
+    monkeypatch.setattr(
+        fmt,
+        "_redact_body",
+        lambda msg, **kwargs: redacted_dict if msg == string_input else msg,
+    )
 
     try:
         # Call _redact_structured with our string input and form content type
-        result = fmt._redact_structured(string_input, "application/x-www-form-urlencoded")
+        result = fmt._redact_structured(
+            string_input, "application/x-www-form-urlencoded"
+        )
 
         # Verify json.dumps was called (line 220)
         import json
+
         expected = json.dumps(redacted_dict, ensure_ascii=False)
         assert result == expected
     finally:
@@ -514,7 +541,11 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
     custom_output = CustomOutput()
 
     # Override redact_body to return our custom output using monkeypatch
-    monkeypatch.setattr(fmt, "_redact_body", lambda msg, **kwargs: custom_output if msg == custom_input else msg)
+    monkeypatch.setattr(
+        fmt,
+        "_redact_body",
+        lambda msg, **kwargs: custom_output if msg == custom_input else msg,
+    )
 
     try:
         # Call _redact_structured with our custom input
@@ -528,7 +559,8 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
 
 
 def test_redacting_formatter_line_138_direct_with_format(
-    monkeypatch: pytest.MonkeyPatch, log_record_factory: Callable[..., logging.LogRecord]
+    monkeypatch: pytest.MonkeyPatch,
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Test that directly targets line 138 in _redact_message using format method."""
     fmt = RedactingFormatter()
@@ -597,7 +629,7 @@ def test_redacting_formatter_line_138_with_subclass() -> None:
         lineno=42,
         msg=obj,
         args=(),
-        exc_info=None
+        exc_info=None,
     )
 
     # Call format

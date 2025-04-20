@@ -25,6 +25,7 @@ class TestTokenInit:
 
         # Check that all exports are importable from the module
         import apiconfig.auth.token
+
         module_globals = dir(apiconfig.auth.token)
         for export in __all__:
             assert export in module_globals

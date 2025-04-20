@@ -2,7 +2,6 @@ import logging
 import types
 from typing import Any, Mapping, Optional, Union
 
-
 class DetailedFormatter(logging.Formatter):
     """
     A logging formatter that provides detailed, potentially multi-line output.
@@ -22,7 +21,6 @@ class DetailedFormatter(logging.Formatter):
         defaults: Optional[Mapping[str, Any]] = ...,
     ) -> None: ...
     def format(self, record: logging.LogRecord) -> str: ...
-
     def formatException(
         self,
         ei: (

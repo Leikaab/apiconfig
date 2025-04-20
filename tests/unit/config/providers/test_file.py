@@ -96,7 +96,9 @@ class TestFileProvider:
 
             provider = FileProvider(file_path=temp_file.name)
 
-            with pytest.raises(ConfigLoadError, match="Error reading configuration file"):
+            with pytest.raises(
+                ConfigLoadError, match="Error reading configuration file"
+            ):
                 provider.load()
 
     def test_load_other_os_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -110,5 +112,7 @@ class TestFileProvider:
 
             provider = FileProvider(file_path=temp_file.name)
 
-            with pytest.raises(ConfigLoadError, match="Error reading configuration file"):
+            with pytest.raises(
+                ConfigLoadError, match="Error reading configuration file"
+            ):
                 provider.load()

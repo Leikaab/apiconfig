@@ -1,9 +1,7 @@
-
 """Tests for the ConfigManager class."""
 
 import logging
 from typing import Any, Dict, Optional
-
 
 import pytest
 
@@ -15,7 +13,12 @@ from apiconfig.exceptions.config import ConfigLoadError
 class MockProvider:
     """Mock provider that returns a predefined config."""
 
-    def __init__(self, config_data: Optional[Dict[str, Any]] = None, name: str = "MockProvider", raise_error: bool = False) -> None:
+    def __init__(
+        self,
+        config_data: Optional[Dict[str, Any]] = None,
+        name: str = "MockProvider",
+        raise_error: bool = False,
+    ) -> None:
         self.config_data = config_data or {}
         self.name = name
         self.raise_error = raise_error
@@ -32,7 +35,11 @@ class MockProvider:
 class MockProviderWithGetConfig:
     """Mock provider that uses get_config instead of load."""
 
-    def __init__(self, config_data: Optional[Dict[str, Any]] = None, name: str = "MockProviderWithGetConfig") -> None:
+    def __init__(
+        self,
+        config_data: Optional[Dict[str, Any]] = None,
+        name: str = "MockProviderWithGetConfig",
+    ) -> None:
         self.config_data = config_data or {}
         self.name = name
         self.get_config_called = False
@@ -79,11 +86,11 @@ class TestConfigManager:
         """Test loading and merging config from multiple providers."""
         provider1 = MockProvider(
             config_data={"api": {"hostname": "example1.com"}, "timeout": 10},
-            name="Provider1"
+            name="Provider1",
         )
         provider2 = MockProvider(
             config_data={"api": {"hostname": "example2.com"}, "retries": 3},
-            name="Provider2"
+            name="Provider2",
         )
 
         manager = ConfigManager(providers=[provider1, provider2])
@@ -117,7 +124,9 @@ class TestConfigManager:
         provider = MockProviderWithNoMethod()
         manager = ConfigManager(providers=[provider])
 
-        with pytest.raises(ConfigLoadError, match="lacks a 'load' or 'get_config' method"):
+        with pytest.raises(
+            ConfigLoadError, match="lacks a 'load' or 'get_config' method"
+        ):
             manager.load_config()
 
     def test_load_config_provider_returns_none(self) -> None:
@@ -166,12 +175,10 @@ class TestConfigManager:
         caplog.set_level(logging.DEBUG)
 
         provider1 = MockProvider(
-            config_data={"api": {"hostname": "example1.com"}},
-            name="Provider1"
+            config_data={"api": {"hostname": "example1.com"}}, name="Provider1"
         )
         provider2 = MockProvider(
-            config_data={"api": {"hostname": "example2.com"}},
-            name="Provider2"
+            config_data={"api": {"hostname": "example2.com"}}, name="Provider2"
         )
 
         manager = ConfigManager(providers=[provider1, provider2])
@@ -183,9 +190,12 @@ class TestConfigManager:
         assert "Merged config from MockProvider" in caplog.text
         assert "Configuration loaded successfully from all providers" in caplog.text
 
-    def test_load_config_provider_returns_non_dict_value_warning(self, caplog: pytest.LogCaptureFixture) -> None:
+    def test_load_config_provider_returns_non_dict_value_warning(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """Test loading config from a provider that returns a non-dict value logs a warning."""
         import logging
+
         caplog.set_level(logging.WARNING)
 
         # Create a provider that returns a non-dict value

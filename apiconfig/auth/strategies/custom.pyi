@@ -2,7 +2,6 @@ from typing import Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
-
 class CustomAuth(AuthStrategy):
     """
     Implements custom authentication logic using provided callback functions.
@@ -44,7 +43,11 @@ class CustomAuth(AuthStrategy):
         """
         ...
 
-    def prepare_request(self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, str]] = None) -> tuple[Dict[str, str], Dict[str, str]]:
+    def prepare_request(
+        self,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, str]] = None,
+    ) -> tuple[Dict[str, str], Dict[str, str]]:
         """
         Prepare authentication headers and parameters for an HTTP request.
 

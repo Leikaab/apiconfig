@@ -3,7 +3,9 @@ import re
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
-from apiconfig.utils.redaction.body import redact_body
+from apiconfig.utils.redaction.body import (
+    redact_body,
+)
 from apiconfig.utils.redaction.headers import (
     DEFAULT_SENSITIVE_HEADER_PREFIXES,
     DEFAULT_SENSITIVE_HEADERS,
@@ -141,6 +143,7 @@ class RedactingFormatter(logging.Formatter):
         # If _redact_structured returned a dict/list, always serialize to JSON
         if isinstance(redacted_msg, (dict, list)):
             import json
+
             record.msg = json.dumps(redacted_msg, ensure_ascii=False)
         else:
             record.msg = str(redacted_msg)

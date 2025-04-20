@@ -153,6 +153,7 @@ class TestCustomAuthStrategyFactory:
 
     def test_custom_auth_strategy_factory_with_callable(self) -> None:
         """Test that custom_auth_strategy_factory creates a CustomAuth with the provided callable."""
+
         # Define a test callable that will be used as a header_callback
         def test_header_callback() -> dict[str, str]:
             return {"X-Test": "test_value"}
@@ -171,6 +172,7 @@ class TestCustomAuthStrategyFactory:
 
     def test_custom_auth_strategy_factory_without_callable(self) -> None:
         """Test that custom_auth_strategy_factory creates a CustomAuth with a default no-op callable."""
+
         # Define a no-op header callback
         def default_header_callback() -> dict[str, str]:
             return {}

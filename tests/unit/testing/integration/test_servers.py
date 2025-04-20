@@ -29,14 +29,12 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data={"result": "success"},
-            status_code=200
+            status_code=200,
         )
 
         # Check that expect_request was called correctly
         mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test",
-            method="GET",
-            ordered=False
+            uri="/test", method="GET", ordered=False
         )
 
         # Check that respond_with_response was called correctly
@@ -66,7 +64,7 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data="Hello, world!",
-            status_code=200
+            status_code=200,
         )
 
         # Check that respond_with_response was called with response_data
@@ -89,7 +87,7 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data=None,
-            status_code=204
+            status_code=204,
         )
 
         # Check that respond_with_response was called without response_data or response_json
@@ -113,7 +111,7 @@ class TestConfigureMockResponse:
             method="GET",
             response_data={"result": "success"},
             status_code=200,
-            response_headers={"X-Custom-Header": "test_value"}
+            response_headers={"X-Custom-Header": "test_value"},
         )
 
         # Check that respond_with_response was called with the custom headers
@@ -137,7 +135,7 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data={"result": "success"},
-            match_headers={"Authorization": "Bearer token"}
+            match_headers={"Authorization": "Bearer token"},
         )
 
         # Check that expect_request was called with the headers
@@ -145,7 +143,7 @@ class TestConfigureMockResponse:
             uri="/test",
             method="GET",
             ordered=False,
-            headers={"Authorization": "Bearer token"}
+            headers={"Authorization": "Bearer token"},
         )
 
     def test_configure_mock_response_with_match_query_string(self) -> None:
@@ -161,15 +159,12 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data={"result": "success"},
-            match_query_string={"page": "1", "limit": "10"}
+            match_query_string={"page": "1", "limit": "10"},
         )
 
         # Check that expect_request was called with the query string
         mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test",
-            method="GET",
-            ordered=False,
-            query_string="page=1&limit=10"
+            uri="/test", method="GET", ordered=False, query_string="page=1&limit=10"
         )
 
     def test_configure_mock_response_with_match_json(self) -> None:
@@ -185,15 +180,12 @@ class TestConfigureMockResponse:
             path="/test",
             method="POST",
             response_data={"result": "success"},
-            match_json={"name": "test"}
+            match_json={"name": "test"},
         )
 
         # Check that expect_request was called with the json
         mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test",
-            method="POST",
-            ordered=False,
-            json={"name": "test"}
+            uri="/test", method="POST", ordered=False, json={"name": "test"}
         )
 
     def test_configure_mock_response_with_match_data(self) -> None:
@@ -209,15 +201,12 @@ class TestConfigureMockResponse:
             path="/test",
             method="POST",
             response_data={"result": "success"},
-            match_data="name=test"
+            match_data="name=test",
         )
 
         # Check that expect_request was called with the data
         mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test",
-            method="POST",
-            ordered=False,
-            data="name=test"
+            uri="/test", method="POST", ordered=False, data="name=test"
         )
 
     def test_configure_mock_response_with_ordered(self) -> None:
@@ -233,14 +222,12 @@ class TestConfigureMockResponse:
             path="/test",
             method="GET",
             response_data={"result": "success"},
-            ordered=True
+            ordered=True,
         )
 
         # Check that expect_request was called with ordered=True
         mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test",
-            method="GET",
-            ordered=True
+            uri="/test", method="GET", ordered=True
         )
 
 
@@ -266,11 +253,7 @@ class TestAssertRequestReceived:
         mock_httpserver.log = [(mock_request, mock_response)]
 
         # Call the function
-        assert_request_received(
-            httpserver=mock_httpserver,
-            path="/test",
-            method="GET"
-        )
+        assert_request_received(httpserver=mock_httpserver, path="/test", method="GET")
 
         # No assertion needed - if the function doesn't raise, it passed
 
@@ -283,7 +266,10 @@ class TestAssertRequestReceived:
         mock_request = MagicMock(spec=Request)
         mock_request.path = "/test"
         mock_request.method = "GET"
-        mock_request.headers = {"Content-Type": "application/json", "Authorization": "Bearer token"}
+        mock_request.headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer token",
+        }
         mock_request.args = {}
 
         # Create a mock response
@@ -297,7 +283,7 @@ class TestAssertRequestReceived:
             httpserver=mock_httpserver,
             path="/test",
             method="GET",
-            expected_headers={"Content-Type": "application/json"}
+            expected_headers={"Content-Type": "application/json"},
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -325,7 +311,7 @@ class TestAssertRequestReceived:
             httpserver=mock_httpserver,
             path="/test",
             method="GET",
-            expected_headers={"Content-Type": "application/json"}
+            expected_headers={"Content-Type": "application/json"},
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -353,7 +339,7 @@ class TestAssertRequestReceived:
             httpserver=mock_httpserver,
             path="/test",
             method="GET",
-            expected_query={"page": "1"}
+            expected_query={"page": "1"},
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -382,7 +368,7 @@ class TestAssertRequestReceived:
             httpserver=mock_httpserver,
             path="/test",
             method="POST",
-            expected_json={"name": "test", "value": 123}
+            expected_json={"name": "test", "value": 123},
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -411,7 +397,7 @@ class TestAssertRequestReceived:
             httpserver=mock_httpserver,
             path="/test",
             method="POST",
-            expected_data="Hello, world!"
+            expected_data="Hello, world!",
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -437,9 +423,7 @@ class TestAssertRequestReceived:
         # Call the function and expect it to raise
         with pytest.raises(AssertionError, match="Expected 1 request"):
             assert_request_received(
-                httpserver=mock_httpserver,
-                path="/test",
-                method="GET"
+                httpserver=mock_httpserver, path="/test", method="GET"
             )
 
     def test_assert_request_received_with_count(self) -> None:
@@ -467,15 +451,12 @@ class TestAssertRequestReceived:
         # Set up the log with the requests and responses
         mock_httpserver.log = [
             (mock_request1, mock_response1),
-            (mock_request2, mock_response2)
+            (mock_request2, mock_response2),
         ]
 
         # Call the function with count=2
         assert_request_received(
-            httpserver=mock_httpserver,
-            path="/test",
-            method="GET",
-            count=2
+            httpserver=mock_httpserver, path="/test", method="GET", count=2
         )
 
         # No assertion needed - if the function doesn't raise, it passed
@@ -483,10 +464,7 @@ class TestAssertRequestReceived:
         # Call the function with count=1 and expect it to raise
         with pytest.raises(AssertionError, match="Expected 1 request"):
             assert_request_received(
-                httpserver=mock_httpserver,
-                path="/test",
-                method="GET",
-                count=1
+                httpserver=mock_httpserver, path="/test", method="GET", count=1
             )
 
     def test_assert_request_received_with_none_count(self) -> None:
@@ -509,10 +487,7 @@ class TestAssertRequestReceived:
 
         # Call the function with count=None
         assert_request_received(
-            httpserver=mock_httpserver,
-            path="/test",
-            method="GET",
-            count=None
+            httpserver=mock_httpserver, path="/test", method="GET", count=None
         )
 
         # No assertion needed - if the function doesn't raise, it passed

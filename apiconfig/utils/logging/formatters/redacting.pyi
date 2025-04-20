@@ -2,7 +2,6 @@ import logging
 import re
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
-
 class RedactingFormatter(logging.Formatter):
     """
     A logging formatter that automatically redacts sensitive information from log messages and HTTP headers.

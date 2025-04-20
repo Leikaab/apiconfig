@@ -68,7 +68,7 @@ class TestInMemoryTokenStorage:
             "access_token": "abc123",
             "refresh_token": "xyz789",
             "expires_in": 3600,
-            "token_type": "bearer"
+            "token_type": "bearer",
         }
 
         storage.store_token("complex", token_data)

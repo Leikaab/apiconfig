@@ -1,12 +1,10 @@
 """Tests for the ClientConfig class."""
 
-
 from typing import cast
 
 import pytest
 
 from apiconfig.auth.base import AuthStrategy
-
 from apiconfig.config.base import ClientConfig
 from apiconfig.exceptions.config import InvalidConfigError, MissingConfigError
 
@@ -198,7 +196,9 @@ class TestClientConfig:
         # Modify other_config's timeout to be negative (invalid)
         other_config.timeout = -1.0
 
-        with pytest.raises(InvalidConfigError, match="Merged timeout must be non-negative"):
+        with pytest.raises(
+            InvalidConfigError, match="Merged timeout must be non-negative"
+        ):
             base_config.merge(other_config)
 
     def test_merge_method(self) -> None:
@@ -235,10 +235,14 @@ class TestClientConfig:
         """Test that merge_configs raises TypeError with incompatible types."""
         config = ClientConfig()
 
-        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
+        with pytest.raises(
+            TypeError, match="Both arguments must be instances of ClientConfig"
+        ):
             ClientConfig.merge_configs(config, "not a ClientConfig")  # type: ignore[type-var]
 
-        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
+        with pytest.raises(
+            TypeError, match="Both arguments must be instances of ClientConfig"
+        ):
             ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[type-var]
 
     def test_deep_copy_on_merge(self) -> None:
@@ -263,6 +267,7 @@ class TestClientConfig:
 
     def test_subclass_default_values(self) -> None:
         """Test that subclasses can define their own default values."""
+
         class CustomConfig(ClientConfig):
             hostname = "custom.example.com"
             version = "v2"

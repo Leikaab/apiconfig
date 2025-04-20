@@ -15,6 +15,7 @@ class TypedLogRecord(logging.LogRecord):
 @pytest.fixture
 def log_record_factory() -> Callable[..., logging.LogRecord]:
     """Factory for creating LogRecord objects with various parameters."""
+
     def make(
         msg: str = "test message",
         args: tuple[Any, ...] = (),
@@ -38,6 +39,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
             sinfo=stack_info,
         )
         return record
+
     return make
 
 

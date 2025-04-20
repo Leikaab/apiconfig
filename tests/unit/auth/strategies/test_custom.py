@@ -1,8 +1,8 @@
 """Tests for the CustomAuth strategy."""
 
-import pytest
 from typing import Dict
 
+import pytest
 
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import AuthStrategyError
@@ -28,6 +28,7 @@ class TestCustomAuth:
 
     def test_prepare_request_headers_with_valid_callback(self) -> None:
         """Test prepare_request_headers with a valid callback."""
+
         # Define a header callback that returns a valid dictionary
         def header_callback() -> Dict[str, str]:
             return {"X-Custom-Header": "test_value"}
@@ -39,6 +40,7 @@ class TestCustomAuth:
 
     def test_prepare_request_headers_with_invalid_callback_return(self) -> None:
         """Test prepare_request_headers with a callback that returns a non-dict."""
+
         # Define a header callback that returns a non-dict value
         def invalid_header_callback() -> str:
             return "not_a_dict"
@@ -50,6 +52,7 @@ class TestCustomAuth:
 
     def test_prepare_request_headers_with_raising_callback(self) -> None:
         """Test prepare_request_headers with a callback that raises an exception."""
+
         # Define a header callback that raises an exception
         def raising_header_callback() -> None:
             raise ValueError("Test error")
@@ -69,6 +72,7 @@ class TestCustomAuth:
 
     def test_prepare_request_params_with_valid_callback(self) -> None:
         """Test prepare_request_params with a valid callback."""
+
         # Define a param callback that returns a valid dictionary
         def param_callback() -> Dict[str, str]:
             return {"custom_param": "test_value"}
@@ -80,6 +84,7 @@ class TestCustomAuth:
 
     def test_prepare_request_params_with_invalid_callback_return(self) -> None:
         """Test prepare_request_params with a callback that returns a non-dict."""
+
         # Define a param callback that returns a non-dict value
         def invalid_param_callback() -> str:
             return "not_a_dict"
@@ -91,6 +96,7 @@ class TestCustomAuth:
 
     def test_prepare_request_params_with_raising_callback(self) -> None:
         """Test prepare_request_params with a callback that raises an exception."""
+
         # Define a param callback that raises an exception
         def raising_param_callback() -> None:
             raise ValueError("Test error")
@@ -110,6 +116,7 @@ class TestCustomAuth:
 
     def test_prepare_request_with_both_callbacks(self) -> None:
         """Test prepare_request with both callbacks."""
+
         def header_callback() -> Dict[str, str]:
             return {"X-Custom-Header": "header_value"}
 
@@ -117,8 +124,7 @@ class TestCustomAuth:
             return {"custom_param": "param_value"}
 
         auth = CustomAuth(
-            header_callback=header_callback,
-            param_callback=param_callback
+            header_callback=header_callback, param_callback=param_callback
         )
 
         headers, params = auth.prepare_request()
@@ -128,6 +134,7 @@ class TestCustomAuth:
 
     def test_prepare_request_merges_with_provided_values(self) -> None:
         """Test prepare_request merges with provided headers and params."""
+
         def header_callback() -> Dict[str, str]:
             return {"X-Custom-Header": "header_value"}
 
@@ -135,8 +142,7 @@ class TestCustomAuth:
             return {"custom_param": "param_value"}
 
         auth = CustomAuth(
-            header_callback=header_callback,
-            param_callback=param_callback
+            header_callback=header_callback, param_callback=param_callback
         )
 
         # Provide initial headers and params
@@ -144,16 +150,12 @@ class TestCustomAuth:
         initial_params = {"page": "1"}
 
         headers, params = auth.prepare_request(
-            headers=initial_headers,
-            params=initial_params
+            headers=initial_headers, params=initial_params
         )
 
         # Check that the result contains both initial and callback values
         assert headers == {
             "Content-Type": "application/json",
-            "X-Custom-Header": "header_value"
+            "X-Custom-Header": "header_value",
         }
-        assert params == {
-            "page": "1",
-            "custom_param": "param_value"
-        }
+        assert params == {"page": "1", "custom_param": "param_value"}

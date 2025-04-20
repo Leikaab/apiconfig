@@ -61,7 +61,11 @@ class CustomAuth(AuthStrategy):
                 ) from e
         return {}
 
-    def prepare_request(self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, str]] = None) -> tuple[Dict[str, str], Dict[str, str]]:
+    def prepare_request(
+        self,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, str]] = None,
+    ) -> tuple[Dict[str, str], Dict[str, str]]:
         """
         Prepare authentication headers and parameters for an HTTP request.
 

@@ -1,7 +1,9 @@
-from apiconfig.exceptions.auth import TokenRefreshError
-from apiconfig.auth.token.refresh import refresh_oauth2_token
 from typing import Any
+
 import pytest
+
+from apiconfig.auth.token.refresh import refresh_oauth2_token
+from apiconfig.exceptions.auth import TokenRefreshError
 
 
 class TestRefreshOAuth2Token:
@@ -12,10 +14,12 @@ class TestRefreshOAuth2Token:
         with pytest.raises(TokenRefreshError, match="not implemented yet"):
             refresh_oauth2_token(
                 refresh_token="test_refresh_token",
-                token_url="https://example.com/token"
+                token_url="https://example.com/token",
             )
 
-    def test_refresh_oauth2_token_constructs_payload_correctly(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_refresh_oauth2_token_constructs_payload_correctly(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """Test that refresh_oauth2_token constructs the payload correctly."""
         # Mock the print function to capture the payload
         captured_output = []
@@ -33,7 +37,7 @@ class TestRefreshOAuth2Token:
                 token_url="https://example.com/token",
                 client_id="test_client_id",
                 client_secret="test_client_secret",
-                extra_params={"scope": "read write"}
+                extra_params={"scope": "read write"},
             )
 
         # Check that the print statement was called with the expected payload
@@ -46,7 +50,9 @@ class TestRefreshOAuth2Token:
         assert "scope" in output
         assert "read write" in output
 
-    def test_refresh_oauth2_token_minimal_payload(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_refresh_oauth2_token_minimal_payload(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """Test that refresh_oauth2_token works with minimal parameters."""
         captured_output = []
 
@@ -57,8 +63,7 @@ class TestRefreshOAuth2Token:
 
         with pytest.raises(TokenRefreshError):
             refresh_oauth2_token(
-                refresh_token="minimal_token",
-                token_url="https://example.com/token"
+                refresh_token="minimal_token", token_url="https://example.com/token"
             )
 
         # Check that the print statement was called with the expected payload
@@ -72,7 +77,9 @@ class TestRefreshOAuth2Token:
         assert "client_id" not in output or "client_id': None" in output
         assert "client_secret" not in output or "client_secret': None" in output
 
-    def test_refresh_oauth2_token_with_client_id_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_refresh_oauth2_token_with_client_id_only(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """Test that refresh_oauth2_token works with only client_id."""
         captured_output = []
 
@@ -85,7 +92,7 @@ class TestRefreshOAuth2Token:
             refresh_oauth2_token(
                 refresh_token="token_with_client_id",
                 token_url="https://example.com/token",
-                client_id="test_client_id"
+                client_id="test_client_id",
             )
 
         # Check that the print statement was called with the expected payload
@@ -95,7 +102,9 @@ class TestRefreshOAuth2Token:
         assert "test_client_id" in output
         assert "client_secret" not in output or "client_secret': None" in output
 
-    def test_refresh_oauth2_token_with_extra_params_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_refresh_oauth2_token_with_extra_params_only(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """Test that refresh_oauth2_token works with only extra_params."""
         captured_output = []
 
@@ -108,7 +117,7 @@ class TestRefreshOAuth2Token:
             refresh_oauth2_token(
                 refresh_token="token_with_extra",
                 token_url="https://example.com/token",
-                extra_params={"audience": "api://default", "scope": "profile"}
+                extra_params={"audience": "api://default", "scope": "profile"},
             )
 
         # Check that the print statement was called with the expected payload

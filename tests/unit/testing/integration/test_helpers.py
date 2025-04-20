@@ -29,7 +29,7 @@ class TestMakeRequestWithConfig:
         mock_auth_strategy.prepare_request = MagicMock()
         mock_auth_strategy.prepare_request.return_value = (
             {"X-Auth": "test_auth"},
-            {"auth_param": "test_param"}
+            {"auth_param": "test_param"},
         )
 
         mock_response = MagicMock(spec=httpx.Response)
@@ -50,7 +50,7 @@ class TestMakeRequestWithConfig:
                 auth_strategy=mock_auth_strategy,
                 mock_server_url="http://example.com",
                 path="/test",
-                method="GET"
+                method="GET",
             )
 
             # Check that the result is the mock response
@@ -61,7 +61,7 @@ class TestMakeRequestWithConfig:
                 base_url="http://example.com",
                 timeout=30.0,
                 follow_redirects=True,
-                verify=False
+                verify=False,
             )
 
             # Check that request was called correctly
@@ -71,13 +71,12 @@ class TestMakeRequestWithConfig:
                 headers={"X-Auth": "test_auth"},
                 params={"auth_param": "test_param"},
                 data=None,
-                json=None
+                json=None,
             )
 
             # Check that auth_strategy.prepare_request was called
             mock_auth_strategy.prepare_request.assert_called_once_with(
-                headers={},
-                params={}
+                headers={}, params={}
             )
 
     def test_make_request_with_config_with_additional_params(self) -> None:
@@ -91,7 +90,7 @@ class TestMakeRequestWithConfig:
         mock_auth_strategy.prepare_request = MagicMock()
         mock_auth_strategy.prepare_request.return_value = (
             {"X-Auth": "test_auth"},
-            {"auth_param": "test_param"}
+            {"auth_param": "test_param"},
         )
 
         mock_response = MagicMock(spec=httpx.Response)
@@ -117,7 +116,7 @@ class TestMakeRequestWithConfig:
                 params={"page": "1"},
                 data="test_data",
                 json={"key": "value"},
-                cookies={"session": "abc123"}
+                cookies={"session": "abc123"},
             )
 
             # Check that the result is the mock response
@@ -128,7 +127,7 @@ class TestMakeRequestWithConfig:
                 base_url="http://example.com",
                 timeout=30.0,
                 follow_redirects=True,
-                verify=False
+                verify=False,
             )
 
             # Check that request was called correctly with all parameters
@@ -140,13 +139,12 @@ class TestMakeRequestWithConfig:
                 params={"auth_param": "test_param"},
                 data="test_data",
                 json={"key": "value"},
-                cookies={"session": "abc123"}
+                cookies={"session": "abc123"},
             )
 
             # Check that auth_strategy.prepare_request was called with initial headers and params
             mock_auth_strategy.prepare_request.assert_called_once_with(
-                headers={"Content-Type": "application/json"},
-                params={"page": "1"}
+                headers={"Content-Type": "application/json"}, params={"page": "1"}
             )
 
     def test_make_request_with_config_url_handling(self) -> None:
@@ -167,8 +165,16 @@ class TestMakeRequestWithConfig:
             ("http://example.com/", "/test", "http://example.com/test"),
             ("http://example.com", "test", "http://example.com/test"),
             ("http://example.com/", "test", "http://example.com/test"),
-            ("http://example.com/api", "/v1/resource", "http://example.com/api/v1/resource"),
-            ("http://example.com/api/", "/v1/resource", "http://example.com/api/v1/resource"),
+            (
+                "http://example.com/api",
+                "/v1/resource",
+                "http://example.com/api/v1/resource",
+            ),
+            (
+                "http://example.com/api/",
+                "/v1/resource",
+                "http://example.com/api/v1/resource",
+            ),
         ]
 
         for mock_server_url, path, expected_url in test_cases:
@@ -187,7 +193,7 @@ class TestMakeRequestWithConfig:
                     auth_strategy=mock_auth_strategy,
                     mock_server_url=mock_server_url,
                     path=path,
-                    method="GET"
+                    method="GET",
                 )
 
                 # Check that request was called with the expected URL
@@ -197,7 +203,7 @@ class TestMakeRequestWithConfig:
                     headers={},
                     params={},
                     data=None,
-                    json=None
+                    json=None,
                 )
 
 
@@ -251,7 +257,9 @@ class TestSimulateTokenEndpoint:
         mock_expectation.respond_with_json = MagicMock()
 
         # Mock the configure_mock_response function
-        with patch('apiconfig.testing.integration.helpers.configure_mock_response') as mock_configure:
+        with patch(
+            "apiconfig.testing.integration.helpers.configure_mock_response"
+        ) as mock_configure:
             # Make sure expect_request is called when simulate_token_endpoint is called
             mock_httpserver.expect_request = MagicMock(return_value=mock_expectation)
 
@@ -279,7 +287,7 @@ class TestSimulateTokenEndpoint:
             expires_in=1800,
             status_code=201,
             error_response={"error": "custom_error"},
-            error_status_code=422
+            error_status_code=422,
         )
 
         # Check that the access token is the custom token
@@ -290,8 +298,7 @@ class TestSimulateTokenEndpoint:
 
         # Check that the first call was for the error response
         mock_httpserver.expect_request.assert_any_call(
-            uri="/custom/token",
-            method="POST"
+            uri="/custom/token", method="POST"
         )
 
         # We can't easily check the second call with configure_mock_response without mocking it,

@@ -7,7 +7,7 @@ import pytest
 class TestRefreshOAuth2Token:
     """Tests for the refresh_oauth2_token function."""
 
-    def test_refresh_oauth2_token_raises_not_implemented(self):
+    def test_refresh_oauth2_token_raises_not_implemented(self) -> None:
         """Test that refresh_oauth2_token raises TokenRefreshError as it's a placeholder."""
         with pytest.raises(TokenRefreshError, match="not implemented yet"):
             refresh_oauth2_token(
@@ -15,7 +15,7 @@ class TestRefreshOAuth2Token:
                 token_url="https://example.com/token"
             )
 
-    def test_refresh_oauth2_token_constructs_payload_correctly(self, monkeypatch):
+    def test_refresh_oauth2_token_constructs_payload_correctly(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test that refresh_oauth2_token constructs the payload correctly."""
         # Mock the print function to capture the payload
         captured_output = []
@@ -46,7 +46,7 @@ class TestRefreshOAuth2Token:
         assert "scope" in output
         assert "read write" in output
 
-    def test_refresh_oauth2_token_minimal_payload(self, monkeypatch):
+    def test_refresh_oauth2_token_minimal_payload(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test that refresh_oauth2_token works with minimal parameters."""
         captured_output = []
 
@@ -72,7 +72,7 @@ class TestRefreshOAuth2Token:
         assert "client_id" not in output or "client_id': None" in output
         assert "client_secret" not in output or "client_secret': None" in output
 
-    def test_refresh_oauth2_token_with_client_id_only(self, monkeypatch):
+    def test_refresh_oauth2_token_with_client_id_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test that refresh_oauth2_token works with only client_id."""
         captured_output = []
 
@@ -95,7 +95,7 @@ class TestRefreshOAuth2Token:
         assert "test_client_id" in output
         assert "client_secret" not in output or "client_secret': None" in output
 
-    def test_refresh_oauth2_token_with_extra_params_only(self, monkeypatch):
+    def test_refresh_oauth2_token_with_extra_params_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test that refresh_oauth2_token works with only extra_params."""
         captured_output = []
 

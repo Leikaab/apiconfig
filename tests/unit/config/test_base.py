@@ -1,7 +1,11 @@
 """Tests for the ClientConfig class."""
 
 
+from typing import cast
+
 import pytest
+
+from apiconfig.auth.base import AuthStrategy
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.exceptions.config import InvalidConfigError, MissingConfigError
@@ -46,7 +50,7 @@ class TestClientConfig:
             headers={"User-Agent": "Test"},
             timeout=30.0,
             retries=5,
-            auth_strategy=auth_strategy,  # type: ignore[arg-type]
+            auth_strategy=cast("AuthStrategy", auth_strategy),
             log_request_body=True,
             log_response_body=True,
         )
@@ -178,8 +182,8 @@ class TestClientConfig:
         base_auth = MockAuthStrategy(name="base_auth")
         other_auth = MockAuthStrategy(name="other_auth")
 
-        base_config = ClientConfig(auth_strategy=base_auth)  # type: ignore[arg-type]
-        other_config = ClientConfig(auth_strategy=other_auth)  # type: ignore[arg-type]
+        base_config = ClientConfig(auth_strategy=cast("AuthStrategy", base_auth))
+        other_config = ClientConfig(auth_strategy=cast("AuthStrategy", other_auth))
 
         merged = base_config.merge(other_config)
 
@@ -232,10 +236,10 @@ class TestClientConfig:
         config = ClientConfig()
 
         with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
-            ClientConfig.merge_configs(config, "not a ClientConfig")
+            ClientConfig.merge_configs(config, "not a ClientConfig")  # type: ignore[type-var]
 
         with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
-            ClientConfig.merge_configs("not a ClientConfig", config)
+            ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[type-var]
 
     def test_deep_copy_on_merge(self) -> None:
         """Test that merge creates deep copies of mutable attributes."""
@@ -245,7 +249,10 @@ class TestClientConfig:
         merged = base_config.merge(other_config)
 
         # Modify the original headers
+        assert base_config.headers is not None
+
         base_config.headers["User-Agent"] = "Modified"
+        assert other_config.headers is not None
         other_config.headers["Authorization"] = "Modified"
 
         # Check that merged headers are not affected

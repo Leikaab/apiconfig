@@ -9,6 +9,8 @@ from typing import Any
 
 import pytest
 
+import pytest
+
 from apiconfig.config.providers.file import FileProvider
 from apiconfig.exceptions.config import ConfigLoadError
 
@@ -86,7 +88,7 @@ class TestFileProvider:
             with pytest.raises(ConfigLoadError, match="Error decoding JSON"):
                 provider.load()
 
-    def test_load_permission_error(self, monkeypatch) -> None:
+    def test_load_permission_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test loading a file with insufficient permissions."""
         with tempfile.NamedTemporaryFile(suffix=".json") as temp_file:
             # Mock pathlib.Path.open to raise PermissionError
@@ -100,7 +102,7 @@ class TestFileProvider:
             with pytest.raises(ConfigLoadError, match="Error reading configuration file"):
                 provider.load()
 
-    def test_load_other_os_error(self, monkeypatch) -> None:
+    def test_load_other_os_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test loading a file with other OS errors."""
         with tempfile.NamedTemporaryFile(suffix=".json") as temp_file:
             # Mock pathlib.Path.open to raise OSError

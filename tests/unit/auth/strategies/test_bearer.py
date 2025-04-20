@@ -17,11 +17,15 @@ class TestBearerAuth:
     def test_init_rejects_empty_token(self) -> None:
         """Test that BearerAuth rejects empty tokens."""
         # Empty string
-        with pytest.raises(AuthStrategyError, match="Bearer token cannot be empty or whitespace"):
+        with pytest.raises(
+            AuthStrategyError, match="Bearer token cannot be empty or whitespace"
+        ):
             BearerAuth(token="")
 
         # Whitespace only
-        with pytest.raises(AuthStrategyError, match="Bearer token cannot be empty or whitespace"):
+        with pytest.raises(
+            AuthStrategyError, match="Bearer token cannot be empty or whitespace"
+        ):
             BearerAuth(token="   ")
 
     def test_prepare_request_headers(self) -> None:

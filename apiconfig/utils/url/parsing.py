@@ -13,7 +13,7 @@ def parse_url(url: str) -> urllib.parse.ParseResult:
         # Count leading slashes
         slash_count = 0
         for char in url:
-            if char == '/':
+            if char == "/":
                 slash_count += 1
             else:
                 break
@@ -38,7 +38,9 @@ def parse_url(url: str) -> urllib.parse.ParseResult:
             # If port_part is numeric, it's likely a port number
             if port_part.isdigit() or host_part in ("localhost", "127.0.0.1"):
                 url = f"https://{url}"
-        elif "." in first_part and not first_part.endswith(".txt"):  # Don't add scheme to simple filenames
+        elif "." in first_part and not first_part.endswith(
+            ".txt"
+        ):  # Don't add scheme to simple filenames
             url = f"https://{url}"
 
     # Parse the URL

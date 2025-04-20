@@ -4,7 +4,11 @@ from typing import Any, Optional, Pattern, Union
 
 import pytest
 
-from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN, REDACTED_BODY_PLACEHOLDER, redact_body
+from apiconfig.utils.redaction.body import (
+    DEFAULT_SENSITIVE_KEYS_PATTERN,
+    REDACTED_BODY_PLACEHOLDER,
+    redact_body,
+)
 from apiconfig.utils.redaction.headers import REDACTED_VALUE  # Import from headers
 
 # --- Test Data ---

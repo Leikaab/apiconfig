@@ -4,7 +4,6 @@ from typing import Any, List, Mapping, Sequence, Tuple, Union
 _QueryParamValue = Union[str, int, float, bool, Sequence[Union[str, int, float, bool]]]
 _QueryParams = Mapping[str, _QueryParamValue | None]
 
-
 def build_url(
     base_url: str,
     *path_segments: Union[str, int, Sequence[Union[str, int]]],
@@ -44,7 +43,6 @@ def build_url(
     """
     ...
 
-
 def add_query_params(url: str, params: _QueryParams, replace: bool = False) -> str:
     """
     Add or update query parameters to an existing URL.
@@ -77,7 +75,6 @@ def add_query_params(url: str, params: _QueryParams, replace: bool = False) -> s
     """
     ...
 
-
 def _handle_special_cases(url: str, segment_index: int, new_segment: str) -> str:
     """
     Handle special test cases for replace_path_segment.
@@ -91,7 +88,6 @@ def _handle_special_cases(url: str, segment_index: int, new_segment: str) -> str
         A URL string if a special case matches, or an empty string if no match.
     """
     ...
-
 
 def _parse_path_components(path: str) -> Tuple[str, List[str], List[str], str]:
     """
@@ -122,12 +118,11 @@ def _parse_path_components(path: str) -> Tuple[str, List[str], List[str], str]:
     """
     ...
 
-
 def _handle_root_path(
     parsed: urllib.parse.ParseResult,
     segment_index: int,
     segments: List[str],
-    slash_patterns: List[str]
+    slash_patterns: List[str],
 ) -> Tuple[List[str], List[str], str]:
     """
     Handle the special case of root paths.
@@ -146,12 +141,11 @@ def _handle_root_path(
     """
     ...
 
-
 def _reconstruct_path(
     leading_slashes: str,
     segments: List[str],
     slash_patterns: List[str],
-    trailing_slashes: str
+    trailing_slashes: str,
 ) -> str:
     """
     Reconstruct a path from its components while preserving slash patterns.
@@ -170,7 +164,6 @@ def _reconstruct_path(
         Handles empty paths by returning "/" for consistency.
     """
     ...
-
 
 def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
     """

@@ -3,8 +3,15 @@ import re
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
-from apiconfig.utils.redaction.body import redact_body
-from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES, DEFAULT_SENSITIVE_HEADERS, REDACTED_VALUE, redact_headers
+from apiconfig.utils.redaction.body import (
+    redact_body,
+)
+from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_HEADER_PREFIXES,
+    DEFAULT_SENSITIVE_HEADERS,
+    REDACTED_VALUE,
+    redact_headers,
+)
 
 
 class RedactingFormatter(logging.Formatter):

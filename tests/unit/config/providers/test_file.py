@@ -126,7 +126,7 @@ class TestFileProvider:
                 "debug": True,
                 "rate_limit": 100.5,
                 "string_number": "42",
-                "string_bool": "true"
+                "string_bool": "true",
             }
             json.dump(config_data, temp_file)
             temp_file.flush()
@@ -173,7 +173,7 @@ class TestFileProvider:
                 "string_bool_true": "true",
                 "string_bool_false": "false",
                 "number": 100,
-                "decimal": 99.9
+                "decimal": 99.9,
             }
             json.dump(config_data, temp_file)
             temp_file.flush()
@@ -244,7 +244,7 @@ class TestFileProvider:
                 "not_an_int": "abc",
                 "not_a_float": "xyz",
                 "not_a_bool": "maybe",
-                "complex_value": {"nested": "value"}
+                "complex_value": {"nested": "value"},
             }
             json.dump(config_data, temp_file)
             temp_file.flush()

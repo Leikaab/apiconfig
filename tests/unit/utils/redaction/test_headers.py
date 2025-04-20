@@ -3,7 +3,12 @@ from typing import Dict, Set, Tuple
 
 import pytest
 
-from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES, DEFAULT_SENSITIVE_HEADERS, REDACTED_VALUE, redact_headers
+from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_HEADER_PREFIXES,
+    DEFAULT_SENSITIVE_HEADERS,
+    REDACTED_VALUE,
+    redact_headers,
+)
 
 # Test Cases for redact_headers
 

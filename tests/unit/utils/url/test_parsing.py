@@ -23,10 +23,20 @@ from apiconfig.utils.url import add_query_params, get_query_params, parse_url
         ("/relative/path", "", "", "/relative/path"),  # Relative path
         ("file.txt", "", "", "file.txt"),  # Simple filename (no scheme added)
         ("domain.com", "https", "domain.com", ""),  # Domain with dot gets scheme
-        ("domain.com/path?q=1#frag", "https", "domain.com", "/path"),  # Domain with path, query, fragment
+        (
+            "domain.com/path?q=1#frag",
+            "https",
+            "domain.com",
+            "/path",
+        ),  # Domain with path, query, fragment
         ("sub.domain.co.uk/path", "https", "sub.domain.co.uk", "/path"),  # Subdomain
         ("localhost:8080", "https", "localhost:8080", ""),  # localhost with port
-        ("127.0.0.1:8000/api", "https", "127.0.0.1:8000", "/api"),  # IP address with port
+        (
+            "127.0.0.1:8000/api",
+            "https",
+            "127.0.0.1:8000",
+            "/api",
+        ),  # IP address with port
         ("https://[2001:db8::1]/path", "https", "[2001:db8::1]", "/path"),  # IPv6
     ],
 )
@@ -99,10 +109,19 @@ def test_parse_url_edge_cases() -> None:
         ("https://example.com/path?a=1&a=1", {"a": ["1", "1"]}),  # Duplicate values
         ("https://example.com/path?", {}),  # Empty query string
         ("https://example.com/path?&&", {}),  # Query string with only separators
-        ("https://example.com/path?a&b&c", {"a": "", "b": "", "c": ""}),  # Params without values
+        (
+            "https://example.com/path?a&b&c",
+            {"a": "", "b": "", "c": ""},
+        ),  # Params without values
         ("https://example.com/path?a=1+2", {"a": "1 2"}),  # Plus as space
-        ("https://example.com/path?a=true&b=false", {"a": "true", "b": "false"}),  # Boolean-like values
-        ("https://example.com/path?arr[]=1&arr[]=2", {"arr[]": ["1", "2"]}),  # Array-like notation
+        (
+            "https://example.com/path?a=true&b=false",
+            {"a": "true", "b": "false"},
+        ),  # Boolean-like values
+        (
+            "https://example.com/path?arr[]=1&arr[]=2",
+            {"arr[]": ["1", "2"]},
+        ),  # Array-like notation
     ],
 )
 def test_get_query_params(

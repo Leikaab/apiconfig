@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional, Type, TypeVar, Union
 
 T = TypeVar("T")
 
-
 class FileProvider:
     """
     Loads configuration data from a file.
@@ -35,7 +34,9 @@ class FileProvider:
         """
         ...
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    def get(
+        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
+    ) -> Any:
         """
         Get a configuration value from the loaded configuration.
 

@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 T = TypeVar("T")
 
-
 class EnvProvider:
     """
     Loads configuration values from environment variables.
@@ -39,7 +38,9 @@ class EnvProvider:
         """
         ...
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    def get(
+        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
+    ) -> Any:
         """
         Get a configuration value from environment variables.
 

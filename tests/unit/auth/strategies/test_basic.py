@@ -20,11 +20,15 @@ class TestBasicAuth:
     def test_init_rejects_empty_username(self) -> None:
         """Test that BasicAuth rejects empty usernames."""
         # Empty string
-        with pytest.raises(AuthStrategyError, match="Username cannot be empty or whitespace"):
+        with pytest.raises(
+            AuthStrategyError, match="Username cannot be empty or whitespace"
+        ):
             BasicAuth(username="", password="test_pass")
 
         # Whitespace only
-        with pytest.raises(AuthStrategyError, match="Username cannot be empty or whitespace"):
+        with pytest.raises(
+            AuthStrategyError, match="Username cannot be empty or whitespace"
+        ):
             BasicAuth(username="   ", password="test_pass")
 
     def test_init_rejects_empty_password(self) -> None:

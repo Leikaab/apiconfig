@@ -39,7 +39,9 @@ class ClientConfig:
         # Store version value before validation
         version_value = version or self.__class__.version
         # Validate version (no leading/trailing slashes)
-        if version_value and (version_value.startswith('/') or version_value.endswith('/')):
+        if version_value and (
+            version_value.startswith("/") or version_value.endswith("/")
+        ):
             raise InvalidConfigError(
                 "Version must not contain leading or trailing slashes."
             )
@@ -120,7 +122,9 @@ class ClientConfig:
 
         # Re-validate merged config
         # Validate version (no leading/trailing slashes)
-        if new_instance.version and (new_instance.version.startswith('/') or new_instance.version.endswith('/')):
+        if new_instance.version and (
+            new_instance.version.startswith("/") or new_instance.version.endswith("/")
+        ):
             raise InvalidConfigError(
                 "Merged version must not contain leading or trailing slashes."
             )
@@ -128,14 +132,18 @@ class ClientConfig:
         # Validate timeout (must be non-negative number)
         if new_instance.timeout is not None:
             if not isinstance(new_instance.timeout, (int, float)):
-                raise InvalidConfigError("Merged timeout must be a number (int or float).")
+                raise InvalidConfigError(
+                    "Merged timeout must be a number (int or float)."
+                )
             if new_instance.timeout < 0:
                 raise InvalidConfigError("Merged timeout must be non-negative.")
 
         # Validate retries (must be non-negative number)
         if new_instance.retries is not None:
             if not isinstance(new_instance.retries, (int, float)):
-                raise InvalidConfigError("Merged retries must be a number (int or float).")
+                raise InvalidConfigError(
+                    "Merged retries must be a number (int or float)."
+                )
             if new_instance.retries < 0:
                 raise InvalidConfigError("Merged retries must be non-negative.")
 

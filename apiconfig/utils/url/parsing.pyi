@@ -38,7 +38,6 @@ def parse_url(url: str) -> urllib.parse.ParseResult:
     """
     ...
 
-
 def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
     """
     Extracts query parameters from a URL string into a dictionary.
@@ -65,10 +64,7 @@ def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
     """
     ...
 
-
-def add_query_params(
-    url: str, params_to_add: Dict[str, Any]
-) -> str:
+def add_query_params(url: str, params_to_add: Dict[str, Any]) -> str:
     """
     Adds or updates query parameters in a URL string.
 

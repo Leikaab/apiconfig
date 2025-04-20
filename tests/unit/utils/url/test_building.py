@@ -158,6 +158,7 @@ def test_build_url_preserves_double_slashes() -> None:
     url = build_url("https://example.com/api/", [])
     assert url == "https://example.com/api/"
 
+
 # --- Tests for add_query_params ---
 
 
@@ -450,15 +451,11 @@ def test_replace_path_segment_index_error(url: str, index: int) -> None:
 def test_handle_special_cases() -> None:
     """Test the _handle_special_cases function."""
     # Test a matching special case
-    result = _handle_special_cases(
-        "https://example.com//api//users//", 1, "items"
-    )
+    result = _handle_special_cases("https://example.com//api//users//", 1, "items")
     assert result == "https://example.com//api/items//"
 
     # Test a non-matching special case
-    result = _handle_special_cases(
-        "https://example.com/not/a/special/case", 1, "items"
-    )
+    result = _handle_special_cases("https://example.com/not/a/special/case", 1, "items")
     assert result == ""
 
 
@@ -474,9 +471,7 @@ def test_parse_path_components() -> None:
     assert trailing == "//"
 
     # Test with simple path
-    leading, segments, slash_patterns, trailing = _parse_path_components(
-        "/simple/path"
-    )
+    leading, segments, slash_patterns, trailing = _parse_path_components("/simple/path")
     assert leading == "/"
     assert segments == ["simple", "path"]
     assert slash_patterns == ["/"]
@@ -490,7 +485,9 @@ def test_parse_path_components() -> None:
     assert trailing == "/"
 
     # Test with path ending with slash but not empty last segment
-    leading, segments, slash_patterns, trailing = _parse_path_components("/path/with/slash/")
+    leading, segments, slash_patterns, trailing = _parse_path_components(
+        "/path/with/slash/"
+    )
     assert leading == "/"
     assert segments == ["path", "with", "slash", ""]
     assert slash_patterns == ["/", "/", "/"]
@@ -518,18 +515,23 @@ def test_handle_root_path() -> None:
     from urllib.parse import ParseResult
 
     # Test with root path and segment_index 0
-    parsed = ParseResult(scheme="https", netloc="example.com", path="/",
-                         params="", query="", fragment="")
-    segments, slash_patterns, trailing = _handle_root_path(
-        parsed, 0, [], []
+    parsed = ParseResult(
+        scheme="https", netloc="example.com", path="/", params="", query="", fragment=""
     )
+    segments, slash_patterns, trailing = _handle_root_path(parsed, 0, [], [])
     assert segments == [""]
     assert slash_patterns == []
     assert trailing == "/"
 
     # Test with non-root path
-    parsed = ParseResult(scheme="https", netloc="example.com", path="/path",
-                         params="", query="", fragment="")
+    parsed = ParseResult(
+        scheme="https",
+        netloc="example.com",
+        path="/path",
+        params="",
+        query="",
+        fragment="",
+    )
     segments = ["path"]
     slash_patterns = ["/"]
     segments, slash_patterns, trailing = _handle_root_path(
@@ -547,7 +549,7 @@ def test_reconstruct_path() -> None:
         leading_slashes="/",
         segments=["path", "to", "resource"],
         slash_patterns=["/", "/"],
-        trailing_slashes=""
+        trailing_slashes="",
     )
     assert path == "/path/to/resource"
 
@@ -556,16 +558,13 @@ def test_reconstruct_path() -> None:
         leading_slashes="//",
         segments=["path", "with", "double", "slashes"],
         slash_patterns=["//", "//", "//"],
-        trailing_slashes="//"
+        trailing_slashes="//",
     )
     assert path == "//path//with//double//slashes//"
 
     # Test with empty segments (should result in root path)
     path = _reconstruct_path(
-        leading_slashes="",
-        segments=["", ""],
-        slash_patterns=[],
-        trailing_slashes=""
+        leading_slashes="", segments=["", ""], slash_patterns=[], trailing_slashes=""
     )
     assert path == "/"
 

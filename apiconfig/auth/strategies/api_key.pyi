@@ -29,7 +29,6 @@ class ApiKeyAuth(AuthStrategy):
         header_name: Optional[str] = None,
         param_name: Optional[str] = None,
     ) -> None: ...
-
     def prepare_request_headers(self) -> Dict[str, str]:
         """
         Prepares headers for API key authentication if configured for headers.

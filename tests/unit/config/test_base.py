@@ -102,17 +102,26 @@ class TestClientConfig:
 
     def test_init_validation_version_leading_slash(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for version with leading slash."""
-        with pytest.raises(InvalidConfigError, match="Version must not contain leading or trailing slashes"):
+        with pytest.raises(
+            InvalidConfigError,
+            match="Version must not contain leading or trailing slashes",
+        ):
             ClientConfig(version="/v1")
 
     def test_init_validation_version_trailing_slash(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for version with trailing slash."""
-        with pytest.raises(InvalidConfigError, match="Version must not contain leading or trailing slashes"):
+        with pytest.raises(
+            InvalidConfigError,
+            match="Version must not contain leading or trailing slashes",
+        ):
             ClientConfig(version="v1/")
 
     def test_init_validation_version_both_slashes(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for version with both leading and trailing slashes."""
-        with pytest.raises(InvalidConfigError, match="Version must not contain leading or trailing slashes"):
+        with pytest.raises(
+            InvalidConfigError,
+            match="Version must not contain leading or trailing slashes",
+        ):
             ClientConfig(version="/v1/")
 
     def test_init_validation_version_valid(self) -> None:
@@ -243,9 +252,7 @@ class TestClientConfig:
         # Set non-numeric timeout
         other_config.timeout = "20.0"  # type: ignore[assignment]
 
-        with pytest.raises(
-            InvalidConfigError, match="Merged timeout must be a number"
-        ):
+        with pytest.raises(InvalidConfigError, match="Merged timeout must be a number"):
             base_config.merge(other_config)
 
     def test_merge_validation_non_numeric_retries(self) -> None:
@@ -256,9 +263,7 @@ class TestClientConfig:
         # Set non-numeric retries
         other_config.retries = "5"  # type: ignore[assignment]
 
-        with pytest.raises(
-            InvalidConfigError, match="Merged retries must be a number"
-        ):
+        with pytest.raises(InvalidConfigError, match="Merged retries must be a number"):
             base_config.merge(other_config)
 
     def test_merge_validation_version_with_slashes(self) -> None:
@@ -270,7 +275,8 @@ class TestClientConfig:
         other_config.version = "/v1"
 
         with pytest.raises(
-            InvalidConfigError, match="Merged version must not contain leading or trailing slashes"
+            InvalidConfigError,
+            match="Merged version must not contain leading or trailing slashes",
         ):
             base_config.merge(other_config)
 
@@ -278,7 +284,8 @@ class TestClientConfig:
         other_config.version = "v1/"
 
         with pytest.raises(
-            InvalidConfigError, match="Merged version must not contain leading or trailing slashes"
+            InvalidConfigError,
+            match="Merged version must not contain leading or trailing slashes",
         ):
             base_config.merge(other_config)
 

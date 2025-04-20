@@ -6,7 +6,6 @@ from apiconfig.auth.base import AuthStrategy
 
 log: logging.Logger
 
-
 class BasicAuth(AuthStrategy):
     """
     Implements HTTP Basic Authentication.

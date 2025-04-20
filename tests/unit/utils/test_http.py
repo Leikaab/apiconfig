@@ -181,7 +181,7 @@ def test_safe_json_decode_with_custom_max_size() -> None:
 def test_safe_json_decode_at_size_limit() -> None:
     """Test that safe_json_decode works with a payload exactly at the size limit."""
     # Create a payload that's exactly 19 bytes when UTF-8 encoded
-    payload = '{"x": "' + 'a' * 10 + '"}'  # 19 bytes when UTF-8 encoded
+    payload = '{"x": "' + "a" * 10 + '"}'  # 19 bytes when UTF-8 encoded
     assert len(payload.encode("utf-8")) == 19
 
     # Should work with max_size_bytes=19
@@ -196,16 +196,20 @@ def test_safe_json_decode_at_size_limit() -> None:
 def test_safe_json_decode_exceeds_size_limit_string() -> None:
     """Test that safe_json_decode raises PayloadTooLargeError for string payloads exceeding the limit."""
     # Create a payload that's larger than the limit
-    large_payload = '{"large": "' + 'a' * 100 + '"}'
+    large_payload = '{"large": "' + "a" * 100 + '"}'
 
-    with pytest.raises(PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"):
+    with pytest.raises(
+        PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"
+    ):
         safe_json_decode(large_payload, max_size_bytes=50)
 
 
 def test_safe_json_decode_exceeds_size_limit_bytes() -> None:
     """Test that safe_json_decode raises PayloadTooLargeError for bytes payloads exceeding the limit."""
     # Create a bytes payload that's larger than the limit
-    large_payload = b'{"large": "' + b'a' * 100 + b'"}'
+    large_payload = b'{"large": "' + b"a" * 100 + b'"}'
 
-    with pytest.raises(PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"):
+    with pytest.raises(
+        PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"
+    ):
         safe_json_decode(large_payload, max_size_bytes=50)

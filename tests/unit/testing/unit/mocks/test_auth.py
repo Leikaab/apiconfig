@@ -4,7 +4,13 @@ import pytest
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.auth.strategies import ApiKeyAuth, BasicAuth, BearerAuth, CustomAuth
 from apiconfig.exceptions.auth import AuthenticationError
-from apiconfig.testing.unit.mocks.auth import MockApiKeyAuth, MockAuthStrategy, MockBasicAuth, MockBearerAuth, MockCustomAuth
+from apiconfig.testing.unit.mocks.auth import (
+    MockApiKeyAuth,
+    MockAuthStrategy,
+    MockBasicAuth,
+    MockBearerAuth,
+    MockCustomAuth,
+)
 
 
 def test_mock_auth_strategy_inheritance() -> None:

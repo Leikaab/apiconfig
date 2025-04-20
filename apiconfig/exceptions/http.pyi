@@ -9,13 +9,13 @@ from .base import APIConfigError
 
 __all__: list[str] = ["HTTPUtilsError", "JSONDecodeError"]
 
-
 class HTTPUtilsError(APIConfigError):
     """Base exception for errors raised by HTTP utilities."""
-    ...
 
+    ...
 
 @final
 class JSONDecodeError(HTTPUtilsError):
     """Raised when JSON decoding of an HTTP response body fails."""
+
     ...

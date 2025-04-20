@@ -14,7 +14,6 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     """
     ...
 
-
 def create_invalid_client_config(reason: str, **overrides: Any) -> Dict[str, Any]:
     """
     Creates a dictionary representing potentially invalid ClientConfig data.
@@ -33,7 +32,6 @@ def create_invalid_client_config(reason: str, **overrides: Any) -> Dict[str, Any
     """
     ...
 
-
 def create_auth_credentials(auth_type: str) -> Dict[str, Any]:
     """
     Generates a dictionary of sample authentication credentials.
@@ -45,7 +43,6 @@ def create_auth_credentials(auth_type: str) -> Dict[str, Any]:
         A dictionary containing sample credentials for the specified type.
     """
     ...
-
 
 def create_provider_dict(source: str) -> Dict[str, Any]:
     """

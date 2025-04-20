@@ -15,6 +15,7 @@ class TypedLogRecord(logging.LogRecord):
 @pytest.fixture
 def log_record_factory() -> Callable[..., logging.LogRecord]:
     """Factory for creating LogRecord objects with various parameters."""
+
     def make(
         msg: str = "test message",
         args: tuple[Any, ...] = (),
@@ -38,6 +39,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
             sinfo=stack_info,
         )
         return record
+
     return make
 
 
@@ -49,9 +51,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
     ],
 )
 def test_detailed_formatter_basic_and_multiline(
-    log_record_factory: Callable[..., logging.LogRecord],
-    msg: str,
-    expected_in: str
+    log_record_factory: Callable[..., logging.LogRecord], msg: str, expected_in: str
 ) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg=msg)
@@ -63,7 +63,7 @@ def test_detailed_formatter_basic_and_multiline(
 
 
 def test_detailed_formatter_custom_format(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     custom_fmt = "[%(levelname)s] %(message)s"
     fmt = DetailedFormatter(fmt=custom_fmt)
@@ -74,7 +74,7 @@ def test_detailed_formatter_custom_format(
 
 
 def test_detailed_formatter_indents_multiline_message(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     msg = "first line\nsecond line\nthird line"
     fmt = DetailedFormatter()
@@ -88,7 +88,7 @@ def test_detailed_formatter_indents_multiline_message(
 
 
 def test_detailed_formatter_with_exception(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     try:
@@ -100,12 +100,14 @@ def test_detailed_formatter_with_exception(
         # Exception text should be present and indented
         assert "ValueError: fail!" in output
         # Should be indented
-        exc_lines = [line for line in output.splitlines() if "ValueError: fail!" in line]
+        exc_lines = [
+            line for line in output.splitlines() if "ValueError: fail!" in line
+        ]
         assert all(line.startswith("    ") for line in exc_lines)
 
 
 def test_detailed_formatter_with_stack_info(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     stack = "".join(traceback.format_stack())
@@ -119,7 +121,7 @@ def test_detailed_formatter_with_stack_info(
 
 
 def test_detailed_formatter_with_exception_and_stack(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     stack = "".join(traceback.format_stack())
@@ -133,14 +135,16 @@ def test_detailed_formatter_with_exception_and_stack(
         assert "RuntimeError: boom" in output
         assert "File" in output
         # Exception and stack should be indented
-        exc_lines = [line for line in output.splitlines() if "RuntimeError: boom" in line]
+        exc_lines = [
+            line for line in output.splitlines() if "RuntimeError: boom" in line
+        ]
         stack_lines = [line for line in output.splitlines() if "File" in line]
         assert all(line.startswith("    ") for line in exc_lines)
         assert all(line.startswith("    ") for line in stack_lines)
 
 
 def test_detailed_formatter_exc_info_and_stack_full_branch(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Covers both exc_info (with exc_text unset) and stack_info branches for 100% coverage."""
     fmt = DetailedFormatter()
@@ -149,7 +153,9 @@ def test_detailed_formatter_exc_info_and_stack_full_branch(
         raise OSError("full branch test")
     except OSError:
         exc_info = sys.exc_info()
-        record = log_record_factory(msg="exc and stack", exc_info=exc_info, stack_info=stack)
+        record = log_record_factory(
+            msg="exc and stack", exc_info=exc_info, stack_info=stack
+        )
         # exc_text should not be set yet
         if hasattr(record, "exc_text"):
             delattr(record, "exc_text")
@@ -157,7 +163,9 @@ def test_detailed_formatter_exc_info_and_stack_full_branch(
         # Both exception and stack info should be present and indented
         assert "OSError: full branch test" in output
         assert "File" in output
-        exc_lines = [line for line in output.splitlines() if "OSError: full branch test" in line]
+        exc_lines = [
+            line for line in output.splitlines() if "OSError: full branch test" in line
+        ]
         stack_lines = [line for line in output.splitlines() if "File" in line]
         assert all(line.startswith("    ") for line in exc_lines)
         assert all(line.startswith("    ") for line in stack_lines)
@@ -174,7 +182,7 @@ def test_detailed_formatter_style_variants(
 
 
 def test_detailed_formatter_repr_and_str(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg="repr test")
@@ -184,7 +192,7 @@ def test_detailed_formatter_repr_and_str(
 
 
 def test_redacting_formatter_basic(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="redact test")
@@ -193,7 +201,7 @@ def test_redacting_formatter_basic(
 
 
 def test_detailed_formatter_empty_message(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg="")
@@ -205,13 +213,14 @@ def test_detailed_formatter_empty_message(
 def test_redacting_formatter_class_and_docstring() -> None:
     """Covers RedactingFormatter class definition and docstring for coverage."""
     from apiconfig.utils.logging.formatters import RedactingFormatter
+
     assert RedactingFormatter.__doc__ is not None
     fmt = RedactingFormatter()
     assert isinstance(fmt, RedactingFormatter)
 
 
 def test_redacting_formatter_format(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Covers RedactingFormatter.format for coverage of class body and inherited method."""
     fmt = RedactingFormatter()
@@ -224,16 +233,28 @@ def test_redacting_formatter_format(
 @pytest.mark.parametrize(
     "msg,content_type,expected",
     [
-        ("{\"token\": \"abc123\", \"data\": \"ok\"}", "application/json", '{"token": "[REDACTED]", "data": "ok"}'),
-        ({"password": "p@ssw0rd", "foo": "bar"}, None, '{"password": "[REDACTED]", "foo": "bar"}'),
-        ("secret=shh123&foo=bar", "application/x-www-form-urlencoded", "secret=%5BREDACTED%5D&foo=bar"),
-    ]
+        (
+            '{"token": "abc123", "data": "ok"}',
+            "application/json",
+            '{"token": "[REDACTED]", "data": "ok"}',
+        ),
+        (
+            {"password": "p@ssw0rd", "foo": "bar"},
+            None,
+            '{"password": "[REDACTED]", "foo": "bar"}',
+        ),
+        (
+            "secret=shh123&foo=bar",
+            "application/x-www-form-urlencoded",
+            "secret=%5BREDACTED%5D&foo=bar",
+        ),
+    ],
 )
 def test_redacting_formatter_structured_redaction(
     log_record_factory: Callable[..., logging.LogRecord],
     msg: Any,
     content_type: str | None,
-    expected: str
+    expected: str,
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg=msg)
@@ -250,12 +271,17 @@ def test_redacting_formatter_structured_redaction(
 
 
 def test_redacting_formatter_headers_redaction(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="headers test")
     from typing import cast
-    setattr(record, "headers", {"Authorization": "Bearer abc", "X-Api-Key": "xyz", "X-Other": "ok"})
+
+    setattr(
+        record,
+        "headers",
+        {"Authorization": "Bearer abc", "X-Api-Key": "xyz", "X-Other": "ok"},
+    )
     record = cast(TypedLogRecord, record)
     fmt.format(record)
     # Accept both JSON and dict string representations
@@ -269,9 +295,10 @@ def test_redacting_formatter_headers_redaction(
 
 
 def test_redacting_formatter_plain_string_secret(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     import re
+
     secret_pattern = re.compile(r"secret_[a-z0-9]+", re.IGNORECASE)
     fmt = RedactingFormatter(body_sensitive_value_pattern=secret_pattern)
     record = log_record_factory(msg="this is a secret_abc123 and should be redacted")
@@ -281,7 +308,7 @@ def test_redacting_formatter_plain_string_secret(
 
 
 def test_redacting_formatter_binary_and_unparsable(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     # Binary data
@@ -297,7 +324,7 @@ def test_redacting_formatter_binary_and_unparsable(
 
 
 def test_redacting_formatter_empty_message(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="")
@@ -307,7 +334,7 @@ def test_redacting_formatter_empty_message(
 
 
 def test_detailed_formatter_metadata_len_minus_one(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Covers the case where metadata_len == -1 in DetailedFormatter (multi-line message, no %(message)s in format)."""
     # Custom format string that puts %(message)s on the second line only
@@ -334,7 +361,7 @@ def test_detailed_formatter_metadata_len_minus_one(
 
 
 def test_detailed_formatter_exc_info_sets_exc_text(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Covers the case where exc_info is set and exc_text is explicitly None, triggering the branch for 100% coverage."""
     fmt = DetailedFormatter()
@@ -351,7 +378,7 @@ def test_detailed_formatter_exc_info_sets_exc_text(
 
 
 def test_redacting_formatter_fallback_branch(
-    log_record_factory: Callable[..., logging.LogRecord]
+    log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
     """Covers the fallback branch in _redact_message (msg is not str, dict, list, or bytes)."""
     fmt = RedactingFormatter()
@@ -359,6 +386,7 @@ def test_redacting_formatter_fallback_branch(
     class WeirdObj:
         def __str__(self) -> str:
             return "weird"
+
     record = log_record_factory(msg=WeirdObj())
     output = fmt.format(record)
     assert "weird" in output
@@ -371,12 +399,16 @@ def test_redacting_formatter_redact_headers_exception(
     fmt = RedactingFormatter()
     record = log_record_factory(msg="headers test")
     from typing import cast
+
     setattr(record, "headers", {"Authorization": "Bearer abc"})
     record = cast(TypedLogRecord, record)
 
     def bad_redact_headers(*a: object, **kw: object) -> None:
         raise RuntimeError("fail")
-    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_headers", bad_redact_headers)
+
+    monkeypatch.setattr(
+        "apiconfig.utils.logging.formatters.redact_headers", bad_redact_headers
+    )
     fmt.format(record)
     # Should not raise, and headers should remain unchanged
     assert record.headers == {"Authorization": "Bearer abc"}
@@ -391,14 +423,20 @@ def test_redacting_formatter_redact_structured_exception(
 
     def bad_redact_body(*a: object, **kw: object) -> None:
         raise RuntimeError("fail")
-    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
+
+    monkeypatch.setattr(
+        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
+    )
     output = fmt.format(record)
     assert "[REDACTED]" in output
+
 
 # --- Additional tests for 100% coverage of RedactingFormatter ---
 
 
-def test_redacting_formatter_structured_dict_list_coverage(log_record_factory: Callable[..., logging.LogRecord]) -> None:
+def test_redacting_formatter_structured_dict_list_coverage(
+    log_record_factory: Callable[..., logging.LogRecord],
+) -> None:
     """Covers _is_structured (dict/list), _redact_structured (dict/list), and fallback branches."""
     fmt = RedactingFormatter()
     # dict input triggers _is_structured True at line 223 and dict/list serialization at 209-210, 264, 284
@@ -411,7 +449,9 @@ def test_redacting_formatter_structured_dict_list_coverage(log_record_factory: C
     assert "[REDACTED]" in output2
 
 
-def test_redacting_formatter_structured_string_json_exception(monkeypatch: Any, log_record_factory: Callable[..., logging.LogRecord]) -> None:
+def test_redacting_formatter_structured_string_json_exception(
+    monkeypatch: Any, log_record_factory: Callable[..., logging.LogRecord]
+) -> None:
     """Covers the exception branch in _redact_structured for string input (lines 266-268, 292)."""
     fmt = RedactingFormatter()
     record = log_record_factory(msg='{"token": "abc"}')
@@ -419,36 +459,49 @@ def test_redacting_formatter_structured_string_json_exception(monkeypatch: Any, 
 
     def bad_redact_body(*a: object, **kw: object) -> None:
         raise RuntimeError("fail")
-    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
+
+    monkeypatch.setattr(
+        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
+    )
     output = fmt.format(record)
     assert '{"token": "abc"}' in output  # Should fall back to original string
 
 
-def test_redacting_formatter_structured_dict_exception(monkeypatch: Any, log_record_factory: Callable[..., logging.LogRecord]) -> None:
+def test_redacting_formatter_structured_dict_exception(
+    monkeypatch: Any, log_record_factory: Callable[..., logging.LogRecord]
+) -> None:
     """Covers the exception branch in _redact_structured for dict/list input (lines 288, 293)."""
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"token": "abc"})
 
     def bad_redact_body(*a: object, **kw: object) -> None:
         raise RuntimeError("fail")
-    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
+
+    monkeypatch.setattr(
+        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
+    )
     output = fmt.format(record)
     assert "[REDACTED]" in output
 
 
-def test_redacting_formatter_fallback_branch_strmsg(log_record_factory: Callable[..., logging.LogRecord]) -> None:
+def test_redacting_formatter_fallback_branch_strmsg(
+    log_record_factory: Callable[..., logging.LogRecord],
+) -> None:
     """Covers fallback branch in _redact_message (line 204) for a custom object not handled by other branches."""
     fmt = RedactingFormatter()
 
     class OddType:
         def __str__(self) -> str:
             return "odd"
+
     record = log_record_factory(msg=OddType())
     output = fmt.format(record)
     assert "odd" in output
 
 
-def test_detailed_formatter_exc_info_sets_exc_text_branch(log_record_factory: Callable[..., logging.LogRecord]) -> None:
+def test_detailed_formatter_exc_info_sets_exc_text_branch(
+    log_record_factory: Callable[..., logging.LogRecord],
+) -> None:
     """Covers line 69: record.exc_text = self.formatException(record.exc_info)"""
     fmt = DetailedFormatter()
     try:

@@ -3,7 +3,12 @@ from typing import Dict, Set, Tuple
 
 import pytest
 
-from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES, DEFAULT_SENSITIVE_HEADERS, REDACTED_VALUE, redact_headers
+from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_HEADER_PREFIXES,
+    DEFAULT_SENSITIVE_HEADERS,
+    REDACTED_VALUE,
+    redact_headers,
+)
 
 # Test Cases for redact_headers
 
@@ -112,9 +117,9 @@ from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES,
         (
             {
                 "Authorization": "token",  # Default key
-                "X-API-Key": "key",       # Default prefix
+                "X-API-Key": "key",  # Default prefix
                 "User-Secret-Token": "abc",  # Pattern match
-                "Public-Data": "123",     # No match
+                "Public-Data": "123",  # No match
             },
             {
                 "Authorization": REDACTED_VALUE,
@@ -144,6 +149,7 @@ def test_redact_headers(
     )
     assert result == expected_headers
 
+
 # Test that defaults are used correctly
 
 
@@ -153,6 +159,7 @@ def test_redact_headers_defaults() -> None:
     expected_headers = {"Authorization": REDACTED_VALUE, "X-API-Key": REDACTED_VALUE}
     result = redact_headers(input_headers)
     assert result == expected_headers
+
 
 # Test that input dictionary is not modified
 

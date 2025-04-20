@@ -13,8 +13,9 @@ from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.file import FileProvider
 
 # Type alias for the custom auth callable used in tests
-CustomAuthCallable = Callable[[Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]]
-
+CustomAuthCallable = Callable[
+    [Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]
+]
 
 @pytest.fixture(scope="session")
 def httpserver_listen_address() -> tuple[str, int]:
@@ -23,30 +24,25 @@ def httpserver_listen_address() -> tuple[str, int]:
 
 # Note: pytest-httpserver automatically provides the 'httpserver' fixture
 
-
 @pytest.fixture(scope="function")
 def mock_api_url(httpserver: HTTPServer) -> str:
     """Provides the base URL of the running mock API server."""
     ...
-
 
 @pytest.fixture(scope="function")
 def temp_config_file(tmp_path: Path) -> Path:
     """Creates a temporary JSON config file for testing."""
     ...
 
-
 @pytest.fixture(scope="function")
 def file_provider(temp_config_file: Path) -> FileProvider:
     """Provides a FileProvider instance pointing to a temporary config file."""
     ...
 
-
 @pytest.fixture(scope="function")
 def env_provider(monkeypatch: MonkeyPatch) -> EnvProvider:
     """Provides an EnvProvider with predefined env vars."""
     ...
-
 
 @pytest.fixture(scope="function")
 def config_manager(
@@ -55,9 +51,10 @@ def config_manager(
     """Provides a ConfigManager instance with file and env providers."""
     ...
 
-
 @pytest.fixture(scope="function")
-def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
+def custom_auth_strategy_factory() -> (
+    Callable[[Optional[CustomAuthCallable]], CustomAuth]
+):
     """
     Provides a factory fixture to create CustomAuth instances for testing.
 

@@ -4,8 +4,15 @@ import textwrap
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
-from apiconfig.utils.redaction.body import redact_body
-from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES, DEFAULT_SENSITIVE_HEADERS, REDACTED_VALUE, redact_headers
+from apiconfig.utils.redaction.body import (
+    redact_body,
+)
+from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_HEADER_PREFIXES,
+    DEFAULT_SENSITIVE_HEADERS,
+    REDACTED_VALUE,
+    redact_headers,
+)
 
 
 class DetailedFormatter(logging.Formatter):
@@ -42,7 +49,9 @@ class DetailedFormatter(logging.Formatter):
         formatted = self._format_stack_info(formatted, record)
         return formatted
 
-    def _format_multiline_message(self, formatted: str, record: logging.LogRecord) -> str:
+    def _format_multiline_message(
+        self, formatted: str, record: logging.LogRecord
+    ) -> str:
         lines = formatted.split("\n")
         if len(lines) <= 1:
             return formatted
@@ -54,13 +63,19 @@ class DetailedFormatter(logging.Formatter):
         if len(message_lines) > 1:
             indented_message = "\n".join(
                 [message_lines[0]]
-                + [textwrap.indent(line, " " * (metadata_len)) for line in message_lines[1:]]
+                + [
+                    textwrap.indent(line, " " * (metadata_len))
+                    for line in message_lines[1:]
+                ]
             )
-            lines[0] = first_line.replace(message_lines[0], indented_message.split("\n", 1)[0])
+            lines[0] = first_line.replace(
+                message_lines[0], indented_message.split("\n", 1)[0]
+            )
         other_lines = [lines[0]] + [textwrap.indent(line, "    ") for line in lines[1:]]
         if len(message_lines) > 1:
             other_lines.extend(
-                textwrap.indent(line, " " * (metadata_len)) for line in message_lines[1:]
+                textwrap.indent(line, " " * (metadata_len))
+                for line in message_lines[1:]
             )
         return "\n".join(other_lines)
 
@@ -68,7 +83,9 @@ class DetailedFormatter(logging.Formatter):
         if record.exc_info and not getattr(record, "exc_text", None):
             record.exc_text = self.formatException(record.exc_info)
         if getattr(record, "exc_text", None):
-            exc_text = textwrap.indent(record.exc_text if record.exc_text is not None else "", "    ")
+            exc_text = textwrap.indent(
+                record.exc_text if record.exc_text is not None else "", "    "
+            )
             if formatted[-1:] != "\n":
                 formatted += "\n"
             formatted += exc_text
@@ -186,7 +203,9 @@ class RedactingFormatter(logging.Formatter):
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
         if isinstance(orig_msg, bytes) or self._is_binary(msg):
-            redacted_msg = self._redact_binary(orig_msg if isinstance(orig_msg, bytes) else msg)
+            redacted_msg = self._redact_binary(
+                orig_msg if isinstance(orig_msg, bytes) else msg
+            )
         # 2. If the original message is dict or list, always redact and serialize to JSON
         elif isinstance(orig_msg, (dict, list)):
             redacted_msg = self._redact_structured(orig_msg, content_type)
@@ -207,6 +226,7 @@ class RedactingFormatter(logging.Formatter):
         # If _redact_structured returned a dict/list, always serialize to JSON
         if isinstance(redacted_msg, (dict, list)):
             import json
+
             record.msg = json.dumps(redacted_msg, ensure_ascii=False)
         else:
             record.msg = str(redacted_msg)
@@ -223,7 +243,10 @@ class RedactingFormatter(logging.Formatter):
             return True
         if isinstance(msg, str):
             if content_type:
-                if "json" in str(content_type).lower() or "form" in str(content_type).lower():
+                if (
+                    "json" in str(content_type).lower()
+                    or "form" in str(content_type).lower()
+                ):
                     return True
             stripped = msg.strip()
             if (stripped.startswith("{") and stripped.endswith("}")) or (
@@ -246,9 +269,8 @@ class RedactingFormatter(logging.Formatter):
         # If msg is a string and looks like JSON, always parse, redact, and serialize
         if isinstance(msg, str):
             stripped = msg.strip()
-            is_json = (
-                (stripped.startswith("{") and stripped.endswith("}"))
-                or (stripped.startswith("[") and stripped.endswith("]"))
+            is_json = (stripped.startswith("{") and stripped.endswith("}")) or (
+                stripped.startswith("[") and stripped.endswith("]")
             )
             if is_json:
                 try:

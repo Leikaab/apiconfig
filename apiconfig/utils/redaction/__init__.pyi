@@ -1,7 +1,12 @@
 # apiconfig/utils/redaction/__init__.pyi
 
 from .body import DEFAULT_SENSITIVE_KEYS_PATTERN, REDACTED_BODY_PLACEHOLDER, redact_body
-from .headers import DEFAULT_SENSITIVE_HEADER_PREFIXES, DEFAULT_SENSITIVE_HEADERS, REDACTED_VALUE, redact_headers
+from .headers import (
+    DEFAULT_SENSITIVE_HEADER_PREFIXES,
+    DEFAULT_SENSITIVE_HEADERS,
+    REDACTED_VALUE,
+    redact_headers,
+)
 
 __all__ = [
     "DEFAULT_SENSITIVE_HEADERS",

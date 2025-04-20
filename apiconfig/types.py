@@ -20,7 +20,9 @@ ConfigProviderCallable: TypeAlias = Callable[[], ConfigDict]
 # Authentication Types
 AuthCredentials: TypeAlias = Any  # Placeholder for various credential types
 TokenStorageStrategy: TypeAlias = Any  # Placeholder for token storage implementations
-TokenRefreshCallable: TypeAlias = Callable[..., Any]  # Placeholder for token refresh logic
+TokenRefreshCallable: TypeAlias = Callable[
+    ..., Any
+]  # Placeholder for token refresh logic
 
 # Extension Types
 CustomAuthPrepareCallable: TypeAlias = Callable[

@@ -4,17 +4,26 @@ from typing import Any, Optional, Pattern, Union
 
 import pytest
 
-from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN, REDACTED_BODY_PLACEHOLDER, redact_body
+from apiconfig.utils.redaction.body import (
+    DEFAULT_SENSITIVE_KEYS_PATTERN,
+    REDACTED_BODY_PLACEHOLDER,
+    redact_body,
+)
 from apiconfig.utils.redaction.headers import REDACTED_VALUE  # Import from headers
 
 # --- Test Data ---
 
 SENSITIVE_KEY_PATTERN = DEFAULT_SENSITIVE_KEYS_PATTERN
-SENSITIVE_VALUE_PATTERN_EMAIL = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
-SENSITIVE_VALUE_PATTERN_UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.IGNORECASE)
+SENSITIVE_VALUE_PATTERN_EMAIL = re.compile(
+    r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+)
+SENSITIVE_VALUE_PATTERN_UUID = re.compile(
+    r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.IGNORECASE
+)
 
 
 # --- Test Cases ---
+
 
 @pytest.mark.parametrize(
     "body, content_type, key_pattern, value_pattern, expected_output",
@@ -157,17 +166,69 @@ SENSITIVE_VALUE_PATTERN_UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-
         ("{}", "application/json", SENSITIVE_KEY_PATTERN, None, "{}"),
         ("[]", "application/json", SENSITIVE_KEY_PATTERN, None, "[]"),
         ("", "application/x-www-form-urlencoded", SENSITIVE_KEY_PATTERN, None, ""),
-        (b'{"password": "secret"}', "application/json", SENSITIVE_KEY_PATTERN, None, f'{{"password": "{REDACTED_VALUE}"}}'.encode('utf-8')),
-        (b"password=secret", "application/x-www-form-urlencoded", SENSITIVE_KEY_PATTERN,
-         None, "password=%5BREDACTED%5D".encode('utf-8')),  # Use URL encoded value
-        (b'\x80abc', None, SENSITIVE_KEY_PATTERN, None, REDACTED_BODY_PLACEHOLDER),  # Binary data
-        ("not json", "application/json", SENSITIVE_KEY_PATTERN, None, "not json"),  # Unparseable JSON
-        ("a=b=c", "application/x-www-form-urlencoded", SENSITIVE_KEY_PATTERN, None, "a=b%3Dc"),  # Unparseable form (sort of)
-        ({"password": "secret", "user": "test"}, None, SENSITIVE_KEY_PATTERN, None, {"password": REDACTED_VALUE, "user": "test"}),  # Already parsed dict
-        ([{"auth_token": "abc"}], None, SENSITIVE_KEY_PATTERN, None, [{"auth_token": REDACTED_VALUE}]),  # Already parsed list
-        ({"email": "test@example.com"}, None, SENSITIVE_KEY_PATTERN, SENSITIVE_VALUE_PATTERN_EMAIL,
-         {"email": REDACTED_VALUE}),  # Already parsed dict with value pattern
-        (123, None, SENSITIVE_KEY_PATTERN, None, 123),  # Non-string/bytes/dict/list body
+        (
+            b'{"password": "secret"}',
+            "application/json",
+            SENSITIVE_KEY_PATTERN,
+            None,
+            f'{{"password": "{REDACTED_VALUE}"}}'.encode("utf-8"),
+        ),
+        (
+            b"password=secret",
+            "application/x-www-form-urlencoded",
+            SENSITIVE_KEY_PATTERN,
+            None,
+            "password=%5BREDACTED%5D".encode("utf-8"),
+        ),  # Use URL encoded value
+        (
+            b"\x80abc",
+            None,
+            SENSITIVE_KEY_PATTERN,
+            None,
+            REDACTED_BODY_PLACEHOLDER,
+        ),  # Binary data
+        (
+            "not json",
+            "application/json",
+            SENSITIVE_KEY_PATTERN,
+            None,
+            "not json",
+        ),  # Unparseable JSON
+        (
+            "a=b=c",
+            "application/x-www-form-urlencoded",
+            SENSITIVE_KEY_PATTERN,
+            None,
+            "a=b%3Dc",
+        ),  # Unparseable form (sort of)
+        (
+            {"password": "secret", "user": "test"},
+            None,
+            SENSITIVE_KEY_PATTERN,
+            None,
+            {"password": REDACTED_VALUE, "user": "test"},
+        ),  # Already parsed dict
+        (
+            [{"auth_token": "abc"}],
+            None,
+            SENSITIVE_KEY_PATTERN,
+            None,
+            [{"auth_token": REDACTED_VALUE}],
+        ),  # Already parsed list
+        (
+            {"email": "test@example.com"},
+            None,
+            SENSITIVE_KEY_PATTERN,
+            SENSITIVE_VALUE_PATTERN_EMAIL,
+            {"email": REDACTED_VALUE},
+        ),  # Already parsed dict with value pattern
+        (
+            123,
+            None,
+            SENSITIVE_KEY_PATTERN,
+            None,
+            123,
+        ),  # Non-string/bytes/dict/list body
     ],
 )
 def test_redact_body(
@@ -186,13 +247,22 @@ def test_redact_body(
     )
 
     # Handle comparison for JSON strings where key order might differ
-    if isinstance(expected_output, str) and content_type == "application/json" and expected_output.startswith(("{", "[")):
+    if (
+        isinstance(expected_output, str)
+        and content_type == "application/json"
+        and expected_output.startswith(("{", "["))
+    ):
         try:
             assert json.loads(result) == json.loads(expected_output)
         except (json.JSONDecodeError, TypeError):
-            pytest.fail(f"Failed to compare JSON: result={result!r}, expected={expected_output!r}")  # Should not happen if expected is valid JSON
+            pytest.fail(
+                f"Failed to compare JSON: result={result!r}, expected={expected_output!r}"
+            )  # Should not happen if expected is valid JSON
     # Handle comparison for form-urlencoded strings where param order might differ
-    elif isinstance(expected_output, str) and content_type == "application/x-www-form-urlencoded":
+    elif (
+        isinstance(expected_output, str)
+        and content_type == "application/x-www-form-urlencoded"
+    ):
         # Simple comparison works if urlencode produces consistent order,
         # otherwise more complex parsing/comparison might be needed.
         # For these tests, direct string comparison should suffice.
@@ -202,9 +272,11 @@ def test_redact_body(
         if isinstance(result, str):
             # Compare decoded expected output with string result
             try:
-                assert result == expected_output.decode('utf-8')
+                assert result == expected_output.decode("utf-8")
             except UnicodeDecodeError:
-                pytest.fail(f"Could not decode expected bytes for comparison: {expected_output!r}")
+                pytest.fail(
+                    f"Could not decode expected bytes for comparison: {expected_output!r}"
+                )
         elif isinstance(result, bytes):
             # If result is still bytes (e.g., binary data placeholder), compare directly
             assert result == expected_output

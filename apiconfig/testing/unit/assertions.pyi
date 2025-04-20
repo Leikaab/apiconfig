@@ -11,7 +11,6 @@ from apiconfig.config.base import ClientConfig
 # A Protocol could be defined later if needed.
 ConfigProvider = Any
 
-
 def assert_client_config_valid(config: ClientConfig) -> None:
     """
     Assert that a ClientConfig instance appears valid.
@@ -26,7 +25,6 @@ def assert_client_config_valid(config: ClientConfig) -> None:
         AssertionError: If the config is invalid.
     """
     ...
-
 
 def assert_auth_header_correct(
     strategy: AuthStrategy, expected_header: Dict[str, str]
@@ -46,7 +44,6 @@ def assert_auth_header_correct(
                       or if the strategy is not a valid AuthStrategy instance.
     """
     ...
-
 
 def assert_provider_loads(
     provider: ConfigProvider, expected_dict: Dict[str, Any]

@@ -32,7 +32,6 @@ class ContextFilter(logging.Filter):
         """
         ...
 
-
 def set_log_context(key: str, value: Any) -> None:
     """
     Sets a key-value pair in the thread-local context for logging.
@@ -42,7 +41,6 @@ def set_log_context(key: str, value: Any) -> None:
         value: The context value.
     """
     ...
-
 
 def clear_log_context() -> None:
     """Clears all context variables from the thread-local storage."""

@@ -11,7 +11,6 @@ from apiconfig.config.manager import ConfigManager
 # NOTE: No ConfigProvider base class found in current implementation.
 # Providers seem to use duck typing (requiring a load() method).
 
-
 class MockConfigProvider:
     """
     A mock ConfigProvider (duck-typed) designed for testing purposes.
@@ -29,7 +28,6 @@ class MockConfigProvider:
     """
 
     def __init__(self, config_data: Dict[str, Any]) -> None: ...
-
     def load(self) -> Dict[str, Any]:
         """
         Return the predefined configuration dictionary.
@@ -38,7 +36,6 @@ class MockConfigProvider:
             The dictionary passed to the constructor.
         """
         ...
-
 
 def create_mock_client_config(
     *,
@@ -67,7 +64,6 @@ def create_mock_client_config(
     """
     ...
 
-
 class MockConfigManager(ConfigManager):
     """
     A mock ConfigManager for testing configuration loading logic.
@@ -85,6 +81,7 @@ class MockConfigManager(ConfigManager):
                    a list containing a single `MagicMock` provider is used.
         config_class: The configuration class to use. Defaults to `ClientConfig`.
     """
+
     load_config: MagicMock  # Allow spying on this method
 
     def __init__(

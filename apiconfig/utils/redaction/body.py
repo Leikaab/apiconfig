@@ -30,9 +30,7 @@ def _redact_recursive(
                 )
         return redacted_dict
     elif isinstance(data, list):
-        return [
-            _redact_recursive(item, key_pattern, value_pattern) for item in data
-        ]
+        return [_redact_recursive(item, key_pattern, value_pattern) for item in data]
     elif isinstance(data, str) and value_pattern and value_pattern.search(data):
         return REDACTED_VALUE
     else:
@@ -117,9 +115,7 @@ def redact_body(
                     # Check individual values if a value pattern is provided
                     if sensitive_value_pattern:
                         redacted_values = [
-                            REDACTED_VALUE
-                            if sensitive_value_pattern.search(v)
-                            else v
+                            REDACTED_VALUE if sensitive_value_pattern.search(v) else v
                             for v in values
                         ]
                         redacted_form[key] = redacted_values

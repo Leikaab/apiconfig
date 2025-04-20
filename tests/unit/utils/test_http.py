@@ -96,7 +96,12 @@ def test_normalize_header_name(name: str, expected: str) -> None:
 @pytest.mark.parametrize(
     "headers, name, default, expected",
     [
-        ({"Content-Type": "application/json"}, "content-type", None, "application/json"),
+        (
+            {"Content-Type": "application/json"},
+            "content-type",
+            None,
+            "application/json",
+        ),
         ({"content-length": "100"}, "Content-Length", None, "100"),
         ({"X-API-Key": "123"}, "x-api-key", None, "123"),
         ({"Auth": "Bearer token"}, "AUTH", None, "Bearer token"),
@@ -135,13 +140,26 @@ def test_safe_json_decode_success(
     "content, encoding, expected_exception, match",
     [
         ("{invalid json", None, JSONDecodeError, "Failed to decode JSON"),
-        (b"\x80abc", "utf-8", JSONDecodeError, "Failed to decode response body"),  # Invalid UTF-8 start byte
+        (
+            b"\x80abc",
+            "utf-8",
+            JSONDecodeError,
+            "Failed to decode response body",
+        ),  # Invalid UTF-8 start byte
         # Removed problematic test case: (b'{"key": "value"}', "ascii", JSONDecodeError, "Failed to decode response body"),
-        (123, None, HTTPUtilsError, "An unexpected error occurred"),  # Invalid input type
+        (
+            123,
+            None,
+            HTTPUtilsError,
+            "An unexpected error occurred",
+        ),  # Invalid input type
     ],
 )
 def test_safe_json_decode_failure(
-    content: Any, encoding: str | None, expected_exception: type[APIConfigError], match: str
+    content: Any,
+    encoding: str | None,
+    expected_exception: type[APIConfigError],
+    match: str,
 ) -> None:
     with pytest.raises(expected_exception, match=match):
         safe_json_decode(content, encoding=encoding)

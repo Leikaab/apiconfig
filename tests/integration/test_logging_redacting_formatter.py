@@ -43,7 +43,10 @@ def test_redacting_formatter_integration_dict(log_stream: io.StringIO) -> None:
 
 def test_redacting_formatter_integration_form(log_stream: io.StringIO) -> None:
     logger = get_logger_with_formatter(log_stream)
-    logger.info("secret=shh123&foo=bar", extra={"content_type": "application/x-www-form-urlencoded"})
+    logger.info(
+        "secret=shh123&foo=bar",
+        extra={"content_type": "application/x-www-form-urlencoded"},
+    )
     output = log_stream.getvalue()
     # Accept both [REDACTED] and %5BREDACTED%5D for form-encoded output
     assert "[REDACTED]" in output or "%5BREDACTED%5D" in output
@@ -52,7 +55,16 @@ def test_redacting_formatter_integration_form(log_stream: io.StringIO) -> None:
 
 def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> None:
     logger = get_logger_with_formatter(log_stream)
-    logger.info("header test", extra={"headers": {"Authorization": "Bearer abc", "X-Api-Key": "xyz", "X-Other": "ok"}})
+    logger.info(
+        "header test",
+        extra={
+            "headers": {
+                "Authorization": "Bearer abc",
+                "X-Api-Key": "xyz",
+                "X-Other": "ok",
+            }
+        },
+    )
     # The headers dict is not in the message, but we can check the record
     # For integration, we check that the record's headers are redacted
     # (This is a limitation of logging, but we can at least check the handler's formatter)
@@ -69,10 +81,16 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
         sinfo=None,
     )
     from typing import cast
-    setattr(record, "headers", {"Authorization": "Bearer abc", "X-Api-Key": "xyz", "X-Other": "ok"})
+
+    setattr(
+        record,
+        "headers",
+        {"Authorization": "Bearer abc", "X-Api-Key": "xyz", "X-Other": "ok"},
+    )
 
     class TypedLogRecord(Protocol):
         headers: dict[str, str]
+
     handler = logging.StreamHandler(io.StringIO())
     handler.setFormatter(RedactingFormatter())
     handler.format(record)
@@ -85,7 +103,9 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
 
 def test_redacting_formatter_integration_plain_string(log_stream: io.StringIO) -> None:
     secret_pattern = re.compile(r"secret_[a-z0-9]+", re.IGNORECASE)
-    logger = get_logger_with_formatter(log_stream, body_sensitive_value_pattern=secret_pattern)
+    logger = get_logger_with_formatter(
+        log_stream, body_sensitive_value_pattern=secret_pattern
+    )
     logger.info("this is a secret_abc123 and should be redacted")
     output = log_stream.getvalue()
     assert "[REDACTED]" in output

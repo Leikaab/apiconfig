@@ -21,7 +21,9 @@ class MockAuthStrategy(AuthStrategy):
         self.raise_exception = raise_exception
 
     def prepare_request(
-        self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, Any]] = None
+        self,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, Any]] = None,
     ) -> Tuple[Dict[str, str], Dict[str, Any]]:
         if self.raise_exception:
             raise self.raise_exception
@@ -37,7 +39,9 @@ class MockAuthStrategy(AuthStrategy):
     # Add dummy implementations for abstract methods inherited from AuthStrategy
     # to make MockAuthStrategy concrete and instantiable for tests.
     # The actual mock logic is handled by the overridden prepare_request above.
-    def prepare_request_headers(self, headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    def prepare_request_headers(
+        self, headers: Optional[Dict[str, str]] = None
+    ) -> Dict[str, str]:
         # This method is required by AuthStrategy ABC.
         # Ensure it always returns Dict[str, str] as per the signature.
         # The actual mock logic uses the main prepare_request method.
@@ -45,7 +49,9 @@ class MockAuthStrategy(AuthStrategy):
         # In a real scenario, auth might be applied here. For the mock, just return.
         return current_headers
 
-    def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def prepare_request_params(
+        self, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         # This method is required by AuthStrategy ABC.
         # Ensure it always returns Dict[str, Any] as per the signature.
         # The actual mock logic uses the main prepare_request method.

@@ -72,4 +72,6 @@ def safe_json_decode(
         ) from e
     except Exception as e:
         # Catch other potential errors during processing
-        raise HTTPUtilsError(f"An unexpected error occurred during JSON decoding: {e}") from e
+        raise HTTPUtilsError(
+            f"An unexpected error occurred during JSON decoding: {e}"
+        ) from e

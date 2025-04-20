@@ -22,9 +22,7 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
     from apiconfig.config.base import ClientConfig
 
     if not isinstance(config, ClientConfig):
-        raise AssertionError(
-            f"Object {config!r} is not an instance of ClientConfig."
-        )
+        raise AssertionError(f"Object {config!r} is not an instance of ClientConfig.")
     if not config.hostname:
         raise AssertionError("ClientConfig hostname cannot be empty or None.")
     if config.timeout < 0:
@@ -50,9 +48,7 @@ def assert_auth_header_correct(
     from apiconfig.auth.base import AuthStrategy
 
     if not isinstance(strategy, AuthStrategy):
-        raise AssertionError(
-            f"Object {strategy!r} is not an instance of AuthStrategy."
-        )
+        raise AssertionError(f"Object {strategy!r} is not an instance of AuthStrategy.")
 
     actual_header = strategy.prepare_request_headers()
     assert (

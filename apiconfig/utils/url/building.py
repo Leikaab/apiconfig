@@ -38,9 +38,7 @@ def build_url(
     return current_url
 
 
-def add_query_params(
-    url: str, params: Mapping[str, Any], replace: bool = False
-) -> str:
+def add_query_params(url: str, params: Mapping[str, Any], replace: bool = False) -> str:
     """Add or update query parameters to an existing URL."""
     parsed = parse_url(url)  # Use parse_url
     # parse_url returns ParseResult, query is a string. Need parse_qs for dict.
@@ -74,15 +72,15 @@ def add_query_params(
     return urllib.parse.urlunparse(new_url_parts)
 
 
-def replace_path_segment(
-    url: str, segment_index: int, new_segment: str
-) -> str:
+def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
     """Replace a specific segment in the URL path."""
     parsed = parse_url(url)  # Use parse_url
     path_segments = [seg for seg in parsed.path.split("/") if seg]
 
     # Handle edge case: replacing the "root" segment when path is "/" or empty ""
-    is_effectively_root = not path_segments and (parsed.path == "/" or parsed.path == "")
+    is_effectively_root = not path_segments and (
+        parsed.path == "/" or parsed.path == ""
+    )
     if is_effectively_root and segment_index == 0:
         path_segments = [""]  # Treat root as a single empty segment for replacement
 
@@ -96,7 +94,9 @@ def replace_path_segment(
 
     # Reconstruct the path, handling potential leading/trailing slashes
     # Join segments, ensuring leading slash
-    new_path = "/" + "/".join(segment for segment in path_segments if segment)  # Filter empty strings post-replacement
+    new_path = "/" + "/".join(
+        segment for segment in path_segments if segment
+    )  # Filter empty strings post-replacement
 
     # Preserve trailing slash if original path had one and the new path isn't just "/"
     if parsed.path.endswith("/") and new_path != "/":

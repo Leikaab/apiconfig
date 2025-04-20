@@ -5,7 +5,6 @@ REDACTED_PLACEHOLDER: str
 DEFAULT_SENSITIVE_KEYS_PATTERN: Pattern[str]
 REDACTED_BODY_PLACEHOLDER: str
 
-
 def redact_body(
     body: Union[str, bytes, Any],
     content_type: Optional[str] = ...,

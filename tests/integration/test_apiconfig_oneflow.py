@@ -20,7 +20,9 @@ def oneflow_config() -> Tuple[ClientConfig, Optional[str], Optional[str], str]:
     config = env.load()
 
     api_key = config.get("ONEFLOW_API_KEY") or os.environ.get("ONEFLOW_API_KEY")
-    user_email = config.get("ONEFLOW_USER_EMAIL") or os.environ.get("ONEFLOW_USER_EMAIL")
+    user_email = config.get("ONEFLOW_USER_EMAIL") or os.environ.get(
+        "ONEFLOW_USER_EMAIL"
+    )
     base_url = (
         config.get("ONEFLOW_BASE_URL")
         or os.environ.get("ONEFLOW_BASE_URL")
@@ -31,7 +33,9 @@ def oneflow_config() -> Tuple[ClientConfig, Optional[str], Optional[str], str]:
     if not base_url.startswith("http"):
         base_url = "https://" + base_url
 
-    auth_strategy = ApiKeyAuth(api_key, header_name="x-oneflow-api-token") if api_key else None
+    auth_strategy = (
+        ApiKeyAuth(api_key, header_name="x-oneflow-api-token") if api_key else None
+    )
 
     headers: Dict[str, str] = {}
     if user_email:
@@ -46,7 +50,7 @@ def oneflow_config() -> Tuple[ClientConfig, Optional[str], Optional[str], str]:
 
 
 def test_oneflow_apiconfig_setup(
-    oneflow_config: Tuple[ClientConfig, Optional[str], Optional[str], str]
+    oneflow_config: Tuple[ClientConfig, Optional[str], Optional[str], str],
 ) -> None:
     """
     Integration test: apiconfig config and auth for Oneflow.
@@ -77,7 +81,7 @@ def test_oneflow_apiconfig_setup(
 
 
 def test_oneflow_api_users(
-    oneflow_config: Tuple[ClientConfig, Optional[str], Optional[str], str]
+    oneflow_config: Tuple[ClientConfig, Optional[str], Optional[str], str],
 ) -> None:
     """
     True integration test: Uses apiconfig to load config/auth and makes a real call to Oneflow API.
@@ -88,7 +92,9 @@ def test_oneflow_api_users(
     if not api_key:
         pytest.skip("ONEFLOW_API_KEY not set in environment; skipping real API call.")
     if not user_email:
-        pytest.skip("ONEFLOW_USER_EMAIL not set in environment; skipping real API call.")
+        pytest.skip(
+            "ONEFLOW_USER_EMAIL not set in environment; skipping real API call."
+        )
 
     url = f"{base_url.rstrip('/')}/users"
     headers: Dict[str, str] = {}
@@ -102,7 +108,9 @@ def test_oneflow_api_users(
     with httpx.Client(timeout=10.0) as client:
         response = client.get(url, headers=headers)
 
-    assert response.status_code == 200, f"Unexpected status code: {response.status_code} - {response.text}"
+    assert (
+        response.status_code == 200
+    ), f"Unexpected status code: {response.status_code} - {response.text}"
 
     data: Any = response.json()
     # Oneflow returns a dict with a "data" key containing a list of users
@@ -112,4 +120,6 @@ def test_oneflow_api_users(
     assert isinstance(users, list), f"'data' is not a list: {type(users)}"
     assert len(users) > 0, "No users returned in response."
     # At least one user should have an "id" field
-    assert any("id" in user for user in users), "No user in response contains an 'id' field."
+    assert any(
+        "id" in user for user in users
+    ), "No user in response contains an 'id' field."

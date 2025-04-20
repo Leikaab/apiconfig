@@ -9,7 +9,6 @@ else:
 _QueryParamValue = Union[str, int, float, bool, Sequence[Union[str, int, float, bool]]]
 _QueryParams = Mapping[str, _QueryParamValue | None]
 
-
 def build_url(
     base_url: str,
     *path_segments: Union[str, int],
@@ -45,10 +44,7 @@ def build_url(
     """
     ...
 
-
-def add_query_params(
-    url: str, params: _QueryParams, replace: bool = False
-) -> str:
+def add_query_params(url: str, params: _QueryParams, replace: bool = False) -> str:
     """
     Add or update query parameters to an existing URL.
 
@@ -79,10 +75,7 @@ def add_query_params(
     """
     ...
 
-
-def replace_path_segment(
-    url: str, segment_index: int, new_segment: str
-) -> str:
+def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
     """
     Replace a specific segment in the URL path.
 

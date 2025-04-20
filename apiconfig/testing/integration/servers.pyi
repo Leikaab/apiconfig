@@ -54,7 +54,6 @@ def configure_mock_response(
     """
     ...
 
-
 def assert_request_received(
     httpserver: HTTPServer,
     path: str,

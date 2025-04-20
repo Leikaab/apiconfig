@@ -10,7 +10,6 @@ from apiconfig.config.manager import ConfigManager
 
 _T = typing.TypeVar("_T")
 
-
 def make_request_with_config(
     config: ClientConfig,
     auth_strategy: AuthStrategy,
@@ -37,9 +36,8 @@ def make_request_with_config(
     """
     ...
 
-
 def setup_multi_provider_manager(
-    config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]]
+    config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]],
 ) -> ConfigManager:
     """
     Sets up a ConfigManager with multiple MemoryProviders for testing.
@@ -52,7 +50,6 @@ def setup_multi_provider_manager(
         A configured ConfigManager instance.
     """
     ...
-
 
 def simulate_token_endpoint(
     httpserver: HTTPServer,

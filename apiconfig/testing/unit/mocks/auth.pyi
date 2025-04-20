@@ -17,6 +17,7 @@ class MockAuthStrategy(AuthStrategy):
     Handles common mocking logic like overriding headers/params and raising exceptions.
     Specific mock strategies should inherit from this class.
     """
+
     override_headers: Dict[str, str]
     override_params: Dict[str, Any]
     raise_exception: Optional[Exception]
@@ -39,7 +40,9 @@ class MockAuthStrategy(AuthStrategy):
         ...
 
     def prepare_request(
-        self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, Any]] = None
+        self,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, Any]] = None,
     ) -> Tuple[Dict[str, str], Dict[str, Any]]:
         """
         Prepare request headers and parameters, applying mock configurations.
@@ -59,21 +62,24 @@ class MockAuthStrategy(AuthStrategy):
             Exception: The exception provided via `raise_exception` during init.
         """
         ...
-
     # Add signatures for dummy implementations required by AuthStrategy ABC
-    def prepare_request_headers(self, headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    def prepare_request_headers(
+        self, headers: Optional[Dict[str, str]] = None
+    ) -> Dict[str, str]:
         """Dummy implementation required by AuthStrategy ABC."""
         ...
 
-    def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def prepare_request_params(
+        self, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Dummy implementation required by AuthStrategy ABC."""
         ...
-
 
 class MockBasicAuth(MockAuthStrategy, BasicAuth):
     """
     Mock implementation of BasicAuth inheriting mock behavior from MockAuthStrategy.
     """
+
     # Attributes like override_headers are inherited from MockAuthStrategy
 
     def __init__(
@@ -96,16 +102,15 @@ class MockBasicAuth(MockAuthStrategy, BasicAuth):
             raise_exception: Optional exception instance to raise when prepare_request is called.
         """
         ...
-
     # prepare_request is inherited from MockAuthStrategy
     # Docstring for prepare_request is also inherited implicitly,
     # but could be overridden if specific mock behavior needed description.
-
 
 class MockBearerAuth(MockAuthStrategy, BearerAuth):
     """
     Mock implementation of BearerAuth inheriting mock behavior from MockAuthStrategy.
     """
+
     # Attributes inherited from MockAuthStrategy
 
     def __init__(
@@ -126,14 +131,13 @@ class MockBearerAuth(MockAuthStrategy, BearerAuth):
             raise_exception: Optional exception instance to raise when prepare_request is called.
         """
         ...
-
     # prepare_request is inherited from MockAuthStrategy
-
 
 class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
     """
     Mock implementation of ApiKeyAuth inheriting mock behavior from MockAuthStrategy.
     """
+
     # Attributes inherited from MockAuthStrategy
 
     def __init__(
@@ -158,14 +162,13 @@ class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
             raise_exception: Optional exception instance to raise when prepare_request is called.
         """
         ...
-
     # prepare_request is inherited from MockAuthStrategy
-
 
 class MockCustomAuth(MockAuthStrategy, CustomAuth):
     """
     Mock implementation of CustomAuth inheriting mock behavior from MockAuthStrategy.
     """
+
     # Attributes inherited from MockAuthStrategy
 
     def __init__(
@@ -184,5 +187,4 @@ class MockCustomAuth(MockAuthStrategy, CustomAuth):
             raise_exception: Optional exception instance to raise when prepare_request is called.
         """
         ...
-
     # prepare_request is inherited from MockAuthStrategy

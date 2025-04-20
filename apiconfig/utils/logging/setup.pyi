@@ -3,7 +3,6 @@ from typing import List, Optional, Union
 
 _logger: logging.Logger
 
-
 def setup_logging(
     level: Union[int, str] = logging.WARNING,
     handlers: Optional[List[logging.Handler]] = None,

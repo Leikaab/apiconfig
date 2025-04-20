@@ -57,7 +57,7 @@ def make_request_with_config(
 
 
 def setup_multi_provider_manager(
-    config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]]
+    config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]],
 ) -> ConfigManager:
     """Internal implementation for setup_multi_provider_manager."""
     providers = []
@@ -114,9 +114,9 @@ def simulate_token_endpoint(
 
         # Configure error response if body doesn't match
         error_resp_data = error_response or {"error": "invalid_request"}
-        httpserver.expect_request(
-            uri=token_path, method="POST"
-        ).respond_with_json(error_resp_data, status=error_status_code)
+        httpserver.expect_request(uri=token_path, method="POST").respond_with_json(
+            error_resp_data, status=error_status_code
+        )
 
         # Configure success response for matching body
         configure_mock_response(

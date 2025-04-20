@@ -5,7 +5,6 @@ from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 _FormatStyle = logging._FormatStyle
 
-
 class DetailedFormatter(logging.Formatter):
     """
     A logging formatter that provides detailed, potentially multi-line output.
@@ -25,7 +24,6 @@ class DetailedFormatter(logging.Formatter):
         defaults: Optional[Mapping[str, Any]] = ...,
     ) -> None: ...
     def format(self, record: logging.LogRecord) -> str: ...
-
     def formatException(
         self,
         ei: (
@@ -34,7 +32,6 @@ class DetailedFormatter(logging.Formatter):
         ),
     ) -> str: ...
     def formatStack(self, stack_info: str) -> str: ...
-
 
 class RedactingFormatter(logging.Formatter):
     """

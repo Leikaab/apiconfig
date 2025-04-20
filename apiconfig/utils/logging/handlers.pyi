@@ -20,8 +20,8 @@ class ConsoleHandler(logging.StreamHandler[IO[str]]):
         """
         ...
 
-
 class RedactingStreamHandler(logging.StreamHandler[IO[str]]):
     """Type stub for RedactingStreamHandler."""
+
     # Placeholder - inherits methods from logging.StreamHandler
     ...

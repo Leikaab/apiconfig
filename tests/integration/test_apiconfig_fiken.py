@@ -42,7 +42,7 @@ def fiken_config() -> tuple[ClientConfig, str | None, str]:
 
 
 def test_fiken_apiconfig_setup(
-    fiken_config: tuple[ClientConfig, str | None, str]
+    fiken_config: tuple[ClientConfig, str | None, str],
 ) -> None:
     """
     Integration test: apiconfig config and auth for Fiken.
@@ -65,7 +65,7 @@ def test_fiken_apiconfig_setup(
 
 
 def test_fiken_api_companies(
-    fiken_config: tuple[ClientConfig, str | None, str]
+    fiken_config: tuple[ClientConfig, str | None, str],
 ) -> None:
     """
     True integration test: Uses apiconfig to load config/auth and makes a real call to Fiken API.
@@ -74,7 +74,9 @@ def test_fiken_api_companies(
     client_config, token, base_url = fiken_config
 
     if not token:
-        pytest.skip("FIKEN_ACCESS_TOKEN not set in environment; skipping real API call.")
+        pytest.skip(
+            "FIKEN_ACCESS_TOKEN not set in environment; skipping real API call."
+        )
 
     url = f"{base_url.rstrip('/')}/companies"
     headers: dict[str, str] = {}
@@ -86,16 +88,18 @@ def test_fiken_api_companies(
     with httpx.Client(timeout=10.0) as client:
         response = client.get(url, headers=headers)
 
-    assert response.status_code == 200, f"Unexpected status code: {response.status_code} - {response.text}"
+    assert (
+        response.status_code == 200
+    ), f"Unexpected status code: {response.status_code} - {response.text}"
 
     data: Any = response.json()
     # Fiken returns a list of companies, so we expect a list or a dict with a key
     assert isinstance(data, (list, dict)), f"Unexpected response type: {type(data)}"
     # If dict, check for expected keys
     if isinstance(data, dict):
-        assert "companies" in data or "data" in data or "id" in data, (
-            f"Response dict missing expected keys: {data.keys()}"
-        )
+        assert (
+            "companies" in data or "data" in data or "id" in data
+        ), f"Response dict missing expected keys: {data.keys()}"
     # If list, check at least one company object
     if isinstance(data, list):
         assert len(data) > 0, "No companies returned in response."

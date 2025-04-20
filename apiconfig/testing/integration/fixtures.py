@@ -12,7 +12,9 @@ from apiconfig.config.providers.env import EnvProvider  # Corrected import
 from apiconfig.config.providers.file import FileProvider
 
 # Type alias for the custom auth callable used in tests
-CustomAuthCallable = Callable[[Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]]
+CustomAuthCallable = Callable[
+    [Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]
+]
 
 
 @pytest.fixture(scope="session")
@@ -37,7 +39,10 @@ def mock_api_url(httpserver: HTTPServer) -> str:
 def temp_config_file(tmp_path: Path) -> Path:
     """Creates a temporary JSON config file for testing."""
     config_data: Dict[str, Any] = {
-        "api": {"hostname": "file.example.com", "version": "v1"},  # Hostname usually overridden by mock_api_url in tests
+        "api": {
+            "hostname": "file.example.com",
+            "version": "v1",
+        },  # Hostname usually overridden by mock_api_url in tests
         "auth": {"type": "file_basic", "username": "file_user"},
     }
     config_file: Path = tmp_path / "config.json"
@@ -54,7 +59,9 @@ def file_provider(temp_config_file: Path) -> FileProvider:
 @pytest.fixture(scope="function")
 def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected type hint
     """Provides an EnvProvider with predefined env vars."""
-    monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
+    monkeypatch.setenv(
+        "APICONFIG_API_HOSTNAME", "env.example.com"
+    )  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
     monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
     return EnvProvider(prefix="APICONFIG")  # Corrected class instantiation
@@ -70,7 +77,9 @@ def config_manager(
 
 
 @pytest.fixture(scope="function")
-def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
+def custom_auth_strategy_factory() -> (
+    Callable[[Optional[CustomAuthCallable]], CustomAuth]
+):
     """
     Provides a factory fixture to create CustomAuth instances for testing.
 
@@ -107,6 +116,7 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
         # Assert the request was received correctly using assert_request_received...
     ```
     """
+
     def _factory(auth_callable: Optional[CustomAuthCallable] = None) -> CustomAuth:
         """Creates a CustomAuth instance with the given callable."""
         if auth_callable is None:
@@ -116,6 +126,7 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
             ) -> tuple[Dict[str, str], Dict[str, str]]:
                 # Simply return the inputs unmodified
                 return headers, params
+
             auth_callable = default_callable
         # Create and return the CustomAuth instance
         return CustomAuth(auth_callable=auth_callable)

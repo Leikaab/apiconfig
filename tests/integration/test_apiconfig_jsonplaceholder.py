@@ -17,7 +17,9 @@ def test_jsonplaceholder_get_post_1() -> None:
     env_vars: Dict[str, Any] = env.load()
     base_url: str = env_vars.get(
         "JSONPLACEHOLDER_BASE_URL",
-        os.environ.get("JSONPLACEHOLDER_BASE_URL", "https://jsonplaceholder.typicode.com"),
+        os.environ.get(
+            "JSONPLACEHOLDER_BASE_URL", "https://jsonplaceholder.typicode.com"
+        ),
     )
 
     # Set up API config (no auth required)

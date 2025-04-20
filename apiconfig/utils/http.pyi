@@ -15,7 +15,6 @@ __all__ = [
     "safe_json_decode",
 ]
 
-
 def is_success(status_code: int) -> bool:
     """
     Check if an HTTP status code indicates success (2xx).
@@ -27,7 +26,6 @@ def is_success(status_code: int) -> bool:
         True if the status code is in the 200-299 range, False otherwise.
     """
     ...
-
 
 def is_redirect(status_code: int) -> bool:
     """
@@ -41,7 +39,6 @@ def is_redirect(status_code: int) -> bool:
     """
     ...
 
-
 def is_client_error(status_code: int) -> bool:
     """
     Check if an HTTP status code indicates a client error (4xx).
@@ -54,7 +51,6 @@ def is_client_error(status_code: int) -> bool:
     """
     ...
 
-
 def is_server_error(status_code: int) -> bool:
     """
     Check if an HTTP status code indicates a server error (5xx).
@@ -66,7 +62,6 @@ def is_server_error(status_code: int) -> bool:
         True if the status code is in the 500-599 range, False otherwise.
     """
     ...
-
 
 def normalize_header_name(name: str) -> str:
     """
@@ -83,7 +78,6 @@ def normalize_header_name(name: str) -> str:
         The normalized header name.
     """
     ...
-
 
 def get_header_value(
     headers: Mapping[str, str], name: str, default: Optional[str] = None
@@ -103,7 +97,6 @@ def get_header_value(
         The header value if found, otherwise the default value.
     """
     ...
-
 
 def safe_json_decode(
     response_text: Union[str, bytes],

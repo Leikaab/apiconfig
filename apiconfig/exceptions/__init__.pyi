@@ -16,8 +16,8 @@ from .config import ConfigLoadError as ConfigLoadError
 from .config import ConfigProviderError as ConfigProviderError
 from .config import InvalidConfigError as InvalidConfigError
 from .config import MissingConfigError as MissingConfigError
-
-from .http import HTTPUtilsError as HTTPUtilsError, JSONDecodeError as JSONDecodeError
+from .http import HTTPUtilsError as HTTPUtilsError
+from .http import JSONDecodeError as JSONDecodeError
 
 __all__: list[str] = [
     # Base exceptions

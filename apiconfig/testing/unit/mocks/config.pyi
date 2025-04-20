@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.config.manager import ConfigManager
+
 # NOTE: No ConfigProvider base class found in current implementation.
 # Providers seem to use duck typing (requiring a load() method).
 

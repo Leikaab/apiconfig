@@ -11,7 +11,6 @@ from typing import Any, Dict, List, Optional, Union
 from pytest_httpserver import HTTPServer
 from pytest_httpserver.log import LogEntry
 
-
 def configure_mock_response(
     httpserver: HTTPServer,
     path: str,

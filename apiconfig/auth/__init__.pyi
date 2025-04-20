@@ -9,12 +9,10 @@ including the base strategy class and common implementations.
 from typing import List
 
 from .base import AuthStrategy as AuthStrategy
-from .strategies import (
-    ApiKeyAuth as ApiKeyAuth,
-    BasicAuth as BasicAuth,
-    BearerAuth as BearerAuth,
-    CustomAuth as CustomAuth,
-)
+from .strategies import ApiKeyAuth as ApiKeyAuth
+from .strategies import BasicAuth as BasicAuth
+from .strategies import BearerAuth as BearerAuth
+from .strategies import CustomAuth as CustomAuth
 
 __all__: List[str] = [
     "AuthStrategy",

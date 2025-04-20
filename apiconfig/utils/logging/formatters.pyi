@@ -1,7 +1,7 @@
-from typing import Any, Mapping, Optional, Set, Tuple, Union
-import re
 import logging
+import re
 import types
+from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 _FormatStyle = logging._FormatStyle
 

@@ -2,7 +2,6 @@ from typing import Any, Dict
 
 from apiconfig.config.base import ClientConfig
 
-
 def create_valid_client_config(**overrides: Any) -> ClientConfig:
     """
     Creates a valid ClientConfig instance with default values.

@@ -10,7 +10,6 @@ from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import AuthenticationError
 
-
 class MockAuthStrategy(AuthStrategy):
     """
     Base mock implementation for AuthStrategy for testing purposes.

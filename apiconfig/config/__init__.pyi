@@ -11,11 +11,9 @@ from typing import List
 
 from .base import ClientConfig as ClientConfig
 from .manager import ConfigManager as ConfigManager
-from .providers import (
-    EnvProvider as EnvProvider,
-    FileProvider as FileProvider,
-    MemoryProvider as MemoryProvider,
-)
+from .providers import EnvProvider as EnvProvider
+from .providers import FileProvider as FileProvider
+from .providers import MemoryProvider as MemoryProvider
 
 __all__: List[str] = [
     "ClientConfig",

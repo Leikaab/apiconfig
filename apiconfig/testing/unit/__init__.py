@@ -3,12 +3,7 @@
 """Unit testing utilities for apiconfig."""
 
 from .assertions import assert_client_config_valid
-from .factories import (
-    create_auth_credentials,
-    create_invalid_client_config,
-    create_provider_dict,
-    create_valid_client_config,
-)
+from .factories import create_auth_credentials, create_invalid_client_config, create_provider_dict, create_valid_client_config
 from .helpers import (
     BaseAuthStrategyTest,
     BaseConfigProviderTest,
@@ -18,11 +13,7 @@ from .helpers import (
     temp_config_file,
     temp_env_vars,
 )
-from .mocks import (
-    MockConfigManager,
-    MockConfigProvider,
-    create_mock_client_config,
-)
+from .mocks import MockConfigManager, MockConfigProvider, create_mock_client_config
 
 __all__ = [
     # Assertions (from assertions.py)

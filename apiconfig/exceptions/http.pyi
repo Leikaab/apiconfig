@@ -3,8 +3,9 @@
 This module defines exceptions raised by HTTP utility functions.
 """
 
-from .base import APIConfigError
 from typing import final
+
+from .base import APIConfigError
 
 __all__: list[str] = ["HTTPUtilsError", "JSONDecodeError"]
 

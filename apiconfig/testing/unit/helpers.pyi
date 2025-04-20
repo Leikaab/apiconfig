@@ -6,7 +6,6 @@ from apiconfig.auth.base import AuthStrategy
 # Removed direct import of ConfigProvider
 from apiconfig.exceptions import AuthenticationError
 
-
 # Define a Protocol for duck typing ConfigProvider
 class ConfigProviderProtocol(Protocol):
     def load(self) -> Dict[str, Any]:

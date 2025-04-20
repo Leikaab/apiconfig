@@ -2,7 +2,6 @@ import logging
 import sys
 from typing import IO, Optional
 
-
 class ConsoleHandler(logging.StreamHandler[IO[str]]):
     """
     A custom logging handler that writes log records to a stream (like stderr).

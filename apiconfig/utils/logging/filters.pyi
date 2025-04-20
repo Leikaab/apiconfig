@@ -1,7 +1,6 @@
 import logging
 from typing import Any
 
-
 class ContextFilter(logging.Filter):
     """
     A logging filter that injects context variables from thread-local storage

@@ -35,10 +35,38 @@ class ClientConfig:
         log_response_body: Optional[bool] = None,
     ) -> None:
         self.hostname = hostname or self.__class__.hostname
-        self.version = version or self.__class__.version
+
+        # Store version value before validation
+        version_value = version or self.__class__.version
+        # Validate version (no leading/trailing slashes)
+        if version_value and (version_value.startswith('/') or version_value.endswith('/')):
+            raise InvalidConfigError(
+                "Version must not contain leading or trailing slashes."
+            )
+        self.version = version_value
+
         self.headers = headers or self.__class__.headers or {}
-        self.timeout = timeout if timeout is not None else self.__class__.timeout
-        self.retries = retries if retries is not None else self.__class__.retries
+
+        # Store timeout value before validation
+        timeout_value = timeout if timeout is not None else self.__class__.timeout
+        # Validate timeout (must be non-negative number)
+        if timeout_value is not None:
+            if not isinstance(timeout_value, (int, float)):
+                raise InvalidConfigError("Timeout must be a number (int or float).")
+            if timeout_value < 0:
+                raise InvalidConfigError("Timeout must be non-negative.")
+        self.timeout = timeout_value
+
+        # Store retries value before validation
+        retries_value = retries if retries is not None else self.__class__.retries
+        # Validate retries (must be non-negative number)
+        if retries_value is not None:
+            if not isinstance(retries_value, (int, float)):
+                raise InvalidConfigError("Retries must be a number (int or float).")
+            if retries_value < 0:
+                raise InvalidConfigError("Retries must be non-negative.")
+        self.retries = retries_value
+
         self.auth_strategy = auth_strategy or self.__class__.auth_strategy
         self.log_request_body = (
             log_request_body
@@ -50,12 +78,6 @@ class ClientConfig:
             if log_response_body is not None
             else self.__class__.log_response_body
         )
-
-        # Validation
-        if self.timeout is not None and self.timeout < 0:
-            raise InvalidConfigError("Timeout must be non-negative.")
-        if self.retries is not None and self.retries < 0:
-            raise InvalidConfigError("Retries must be non-negative.")
 
     @property
     def base_url(self) -> str:
@@ -97,10 +119,25 @@ class ClientConfig:
                     )
 
         # Re-validate merged config
-        if new_instance.timeout is not None and new_instance.timeout < 0:
-            raise InvalidConfigError("Merged timeout must be non-negative.")
-        if new_instance.retries is not None and new_instance.retries < 0:
-            raise InvalidConfigError("Merged retries must be non-negative.")
+        # Validate version (no leading/trailing slashes)
+        if new_instance.version and (new_instance.version.startswith('/') or new_instance.version.endswith('/')):
+            raise InvalidConfigError(
+                "Merged version must not contain leading or trailing slashes."
+            )
+
+        # Validate timeout (must be non-negative number)
+        if new_instance.timeout is not None:
+            if not isinstance(new_instance.timeout, (int, float)):
+                raise InvalidConfigError("Merged timeout must be a number (int or float).")
+            if new_instance.timeout < 0:
+                raise InvalidConfigError("Merged timeout must be non-negative.")
+
+        # Validate retries (must be non-negative number)
+        if new_instance.retries is not None:
+            if not isinstance(new_instance.retries, (int, float)):
+                raise InvalidConfigError("Merged retries must be a number (int or float).")
+            if new_instance.retries < 0:
+                raise InvalidConfigError("Merged retries must be non-negative.")
 
         return new_instance
 

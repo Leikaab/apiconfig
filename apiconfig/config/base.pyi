@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 _TClientConfig = TypeVar("_TClientConfig", bound="ClientConfig")
 
+
 class ClientConfig:
     """
     Base configuration class for API clients.
@@ -59,7 +60,9 @@ class ClientConfig:
             log_response_body: Flag to enable response body logging.
 
         Raises:
-            InvalidConfigError: If timeout or retries are negative.
+            InvalidConfigError: If version contains leading or trailing slashes,
+                if timeout or retries are negative, or if timeout or retries
+                are not numbers (int or float).
         """
         ...
 
@@ -94,7 +97,9 @@ class ClientConfig:
             A new ClientConfig instance representing the merged configuration.
 
         Raises:
-            InvalidConfigError: If the merged timeout or retries are negative.
+            InvalidConfigError: If the merged version contains leading or trailing slashes,
+                if the merged timeout or retries are negative, or if the merged timeout
+                or retries are not numbers (int or float).
         """
         ...
 

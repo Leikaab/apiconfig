@@ -58,8 +58,15 @@ class ConfigManager:
                     )
 
                 if config_data:
-                    merged_config.update(config_data)
-                    logger.debug("Merged config from %s", provider_name)
+                    if not isinstance(config_data, dict):
+                        logger.warning(
+                            "Provider %s returned non-dict value: %r. Skipping.",
+                            provider_name,
+                            config_data,
+                        )
+                    else:
+                        merged_config.update(config_data)
+                        logger.debug("Merged config from %s", provider_name)
                 else:
                     logger.debug("Provider %s returned no data.", provider_name)
 

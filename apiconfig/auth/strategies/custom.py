@@ -61,6 +61,27 @@ class CustomAuth(AuthStrategy):
                 ) from e
         return {}
 
+    def prepare_request(self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, str]] = None) -> tuple[Dict[str, str], Dict[str, str]]:
+        """
+        Prepare authentication headers and parameters for an HTTP request.
+
+        Args:
+            headers: Optional initial headers dictionary to update.
+            params: Optional initial parameters dictionary to update.
+
+        Returns:
+            A tuple of (headers, params) dictionaries with authentication data.
+        """
+        # Initialize headers and params if not provided
+        headers = headers.copy() if headers else {}
+        params = params.copy() if params else {}
+
+        # Update with authentication headers and params
+        headers.update(self.prepare_request_headers())
+        params.update(self.prepare_request_params())
+
+        return headers, params
+
     def prepare_request_params(self) -> Dict[str, str]:
         """
         Generates request parameters using the param_callback, if provided.

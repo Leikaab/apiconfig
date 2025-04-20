@@ -62,7 +62,9 @@ def setup_multi_provider_manager(
     """Internal implementation for setup_multi_provider_manager."""
     providers = []
     for name, data in config_sources:
-        providers.append(MemoryProvider(data=data, name=name))
+        providers.append(MemoryProvider(config_data=data))
+        # Store name as an attribute for testing
+        providers[-1]._name = name
     return ConfigManager(providers=providers)
 
 

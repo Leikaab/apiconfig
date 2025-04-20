@@ -9,7 +9,7 @@ for testing interactions with external APIs, including custom authentication flo
 from typing import Any, Dict, List, Optional, Union
 
 from pytest_httpserver import HTTPServer
-from pytest_httpserver.log import LogEntry
+
 
 def configure_mock_response(
     httpserver: HTTPServer,
@@ -53,6 +53,7 @@ def configure_mock_response(
                   See pytest-httpserver documentation for more advanced matching.
     """
     ...
+
 
 def assert_request_received(
     httpserver: HTTPServer,

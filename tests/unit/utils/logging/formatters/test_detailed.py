@@ -251,7 +251,7 @@ def test_detailed_formatter_format_exception_text_direct(
 
         # Call _format_exception_text directly
         formatted = ""
-        formatted = fmt._format_exception_text(formatted, record)
+        formatted = fmt._format_exception_text(formatted, record)  # type: ignore[attr-defined]
 
         # Verify exc_text was set by the method
         assert hasattr(record, "exc_text")

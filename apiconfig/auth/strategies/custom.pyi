@@ -2,6 +2,7 @@ from typing import Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
+
 class CustomAuth(AuthStrategy):
     """
     Implements custom authentication logic using provided callback functions.
@@ -40,6 +41,19 @@ class CustomAuth(AuthStrategy):
         Raises:
             AuthStrategyError: If the header_callback does not return a dictionary
                                or raises an exception.
+        """
+        ...
+
+    def prepare_request(self, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, str]] = None) -> tuple[Dict[str, str], Dict[str, str]]:
+        """
+        Prepare authentication headers and parameters for an HTTP request.
+
+        Args:
+            headers: Optional initial headers dictionary to update.
+            params: Optional initial parameters dictionary to update.
+
+        Returns:
+            A tuple of (headers, params) dictionaries with authentication data.
         """
         ...
 

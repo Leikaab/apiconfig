@@ -7,10 +7,9 @@ This module leverages pytest-httpserver to provide a configurable mock server
 for testing interactions with external APIs, including custom authentication flows.
 """
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from pytest_httpserver import HTTPServer  # type: ignore[import-untyped]
-from pytest_httpserver.log import LogEntry  # type: ignore[import-untyped]
 from werkzeug.wrappers import Request, Response
 
 
@@ -77,14 +76,14 @@ def assert_request_received(
     count: Optional[int] = 1,
 ) -> None:
     """Internal implementation for assert_request_received."""
-    matching_requests: List[LogEntry] = []
+    matching_requests = []
     lower_expected_headers = (
         {k.lower(): v for k, v in expected_headers.items()}
         if expected_headers
         else None
     )
 
-    log: List[LogEntry] = httpserver.log
+    log = httpserver.log
     for entry in log:
         request: Request = entry[0]  # entry is a tuple (request, response)
         if request.path == path and request.method == method:

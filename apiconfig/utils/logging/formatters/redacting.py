@@ -1,103 +1,15 @@
 import logging
 import re
-import textwrap
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
 from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
-from apiconfig.utils.redaction.body import (
-    redact_body,
-)
+from apiconfig.utils.redaction.body import redact_body
 from apiconfig.utils.redaction.headers import (
     DEFAULT_SENSITIVE_HEADER_PREFIXES,
     DEFAULT_SENSITIVE_HEADERS,
     REDACTED_VALUE,
     redact_headers,
 )
-
-
-class DetailedFormatter(logging.Formatter):
-    """A logging formatter that provides detailed, potentially multi-line output."""
-
-    def __init__(
-        self,
-        fmt: Optional[str] = None,
-        datefmt: Optional[str] = None,
-        style: Union[str, None] = "%",
-        validate: bool = True,
-        *,
-        defaults: Optional[Mapping[str, Any]] = None,
-    ) -> None:
-        # Default format string
-        default_fmt = (
-            "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s"
-            "\n    (%(filename)s:%(lineno)d)"
-        )
-        super().__init__(
-            fmt=fmt or default_fmt,
-            datefmt=datefmt,
-            style=style,
-            validate=validate,
-            defaults=defaults,
-        )
-
-    def format(self, record: logging.LogRecord) -> str:
-        if not hasattr(record, "exc_text"):
-            record.exc_text = None
-        formatted = super().format(record)
-        formatted = self._format_multiline_message(formatted, record)
-        formatted = self._format_exception_text(formatted, record)
-        formatted = self._format_stack_info(formatted, record)
-        return formatted
-
-    def _format_multiline_message(
-        self, formatted: str, record: logging.LogRecord
-    ) -> str:
-        lines = formatted.split("\n")
-        if len(lines) <= 1:
-            return formatted
-        first_line = lines[0]
-        message_lines = record.getMessage().split("\n")
-        metadata_len = first_line.find(message_lines[0])
-        if metadata_len == -1:
-            metadata_len = len(first_line) - len(message_lines[0])
-        if len(message_lines) > 1:
-            indented_message = "\n".join(
-                [message_lines[0]]
-                + [
-                    textwrap.indent(line, " " * (metadata_len))
-                    for line in message_lines[1:]
-                ]
-            )
-            lines[0] = first_line.replace(
-                message_lines[0], indented_message.split("\n", 1)[0]
-            )
-        other_lines = [lines[0]] + [textwrap.indent(line, "    ") for line in lines[1:]]
-        if len(message_lines) > 1:
-            other_lines.extend(
-                textwrap.indent(line, " " * (metadata_len))
-                for line in message_lines[1:]
-            )
-        return "\n".join(other_lines)
-
-    def _format_exception_text(self, formatted: str, record: logging.LogRecord) -> str:
-        if record.exc_info and not getattr(record, "exc_text", None):
-            record.exc_text = self.formatException(record.exc_info)
-        if getattr(record, "exc_text", None):
-            exc_text = textwrap.indent(
-                record.exc_text if record.exc_text is not None else "", "    "
-            )
-            if formatted[-1:] != "\n":
-                formatted += "\n"
-            formatted += exc_text
-        return formatted
-
-    def _format_stack_info(self, formatted: str, record: logging.LogRecord) -> str:
-        if record.stack_info:
-            stack_info = textwrap.indent(self.formatStack(record.stack_info), "    ")
-            if formatted[-1:] != "\n":
-                formatted += "\n"
-            formatted += stack_info
-        return formatted
 
 
 class RedactingFormatter(logging.Formatter):
@@ -169,6 +81,9 @@ class RedactingFormatter(logging.Formatter):
         self.header_sensitive_keys = header_sensitive_keys
         self.header_sensitive_prefixes = header_sensitive_prefixes
         self.header_sensitive_name_pattern = header_sensitive_name_pattern
+        # For testability: allow monkeypatching
+        self._redact_body = redact_body
+        self._redact_headers_func = redact_headers
 
     def format(self, record: logging.LogRecord) -> str:
         self._redact_headers(record)
@@ -178,7 +93,7 @@ class RedactingFormatter(logging.Formatter):
     def _redact_headers(self, record: logging.LogRecord) -> None:
         if hasattr(record, "headers") and isinstance(record.headers, Mapping):
             try:
-                redacted_headers = redact_headers(
+                redacted_headers = self._redact_headers_func(
                     record.headers,
                     sensitive_keys=self.header_sensitive_keys,
                     sensitive_prefixes=self.header_sensitive_prefixes,
@@ -226,7 +141,6 @@ class RedactingFormatter(logging.Formatter):
         # If _redact_structured returned a dict/list, always serialize to JSON
         if isinstance(redacted_msg, (dict, list)):
             import json
-
             record.msg = json.dumps(redacted_msg, ensure_ascii=False)
         else:
             record.msg = str(redacted_msg)
@@ -275,7 +189,7 @@ class RedactingFormatter(logging.Formatter):
             if is_json:
                 try:
                     # Use redact_body directly on the string, which will parse, redact, and return a JSON string
-                    redacted = redact_body(
+                    redacted = self._redact_body(
                         msg,
                         content_type="application/json",
                         sensitive_keys_pattern=self.body_sensitive_keys_pattern,
@@ -289,7 +203,7 @@ class RedactingFormatter(logging.Formatter):
                     # If parsing or redaction fails, fallback to original string
                     return msg
         try:
-            redacted = redact_body(
+            redacted = self._redact_body(
                 msg,
                 content_type=content_type,
                 sensitive_keys_pattern=self.body_sensitive_keys_pattern,

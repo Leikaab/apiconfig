@@ -6,6 +6,7 @@ from apiconfig.auth.base import AuthStrategy
 
 log: logging.Logger
 
+
 class BasicAuth(AuthStrategy):
     """
     Implements HTTP Basic Authentication.
@@ -24,6 +25,10 @@ class BasicAuth(AuthStrategy):
         Args:
             username: The username for authentication.
             password: The password for authentication.
+
+        Raises:
+            AuthStrategyError: If the username is empty or whitespace.
+            AuthStrategyError: If the password is empty.
         """
         ...
 

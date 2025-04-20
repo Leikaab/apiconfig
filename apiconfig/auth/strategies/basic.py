@@ -3,6 +3,7 @@ import logging
 from typing import Dict
 
 from apiconfig.auth.base import AuthStrategy
+from apiconfig.exceptions.auth import AuthStrategyError
 
 log = logging.getLogger(__name__)
 
@@ -10,6 +11,14 @@ log = logging.getLogger(__name__)
 class BasicAuth(AuthStrategy):
 
     def __init__(self, username: str, password: str) -> None:
+        # Validate username is not empty or whitespace
+        if not username or username.strip() == "":
+            raise AuthStrategyError("Username cannot be empty or whitespace")
+
+        # Validate password is not empty
+        if not password:
+            raise AuthStrategyError("Password cannot be empty")
+
         log.debug(
             "[BasicAuth] Initialized with username: %s (Password not logged)",
             username,

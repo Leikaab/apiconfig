@@ -2,6 +2,7 @@ from typing import Dict
 
 from apiconfig.auth.base import AuthStrategy
 
+
 class BearerAuth(AuthStrategy):
     """
     Implements Bearer Token authentication.
@@ -17,6 +18,9 @@ class BearerAuth(AuthStrategy):
 
         Args:
             token: The bearer token to use for authentication.
+
+        Raises:
+            AuthStrategyError: If the token is empty or whitespace.
         """
         ...
 

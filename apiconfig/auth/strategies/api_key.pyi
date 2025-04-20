@@ -2,6 +2,7 @@ from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
+
 class ApiKeyAuth(AuthStrategy):
     """
     Implements API Key authentication.
@@ -14,7 +15,9 @@ class ApiKeyAuth(AuthStrategy):
         param_name: The name of the query parameter to use for the API key.
 
     Raises:
+        AuthStrategyError: If the API key is empty or whitespace.
         AuthStrategyError: If neither or both `header_name` and `param_name` are provided.
+        AuthStrategyError: If the provided `header_name` or `param_name` is empty or whitespace.
     """
 
     api_key: str
@@ -27,6 +30,7 @@ class ApiKeyAuth(AuthStrategy):
         header_name: Optional[str] = None,
         param_name: Optional[str] = None,
     ) -> None: ...
+
     def prepare_request_headers(self) -> Dict[str, str]:
         """
         Prepares headers for API key authentication if configured for headers.

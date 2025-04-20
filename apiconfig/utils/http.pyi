@@ -1,21 +1,7 @@
 import sys
 from typing import Any, Dict, Mapping, Optional, Union
 
-from ..exceptions.base import APIConfigError
-
-if sys.version_info >= (3, 8):
-    from typing import final
-else:
-    from typing_extensions import final
-
-
-class HTTPUtilsError(APIConfigError):
-    """Base exception for errors raised by HTTP utilities."""
-
-
-@final
-class JSONDecodeError(HTTPUtilsError):
-    """Raised when JSON decoding of an HTTP response body fails."""
+from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError
 
 
 def is_success(status_code: int) -> bool:

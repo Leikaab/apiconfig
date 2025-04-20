@@ -1,15 +1,7 @@
 import json
 from typing import Any, Dict, Mapping, Optional, Union
 
-from ..exceptions.base import APIConfigError
-
-
-class HTTPUtilsError(APIConfigError):
-    pass
-
-
-class JSONDecodeError(HTTPUtilsError):
-    pass
+from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError
 
 
 def is_success(status_code: int) -> bool:

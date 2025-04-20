@@ -18,6 +18,7 @@ from .config import (
     InvalidConfigError,
     MissingConfigError,
 )
+from .http import HTTPUtilsError, JSONDecodeError
 
 __all__ = [
     # Base exceptions
@@ -35,4 +36,7 @@ __all__ = [
     "MissingConfigError",
     "ConfigLoadError",
     "ConfigProviderError",
+    # HTTP exceptions
+    "HTTPUtilsError",
+    "JSONDecodeError",
 ]

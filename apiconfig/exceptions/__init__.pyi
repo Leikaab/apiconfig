@@ -17,6 +17,8 @@ from .config import ConfigProviderError as ConfigProviderError
 from .config import InvalidConfigError as InvalidConfigError
 from .config import MissingConfigError as MissingConfigError
 
+from .http import HTTPUtilsError as HTTPUtilsError, JSONDecodeError as JSONDecodeError
+
 __all__: list[str] = [
     # Base exceptions
     "APIConfigError",
@@ -33,4 +35,7 @@ __all__: list[str] = [
     "MissingConfigError",
     "ConfigLoadError",
     "ConfigProviderError",
+    # HTTP exceptions
+    "HTTPUtilsError",
+    "JSONDecodeError",
 ]

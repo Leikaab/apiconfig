@@ -1,7 +1,17 @@
 ---
+issue_number: 59
+github_issue_id: I_kwDOObjluc6zNtbK
+github_issue_url: https://github.com/Leikaab/apiconfig/issues/59
 title: "Missing type annotation for __all__ in config/__init__.py"
-severity: low
-location: "apiconfig/config/__init__.py, apiconfig/config/__init__.pyi"
+state: OPEN
+created_at: "2025-04-20T00:09:11Z"
+updated_at: "2025-04-20T00:09:11Z"
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+  is_bot: false
+assignees: []
+labels: []
 ---
 
 ## Summary

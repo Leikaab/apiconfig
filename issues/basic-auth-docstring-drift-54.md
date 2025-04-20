@@ -1,5 +1,15 @@
 ---
 title: "Docstring drift between auth/strategies/basic.py and basic.pyi"
+issue_number: 54
+issue_id: I_kwDOObjluc6zNtAp
+github_url: "https://github.com/Leikaab/apiconfig/issues/54"
+state: OPEN
+created_at: "2025-04-20T00:04:30Z"
+updated_at: "2025-04-20T00:04:30Z"
+author: "Leikaab"
+author_id: "MDQ6VXNlcjQ5NzkxNzAx"
+assignees: []
+labels: []
 severity: medium
 location: "apiconfig/auth/strategies/basic.py, apiconfig/auth/strategies/basic.pyi"
 ---

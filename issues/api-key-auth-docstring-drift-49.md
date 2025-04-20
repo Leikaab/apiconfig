@@ -2,6 +2,18 @@
 title: "Docstring drift between auth/strategies/api_key.py and api_key.pyi"
 severity: medium
 location: "apiconfig/auth/strategies/api_key.py, apiconfig/auth/strategies/api_key.pyi"
+github_issue:
+  number: 49
+  url: "https://github.com/Leikaab/apiconfig/issues/49"
+  state: OPEN
+  createdAt: "2025-04-19T23:57:57Z"
+  updatedAt: "2025-04-19T23:57:57Z"
+  author:
+    login: "Leikaab"
+    id: "MDQ6VXNlcjQ5NzkxNzAx"
+  id: "I_kwDOObjluc6zNsgZ"
+  assignees: []
+  labels: []
 ---
 
 ## Summary

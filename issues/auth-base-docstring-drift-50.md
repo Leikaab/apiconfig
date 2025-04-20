@@ -1,7 +1,15 @@
 ---
+issue_number: 50
 title: "Docstring drift between auth/base.py and auth/base.pyi"
-severity: medium
-location: "apiconfig/auth/base.py, apiconfig/auth/base.pyi"
+state: OPEN
+url: https://github.com/Leikaab/apiconfig/issues/50
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+created_at: 2025-04-19T23:59:03Z
+updated_at: 2025-04-19T23:59:03Z
+assignees: []
+labels: []
 ---
 
 ## Summary

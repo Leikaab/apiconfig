@@ -1,3 +1,11 @@
+---
+issue_number: 74
+issue_url: https://github.com/Leikaab/apiconfig/issues/74
+repository: Leikaab/apiconfig
+labels: [bug]
+title: No Timeout or JSON Error Handling in Token Refresh
+---
+
 # No Timeout or JSON Error Handling in Token Refresh
 
 **Module**: `apiconfig/auth/token/refresh.py`

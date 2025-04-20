@@ -1,7 +1,20 @@
 ---
+issue_number: 60
 title: "Minor docstring drift between config/manager.py and manager.pyi for ConfigManager"
-severity: low
-location: "apiconfig/config/manager.py, apiconfig/config/manager.pyi"
+url: "https://github.com/Leikaab/apiconfig/issues/60"
+state: OPEN
+created_at: "2025-04-20T00:10:04Z"
+updated_at: "2025-04-20T00:10:04Z"
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+  is_bot: false
+labels:
+  - name: "documentation"
+    id: "LA_kwDOObjluc8AAAAB-S4H2w"
+    description: "Improvements or additions to documentation"
+    color: "0075ca"
+assignees: []
 ---
 
 ## Summary

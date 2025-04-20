@@ -1,5 +1,16 @@
 ---
+issue_number: 75
 title: "Docstring drift between auth/token/storage.py and storage.pyi"
+url: "https://github.com/Leikaab/apiconfig/issues/75"
+state: OPEN
+createdAt: "2025-04-20T00:42:58Z"
+updatedAt: "2025-04-20T00:42:58Z"
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+assignees:
+  - login: "Leikaab"
+    id: "MDQ6VXNlcjQ5NzkxNzAx"
 severity: medium
 location: "apiconfig/auth/token/storage.py, apiconfig/auth/token/storage.pyi"
 ---

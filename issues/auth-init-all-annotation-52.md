@@ -1,7 +1,15 @@
 ---
+issue_number: 52
+issue_url: "https://github.com/Leikaab/apiconfig/issues/52"
+issue_id: "I_kwDOObjluc6zNs1Q"
 title: "Missing type annotation for __all__ in auth/__init__.py"
-severity: low
-location: "apiconfig/auth/__init__.py, apiconfig/auth/__init__.pyi"
+state: OPEN
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+created_at: "2025-04-20T00:02:26Z"
+updated_at: "2025-04-20T00:02:26Z"
+labels: []
 ---
 
 ## Summary

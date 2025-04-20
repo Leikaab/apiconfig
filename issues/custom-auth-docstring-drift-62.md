@@ -1,7 +1,26 @@
 ---
+issue_number: 62
 title: "Minor docstring drift between auth/strategies/custom.py and custom.pyi"
-severity: low
-location: "apiconfig/auth/strategies/custom.py, apiconfig/auth/strategies/custom.pyi"
+url: "https://github.com/Leikaab/apiconfig/issues/62"
+state: OPEN
+createdAt: "2025-04-20T00:11:40Z"
+updatedAt: "2025-04-20T00:11:40Z"
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+  is_bot: false
+id: "I_kwDOObjluc6zNtoZ"
+isPinned: false
+labels: []
+milestone: null
+assignees: []
+closed: false
+closedAt: null
+stateReason: ""
+reactionGroups: []
+projectCards: []
+projectItems: []
+comments: []
 ---
 
 ## Summary

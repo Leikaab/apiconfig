@@ -1,7 +1,14 @@
 ---
 title: "Docstring drift between auth/strategies/bearer.py and bearer.pyi"
-severity: medium
+issue_number: 55
+github_issue_id: I_kwDOObjluc6zNtGG
+url: https://github.com/Leikaab/apiconfig/issues/55
+state: OPEN
+author: Leikaab
+created_at: "2025-04-20T00:05:32Z"
+updated_at: "2025-04-20T00:05:32Z"
 location: "apiconfig/auth/strategies/bearer.py, apiconfig/auth/strategies/bearer.pyi"
+severity: medium
 ---
 
 ## Summary

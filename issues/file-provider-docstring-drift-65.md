@@ -1,4 +1,15 @@
 ---
+github_issue_number: 65
+github_issue_url: https://github.com/Leikaab/apiconfig/issues/65
+github_issue_id: I_kwDOObjluc6zNukT
+github_issue_state: OPEN
+github_issue_author: Leikaab
+github_issue_author_id: MDQ6VXNlcjQ5NzkxNzAx
+github_issue_created_at: 2025-04-20T00:22:44Z
+github_issue_updated_at: 2025-04-20T00:22:44Z
+---
+
+---
 title: "Docstring drift between config/providers/file.py and file.pyi for FileProvider"
 severity: medium
 location: "apiconfig/config/providers/file.py, apiconfig/config/providers/file.pyi"

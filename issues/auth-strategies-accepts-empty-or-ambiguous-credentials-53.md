@@ -1,3 +1,10 @@
+---
+issue_number: 53
+github_issue_url: https://github.com/Leikaab/apiconfig/issues/53
+title: Accepts Empty or Ambiguous Credentials
+labels: [bug]
+---
+
 # Accepts Empty or Ambiguous Credentials
 
 **Module**: `apiconfig/auth/strategies/`

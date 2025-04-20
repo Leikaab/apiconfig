@@ -1,7 +1,16 @@
 ---
+issue_number: 68
+github_id: I_kwDOObjluc6zNvNs
+url: https://github.com/Leikaab/apiconfig/issues/68
+state: OPEN
+created_at: 2025-04-20T00:25:16Z
+updated_at: 2025-04-20T00:25:16Z
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+assignees: []
+labels: []
 title: "Docstring drift between testing/integration/servers.py and servers.pyi"
-severity: medium
-location: "apiconfig/testing/integration/servers.py, apiconfig/testing/integration/servers.pyi"
 ---
 
 ## Summary

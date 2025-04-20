@@ -1,3 +1,13 @@
+---
+issue_number: 57
+issue_url: https://github.com/Leikaab/apiconfig/issues/57
+title: ClientConfig Version and Timeout Validation
+labels: [bug]
+assignee: @me
+status: open
+created: 2025-04-20
+---
+
 # ClientConfig Version and Timeout Validation
 
 **Module**: `apiconfig/config/base.py`

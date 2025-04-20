@@ -1,6 +1,9 @@
 ---
 title: "Docstring drift between config/providers/env.py and env.pyi for EnvProvider"
-severity: medium
+issue_number: 63
+issue_url: "https://github.com/Leikaab/apiconfig/issues/63"
+labels: [documentation]
+created: 2025-04-20
 location: "apiconfig/config/providers/env.py, apiconfig/config/providers/env.pyi"
 ---
 

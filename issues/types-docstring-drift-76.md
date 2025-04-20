@@ -1,7 +1,17 @@
 ---
+issue_number: 76
 title: "Docstring drift between types.py and types.pyi"
-severity: medium
-location: "apiconfig/types.py, apiconfig/types.pyi"
+state: OPEN
+url: https://github.com/Leikaab/apiconfig/issues/76
+labels:
+  - documentation
+created_at: 2025-04-20T00:44:02Z
+updated_at: 2025-04-20T00:44:02Z
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+  is_bot: false
+assignees: []
 ---
 
 ## Summary

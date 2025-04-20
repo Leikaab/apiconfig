@@ -1,4 +1,29 @@
 ---
+issue_number: 64
+title: "Missing type annotation for __all__ in exceptions/__init__.py"
+url: "https://github.com/Leikaab/apiconfig/issues/64"
+state: OPEN
+createdAt: "2025-04-20T00:21:57Z"
+updatedAt: "2025-04-20T00:21:57Z"
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+  is_bot: false
+id: "I_kwDOObjluc6zNugF"
+closed: false
+closedAt: null
+isPinned: false
+labels: []
+milestone: null
+assignees: []
+comments: []
+projectCards: []
+projectItems: []
+reactionGroups: []
+stateReason: ""
+---
+
+---
 title: "Missing type annotation for __all__ in exceptions/__init__.py"
 severity: low
 location: "apiconfig/exceptions/__init__.py, apiconfig/exceptions/__init__.pyi"

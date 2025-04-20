@@ -1,3 +1,18 @@
+<!--
+issue_number: 67
+issue_url: https://github.com/Leikaab/apiconfig/issues/67
+state: OPEN
+created_at: 2025-04-20T00:24:27Z
+updated_at: 2025-04-20T00:24:27Z
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+labels:
+  - name: documentation
+    id: LA_kwDOObjluc8AAAAB-S4H2w
+assignees: []
+-->
+
 ---
 title: "Docstring drift between testing/integration/helpers.py and helpers.pyi"
 severity: medium

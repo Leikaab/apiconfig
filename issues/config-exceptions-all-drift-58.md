@@ -1,7 +1,13 @@
 ---
+issue_number: 58
+github_url: https://github.com/Leikaab/apiconfig/issues/58
+state: OPEN
+created_at: 2025-04-20T00:08:24Z
+updated_at: 2025-04-20T00:08:24Z
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
 title: "Missing __all__ in exceptions/config.py"
-severity: low
-location: "apiconfig/exceptions/config.py, apiconfig/exceptions/config.pyi"
 ---
 
 ## Summary

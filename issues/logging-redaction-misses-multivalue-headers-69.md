@@ -1,3 +1,14 @@
+---
+github_issue_number: 69
+github_issue_url: https://github.com/Leikaab/apiconfig/issues/69
+github_issue_id: I_kwDOObjluc6zNvRj
+github_issue_state: OPEN
+github_issue_created_at: 2025-04-20T00:26:04Z
+github_issue_updated_at: 2025-04-20T00:26:04Z
+github_issue_author_login: Leikaab
+github_issue_author_id: MDQ6VXNlcjQ5NzkxNzAx
+---
+
 # Redaction Misses Multi-Value Headers
 
 **Module**: `apiconfig/utils/logging/filters.py`

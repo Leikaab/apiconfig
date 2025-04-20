@@ -1,3 +1,11 @@
+---
+issue_number: 66
+issue_url: https://github.com/Leikaab/apiconfig/issues/66
+repository: Leikaab/apiconfig
+created: 2025-04-20T00:23:37Z
+title: No Size Guard in safe_json_decode
+---
+
 # No Size Guard in safe_json_decode
 
 **Module**: `apiconfig/utils/http.py`

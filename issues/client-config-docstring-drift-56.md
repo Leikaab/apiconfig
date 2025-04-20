@@ -2,6 +2,11 @@
 title: "Docstring drift between config/base.py and base.pyi for ClientConfig"
 severity: medium
 location: "apiconfig/config/base.py, apiconfig/config/base.pyi"
+issue_number: 56
+issue_url: https://github.com/Leikaab/apiconfig/issues/56
+repo: Leikaab/apiconfig
+created_via: GitHub CLI
+created_at: 2025-04-20T00:06:23Z
 ---
 
 ## Summary

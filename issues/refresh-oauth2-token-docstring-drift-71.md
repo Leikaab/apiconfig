@@ -2,6 +2,11 @@
 title: "Docstring drift for refresh_oauth2_token between refresh.py and refresh.pyi"
 severity: medium
 location: "apiconfig/auth/token/refresh.py, apiconfig/auth/token/refresh.pyi"
+github_issue_number: 71
+github_issue_url: https://github.com/Leikaab/apiconfig/issues/71
+github_issue_state: open
+github_issue_author: Leikaab
+# (Add additional metadata as needed)
 ---
 
 ## Summary

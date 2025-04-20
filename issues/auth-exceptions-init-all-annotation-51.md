@@ -1,7 +1,17 @@
 ---
-title: "Missing type annotation for __all__ in exceptions/auth.py"
-severity: low
-location: "apiconfig/exceptions/auth.py, apiconfig/exceptions/auth.pyi"
+github_issue:
+  number: 51
+  title: "Missing type annotation for __all__ in exceptions/auth.py"
+  url: "https://github.com/Leikaab/apiconfig/issues/51"
+  state: OPEN
+  created_at: "2025-04-20T00:00:16Z"
+  updated_at: "2025-04-20T00:00:16Z"
+  author:
+    login: "Leikaab"
+    id: "MDQ6VXNlcjQ5NzkxNzAx"
+    is_bot: false
+  assignees: []
+  labels: []
 ---
 
 ## Summary

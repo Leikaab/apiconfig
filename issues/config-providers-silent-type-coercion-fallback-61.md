@@ -1,3 +1,18 @@
+---
+issue_number: 61
+title: "Silent Type Coercion Fallback in Config Providers"
+url: "https://github.com/Leikaab/apiconfig/issues/61"
+state: OPEN
+created_at: "2025-04-20T00:10:50Z"
+updated_at: "2025-04-20T00:10:50Z"
+author:
+  login: "Leikaab"
+  id: "MDQ6VXNlcjQ5NzkxNzAx"
+  is_bot: false
+assignees: []
+labels: []
+---
+
 # Silent Type Coercion Fallback in Config Providers
 
 **Module**: `apiconfig/config/providers/`

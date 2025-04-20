@@ -2,6 +2,8 @@
 title: "Missing type annotation for __all__ in testing/__init__.py"
 severity: low
 location: "apiconfig/testing/__init__.py, apiconfig/testing/__init__.pyi"
+issue_number: 72
+issue_url: https://github.com/Leikaab/apiconfig/issues/72
 ---
 
 ## Summary

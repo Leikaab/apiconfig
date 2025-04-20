@@ -1,7 +1,16 @@
 ---
+issue_number: 70
 title: "Stub and implementation drift in __init__.py: __all__ and type annotations"
-severity: medium
-location: "apiconfig/__init__.py, apiconfig/__init__.pyi"
+state: OPEN
+url: https://github.com/Leikaab/apiconfig/issues/70
+created_at: 2025-04-20T00:29:09Z
+updated_at: 2025-04-20T00:29:09Z
+author:
+  login: Leikaab
+  id: MDQ6VXNlcjQ5NzkxNzAx
+  is_bot: false
+assignees: []
+labels: []
 ---
 
 ## Summary

@@ -1,4 +1,16 @@
 ---
+github_issue:
+  number: 73
+  title: "Missing type annotation for __all__ in testing/integration/__init__.py"
+  url: "https://github.com/Leikaab/apiconfig/issues/73"
+  state: OPEN
+  author: "Leikaab"
+  created_at: "2025-04-20T00:41:13Z"
+  updated_at: "2025-04-20T00:41:13Z"
+  closed_at: null
+  assignees: []
+  labels: []
+---
 title: "Missing type annotation for __all__ in testing/integration/__init__.py"
 severity: low
 location: "apiconfig/testing/integration/__init__.py, apiconfig/testing/integration/__init__.pyi"

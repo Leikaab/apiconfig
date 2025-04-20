@@ -29,6 +29,9 @@ class DetailedFormatter(logging.Formatter):
         )
 
     def format(self, record: logging.LogRecord) -> str:
+        # Ensure exc_text is always present for compatibility with base Formatter
+        if not hasattr(record, "exc_text"):
+            record.exc_text = None
         # Format the first line using the base class
         formatted = super().format(record)
 
@@ -78,9 +81,9 @@ class DetailedFormatter(logging.Formatter):
             formatted = "\n".join(other_lines)
 
         # Handle exception info if present
-        if record.exc_info and not record.exc_text:
+        if record.exc_info and not getattr(record, "exc_text", None):
             record.exc_text = self.formatException(record.exc_info)
-        if record.exc_text:
+        if getattr(record, "exc_text", None):
             # Indent exception text
             exc_text = textwrap.indent(record.exc_text, "    ")
             if formatted[-1:] != "\n":

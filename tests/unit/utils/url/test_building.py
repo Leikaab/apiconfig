@@ -259,6 +259,13 @@ def test_add_query_params(
             "new_root",
             "https://example.com/new_root",  # Should not add trailing slash
         ),
+        # Replacing root segment with empty string (triggers line 107)
+        (
+            "https://example.com/",
+            0,
+            "",
+            "https://example.com/",
+        ),
     ],
 )
 def test_replace_path_segment(

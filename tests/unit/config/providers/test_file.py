@@ -4,12 +4,12 @@ import json
 import pathlib
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 import pytest
 
 from apiconfig.config.providers.file import FileProvider
-from apiconfig.exceptions.config import ConfigLoadError
+from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
 
 
 class TestFileProvider:
@@ -116,3 +116,153 @@ class TestFileProvider:
                 ConfigLoadError, match="Error reading configuration file"
             ):
                 provider.load()
+
+    def test_get_existing_value(self) -> None:
+        """Test getting an existing configuration value."""
+        with tempfile.NamedTemporaryFile(suffix=".json", mode="w+") as temp_file:
+            config_data = {
+                "api": {"hostname": "example.com", "port": 443},
+                "timeout": 30,
+                "debug": True,
+                "rate_limit": 100.5,
+                "string_number": "42",
+                "string_bool": "true"
+            }
+            json.dump(config_data, temp_file)
+            temp_file.flush()
+
+            provider = FileProvider(file_path=temp_file.name)
+
+            # Test getting top-level values
+            assert provider.get("timeout") == 30
+            assert provider.get("debug") is True
+            assert provider.get("rate_limit") == 100.5
+
+            # Test getting nested values with dot notation
+            assert provider.get("api.hostname") == "example.com"
+            assert provider.get("api.port") == 443
+
+    def test_get_missing_value(self) -> None:
+        """Test getting a missing configuration value."""
+        with tempfile.NamedTemporaryFile(suffix=".json", mode="w+") as temp_file:
+            config_data = {"api": {"hostname": "example.com"}}
+            json.dump(config_data, temp_file)
+            temp_file.flush()
+
+            provider = FileProvider(file_path=temp_file.name)
+
+            # Test with default value
+            assert provider.get("missing", default="default_value") == "default_value"
+
+            # Test without default value
+            assert provider.get("missing") is None
+
+            # Test missing nested value
+            assert provider.get("api.missing") is None
+            assert provider.get("api.missing", default=123) == 123
+
+            # Test completely wrong path
+            assert provider.get("not.a.valid.path") is None
+
+    def test_get_with_type_coercion(self) -> None:
+        """Test getting values with type coercion."""
+        with tempfile.NamedTemporaryFile(suffix=".json", mode="w+") as temp_file:
+            config_data = {
+                "string_int": "42",
+                "string_float": "3.14",
+                "string_bool_true": "true",
+                "string_bool_false": "false",
+                "number": 100,
+                "decimal": 99.9
+            }
+            json.dump(config_data, temp_file)
+            temp_file.flush()
+
+            provider = FileProvider(file_path=temp_file.name)
+
+            # String to int conversion
+            int_value = provider.get("string_int", expected_type=int)
+            assert int_value == 42
+            assert isinstance(int_value, int)
+
+            # String to float conversion
+            float_value = provider.get("string_float", expected_type=float)
+            assert float_value == 3.14
+            assert isinstance(float_value, float)
+
+            # String to bool conversion
+            bool_true = provider.get("string_bool_true", expected_type=bool)
+            assert bool_true is True
+            bool_false = provider.get("string_bool_false", expected_type=bool)
+            assert bool_false is False
+
+            # Number to string conversion
+            str_value = provider.get("number", expected_type=str)
+            assert str_value == "100"
+            assert isinstance(str_value, str)
+
+            # Decimal to int conversion
+            int_from_float = provider.get("decimal", expected_type=int)
+            assert int_from_float == 99
+            assert isinstance(int_from_float, int)
+
+    def test_get_with_bool_variations(self) -> None:
+        """Test boolean coercion with various string representations."""
+        bool_variations: Dict[str, bool] = {
+            "true": True,
+            "True": True,
+            "TRUE": True,
+            "1": True,
+            "yes": True,
+            "Yes": True,
+            "Y": True,
+            "on": True,
+            "false": False,
+            "False": False,
+            "FALSE": False,
+            "0": False,
+            "no": False,
+            "No": False,
+            "N": False,
+            "off": False,
+        }
+
+        for string_value, expected_bool in bool_variations.items():
+            with tempfile.NamedTemporaryFile(suffix=".json", mode="w+") as temp_file:
+                config_data = {"bool_value": string_value}
+                json.dump(config_data, temp_file)
+                temp_file.flush()
+
+                provider = FileProvider(file_path=temp_file.name)
+                bool_value = provider.get("bool_value", expected_type=bool)
+                assert bool_value is expected_bool, f"Failed for '{string_value}'"
+
+    def test_get_invalid_type_coercion(self) -> None:
+        """Test type coercion failures."""
+        with tempfile.NamedTemporaryFile(suffix=".json", mode="w+") as temp_file:
+            config_data = {
+                "not_an_int": "abc",
+                "not_a_float": "xyz",
+                "not_a_bool": "maybe",
+                "complex_value": {"nested": "value"}
+            }
+            json.dump(config_data, temp_file)
+            temp_file.flush()
+
+            provider = FileProvider(file_path=temp_file.name)
+
+            # Invalid int conversion
+            with pytest.raises(ConfigValueError, match="Cannot convert.*to int"):
+                provider.get("not_an_int", expected_type=int)
+
+            # Invalid float conversion
+            with pytest.raises(ConfigValueError, match="Cannot convert.*to float"):
+                provider.get("not_a_float", expected_type=float)
+
+            # Invalid bool conversion
+            with pytest.raises(ConfigValueError, match="Cannot convert.*to bool"):
+                provider.get("not_a_bool", expected_type=bool)
+
+            # Complex value to simple type
+            with pytest.raises(ConfigValueError):
+                provider.get("complex_value", expected_type=int)

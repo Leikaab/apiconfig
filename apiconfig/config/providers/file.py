@@ -1,8 +1,10 @@
 import json
 import pathlib
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Type, TypeVar, Union
 
-from apiconfig.exceptions.config import ConfigLoadError
+from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
+
+T = TypeVar("T")
 
 
 class FileProvider:
@@ -36,4 +38,53 @@ class FileProvider:
         except OSError as e:
             raise ConfigLoadError(
                 f"Error reading configuration file: {self._file_path}"
+            ) from e
+
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+        """Get a configuration value from the loaded configuration.
+
+        Args:
+            key: The configuration key to get. Can use dot notation for nested keys.
+            default: The default value to return if the key is not found.
+            expected_type: The expected type of the value. If provided, the value
+                will be coerced to this type.
+
+        Returns:
+            The configuration value, or the default if not found.
+
+        Raises:
+            ConfigValueError: If the value cannot be coerced to the expected type.
+            ConfigLoadError: If there's an error loading the configuration file.
+        """
+        config = self.load()
+
+        # Handle dot notation for nested keys
+        parts = key.split(".")
+        value = config
+
+        # Navigate through nested dictionaries
+        for part in parts:
+            if not isinstance(value, dict) or part not in value:
+                return default
+            value = value[part]
+
+        if expected_type is None or isinstance(value, expected_type):
+            return value
+
+        try:
+            if expected_type is bool:
+                # Special handling for boolean values
+                if isinstance(value, str):
+                    if value.lower() in ("true", "1", "yes", "y", "on"):
+                        return True
+                    if value.lower() in ("false", "0", "no", "n", "off"):
+                        return False
+                    raise ValueError(f"Cannot convert '{value}' to bool")
+                return bool(value)
+
+            # Handle other types through standard conversion
+            return expected_type(value)
+        except (ValueError, TypeError) as e:
+            raise ConfigValueError(
+                f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}"
             ) from e

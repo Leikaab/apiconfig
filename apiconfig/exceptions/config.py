@@ -17,3 +17,7 @@ class ConfigLoadError(ConfigurationError):
 
 class ConfigProviderError(ConfigurationError):
     """Raised for errors specific to a configuration provider."""
+
+
+class ConfigValueError(ConfigurationError):
+    """Raised when a configuration value cannot be coerced to the expected type."""

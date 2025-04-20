@@ -1,8 +1,6 @@
 """Tests for the auth/token/__init__.py module."""
 
-from apiconfig.auth.token import (
-    __all__,
-)
+from apiconfig.auth.token import __all__
 
 
 class TestTokenInit:

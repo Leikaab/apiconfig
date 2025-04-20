@@ -2,11 +2,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import pytest
 
-from apiconfig.utils.url.building import (
-    add_query_params,
-    build_url,
-    replace_path_segment,
-)
+from apiconfig.utils.url.building import add_query_params, build_url, replace_path_segment
 
 # --- Tests for build_url ---
 _QueryParamsInput = Optional[Dict[str, Any]]

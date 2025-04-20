@@ -3,12 +3,7 @@
 """Unit testing utilities for apiconfig."""
 
 from .assertions import assert_client_config_valid
-from .factories import (
-    create_auth_credentials,
-    create_invalid_client_config,
-    create_provider_dict,
-    create_valid_client_config,
-)
+from .factories import create_auth_credentials, create_invalid_client_config, create_provider_dict, create_valid_client_config
 from .helpers import (
     BaseAuthStrategyTest,
     BaseConfigProviderTest,

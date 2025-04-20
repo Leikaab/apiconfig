@@ -7,10 +7,7 @@ import pytest
 from pytest_httpserver import HTTPServer
 from werkzeug.wrappers import Request, Response
 
-from apiconfig.testing.integration.servers import (
-    assert_request_received,
-    configure_mock_response,
-)
+from apiconfig.testing.integration.servers import assert_request_received, configure_mock_response
 
 
 class TestConfigureMockResponse:

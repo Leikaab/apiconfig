@@ -12,15 +12,6 @@ from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.config.manager import ConfigManager
 from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.file import FileProvider
-from apiconfig.testing.integration.fixtures import (
-    config_manager,
-    custom_auth_strategy_factory,
-    env_provider,
-    file_provider,
-    httpserver_listen_address,
-    mock_api_url,
-    temp_config_file,
-)
 
 
 class TestHttpserverListenAddress:

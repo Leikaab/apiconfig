@@ -6,9 +6,6 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-
-import pytest
-
 import pytest
 
 from apiconfig.config.providers.file import FileProvider

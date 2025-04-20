@@ -1,7 +1,6 @@
 import urllib.parse
 from typing import Any, Dict, List, Union
 
-
 def parse_url(url: str) -> urllib.parse.ParseResult:
     """
     Parses a URL string into its components using urllib.parse.urlparse.

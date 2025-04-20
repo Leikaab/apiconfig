@@ -2,7 +2,6 @@
 
 from .base import ConfigurationError
 
-
 class InvalidConfigError(ConfigurationError):
     """Raised when configuration values are invalid."""
 

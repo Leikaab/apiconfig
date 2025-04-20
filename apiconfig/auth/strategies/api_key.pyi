@@ -2,7 +2,6 @@ from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
-
 class ApiKeyAuth(AuthStrategy):
     """
     Implements API Key authentication.

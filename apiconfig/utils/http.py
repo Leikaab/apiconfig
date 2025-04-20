@@ -1,11 +1,7 @@
 import json
 from typing import Any, Dict, Mapping, Optional, Union
 
-from apiconfig.exceptions.http import (
-    HTTPUtilsError,
-    JSONDecodeError,
-    PayloadTooLargeError,
-)
+from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError, PayloadTooLargeError
 
 __all__ = [
     "HTTPUtilsError",

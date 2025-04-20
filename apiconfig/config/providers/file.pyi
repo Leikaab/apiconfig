@@ -1,5 +1,5 @@
 import pathlib
-from typing import Any, Dict, Union, Optional, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar, Union
 
 T = TypeVar("T")
 

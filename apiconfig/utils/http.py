@@ -1,11 +1,16 @@
 import json
 from typing import Any, Dict, Mapping, Optional, Union
 
-from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError
+from apiconfig.exceptions.http import (
+    HTTPUtilsError,
+    JSONDecodeError,
+    PayloadTooLargeError,
+)
 
 __all__ = [
     "HTTPUtilsError",
     "JSONDecodeError",
+    "PayloadTooLargeError",
     "is_success",
     "is_redirect",
     "is_client_error",
@@ -50,12 +55,24 @@ def get_header_value(
 def safe_json_decode(
     response_text: Union[str, bytes],
     encoding: Optional[str] = None,
+    max_size_bytes: int = 1 * 1024 * 1024,  # Default to 1MB
 ) -> Optional[Dict[str, Any]]:
     try:
         if isinstance(response_text, bytes):
+            # Check size before decoding bytes
+            if len(response_text) > max_size_bytes:
+                raise PayloadTooLargeError(
+                    f"Payload size ({len(response_text)} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)"
+                )
             # Attempt to decode bytes using provided encoding or default (UTF-8)
             text_content = response_text.decode(encoding or "utf-8")
         else:
+            # Check size for string (UTF-8 encoded size)
+            encoded_size = len(response_text.encode("utf-8"))
+            if encoded_size > max_size_bytes:
+                raise PayloadTooLargeError(
+                    f"Payload size ({encoded_size} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)"
+                )
             text_content = response_text
 
         # Strip whitespace before checking if empty
@@ -70,6 +87,9 @@ def safe_json_decode(
         raise JSONDecodeError(
             f"Failed to decode response body with encoding '{encoding or 'utf-8'}': {e}"
         ) from e
+    except PayloadTooLargeError:
+        # Re-raise PayloadTooLargeError directly without wrapping
+        raise
     except Exception as e:
         # Catch other potential errors during processing
         raise HTTPUtilsError(

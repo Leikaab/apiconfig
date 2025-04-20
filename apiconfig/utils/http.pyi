@@ -1,11 +1,16 @@
 import sys
 from typing import Any, Dict, Mapping, Optional, Union
 
-from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError
+from apiconfig.exceptions.http import (
+    HTTPUtilsError,
+    JSONDecodeError,
+    PayloadTooLargeError,
+)
 
 __all__ = [
     "HTTPUtilsError",
     "JSONDecodeError",
+    "PayloadTooLargeError",
     "is_success",
     "is_redirect",
     "is_client_error",
@@ -14,6 +19,7 @@ __all__ = [
     "get_header_value",
     "safe_json_decode",
 ]
+
 
 def is_success(status_code: int) -> bool:
     """
@@ -27,6 +33,7 @@ def is_success(status_code: int) -> bool:
     """
     ...
 
+
 def is_redirect(status_code: int) -> bool:
     """
     Check if an HTTP status code indicates redirection (3xx).
@@ -38,6 +45,7 @@ def is_redirect(status_code: int) -> bool:
         True if the status code is in the 300-399 range, False otherwise.
     """
     ...
+
 
 def is_client_error(status_code: int) -> bool:
     """
@@ -51,6 +59,7 @@ def is_client_error(status_code: int) -> bool:
     """
     ...
 
+
 def is_server_error(status_code: int) -> bool:
     """
     Check if an HTTP status code indicates a server error (5xx).
@@ -62,6 +71,7 @@ def is_server_error(status_code: int) -> bool:
         True if the status code is in the 500-599 range, False otherwise.
     """
     ...
+
 
 def normalize_header_name(name: str) -> str:
     """
@@ -78,6 +88,7 @@ def normalize_header_name(name: str) -> str:
         The normalized header name.
     """
     ...
+
 
 def get_header_value(
     headers: Mapping[str, str], name: str, default: Optional[str] = None
@@ -98,24 +109,29 @@ def get_header_value(
     """
     ...
 
+
 def safe_json_decode(
     response_text: Union[str, bytes],
     encoding: Optional[str] = None,
+    max_size_bytes: int = 1 * 1024 * 1024,  # Default to 1MB
 ) -> Optional[Dict[str, Any]]:
     """
     Safely decode a JSON response body (string or bytes).
 
     Handles potential JSONDecodeError and UnicodeDecodeError.
     Returns None if the input content is empty.
+    Checks payload size before decoding to prevent excessive memory usage.
 
     Args:
         response_text: The response body content as a string or bytes.
         encoding: The encoding to use if response_text is bytes. Defaults to 'utf-8'.
+        max_size_bytes: Maximum allowed size of the payload in bytes. Defaults to 1MB.
 
     Returns:
         The decoded JSON dictionary, or None if the input was empty.
 
     Raises:
+        PayloadTooLargeError: If the payload size exceeds max_size_bytes.
         JSONDecodeError: If JSON decoding fails or if byte decoding fails.
         HTTPUtilsError: For other unexpected errors during processing.
     """

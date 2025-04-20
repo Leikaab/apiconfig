@@ -232,3 +232,29 @@ def test_detailed_formatter_exc_info_sets_exc_text_branch(
             delattr(record, "exc_text")
         output = fmt.format(record)
         assert "KeyError: 'trigger exc_info path'" in output
+
+
+def test_detailed_formatter_format_exception_text_direct(
+    log_record_factory: Callable[..., logging.LogRecord],
+) -> None:
+    """Test that directly calls _format_exception_text to ensure line 72 is covered."""
+    fmt = DetailedFormatter()
+    try:
+        raise ValueError("direct test")
+    except ValueError:
+        exc_info = sys.exc_info()
+        record = log_record_factory(msg="direct test", exc_info=exc_info)
+
+        # Ensure exc_text is not set
+        if hasattr(record, "exc_text"):
+            delattr(record, "exc_text")
+
+        # Call _format_exception_text directly
+        formatted = ""
+        formatted = fmt._format_exception_text(formatted, record)
+
+        # Verify exc_text was set by the method
+        assert hasattr(record, "exc_text")
+        assert record.exc_text is not None
+        assert "ValueError: direct test" in record.exc_text
+        assert "ValueError: direct test" in formatted

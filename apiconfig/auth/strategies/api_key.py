@@ -1,3 +1,9 @@
+"""
+Implement API Key authentication strategy for the apiconfig library.
+
+It allows sending the API key either in a request header or as a query parameter.
+"""
+
 from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
@@ -68,7 +74,7 @@ class ApiKeyAuth(AuthStrategy):
 
     def prepare_request_headers(self) -> Dict[str, str]:
         """
-        Prepares headers for API key authentication if configured for headers.
+        Prepare headers for API key authentication if configured for headers.
 
         Returns
         -------
@@ -77,11 +83,12 @@ class ApiKeyAuth(AuthStrategy):
         """
         if self.header_name is not None:
             return {self.header_name: self.api_key}
+
         return {}
 
     def prepare_request_params(self) -> Dict[str, str]:
         """
-        Prepares query parameters for API key authentication if configured for parameters.
+        Prepare query parameters for API key authentication if configured for parameters.
 
         Returns
         -------
@@ -90,4 +97,5 @@ class ApiKeyAuth(AuthStrategy):
         """
         if self.param_name is not None:
             return {self.param_name: self.api_key}
+
         return {}

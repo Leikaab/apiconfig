@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Detailed logging formatter."""
+
 import logging
 import textwrap
 import types
@@ -33,6 +36,20 @@ class DetailedFormatter(logging.Formatter):
         )
 
     def format(self, record: logging.LogRecord) -> str:
+        """Format the specified record as text.
+
+        Handles multi-line messages, exception text, and stack information.
+
+        Args
+        ----
+        record
+            The log record to format.
+
+        Returns
+        -------
+        str
+            The formatted log record.
+        """
         if not hasattr(record, "exc_text"):
             record.exc_text = None
         formatted = super().format(record)
@@ -62,9 +79,37 @@ class DetailedFormatter(logging.Formatter):
         self,
         ei: tuple[type[BaseException], BaseException, types.TracebackType | None] | tuple[None, None, None],
     ) -> str:
+        """Format the specified exception information as a string.
+
+        This implementation delegates to the base class.
+
+        Args
+        ----
+        ei
+            Exception info tuple as returned by sys.exc_info().
+
+        Returns
+        -------
+        str
+            The formatted exception string.
+        """
         return super().formatException(ei)
 
     def formatStack(self, stack_info: str) -> str:
+        """Format the specified stack information as a string.
+
+        This implementation delegates to the base class.
+
+        Args
+        ----
+        stack_info
+            Stack information string.
+
+        Returns
+        -------
+        str
+            The formatted stack string.
+        """
         return super().formatStack(stack_info)
 
     def _format_exception_text(self, formatted: str, record: logging.LogRecord) -> str:

@@ -35,8 +35,7 @@ def configure_mock_response(
     ordered: bool = False,
     **kwargs: Any,
 ) -> None:
-    """
-    Configures a specific response expectation for the mock HTTPServer.
+    """Configure a specific response expectation for the mock HTTPServer.
 
     This function allows detailed matching of incoming requests, making it suitable
     for testing various authentication strategies, including custom ones that
@@ -121,8 +120,7 @@ def assert_request_received(
     expected_data: Optional[str] = None,
     count: Optional[int] = 1,
 ) -> None:
-    """
-    Asserts that specific requests were received by the mock server.
+    """Assert that specific requests were received by the mock server.
 
     Checks the server log for requests matching the criteria.
 

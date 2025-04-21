@@ -1,3 +1,5 @@
+"""Custom authentication strategy using user-provided callbacks."""
+
 from typing import Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
@@ -6,7 +8,7 @@ from apiconfig.exceptions.auth import AuthStrategyError
 
 class CustomAuth(AuthStrategy):
     """
-    Implements custom authentication logic using provided callback functions.
+    Implement custom authentication logic using provided callback functions.
 
     This strategy allows users to define their own functions to generate
     authentication headers or parameters dynamically.
@@ -18,7 +20,7 @@ class CustomAuth(AuthStrategy):
         param_callback: Optional[Callable[[], Dict[str, str]]] = None,
     ) -> None:
         """
-        Initializes the CustomAuth strategy.
+        Initialize the CustomAuth strategy.
 
         Parameters
         ----------
@@ -39,7 +41,7 @@ class CustomAuth(AuthStrategy):
 
     def prepare_request_headers(self) -> Dict[str, str]:
         """
-        Generates request headers using the header_callback, if provided.
+        Generate request headers using the header_callback, if provided.
 
         Returns
         -------
@@ -93,7 +95,7 @@ class CustomAuth(AuthStrategy):
 
     def prepare_request_params(self) -> Dict[str, str]:
         """
-        Generates request parameters using the param_callback, if provided.
+        Generate request parameters using the param_callback, if provided.
 
         Returns
         -------

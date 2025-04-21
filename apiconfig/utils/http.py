@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""HTTP related utility functions."""
+
 import json
 from typing import Any, Dict, Mapping, Optional, Union
 

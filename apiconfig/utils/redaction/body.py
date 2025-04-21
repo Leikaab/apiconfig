@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Utilities for redacting sensitive data from request/response bodies."""
+
 import json
 import re
 from typing import Any, Dict, List, Optional, Union
@@ -40,23 +43,29 @@ def redact_body(
     sensitive_keys_pattern: re.Pattern[str] = DEFAULT_SENSITIVE_KEYS_PATTERN,
     sensitive_value_pattern: Optional[re.Pattern[str]] = None,
 ) -> Union[str, bytes, Any]:
-    """
-    Redacts sensitive information from request or response bodies.
+    """Redact sensitive information from request or response bodies.
 
     Attempts to parse JSON or form-urlencoded bodies and recursively redacts
     values associated with keys matching `sensitive_keys_pattern` or string
     values matching `sensitive_value_pattern`.
 
-    Args:
-        body: The request or response body (str, bytes, or already parsed).
-        content_type: The Content-Type header value (e.g., 'application/json').
-        sensitive_keys_pattern: A compiled regex pattern to identify sensitive keys.
-                                Defaults to matching 'password', 'token', 'secret',
-                                'key', 'auth' case-insensitively.
-        sensitive_value_pattern: An optional compiled regex pattern to identify
-                                 sensitive string values. Defaults to `None`.
+    Args
+    ----
+    body
+        The request or response body (str, bytes, or already parsed).
+    content_type
+        The Content-Type header value (e.g., 'application/json').
+    sensitive_keys_pattern
+        A compiled regex pattern to identify sensitive keys.
+        Defaults to matching 'password', 'token', 'secret',
+        'key', 'auth' case-insensitively.
+    sensitive_value_pattern
+        An optional compiled regex pattern to identify
+        sensitive string values. Defaults to `None`.
 
-    Returns:
+    Returns
+    -------
+    Union[str, bytes, Any]
         The body with sensitive information redacted, or the original body
         if parsing/redaction is not applicable or fails. Returns a generic
         placeholder if the body is bytes and cannot be decoded.

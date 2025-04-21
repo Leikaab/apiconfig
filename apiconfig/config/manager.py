@@ -1,3 +1,5 @@
+"""Manages loading configuration from multiple providers."""
+
 import logging
 from typing import Any, Dict, Sequence
 
@@ -30,19 +32,20 @@ class ConfigManager:
 
     def __init__(self, providers: Sequence[ConfigProvider]) -> None:
         """
-        Initializes the ConfigManager with a sequence of configuration providers.
+        Initialize the ConfigManager with a sequence of configuration providers.
 
-        Args:
-            providers: A sequence of configuration provider instances.
-                       Providers will be loaded in the order they appear in the sequence,
-                       with later providers overriding settings from earlier ones.
-                       Each provider must implement either a `load()` or `get_config()` method.
+        Args
+        ----
+        providers: A sequence of configuration provider instances.
+            Providers will be loaded in the order they appear in the sequence,
+            with later providers overriding settings from earlier ones.
+            Each provider must implement either a `load()` or `get_config()` method.
         """
         self._providers: Sequence[ConfigProvider] = providers
 
     def load_config(self) -> Dict[str, Any]:
         """
-        Loads configuration by iterating through all registered providers.
+        Load configuration by iterating through all registered providers.
 
         The method attempts to load configuration from each provider in sequence.
         For each provider, it:
@@ -54,13 +57,15 @@ class ConfigManager:
         values from earlier providers when keys conflict. This allows for a layered
         configuration approach where default values can be overridden by more specific sources.
 
-        Returns:
-            A dictionary containing the merged configuration from all providers.
+        Returns
+        -------
+        A dictionary containing the merged configuration from all providers.
             If no providers are registered or none return data, an empty dictionary is returned.
 
-        Raises:
-            ConfigLoadError: If any provider fails to load its configuration or
-                             if a provider lacks both `load()` and `get_config()` methods.
+        Raises
+        ------
+        ConfigLoadError: If any provider fails to load its configuration or
+            if a provider lacks both `load()` and `get_config()` methods.
         """
         merged_config: Dict[str, Any] = {}
         logger.debug("Loading configuration from %d providers...", len(self._providers))

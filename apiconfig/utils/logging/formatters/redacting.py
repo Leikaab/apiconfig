@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Logging formatter that redacts sensitive information."""
+
 import logging
 import re
 from typing import Any, Literal, Mapping, Optional, Set, Tuple
@@ -14,46 +17,60 @@ from apiconfig.utils.redaction.headers import (
 
 
 class RedactingFormatter(logging.Formatter):
-    """
-    A logging formatter that automatically redacts sensitive information from log messages and HTTP headers.
+    """Automatically redact sensitive information from log messages and HTTP headers.
 
-    Guarantees:
-        - Applies redaction to structured log messages (JSON, dict, form-encoded) using the project's redaction utilities.
-        - Redacts HTTP headers if present in the log record (as a dict) using the project's header redaction utility.
-        - For plain string messages, redacts secrets matching the sensitive value pattern if provided.
-        - All redacted output uses the REDACTED_VALUE constant.
-        - No redaction logic is duplicated; always delegates to utility functions.
+    Guarantees
+    ----------
+    - Applies redaction to structured log messages (JSON, dict, form-encoded) using the project's redaction utilities.
+    - Redacts HTTP headers if present in the log record (as a dict) using the project's header redaction utility.
+    - For plain string messages, redacts secrets matching the sensitive value pattern if provided.
+    - All redacted output uses the REDACTED_VALUE constant.
+    - No redaction logic is duplicated; always delegates to utility functions.
 
-    Limitations:
-        - Only redacts fields and values matching the configured patterns.
-        - If a message cannot be parsed as structured data, only obvious secrets in plain strings are redacted.
-        - Binary/unparsable data is replaced with a placeholder or left unchanged, per utility behavior.
+    Limitations
+    -----------
+    - Only redacts fields and values matching the configured patterns.
+    - If a message cannot be parsed as structured data, only obvious secrets in plain strings are redacted.
+    - Binary/unparsable data is replaced with a placeholder or left unchanged, per utility behavior.
 
-    Configuration:
-        - Sensitive key/value patterns for both body and headers can be customized via the constructor.
-        - Defaults to the project's standard patterns.
+    Configuration
+    -------------
+    - Sensitive key/value patterns for both body and headers can be customized via the constructor.
+    - Defaults to the project's standard patterns.
 
-    Args:
-        fmt: Format string for the log message.
-        datefmt: Date format string.
-        style: Format style ('%', '{', or '$').
-        validate: Whether to validate the format string.
-        body_sensitive_keys_pattern: Regex pattern for sensitive keys in structured data.
-        body_sensitive_value_pattern: Regex pattern for sensitive values in structured data or plain strings.
-        header_sensitive_keys: Set of sensitive header keys (lowercase).
-        header_sensitive_prefixes: Tuple of sensitive header prefixes (lowercase).
-        header_sensitive_name_pattern: Regex pattern for sensitive header names.
-        defaults: Optional mapping of default values for format fields.
+    Args
+    ----
+    fmt
+        Format string for the log message.
+    datefmt
+        Date format string.
+    style
+        Format style ('%', '{', or '$').
+    validate
+        Whether to validate the format string.
+    body_sensitive_keys_pattern
+        Regex pattern for sensitive keys in structured data.
+    body_sensitive_value_pattern
+        Regex pattern for sensitive values in structured data or plain strings.
+    header_sensitive_keys
+        Set of sensitive header keys (lowercase).
+    header_sensitive_prefixes
+        Tuple of sensitive header prefixes (lowercase).
+    header_sensitive_name_pattern
+        Regex pattern for sensitive header names.
+    defaults
+        Optional mapping of default values for format fields.
 
-    Example:
-        >>> import logging
-        >>> from apiconfig.utils.logging.formatters import RedactingFormatter
-        >>> handler = logging.StreamHandler()
-        >>> handler.setFormatter(RedactingFormatter())
-        >>> logger = logging.getLogger("api")
-        >>> logger.addHandler(handler)
-        >>> logger.info({"token": "secret123", "data": "ok"})
-        # Output: {"token": "[REDACTED]", "data": "ok"}
+    Example
+    -------
+    >>> import logging
+    >>> from apiconfig.utils.logging.formatters import RedactingFormatter
+    >>> handler = logging.StreamHandler()
+    >>> handler.setFormatter(RedactingFormatter())
+    >>> logger = logging.getLogger("api")
+    >>> logger.addHandler(handler)
+    >>> logger.info({"token": "secret123", "data": "ok"})
+    # Output: {"token": "[REDACTED]", "data": "ok"}
     """
 
     def __init__(
@@ -89,6 +106,18 @@ class RedactingFormatter(logging.Formatter):
         self._redact_headers_func = redact_headers
 
     def format(self, record: logging.LogRecord) -> str:
+        """Format the specified record as text, redacting sensitive data.
+
+        Args
+        ----
+        record
+            The log record to format.
+
+        Returns
+        -------
+        str
+            The formatted and redacted log record.
+        """
         self._redact_headers(record)
         self._redact_message(record)
         return super().format(record)
@@ -108,8 +137,9 @@ class RedactingFormatter(logging.Formatter):
                 pass  # Fallback to original headers if redaction fails
 
     def _redact_message(self, record: logging.LogRecord) -> None:
-        """
-        Redact the log message in-place on the record, handling all input types robustly:
+        """Redact the log message in-place on the record.
+
+        Handles all input types robustly:
         - For bytes: always output '[REDACTED BODY]'
         - For dict/list: always output JSON string with only sensitive fields redacted
         - For string: if structured (JSON/form), redact and output JSON string; else, redact sensitive values in the string

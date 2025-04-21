@@ -1,3 +1,5 @@
+"""Implements Bearer Token authentication strategy."""
+
 import logging
 from typing import Dict
 
@@ -22,7 +24,7 @@ class BearerAuth(AuthStrategy):
 
     def __init__(self, token: str) -> None:
         """
-        Initializes the BearerAuth strategy with the provided token.
+        Initialize the BearerAuth strategy with the provided token.
 
         Parameters
         ----------
@@ -43,7 +45,7 @@ class BearerAuth(AuthStrategy):
 
     def prepare_request_headers(self) -> Dict[str, str]:
         """
-        Prepares the 'Authorization' header with the bearer token.
+        Prepare the 'Authorization' header with the bearer token.
 
         Adds an 'Authorization' header with the format 'Bearer {token}'
         to be included in the HTTP request.

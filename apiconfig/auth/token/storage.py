@@ -1,3 +1,5 @@
+"""Abstract base classes and in-memory implementation for token storage."""
+
 import abc
 from typing import Any, Dict, Optional
 
@@ -5,6 +7,9 @@ from typing import Any, Dict, Optional
 class TokenStorage(abc.ABC):
     """
     Abstract base class for token storage mechanisms.
+
+    This class defines the interface for storing, retrieving, and deleting
+    authentication tokens.
     """
 
     @abc.abstractmethod
@@ -62,6 +67,7 @@ class InMemoryTokenStorage(TokenStorage):
     _storage: Dict[str, Any]
 
     def __init__(self) -> None:
+        """Initialize the in-memory storage dictionary."""
         self._storage: Dict[str, Any] = {}
 
     def store_token(self, key: str, token_data: Any) -> None:

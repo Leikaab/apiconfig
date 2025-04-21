@@ -1,3 +1,5 @@
+"""Provides a configuration provider that loads data from a file."""
+
 import json
 import pathlib
 from typing import Any, Dict, Optional, Type, TypeVar, Union
@@ -22,7 +24,7 @@ class FileProvider:
 
     def __init__(self, file_path: Union[str, pathlib.Path]) -> None:
         """
-        Initializes the FileProvider.
+        Initialize the FileProvider.
 
         Parameters
         ----------
@@ -34,7 +36,7 @@ class FileProvider:
 
     def load(self) -> Dict[str, Any]:
         """
-        Loads configuration data from the specified file.
+        Load configuration data from the specified file.
 
         Currently only JSON files (.json extension) are supported. The file must contain
         a valid JSON object (dictionary).

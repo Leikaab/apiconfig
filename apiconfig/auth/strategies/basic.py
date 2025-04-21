@@ -1,3 +1,9 @@
+"""Implement HTTP Basic Authentication according to RFC 7617.
+
+It provides a strategy for adding the 'Authorization' header with Basic
+credentials (base64-encoded username:password) to HTTP requests.
+"""
+
 import base64
 import logging
 from typing import Dict
@@ -9,8 +15,7 @@ log: logging.Logger = logging.getLogger(__name__)
 
 
 class BasicAuth(AuthStrategy):
-    """
-    Implements HTTP Basic Authentication according to RFC 7617.
+    """Implements HTTP Basic Authentication according to RFC 7617.
 
     This strategy adds the 'Authorization' header with Basic credentials
     (base64-encoded username:password) to the request. The header format is:
@@ -25,8 +30,7 @@ class BasicAuth(AuthStrategy):
     password: str
 
     def __init__(self, username: str, password: str) -> None:
-        """
-        Initializes the BasicAuth strategy with username and password credentials.
+        """Initialize the BasicAuth strategy with username and password credentials.
 
         Parameters
         ----------
@@ -42,10 +46,11 @@ class BasicAuth(AuthStrategy):
         AuthStrategyError
             If the password is empty (but may contain only whitespace).
 
-        Note
-        ----
+        Notes
+        -----
         While username is validated to reject whitespace-only values, password validation
         allows whitespace-only values as they might be legitimate passwords.
+
         """
         # Validate username is not empty or whitespace
         if not username or username.strip() == "":
@@ -63,8 +68,7 @@ class BasicAuth(AuthStrategy):
         self.password = password
 
     def prepare_request_headers(self) -> Dict[str, str]:
-        """
-        Generates the 'Authorization' header for Basic Authentication.
+        """Generate the 'Authorization' header for Basic Authentication.
 
         Creates a header with the format 'Authorization: Basic <base64-encoded username:password>'.
         The username and password are combined with a colon, encoded in UTF-8, then base64 encoded.
@@ -73,6 +77,7 @@ class BasicAuth(AuthStrategy):
         -------
         Dict[str, str]
             A dictionary containing the 'Authorization' header with the Basic authentication credentials.
+
         """
         log.debug("[BasicAuth] Adding Basic Authentication header to request")
         auth_string = f"{self.username}:{self.password}"
@@ -80,8 +85,7 @@ class BasicAuth(AuthStrategy):
         return {"Authorization": f"Basic {encoded_auth}"}
 
     def prepare_request_params(self) -> Dict[str, str]:
-        """
-        Returns an empty dictionary as Basic Auth uses headers, not query parameters.
+        """Return an empty dictionary as Basic Auth uses headers, not query parameters.
 
         Basic Authentication is implemented exclusively through the 'Authorization' header
         and does not use query parameters for security reasons (to avoid credentials
@@ -91,5 +95,6 @@ class BasicAuth(AuthStrategy):
         -------
         Dict[str, str]
             An empty dictionary, as no query parameters are needed for Basic Authentication.
+
         """
         return {}

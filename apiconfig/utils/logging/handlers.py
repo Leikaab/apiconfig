@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Custom logging handlers."""
+
 import logging
 import sys
 from typing import IO, Optional

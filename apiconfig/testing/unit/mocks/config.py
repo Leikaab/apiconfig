@@ -53,8 +53,7 @@ def create_mock_client_config(
     max_retries: int = 3,
     **kwargs: Any,
 ) -> ClientConfig:
-    """
-    Factory function to create ClientConfig instances with sensible defaults.
+    """Create ClientConfig instances with sensible defaults.
 
     This simplifies the creation of ClientConfig objects needed for tests,
     allowing specific attributes to be overridden via keyword arguments.

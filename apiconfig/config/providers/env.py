@@ -1,3 +1,5 @@
+"""Provides a configuration provider that loads values from environment variables."""
+
 import os
 from typing import Any, Dict, Optional, Type, TypeVar
 
@@ -25,8 +27,7 @@ class EnvProvider:
     _prefix: str
 
     def __init__(self, prefix: str = "APICONFIG_") -> None:
-        """
-        Initializes the provider with a specific prefix.
+        """Initialize the provider with a specific prefix.
 
         Parameters
         ----------
@@ -36,8 +37,7 @@ class EnvProvider:
         self._prefix = prefix
 
     def _is_digit(self, value: str) -> bool:
-        """
-        Helper method to check if a string contains only digits.
+        """Check if a string contains only digits.
 
         Parameters
         ----------
@@ -52,8 +52,7 @@ class EnvProvider:
         return value.isdigit()
 
     def load(self) -> Dict[str, Any]:
-        """
-        Loads configuration from environment variables matching the prefix.
+        """Load configuration from environment variables matching the prefix.
 
         Performs automatic type inference for common data types:
         - Strings containing only digits are converted to integers
@@ -97,8 +96,7 @@ class EnvProvider:
         return config
 
     def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
-        """
-        Get a configuration value from environment variables.
+        """Get a configuration value from environment variables.
 
         Parameters
         ----------

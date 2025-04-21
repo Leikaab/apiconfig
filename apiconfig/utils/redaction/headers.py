@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Utilities for redacting sensitive data from HTTP headers."""
+
 import re
 from collections.abc import Mapping
 from typing import Dict, Final, Optional, Set, Tuple
@@ -39,8 +42,7 @@ def redact_headers(
     sensitive_name_pattern: Optional[re.Pattern[str]] = None,
     sensitive_cookie_keys: Set[str] = DEFAULT_SENSITIVE_COOKIE_KEYS,
 ) -> Dict[str, str]:
-    """
-    Redacts sensitive information from HTTP headers.
+    """Redact sensitive information from HTTP headers.
 
     Iterates through a mapping of headers, identifies sensitive headers based on
     predefined keys, prefixes (case-insensitive), or a regex pattern for the
@@ -50,19 +52,27 @@ def redact_headers(
     where only the sensitive values within these headers are redacted while preserving
     the structure and non-sensitive parts.
 
-    Args:
-        headers: A mapping (e.g., dictionary) of header names to values.
-        sensitive_keys: A set of lowercase header names to consider sensitive.
-                        Defaults to `DEFAULT_SENSITIVE_HEADERS`.
-        sensitive_prefixes: A tuple of lowercase header prefixes to consider sensitive.
-                            Defaults to `DEFAULT_SENSITIVE_HEADER_PREFIXES`.
-        sensitive_name_pattern: An optional compiled regex pattern. If provided,
-                                header names matching this pattern (case-insensitive)
-                                will also be redacted. Defaults to `None`.
-        sensitive_cookie_keys: A set of lowercase cookie names to consider sensitive.
-                               Defaults to `DEFAULT_SENSITIVE_COOKIE_KEYS`.
+    Args
+    ----
+    headers
+        A mapping (e.g., dictionary) of header names to values.
+    sensitive_keys
+        A set of lowercase header names to consider sensitive.
+        Defaults to `DEFAULT_SENSITIVE_HEADERS`.
+    sensitive_prefixes
+        A tuple of lowercase header prefixes to consider sensitive.
+        Defaults to `DEFAULT_SENSITIVE_HEADER_PREFIXES`.
+    sensitive_name_pattern
+        An optional compiled regex pattern. If provided,
+        header names matching this pattern (case-insensitive)
+        will also be redacted. Defaults to `None`.
+    sensitive_cookie_keys
+        A set of lowercase cookie names to consider sensitive.
+        Defaults to `DEFAULT_SENSITIVE_COOKIE_KEYS`.
 
-    Returns:
+    Returns
+    -------
+    Dict[str, str]
         A new dictionary containing the headers with sensitive values redacted.
         Returns an empty dictionary if the input `headers` is None or empty.
     """
@@ -93,14 +103,18 @@ def redact_headers(
 
 
 def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
-    """
-    Redacts sensitive values from a Cookie header while preserving its structure.
+    """Redact sensitive values from a Cookie header while preserving its structure.
 
-    Args:
-        cookie_value: The value of the Cookie header (e.g., "name=value; other=value2").
-        sensitive_keys: A set of lowercase cookie names to consider sensitive.
+    Args
+    ----
+    cookie_value
+        The value of the Cookie header (e.g., "name=value; other=value2").
+    sensitive_keys
+        A set of lowercase cookie names to consider sensitive.
 
-    Returns:
+    Returns
+    -------
+    str
         A string with sensitive cookie values redacted.
     """
     if not cookie_value:
@@ -152,15 +166,19 @@ def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
 
 
 def _redact_set_cookie_header(set_cookie_value: str, sensitive_keys: Set[str]) -> str:
-    """
-    Redacts sensitive values from a Set-Cookie header while preserving its attributes.
+    """Redact sensitive values from a Set-Cookie header while preserving its attributes.
 
-    Args:
-        set_cookie_value: The value of the Set-Cookie header
-                         (e.g., "name=value; Path=/; HttpOnly").
-        sensitive_keys: A set of lowercase cookie names to consider sensitive.
+    Args
+    ----
+    set_cookie_value
+        The value of the Set-Cookie header
+        (e.g., "name=value; Path=/; HttpOnly").
+    sensitive_keys
+        A set of lowercase cookie names to consider sensitive.
 
-    Returns:
+    Returns
+    -------
+    str
         A string with sensitive cookie values redacted but attributes preserved.
     """
     if not set_cookie_value:

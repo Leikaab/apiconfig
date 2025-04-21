@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Factory functions for creating test data."""
+
 from typing import Any, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
@@ -5,8 +8,7 @@ from apiconfig.config.base import ClientConfig
 
 
 def create_valid_client_config(**overrides: Any) -> ClientConfig:
-    """
-    Creates a valid ClientConfig instance with default values.
+    """Create a valid ClientConfig instance with default values.
 
     Parameters
     ----------
@@ -72,8 +74,7 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
 
 
 def create_invalid_client_config(reason: str, **overrides: Any) -> Dict[str, Any]:
-    """
-    Creates a dictionary representing potentially invalid ClientConfig data.
+    """Create a dictionary representing potentially invalid ClientConfig data.
 
     This returns a dictionary because ClientConfig validation might prevent
     instantiation with invalid data directly. The consuming test should
@@ -114,8 +115,7 @@ def create_invalid_client_config(reason: str, **overrides: Any) -> Dict[str, Any
 
 
 def create_auth_credentials(auth_type: str) -> Dict[str, Any]:
-    """
-    Generates a dictionary of sample authentication credentials.
+    """Generate a dictionary of sample authentication credentials.
 
     Parameters
     ----------
@@ -138,8 +138,7 @@ def create_auth_credentials(auth_type: str) -> Dict[str, Any]:
 
 
 def create_provider_dict(source: str) -> Dict[str, Any]:
-    """
-    Generates a sample configuration dictionary for a specific provider type.
+    """Generate a sample configuration dictionary for a specific provider type.
 
     Parameters
     ----------

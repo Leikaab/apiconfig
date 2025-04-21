@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Utilities for redacting sensitive data from logs and outputs."""
+
 # apiconfig/utils/redaction/__init__.py
 
 from .body import DEFAULT_SENSITIVE_KEYS_PATTERN, REDACTED_BODY_PLACEHOLDER, redact_body

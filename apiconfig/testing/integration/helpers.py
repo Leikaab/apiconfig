@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Helper functions for integration tests."""
+
 # apiconfig/testing/integration/helpers.py
 import typing
 import uuid
@@ -22,8 +25,7 @@ def make_request_with_config(
     method: str = "GET",
     **kwargs: typing.Any,
 ) -> httpx.Response:
-    """
-    Makes an HTTP request using the provided config and auth strategy to a mock server.
+    """Make an HTTP request using the provided config and auth strategy to a mock server.
 
     Handles applying authentication via the strategy's `prepare_request` method.
 
@@ -89,8 +91,7 @@ def make_request_with_config(
 def setup_multi_provider_manager(
     config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]],
 ) -> ConfigManager:
-    """
-    Sets up a ConfigManager with multiple MemoryProviders for testing.
+    """Set up a ConfigManager with multiple MemoryProviders for testing.
 
     Args
     ----
@@ -122,8 +123,7 @@ def simulate_token_endpoint(
     error_response: typing.Optional[typing.Dict[str, str]] = None,
     error_status_code: int = 400,
 ) -> str:
-    """
-    Configures the mock server to simulate a simple token endpoint.
+    """Configure the mock server to simulate a simple token endpoint.
 
     Useful for testing custom authentication flows involving token fetching.
 

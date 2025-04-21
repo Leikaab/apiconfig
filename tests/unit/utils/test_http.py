@@ -112,9 +112,7 @@ def test_normalize_header_name(name: str, expected: str) -> None:
         ({"Multi-Part-Header": "value"}, "multi-part-header", None, "value"),
     ],
 )
-def test_get_header_value(
-    headers: dict[str, str], name: str, default: str | None, expected: str | None
-) -> None:
+def test_get_header_value(headers: dict[str, str], name: str, default: str | None, expected: str | None) -> None:
     assert get_header_value(headers, name, default=default) == expected
 
 
@@ -131,9 +129,7 @@ def test_get_header_value(
         ('{"nested": {"num": 1}}', None, {"nested": {"num": 1}}),
     ],
 )
-def test_safe_json_decode_success(
-    content: str | bytes, encoding: str | None, expected: dict[str, Any] | None
-) -> None:
+def test_safe_json_decode_success(content: str | bytes, encoding: str | None, expected: dict[str, Any] | None) -> None:
     assert safe_json_decode(content, encoding=encoding) == expected
 
 
@@ -198,9 +194,7 @@ def test_safe_json_decode_exceeds_size_limit_string() -> None:
     # Create a payload that's larger than the limit
     large_payload = '{"large": "' + "a" * 100 + '"}'
 
-    with pytest.raises(
-        PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"
-    ):
+    with pytest.raises(PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"):
         safe_json_decode(large_payload, max_size_bytes=50)
 
 
@@ -209,7 +203,5 @@ def test_safe_json_decode_exceeds_size_limit_bytes() -> None:
     # Create a bytes payload that's larger than the limit
     large_payload = b'{"large": "' + b"a" * 100 + b'"}'
 
-    with pytest.raises(
-        PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"
-    ):
+    with pytest.raises(PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"):
         safe_json_decode(large_payload, max_size_bytes=50)

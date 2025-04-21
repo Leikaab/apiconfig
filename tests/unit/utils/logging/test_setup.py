@@ -13,9 +13,7 @@ DEFAULT_LOG_LEVEL = logging.WARNING  # Default level is WARNING as per .pyi
 DEFAULT_FORMAT_STRING = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 
-@patch(
-    "apiconfig.utils.logging.setup._logger"
-)  # Patch the module-level logger instance
+@patch("apiconfig.utils.logging.setup._logger")  # Patch the module-level logger instance
 @patch("apiconfig.utils.logging.setup.RedactingStreamHandler")
 @patch("apiconfig.utils.logging.setup.RedactingFormatter")
 def test_setup_logging_default(
@@ -47,9 +45,7 @@ def test_setup_logging_default(
     mock_logger.addHandler.assert_called_once_with(mock_handler_instance)
 
 
-@patch(
-    "apiconfig.utils.logging.setup._logger"
-)  # Patch the module-level logger instance
+@patch("apiconfig.utils.logging.setup._logger")  # Patch the module-level logger instance
 @patch("apiconfig.utils.logging.setup.RedactingFormatter")  # Patch default formatter
 def test_setup_logging_custom_handlers(
     mock_formatter_cls: MagicMock,
@@ -93,9 +89,7 @@ def test_setup_logging_custom_handlers(
         os.remove("test1.log")
 
 
-@patch(
-    "apiconfig.utils.logging.setup._logger"
-)  # Patch the module-level logger instance
+@patch("apiconfig.utils.logging.setup._logger")  # Patch the module-level logger instance
 @patch("apiconfig.utils.logging.setup.RedactingStreamHandler")  # Patch default handler
 def test_setup_logging_custom_formatter(
     mock_handler_cls: MagicMock,
@@ -122,9 +116,7 @@ def test_setup_logging_custom_formatter(
     mock_logger.addHandler.assert_called_once_with(mock_handler_instance)
 
 
-@patch(
-    "apiconfig.utils.logging.setup._logger"
-)  # Patch the module-level logger instance
+@patch("apiconfig.utils.logging.setup._logger")  # Patch the module-level logger instance
 @patch("apiconfig.utils.logging.setup.RedactingStreamHandler")
 @patch("apiconfig.utils.logging.setup.RedactingFormatter")
 def test_setup_logging_custom_level(
@@ -155,9 +147,7 @@ def test_setup_logging_custom_level(
     mock_logger.addHandler.assert_called_once_with(mock_handler_instance)
 
 
-@patch(
-    "apiconfig.utils.logging.setup._logger"
-)  # Patch the module-level logger instance
+@patch("apiconfig.utils.logging.setup._logger")  # Patch the module-level logger instance
 @patch("apiconfig.utils.logging.setup.RedactingStreamHandler")
 @patch("apiconfig.utils.logging.setup.RedactingFormatter")
 def test_setup_logging_removes_existing_handlers(

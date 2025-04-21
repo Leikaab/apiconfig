@@ -18,15 +18,11 @@ class ApiKeyAuth(AuthStrategy):
 
         # Validate that at least one of header_name or param_name is provided
         if header_name is None and param_name is None:
-            raise AuthStrategyError(
-                "One of header_name or param_name must be provided for ApiKeyAuth"
-            )
+            raise AuthStrategyError("One of header_name or param_name must be provided for ApiKeyAuth")
 
         # Validate that only one of header_name or param_name is provided
         if header_name is not None and param_name is not None:
-            raise AuthStrategyError(
-                "Only one of header_name or param_name should be provided for ApiKeyAuth"
-            )
+            raise AuthStrategyError("Only one of header_name or param_name should be provided for ApiKeyAuth")
 
         # Validate header_name and param_name are not empty or whitespace if provided
         if header_name is not None and header_name.strip() == "":

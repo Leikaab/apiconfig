@@ -10,12 +10,8 @@ from apiconfig.utils.redaction.headers import REDACTED_VALUE  # Import from head
 # --- Test Data ---
 
 SENSITIVE_KEY_PATTERN = DEFAULT_SENSITIVE_KEYS_PATTERN
-SENSITIVE_VALUE_PATTERN_EMAIL = re.compile(
-    r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-)
-SENSITIVE_VALUE_PATTERN_UUID = re.compile(
-    r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.IGNORECASE
-)
+SENSITIVE_VALUE_PATTERN_EMAIL = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+SENSITIVE_VALUE_PATTERN_UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.IGNORECASE)
 
 
 # --- Test Cases ---
@@ -243,22 +239,13 @@ def test_redact_body(
     )
 
     # Handle comparison for JSON strings where key order might differ
-    if (
-        isinstance(expected_output, str)
-        and content_type == "application/json"
-        and expected_output.startswith(("{", "["))
-    ):
+    if isinstance(expected_output, str) and content_type == "application/json" and expected_output.startswith(("{", "[")):
         try:
             assert json.loads(result) == json.loads(expected_output)
         except (json.JSONDecodeError, TypeError):
-            pytest.fail(
-                f"Failed to compare JSON: result={result!r}, expected={expected_output!r}"
-            )  # Should not happen if expected is valid JSON
+            pytest.fail(f"Failed to compare JSON: result={result!r}, expected={expected_output!r}")  # Should not happen if expected is valid JSON
     # Handle comparison for form-urlencoded strings where param order might differ
-    elif (
-        isinstance(expected_output, str)
-        and content_type == "application/x-www-form-urlencoded"
-    ):
+    elif isinstance(expected_output, str) and content_type == "application/x-www-form-urlencoded":
         # Simple comparison works if urlencode produces consistent order,
         # otherwise more complex parsing/comparison might be needed.
         # For these tests, direct string comparison should suffice.
@@ -270,9 +257,7 @@ def test_redact_body(
             try:
                 assert result == expected_output.decode("utf-8")
             except UnicodeDecodeError:
-                pytest.fail(
-                    f"Could not decode expected bytes for comparison: {expected_output!r}"
-                )
+                pytest.fail(f"Could not decode expected bytes for comparison: {expected_output!r}")
         elif isinstance(result, bytes):
             # If result is still bytes (e.g., binary data placeholder), compare directly
             assert result == expected_output

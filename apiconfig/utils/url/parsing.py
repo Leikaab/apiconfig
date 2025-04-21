@@ -38,9 +38,7 @@ def parse_url(url: str) -> urllib.parse.ParseResult:
             # If port_part is numeric, it's likely a port number
             if port_part.isdigit() or host_part in ("localhost", "127.0.0.1"):
                 url = f"https://{url}"
-        elif "." in first_part and not first_part.endswith(
-            ".txt"
-        ):  # Don't add scheme to simple filenames
+        elif "." in first_part and not first_part.endswith(".txt"):  # Don't add scheme to simple filenames
             url = f"https://{url}"
 
     # Parse the URL
@@ -69,9 +67,7 @@ def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
     return simple_params
 
 
-def add_query_params(
-    url: str, params_to_add: Dict[str, Union[str, List[str], None]]
-) -> str:
+def add_query_params(url: str, params_to_add: Dict[str, Union[str, List[str], None]]) -> str:
     """Adds or updates query parameters in a URL."""
     if not url:
         raise ValueError("URL cannot be empty")

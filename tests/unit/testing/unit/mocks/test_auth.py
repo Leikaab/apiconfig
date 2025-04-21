@@ -37,9 +37,7 @@ def test_mock_auth_strategy_prepare_request_no_overrides() -> None:
     mock_auth = MockAuthStrategy()
     original_headers = {"Authorization": "Original"}
     original_params = {"key": "original"}
-    headers, params = mock_auth.prepare_request(
-        headers=original_headers.copy(), params=original_params.copy()
-    )
+    headers, params = mock_auth.prepare_request(headers=original_headers.copy(), params=original_params.copy())
     assert headers == original_headers
     assert params == original_params
 
@@ -48,16 +46,12 @@ def test_mock_auth_strategy_prepare_request_with_overrides() -> None:
     """Test prepare_request applies overrides correctly."""
     override_headers = {"Authorization": "Override", "X-New": "Value"}
     override_params = {"key": "override", "new": "val"}
-    mock_auth = MockAuthStrategy(
-        override_headers=override_headers, override_params=override_params
-    )
+    mock_auth = MockAuthStrategy(override_headers=override_headers, override_params=override_params)
 
     original_headers = {"Authorization": "Original", "Keep-Me": "Yes"}
     original_params = {"key": "original", "keep": "yes"}
 
-    headers, params = mock_auth.prepare_request(
-        headers=original_headers.copy(), params=original_params.copy()
-    )
+    headers, params = mock_auth.prepare_request(headers=original_headers.copy(), params=original_params.copy())
 
     expected_headers = {"Keep-Me": "Yes", "Authorization": "Override", "X-New": "Value"}
     expected_params = {"keep": "yes", "key": "override", "new": "val"}

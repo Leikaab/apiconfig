@@ -122,9 +122,7 @@ class RedactingFormatter(logging.Formatter):
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
         if isinstance(orig_msg, bytes) or self._is_binary(msg):
-            redacted_msg = self._redact_binary(
-                orig_msg if isinstance(orig_msg, bytes) else msg
-            )
+            redacted_msg = self._redact_binary(orig_msg if isinstance(orig_msg, bytes) else msg)
         # 2. If the original message is dict or list, always redact and serialize to JSON
         elif isinstance(orig_msg, (dict, list)):
             redacted_msg = self._redact_structured(orig_msg, content_type)
@@ -162,15 +160,10 @@ class RedactingFormatter(logging.Formatter):
             return True
         if isinstance(msg, str):
             if content_type:
-                if (
-                    "json" in str(content_type).lower()
-                    or "form" in str(content_type).lower()
-                ):
+                if "json" in str(content_type).lower() or "form" in str(content_type).lower():
                     return True
             stripped = msg.strip()
-            if (stripped.startswith("{") and stripped.endswith("}")) or (
-                stripped.startswith("[") and stripped.endswith("]")
-            ):
+            if (stripped.startswith("{") and stripped.endswith("}")) or (stripped.startswith("[") and stripped.endswith("]")):
                 return True
         return False
 
@@ -188,9 +181,7 @@ class RedactingFormatter(logging.Formatter):
         # If msg is a string and looks like JSON, always parse, redact, and serialize
         if isinstance(msg, str):
             stripped = msg.strip()
-            is_json = (stripped.startswith("{") and stripped.endswith("}")) or (
-                stripped.startswith("[") and stripped.endswith("]")
-            )
+            is_json = (stripped.startswith("{") and stripped.endswith("}")) or (stripped.startswith("[") and stripped.endswith("]"))
             if is_json:
                 try:
                     # Use redact_body directly on the string, which will parse, redact, and return a JSON string

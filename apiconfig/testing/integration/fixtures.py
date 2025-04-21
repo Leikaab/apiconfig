@@ -12,9 +12,7 @@ from apiconfig.config.providers.env import EnvProvider  # Corrected import
 from apiconfig.config.providers.file import FileProvider
 
 # Type alias for the custom auth callable used in tests
-CustomAuthCallable = Callable[
-    [Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]
-]
+CustomAuthCallable = Callable[[Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]]
 
 
 @pytest.fixture(scope="session")
@@ -59,27 +57,21 @@ def file_provider(temp_config_file: Path) -> FileProvider:
 @pytest.fixture(scope="function")
 def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected type hint
     """Provides an EnvProvider with predefined env vars."""
-    monkeypatch.setenv(
-        "APICONFIG_API_HOSTNAME", "env.example.com"
-    )  # Hostname usually overridden by mock_api_url in tests
+    monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
     monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
     return EnvProvider(prefix="APICONFIG")  # Corrected class instantiation
 
 
 @pytest.fixture(scope="function")
-def config_manager(
-    file_provider: FileProvider, env_provider: EnvProvider  # Corrected type hint
-) -> ConfigManager:
+def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> ConfigManager:  # Corrected type hint
     """Provides a ConfigManager instance with file and env providers."""
     # Order matters: env overrides file by default
     return ConfigManager(providers=[file_provider, env_provider])
 
 
 @pytest.fixture(scope="function")
-def custom_auth_strategy_factory() -> (
-    Callable[[Optional[CustomAuthCallable]], CustomAuth]
-):
+def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
     """
     Provides a factory fixture to create CustomAuth instances for testing.
 
@@ -121,9 +113,7 @@ def custom_auth_strategy_factory() -> (
         """Creates a CustomAuth instance with the given callable."""
         if auth_callable is None:
             # Default no-op callable if none provided
-            def default_callable(
-                headers: Dict[str, str], params: Dict[str, str]
-            ) -> tuple[Dict[str, str], Dict[str, str]]:
+            def default_callable(headers: Dict[str, str], params: Dict[str, str]) -> tuple[Dict[str, str], Dict[str, str]]:
                 # Simply return the inputs unmodified
                 return headers, params
 

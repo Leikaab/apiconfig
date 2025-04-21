@@ -23,9 +23,6 @@ class DetailedFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str: ...
     def formatException(
         self,
-        ei: (
-            tuple[type[BaseException], BaseException, types.TracebackType | None]
-            | tuple[None, None, None]
-        ),
+        ei: tuple[type[BaseException], BaseException, types.TracebackType | None] | tuple[None, None, None],
     ) -> str: ...
     def formatStack(self, stack_info: str) -> str: ...

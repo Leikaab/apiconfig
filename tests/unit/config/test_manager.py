@@ -109,9 +109,7 @@ class TestConfigManager:
 
     def test_load_config_provider_with_get_config(self) -> None:
         """Test loading config from a provider with get_config method."""
-        provider = MockProviderWithGetConfig(
-            config_data={"api": {"hostname": "example.com"}}
-        )
+        provider = MockProviderWithGetConfig(config_data={"api": {"hostname": "example.com"}})
         manager = ConfigManager(providers=[provider])
 
         config = manager.load_config()
@@ -124,9 +122,7 @@ class TestConfigManager:
         provider = MockProviderWithNoMethod()
         manager = ConfigManager(providers=[provider])
 
-        with pytest.raises(
-            ConfigLoadError, match="lacks a 'load' or 'get_config' method"
-        ):
+        with pytest.raises(ConfigLoadError, match="lacks a 'load' or 'get_config' method"):
             manager.load_config()
 
     def test_load_config_provider_returns_none(self) -> None:
@@ -174,12 +170,8 @@ class TestConfigManager:
         """Test that ConfigManager logs appropriate messages."""
         caplog.set_level(logging.DEBUG)
 
-        provider1 = MockProvider(
-            config_data={"api": {"hostname": "example1.com"}}, name="Provider1"
-        )
-        provider2 = MockProvider(
-            config_data={"api": {"hostname": "example2.com"}}, name="Provider2"
-        )
+        provider1 = MockProvider(config_data={"api": {"hostname": "example1.com"}}, name="Provider1")
+        provider2 = MockProvider(config_data={"api": {"hostname": "example2.com"}}, name="Provider2")
 
         manager = ConfigManager(providers=[provider1, provider2])
         manager.load_config()
@@ -190,9 +182,7 @@ class TestConfigManager:
         assert "Merged config from MockProvider" in caplog.text
         assert "Configuration loaded successfully from all providers" in caplog.text
 
-    def test_load_config_provider_returns_non_dict_value_warning(
-        self, caplog: pytest.LogCaptureFixture
-    ) -> None:
+    def test_load_config_provider_returns_non_dict_value_warning(self, caplog: pytest.LogCaptureFixture) -> None:
         """Test loading config from a provider that returns a non-dict value logs a warning."""
         import logging
 

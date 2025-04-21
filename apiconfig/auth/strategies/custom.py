@@ -13,9 +13,7 @@ class CustomAuth(AuthStrategy):
         param_callback: Optional[Callable[[], Dict[str, str]]] = None,
     ) -> None:
         if header_callback is None and param_callback is None:
-            raise AuthStrategyError(
-                "At least one callback (header or param) must be provided for CustomAuth."
-            )
+            raise AuthStrategyError("At least one callback (header or param) must be provided for CustomAuth.")
         self._header_callback = header_callback
         self._param_callback = param_callback
 
@@ -24,14 +22,10 @@ class CustomAuth(AuthStrategy):
             try:
                 result = self._header_callback()
                 if not isinstance(result, dict):
-                    raise AuthStrategyError(
-                        "CustomAuth header callback must return a dictionary."
-                    )
+                    raise AuthStrategyError("CustomAuth header callback must return a dictionary.")
                 return result
             except Exception as e:
-                raise AuthStrategyError(
-                    f"CustomAuth header callback failed: {e}"
-                ) from e
+                raise AuthStrategyError(f"CustomAuth header callback failed: {e}") from e
         return {}
 
     def prepare_request(
@@ -54,12 +48,8 @@ class CustomAuth(AuthStrategy):
             try:
                 result = self._param_callback()
                 if not isinstance(result, dict):
-                    raise AuthStrategyError(
-                        "CustomAuth parameter callback must return a dictionary."
-                    )
+                    raise AuthStrategyError("CustomAuth parameter callback must return a dictionary.")
                 return result
             except Exception as e:
-                raise AuthStrategyError(
-                    f"CustomAuth parameter callback failed: {e}"
-                ) from e
+                raise AuthStrategyError(f"CustomAuth parameter callback failed: {e}") from e
         return {}

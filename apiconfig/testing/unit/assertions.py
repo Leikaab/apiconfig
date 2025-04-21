@@ -26,13 +26,9 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
     if not config.hostname:
         raise AssertionError("ClientConfig hostname cannot be empty or None.")
     if config.timeout < 0:
-        raise AssertionError(
-            f"ClientConfig timeout cannot be negative: {config.timeout}"
-        )
+        raise AssertionError(f"ClientConfig timeout cannot be negative: {config.timeout}")
     if config.retries < 0:
-        raise AssertionError(
-            f"ClientConfig retries cannot be negative: {config.retries}"
-        )
+        raise AssertionError(f"ClientConfig retries cannot be negative: {config.retries}")
     # Implicitly check base_url construction works
     try:
         _ = config.base_url
@@ -40,9 +36,7 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
         raise AssertionError(f"ClientConfig failed base_url construction: {e}")
 
 
-def assert_auth_header_correct(
-    strategy: "AuthStrategy", expected_header: Dict[str, str]
-) -> None:
+def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[str, str]) -> None:
     """Assert that the AuthStrategy produces the expected headers."""
     # Import locally if needed
     from apiconfig.auth.base import AuthStrategy
@@ -51,22 +45,14 @@ def assert_auth_header_correct(
         raise AssertionError(f"Object {strategy!r} is not an instance of AuthStrategy.")
 
     actual_header = strategy.prepare_request_headers()
-    assert (
-        actual_header == expected_header
-    ), f"Auth header mismatch. Expected: {expected_header}, Got: {actual_header}"
+    assert actual_header == expected_header, f"Auth header mismatch. Expected: {expected_header}, Got: {actual_header}"
 
 
-def assert_provider_loads(
-    provider: "ConfigProvider", expected_dict: Dict[str, Any]
-) -> None:
+def assert_provider_loads(provider: "ConfigProvider", expected_dict: Dict[str, Any]) -> None:
     """Assert that the ConfigProvider loads the expected dictionary."""
     # Check if the provider has a 'load' method
     if not hasattr(provider, "load") or not callable(provider.load):
-        raise AssertionError(
-            f"Object {provider!r} does not have a callable 'load' method."
-        )
+        raise AssertionError(f"Object {provider!r} does not have a callable 'load' method.")
 
     actual_dict = provider.load()
-    assert (
-        actual_dict == expected_dict
-    ), f"Provider load mismatch. Expected: {expected_dict}, Got: {actual_dict}"
+    assert actual_dict == expected_dict, f"Provider load mismatch. Expected: {expected_dict}, Got: {actual_dict}"

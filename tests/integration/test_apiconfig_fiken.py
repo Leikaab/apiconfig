@@ -22,11 +22,7 @@ def fiken_config() -> tuple[ClientConfig, str | None, str]:
     # Try FIKEN_ACCESS_TOKEN from config, then from os.environ
     token = config.get("FIKEN_ACCESS_TOKEN") or os.environ.get("FIKEN_ACCESS_TOKEN")
     # Try FIKEN_BASE_URL from config, then from os.environ, then default
-    base_url = (
-        config.get("FIKEN_BASE_URL")
-        or os.environ.get("FIKEN_BASE_URL")
-        or "https://api.fiken.no/api/v2"
-    )
+    base_url = config.get("FIKEN_BASE_URL") or os.environ.get("FIKEN_BASE_URL") or "https://api.fiken.no/api/v2"
 
     # Ensure base_url has a scheme
     if not base_url.startswith("http"):
@@ -74,9 +70,7 @@ def test_fiken_api_companies(
     client_config, token, base_url = fiken_config
 
     if not token:
-        pytest.skip(
-            "FIKEN_ACCESS_TOKEN not set in environment; skipping real API call."
-        )
+        pytest.skip("FIKEN_ACCESS_TOKEN not set in environment; skipping real API call.")
 
     url = f"{base_url.rstrip('/')}/companies"
     headers: dict[str, str] = {}
@@ -88,18 +82,14 @@ def test_fiken_api_companies(
     with httpx.Client(timeout=10.0) as client:
         response = client.get(url, headers=headers)
 
-    assert (
-        response.status_code == 200
-    ), f"Unexpected status code: {response.status_code} - {response.text}"
+    assert response.status_code == 200, f"Unexpected status code: {response.status_code} - {response.text}"
 
     data: Any = response.json()
     # Fiken returns a list of companies, so we expect a list or a dict with a key
     assert isinstance(data, (list, dict)), f"Unexpected response type: {type(data)}"
     # If dict, check for expected keys
     if isinstance(data, dict):
-        assert (
-            "companies" in data or "data" in data or "id" in data
-        ), f"Response dict missing expected keys: {data.keys()}"
+        assert "companies" in data or "data" in data or "id" in data, f"Response dict missing expected keys: {data.keys()}"
     # If list, check at least one company object
     if isinstance(data, list):
         assert len(data) > 0, "No companies returned in response."

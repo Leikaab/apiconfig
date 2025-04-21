@@ -26,9 +26,7 @@ def assert_client_config_valid(config: ClientConfig) -> None:
     """
     ...
 
-def assert_auth_header_correct(
-    strategy: AuthStrategy, expected_header: Dict[str, str]
-) -> None:
+def assert_auth_header_correct(strategy: AuthStrategy, expected_header: Dict[str, str]) -> None:
     """
     Assert that the AuthStrategy produces the expected headers.
 
@@ -45,9 +43,7 @@ def assert_auth_header_correct(
     """
     ...
 
-def assert_provider_loads(
-    provider: ConfigProvider, expected_dict: Dict[str, Any]
-) -> None:
+def assert_provider_loads(provider: ConfigProvider, expected_dict: Dict[str, Any]) -> None:
     """
     Assert that the ConfigProvider loads the expected dictionary.
 

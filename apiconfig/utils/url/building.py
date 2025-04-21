@@ -70,14 +70,10 @@ def build_url(
                 # If the first segment starts with slashes, we need to handle it specially
                 if path_to_append.startswith("//"):
                     # Keep all leading slashes intact
-                    new_path = (
-                        base_path[:-1] + path_to_append
-                    )  # Remove the slash we added to base_path
+                    new_path = base_path[:-1] + path_to_append  # Remove the slash we added to base_path
                 else:
                     # Combine paths, ensuring we don't collapse double slashes
-                    new_path = (
-                        base_path + path_to_append[1:]
-                    )  # Remove the first slash we added
+                    new_path = base_path + path_to_append[1:]  # Remove the first slash we added
 
                 # Rebuild the URL with the new path
                 current_url = urllib.parse.urlunparse(parsed._replace(path=new_path))
@@ -143,53 +139,25 @@ def _handle_special_cases(url: str, segment_index: int, new_segment: str) -> str
     """Handle special test cases for replace_path_segment."""
     # Special case for URLs with specific expected patterns
     # This is a direct mapping for the specific test cases that are failing
-    if (
-        url == "https://example.com//api//users//"
-        and segment_index == 1
-        and new_segment == "items"
-    ):
+    if url == "https://example.com//api//users//" and segment_index == 1 and new_segment == "items":
         return "https://example.com//api/items//"
 
-    if (
-        url == "https://example.com/path//with//double//slashes"
-        and segment_index == 2
-        and new_segment == "new-segment"
-    ):
+    if url == "https://example.com/path//with//double//slashes" and segment_index == 2 and new_segment == "new-segment":
         return "https://example.com/path//with/new-segment//slashes"
 
-    if (
-        url == "https://example.com//path//with//double//slashes"
-        and segment_index == 2
-        and new_segment == "new-segment"
-    ):
+    if url == "https://example.com//path//with//double//slashes" and segment_index == 2 and new_segment == "new-segment":
         return "https://example.com//path//with/new-segment//slashes"
 
-    if (
-        url == "https://example.com/"
-        and segment_index == 0
-        and new_segment == "new_root"
-    ):
+    if url == "https://example.com/" and segment_index == 0 and new_segment == "new_root":
         return "https://example.com/new_root/"
 
-    if (
-        url == "https://example.com/path/segment//with//slashes/end"
-        and segment_index == 1
-        and new_segment == "new-segment"
-    ):
+    if url == "https://example.com/path/segment//with//slashes/end" and segment_index == 1 and new_segment == "new-segment":
         return "https://example.com/path/new-segment/end"
 
-    if (
-        url == "https://example.com/path///with///triple///slashes"
-        and segment_index == 1
-        and new_segment == "new-segment"
-    ):
+    if url == "https://example.com/path///with///triple///slashes" and segment_index == 1 and new_segment == "new-segment":
         return "https://example.com/path/new-segment///triple///slashes"
 
-    if (
-        url == "https://example.com///"
-        and segment_index == 0
-        and new_segment == "segment"
-    ):
+    if url == "https://example.com///" and segment_index == 0 and new_segment == "segment":
         return "https://example.com///segment"
 
     return ""  # No special case matched
@@ -288,9 +256,7 @@ def _handle_root_path(
     trailing_slashes = ""
 
     # Handle edge case: replacing the "root" segment when path is "/" or empty ""
-    is_effectively_root = (not segments or all(s == "" for s in segments)) and (
-        parsed.path == "/" or parsed.path == ""
-    )
+    is_effectively_root = (not segments or all(s == "" for s in segments)) and (parsed.path == "/" or parsed.path == "")
 
     if is_effectively_root and segment_index == 0:
         segments = [""]  # Treat root as a single empty segment for replacement
@@ -326,12 +292,7 @@ def _reconstruct_path(
 
     # Add trailing slashes if the original path had them
     # But avoid duplicating trailing slashes if the last slash pattern already includes them
-    if trailing_slashes and not (
-        segments
-        and not segments[-1]
-        and slash_patterns
-        and slash_patterns[-1] == trailing_slashes
-    ):
+    if trailing_slashes and not (segments and not segments[-1] and slash_patterns and slash_patterns[-1] == trailing_slashes):
         # Only add trailing slashes if they're not already included in the last slash pattern
         new_path += trailing_slashes
 
@@ -359,14 +320,10 @@ def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
         return special_case_result
 
     # Parse the path into components
-    leading_slashes, segments, slash_patterns, trailing_slashes = (
-        _parse_path_components(path)
-    )
+    leading_slashes, segments, slash_patterns, trailing_slashes = _parse_path_components(path)
 
     # Handle root path special case
-    segments, slash_patterns, root_trailing_slashes = _handle_root_path(
-        parsed, segment_index, segments, slash_patterns
-    )
+    segments, slash_patterns, root_trailing_slashes = _handle_root_path(parsed, segment_index, segments, slash_patterns)
 
     # Use trailing slashes from root path handling if provided
     if root_trailing_slashes:
@@ -374,20 +331,14 @@ def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
 
     # Check index bounds *after* potentially modifying segments for root case
     if not (0 <= segment_index < len(segments)):
-        raise IndexError(
-            f"Segment index {segment_index} out of range for path '{parsed.path}' ({len(segments)} segments found)"
-        )
+        raise IndexError(f"Segment index {segment_index} out of range for path '{parsed.path}' ({len(segments)} segments found)")
 
     # Replace the segment
     segments[segment_index] = new_segment.strip("/")
 
     # Special case: if we're replacing the last segment and it's empty (trailing slash),
     # and the new segment is not empty, we need to handle it differently
-    if (
-        segment_index == len(segments) - 1
-        and segments[segment_index]
-        and not path.endswith("/")
-    ):
+    if segment_index == len(segments) - 1 and segments[segment_index] and not path.endswith("/"):
         # If the original URL didn't have a trailing slash, don't add one
         trailing_slashes = ""
 
@@ -397,9 +348,7 @@ def replace_path_segment(url: str, segment_index: int, new_segment: str) -> str:
             trailing_slashes = ""
 
     # Reconstruct the path with the original slash pattern
-    new_path = _reconstruct_path(
-        leading_slashes, segments, slash_patterns, trailing_slashes
-    )
+    new_path = _reconstruct_path(leading_slashes, segments, slash_patterns, trailing_slashes)
 
     # Rebuild the URL using _replace
     new_url_parts = parsed._replace(path=new_path)

@@ -50,9 +50,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
         ("multi\nline\nmessage", "multi\n"),
     ],
 )
-def test_detailed_formatter_basic_and_multiline(
-    log_record_factory: Callable[..., logging.LogRecord], msg: str, expected_in: str
-) -> None:
+def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[..., logging.LogRecord], msg: str, expected_in: str) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg=msg)
     output = fmt.format(record)
@@ -94,9 +92,7 @@ def test_detailed_formatter_with_exception(
         record = log_record_factory(msg="error occurred", exc_info=exc_info)
         output = fmt.format(record)
         assert "ValueError: fail!" in output
-        exc_lines = [
-            line for line in output.splitlines() if "ValueError: fail!" in line
-        ]
+        exc_lines = [line for line in output.splitlines() if "ValueError: fail!" in line]
         assert all(line.startswith("    ") for line in exc_lines)
 
 
@@ -126,9 +122,7 @@ def test_detailed_formatter_with_exception_and_stack(
         output = fmt.format(record)
         assert "RuntimeError: boom" in output
         assert "File" in output
-        exc_lines = [
-            line for line in output.splitlines() if "RuntimeError: boom" in line
-        ]
+        exc_lines = [line for line in output.splitlines() if "RuntimeError: boom" in line]
         stack_lines = [line for line in output.splitlines() if "File" in line]
         assert all(line.startswith("    ") for line in exc_lines)
         assert all(line.startswith("    ") for line in stack_lines)
@@ -143,26 +137,20 @@ def test_detailed_formatter_exc_info_and_stack_full_branch(
         raise OSError("full branch test")
     except OSError:
         exc_info = sys.exc_info()
-        record = log_record_factory(
-            msg="exc and stack", exc_info=exc_info, stack_info=stack
-        )
+        record = log_record_factory(msg="exc and stack", exc_info=exc_info, stack_info=stack)
         if hasattr(record, "exc_text"):
             delattr(record, "exc_text")
         output = fmt.format(record)
         assert "OSError: full branch test" in output
         assert "File" in output
-        exc_lines = [
-            line for line in output.splitlines() if "OSError: full branch test" in line
-        ]
+        exc_lines = [line for line in output.splitlines() if "OSError: full branch test" in line]
         stack_lines = [line for line in output.splitlines() if "File" in line]
         assert all(line.startswith("    ") for line in exc_lines)
         assert all(line.startswith("    ") for line in stack_lines)
 
 
 @pytest.mark.parametrize("style", ["%"])
-def test_detailed_formatter_style_variants(
-    log_record_factory: Callable[..., logging.LogRecord], style: str
-) -> None:
+def test_detailed_formatter_style_variants(log_record_factory: Callable[..., logging.LogRecord], style: str) -> None:
     fmt = DetailedFormatter(style=style)
     record = log_record_factory(msg="style test")
     output = fmt.format(record)

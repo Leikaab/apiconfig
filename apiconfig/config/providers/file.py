@@ -14,35 +14,22 @@ class FileProvider:
     def load(self) -> Dict[str, Any]:
         if self._file_path.suffix.lower() != ".json":
             # TODO: Add support for YAML later if needed
-            raise ConfigLoadError(
-                f"Unsupported file type: {self._file_path.suffix}. "
-                "Only .json is currently supported."
-            )
+            raise ConfigLoadError(f"Unsupported file type: {self._file_path.suffix}. " "Only .json is currently supported.")
 
         try:
             with self._file_path.open("r", encoding="utf-8") as f:
                 config_data = json.load(f)
             if not isinstance(config_data, dict):
-                raise ConfigLoadError(
-                    f"Configuration file '{self._file_path}' must contain a JSON object (dict)."
-                )
+                raise ConfigLoadError(f"Configuration file '{self._file_path}' must contain a JSON object (dict).")
             return config_data
         except FileNotFoundError as e:
-            raise ConfigLoadError(
-                f"Configuration file not found: {self._file_path}"
-            ) from e
+            raise ConfigLoadError(f"Configuration file not found: {self._file_path}") from e
         except json.JSONDecodeError as e:
-            raise ConfigLoadError(
-                f"Error decoding JSON from configuration file: {self._file_path}"
-            ) from e
+            raise ConfigLoadError(f"Error decoding JSON from configuration file: {self._file_path}") from e
         except OSError as e:
-            raise ConfigLoadError(
-                f"Error reading configuration file: {self._file_path}"
-            ) from e
+            raise ConfigLoadError(f"Error reading configuration file: {self._file_path}") from e
 
-    def get(
-        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
-    ) -> Any:
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
         config = self.load()
 
         # Handle dot notation for nested keys
@@ -72,6 +59,4 @@ class FileProvider:
             # Handle other types through standard conversion
             return expected_type(value)
         except (ValueError, TypeError) as e:
-            raise ConfigValueError(
-                f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}"
-            ) from e
+            raise ConfigValueError(f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}") from e

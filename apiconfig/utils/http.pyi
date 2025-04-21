@@ -80,9 +80,7 @@ def normalize_header_name(name: str) -> str:
     """
     ...
 
-def get_header_value(
-    headers: Mapping[str, str], name: str, default: Optional[str] = None
-) -> Optional[str]:
+def get_header_value(headers: Mapping[str, str], name: str, default: Optional[str] = None) -> Optional[str]:
     """
     Get a header value from a mapping, case-insensitively.
 

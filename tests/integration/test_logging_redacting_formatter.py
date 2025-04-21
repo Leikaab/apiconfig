@@ -183,9 +183,7 @@ def test_redacting_formatter_integration_set_cookie_header(
 
 def test_redacting_formatter_integration_plain_string(log_stream: io.StringIO) -> None:
     secret_pattern = re.compile(r"secret_[a-z0-9]+", re.IGNORECASE)
-    logger = get_logger_with_formatter(
-        log_stream, body_sensitive_value_pattern=secret_pattern
-    )
+    logger = get_logger_with_formatter(log_stream, body_sensitive_value_pattern=secret_pattern)
     logger.info("this is a secret_abc123 and should be redacted")
     output = log_stream.getvalue()
     assert "[REDACTED]" in output

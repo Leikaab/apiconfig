@@ -36,9 +36,7 @@ def configure_mock_response(
         expect_kwargs["headers"] = match_headers
     if match_query_string:
         # pytest-httpserver expects query_string as bytes or str
-        expect_kwargs["query_string"] = "&".join(
-            f"{k}={v}" for k, v in match_query_string.items()
-        )
+        expect_kwargs["query_string"] = "&".join(f"{k}={v}" for k, v in match_query_string.items())
     if match_json:
         expect_kwargs["json"] = match_json
     if match_data:
@@ -52,12 +50,8 @@ def configure_mock_response(
         response_kwargs["response_data"] = response_data
     # Handle None case implicitly (empty body)
 
-    expectation = httpserver.expect_request(
-        uri=path, method=method, ordered=ordered, **expect_kwargs
-    )
-    expectation.respond_with_response(
-        Response(status=status_code, headers=response_headers), **response_kwargs
-    )
+    expectation = httpserver.expect_request(uri=path, method=method, ordered=ordered, **expect_kwargs)
+    expectation.respond_with_response(Response(status=status_code, headers=response_headers), **response_kwargs)
 
 
 def assert_request_received(
@@ -72,11 +66,7 @@ def assert_request_received(
 ) -> None:
     """Assert that specific requests were received by the mock server."""
     matching_requests = []
-    lower_expected_headers = (
-        {k.lower(): v for k, v in expected_headers.items()}
-        if expected_headers
-        else None
-    )
+    lower_expected_headers = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
     log = httpserver.log
     for entry in log:
@@ -85,19 +75,12 @@ def assert_request_received(
             match = True
             # Check headers
             if lower_expected_headers:
-                request_headers_lower = {
-                    k.lower(): v for k, v in request.headers.items()
-                }
-                if not all(
-                    item in request_headers_lower.items()
-                    for item in lower_expected_headers.items()
-                ):
+                request_headers_lower = {k.lower(): v for k, v in request.headers.items()}
+                if not all(item in request_headers_lower.items() for item in lower_expected_headers.items()):
                     match = False
             # Check query parameters
             if expected_query and match:
-                if not all(
-                    item in request.args.items() for item in expected_query.items()
-                ):
+                if not all(item in request.args.items() for item in expected_query.items()):
                     match = False
             # Check JSON body
             if expected_json is not None and match:
@@ -117,11 +100,7 @@ def assert_request_received(
 
     if count is not None:
         assert len(matching_requests) == count, (
-            f"Expected {count} request(s) matching criteria for {method} {path}, "
-            f"but found {len(matching_requests)}. Log: {log}"
+            f"Expected {count} request(s) matching criteria for {method} {path}, " f"but found {len(matching_requests)}. Log: {log}"
         )
     else:
-        assert len(matching_requests) > 0, (
-            f"Expected at least one request matching criteria for {method} {path}, "
-            f"but found none. Log: {log}"
-        )
+        assert len(matching_requests) > 0, f"Expected at least one request matching criteria for {method} {path}, " f"but found none. Log: {log}"

@@ -30,14 +30,10 @@ class ConfigManager:
                 # We might need a Protocol later.
                 if hasattr(provider, "load"):
                     config_data = provider.load()
-                elif hasattr(
-                    provider, "get_config"
-                ):  # Fallback for potential variations
+                elif hasattr(provider, "get_config"):  # Fallback for potential variations
                     config_data = provider.get_config()
                 else:
-                    raise AttributeError(
-                        f"Provider {provider_name} lacks a 'load' or 'get_config' method."
-                    )
+                    raise AttributeError(f"Provider {provider_name} lacks a 'load' or 'get_config' method.")
 
                 if config_data:
                     if not isinstance(config_data, dict):
@@ -60,9 +56,7 @@ class ConfigManager:
                     exc_info=True,
                 )
                 # Wrap the original exception for context
-                raise ConfigLoadError(
-                    f"Failed to load configuration from provider {provider_name}: {e}"
-                ) from e
+                raise ConfigLoadError(f"Failed to load configuration from provider {provider_name}: {e}") from e
 
         logger.info("Configuration loaded successfully from all providers.")
         return merged_config

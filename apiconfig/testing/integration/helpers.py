@@ -32,9 +32,7 @@ def make_request_with_config(
     json_data = kwargs.pop("json", None)
 
     # Prepare request using auth strategy
-    prepared_headers, prepared_params = auth_strategy.prepare_request(
-        headers=headers, params=params
-    )
+    prepared_headers, prepared_params = auth_strategy.prepare_request(headers=headers, params=params)
 
     # Use httpx for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver
@@ -95,9 +93,7 @@ def simulate_token_endpoint(
 
         # Configure error response if body doesn't match
         error_resp_data = error_response or {"error": "invalid_request"}
-        httpserver.expect_request(uri=token_path, method="POST").respond_with_json(
-            error_resp_data, status=error_status_code
-        )
+        httpserver.expect_request(uri=token_path, method="POST").respond_with_json(error_resp_data, status=error_status_code)
 
         # Configure success response for matching body
         configure_mock_response(

@@ -20,18 +20,14 @@ class EnvProvider:
 
         for key, value in os.environ.items():
             if key.startswith(self._prefix):
-                config_key = key[
-                    prefix_len:
-                ]  # Keep original case after removing prefix
+                config_key = key[prefix_len:]  # Keep original case after removing prefix
                 # Basic type inference (can be expanded later)
                 if self._is_digit(value):
                     try:
                         config[config_key] = int(value)
                     except ValueError:
                         # Should not happen with isdigit, but safety first
-                        raise InvalidConfigError(
-                            f"Invalid integer value for env var {key}: {value}"
-                        )
+                        raise InvalidConfigError(f"Invalid integer value for env var {key}: {value}")
                 elif value.lower() in ("true", "false"):
                     config[config_key] = value.lower() == "true"
                 else:
@@ -43,9 +39,7 @@ class EnvProvider:
                         config[config_key] = value
         return config
 
-    def get(
-        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
-    ) -> Any:
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
         env_key = f"{self._prefix}{key}"
         value = os.environ.get(env_key)
 
@@ -67,6 +61,4 @@ class EnvProvider:
             # Handle other types through standard conversion
             return expected_type(value)
         except (ValueError, TypeError) as e:
-            raise ConfigValueError(
-                f"Cannot convert environment variable {env_key}='{value}' to {expected_type.__name__}: {str(e)}"
-            ) from e
+            raise ConfigValueError(f"Cannot convert environment variable {env_key}='{value}' to {expected_type.__name__}: {str(e)}") from e

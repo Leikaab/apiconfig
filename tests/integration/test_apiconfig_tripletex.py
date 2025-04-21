@@ -14,9 +14,7 @@ from dotenv import load_dotenv
 
 from apiconfig.config.providers.env import EnvProvider
 
-load_dotenv(
-    dotenv_path=".env", override=True
-)  # Explicitly load .env from workspace root and override existing vars
+load_dotenv(dotenv_path=".env", override=True)  # Explicitly load .env from workspace root and override existing vars
 # Configure logging for debugging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,16 +35,10 @@ def tripletex_config() -> Dict[str, str]:
     employee_token = loaded_env_vars.get("TRIPLETEX_TEST_EMPLOYEE_TOKEN")
 
     if not consumer_token or not employee_token:
-        pytest.skip(
-            "Missing TRIPLETEX_TEST_CONSUMER_TOKEN or "
-            "TRIPLETEX_TEST_EMPLOYEE_TOKEN environment variables."
-        )
+        pytest.skip("Missing TRIPLETEX_TEST_CONSUMER_TOKEN or " "TRIPLETEX_TEST_EMPLOYEE_TOKEN environment variables.")
 
     if not isinstance(consumer_token, str) or not isinstance(employee_token, str):
-        pytest.fail(
-            "TRIPLETEX_TEST_CONSUMER_TOKEN or TRIPLETEX_TEST_EMPLOYEE_TOKEN "
-            "environment variables are not strings."
-        )
+        pytest.fail("TRIPLETEX_TEST_CONSUMER_TOKEN or TRIPLETEX_TEST_EMPLOYEE_TOKEN " "environment variables are not strings.")
 
     config = {
         "hostname": TRIPLETEX_TEST_HOSTNAME,
@@ -63,9 +55,7 @@ def create_expiration_date() -> str:
     Sets the expiration date to two days ahead at 23:59:59 UTC to ensure it is always in the future,
     regardless of when the test is run.
     """
-    two_days_ahead = (datetime.now(timezone.utc) + timedelta(days=2)).replace(
-        hour=23, minute=59, second=59, microsecond=0
-    )
+    two_days_ahead = (datetime.now(timezone.utc) + timedelta(days=2)).replace(hour=23, minute=59, second=59, microsecond=0)
     return two_days_ahead.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
@@ -90,9 +80,7 @@ def get_session_token(config: Dict[str, str]) -> Optional[str]:
             if response.status == 200:
                 data = json.loads(response.read().decode("utf-8"))
                 token_data = data.get("value", {})
-                token = (
-                    token_data.get("token") if isinstance(token_data, dict) else None
-                )
+                token = token_data.get("token") if isinstance(token_data, dict) else None
                 # Ensure token is a non-empty string before returning
                 if isinstance(token, str) and token:
                     logger.info("Successfully obtained session token.")
@@ -132,9 +120,7 @@ def get_session_token(config: Dict[str, str]) -> Optional[str]:
         return None
 
 
-def list_countries(
-    config: Dict[str, str], session_token: str
-) -> Optional[List[Dict[str, Any]]]:
+def list_countries(config: Dict[str, str], session_token: str) -> Optional[List[Dict[str, Any]]]:
     """Lists countries using the obtained session token."""
     base_url = f"{config['hostname']}/{TRIPLETEX_API_VERSION}"
     url = f"{base_url}/country"

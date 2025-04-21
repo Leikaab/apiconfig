@@ -63,15 +63,11 @@ class MockAuthStrategy(AuthStrategy):
         """
         ...
     # Add signatures for dummy implementations required by AuthStrategy ABC
-    def prepare_request_headers(
-        self, headers: Optional[Dict[str, str]] = None
-    ) -> Dict[str, str]:
+    def prepare_request_headers(self, headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
         """Dummy implementation required by AuthStrategy ABC."""
         ...
 
-    def prepare_request_params(
-        self, params: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+    def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Dummy implementation required by AuthStrategy ABC."""
         ...
 

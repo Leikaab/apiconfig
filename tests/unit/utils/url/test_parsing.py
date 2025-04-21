@@ -40,9 +40,7 @@ from apiconfig.utils.url import add_query_params, get_query_params, parse_url
         ("https://[2001:db8::1]/path", "https", "[2001:db8::1]", "/path"),  # IPv6
     ],
 )
-def test_parse_url(
-    url_in: str, expected_scheme: str, expected_netloc: str, expected_path: str
-) -> None:
+def test_parse_url(url_in: str, expected_scheme: str, expected_netloc: str, expected_path: str) -> None:
     """Tests basic URL parsing and scheme defaulting."""
     result: ParseResult = parse_url(url_in)
     assert isinstance(result, ParseResult)
@@ -124,9 +122,7 @@ def test_parse_url_edge_cases() -> None:
         ),  # Array-like notation
     ],
 )
-def test_get_query_params(
-    url_in: str, expected_params: Dict[str, Union[str, List[str]]]
-) -> None:
+def test_get_query_params(url_in: str, expected_params: Dict[str, Union[str, List[str]]]) -> None:
     """Tests extraction of query parameters."""
     result: Dict[str, Union[str, List[str]]] = get_query_params(url_in)
     assert result == expected_params

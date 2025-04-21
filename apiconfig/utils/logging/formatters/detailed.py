@@ -16,10 +16,7 @@ class DetailedFormatter(logging.Formatter):
         defaults: Optional[Mapping[str, Any]] = None,
     ) -> None:
         # Default format string
-        default_fmt = (
-            "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s"
-            "\n    (%(filename)s:%(lineno)d)"
-        )
+        default_fmt = "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s" "\n    (%(filename)s:%(lineno)d)"
         super().__init__(
             fmt=fmt or default_fmt,
             datefmt=datefmt,
@@ -37,9 +34,7 @@ class DetailedFormatter(logging.Formatter):
         formatted = self._format_stack_info(formatted, record)
         return formatted
 
-    def _format_multiline_message(
-        self, formatted: str, record: logging.LogRecord
-    ) -> str:
+    def _format_multiline_message(self, formatted: str, record: logging.LogRecord) -> str:
         lines = formatted.split("\n")
         if len(lines) <= 1:
             return formatted
@@ -49,31 +44,18 @@ class DetailedFormatter(logging.Formatter):
         if metadata_len == -1:
             metadata_len = len(first_line) - len(message_lines[0])
         if len(message_lines) > 1:
-            indented_message = "\n".join(
-                [message_lines[0]]
-                + [
-                    textwrap.indent(line, " " * (metadata_len))
-                    for line in message_lines[1:]
-                ]
-            )
-            lines[0] = first_line.replace(
-                message_lines[0], indented_message.split("\n", 1)[0]
-            )
+            indented_message = "\n".join([message_lines[0]] + [textwrap.indent(line, " " * (metadata_len)) for line in message_lines[1:]])
+            lines[0] = first_line.replace(message_lines[0], indented_message.split("\n", 1)[0])
         other_lines = [lines[0]] + [textwrap.indent(line, "    ") for line in lines[1:]]
         if len(message_lines) > 1:
-            other_lines.extend(
-                textwrap.indent(line, " " * (metadata_len))
-                for line in message_lines[1:]
-            )
+            other_lines.extend(textwrap.indent(line, " " * (metadata_len)) for line in message_lines[1:])
         return "\n".join(other_lines)
 
     def _format_exception_text(self, formatted: str, record: logging.LogRecord) -> str:
         if record.exc_info and not getattr(record, "exc_text", None):
             record.exc_text = self.formatException(record.exc_info)
         if getattr(record, "exc_text", None):
-            exc_text = textwrap.indent(
-                record.exc_text if record.exc_text is not None else "", "    "
-            )
+            exc_text = textwrap.indent(record.exc_text if record.exc_text is not None else "", "    ")
             if formatted[-1:] != "\n":
                 formatted += "\n"
             formatted += exc_text

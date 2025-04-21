@@ -38,9 +38,7 @@ def normalize_header_name(name: str) -> str:
     return "-".join(part.capitalize() for part in name.split("-"))
 
 
-def get_header_value(
-    headers: Mapping[str, str], name: str, default: Optional[str] = None
-) -> Optional[str]:
+def get_header_value(headers: Mapping[str, str], name: str, default: Optional[str] = None) -> Optional[str]:
     normalized_name = normalize_header_name(name)
     for key, value in headers.items():
         if normalize_header_name(key) == normalized_name:
@@ -57,18 +55,14 @@ def safe_json_decode(
         if isinstance(response_text, bytes):
             # Check size before decoding bytes
             if len(response_text) > max_size_bytes:
-                raise PayloadTooLargeError(
-                    f"Payload size ({len(response_text)} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)"
-                )
+                raise PayloadTooLargeError(f"Payload size ({len(response_text)} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)")
             # Attempt to decode bytes using provided encoding or default (UTF-8)
             text_content = response_text.decode(encoding or "utf-8")
         else:
             # Check size for string (UTF-8 encoded size)
             encoded_size = len(response_text.encode("utf-8"))
             if encoded_size > max_size_bytes:
-                raise PayloadTooLargeError(
-                    f"Payload size ({encoded_size} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)"
-                )
+                raise PayloadTooLargeError(f"Payload size ({encoded_size} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)")
             text_content = response_text
 
         # Strip whitespace before checking if empty
@@ -80,14 +74,10 @@ def safe_json_decode(
     except json.JSONDecodeError as e:
         raise JSONDecodeError(f"Failed to decode JSON: {e}") from e
     except UnicodeDecodeError as e:
-        raise JSONDecodeError(
-            f"Failed to decode response body with encoding '{encoding or 'utf-8'}': {e}"
-        ) from e
+        raise JSONDecodeError(f"Failed to decode response body with encoding '{encoding or 'utf-8'}': {e}") from e
     except PayloadTooLargeError:
         # Re-raise PayloadTooLargeError directly without wrapping
         raise
     except Exception as e:
         # Catch other potential errors during processing
-        raise HTTPUtilsError(
-            f"An unexpected error occurred during JSON decoding: {e}"
-        ) from e
+        raise HTTPUtilsError(f"An unexpected error occurred during JSON decoding: {e}") from e

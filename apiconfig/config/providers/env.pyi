@@ -54,9 +54,7 @@ class EnvProvider:
         """
         ...
 
-    def get(
-        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
-    ) -> Any:
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
         """
         Get a configuration value from environment variables.
 

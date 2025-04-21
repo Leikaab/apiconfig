@@ -74,26 +74,18 @@ def redact_headers(
         lower_name = name.lower()
         is_sensitive_by_key = lower_name in sensitive_keys
         is_sensitive_by_prefix = lower_name.startswith(sensitive_prefixes)
-        is_sensitive_by_pattern = bool(
-            sensitive_name_pattern and sensitive_name_pattern.search(name)
-        )
+        is_sensitive_by_pattern = bool(sensitive_name_pattern and sensitive_name_pattern.search(name))
 
-        is_sensitive = (
-            is_sensitive_by_key or is_sensitive_by_prefix or is_sensitive_by_pattern
-        )
+        is_sensitive = is_sensitive_by_key or is_sensitive_by_prefix or is_sensitive_by_pattern
 
         # Ensure value is treated as a string for consistency
         value_str = str(value)
 
         # Special handling for multi-value headers
         if is_sensitive and lower_name == "cookie":
-            redacted_headers[name] = _redact_cookie_header(
-                value_str, sensitive_cookie_keys
-            )
+            redacted_headers[name] = _redact_cookie_header(value_str, sensitive_cookie_keys)
         elif is_sensitive and lower_name == "set-cookie":
-            redacted_headers[name] = _redact_set_cookie_header(
-                value_str, sensitive_cookie_keys
-            )
+            redacted_headers[name] = _redact_set_cookie_header(value_str, sensitive_cookie_keys)
         else:
             redacted_headers[name] = REDACTED_VALUE if is_sensitive else value_str
 
@@ -135,11 +127,7 @@ def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
 
         # Check if this cookie name is sensitive and value is not empty
         if (
-            name.lower() in sensitive_keys
-            or any(
-                name.lower().startswith(prefix)
-                for prefix in ["auth", "token", "key", "secret"]
-            )
+            name.lower() in sensitive_keys or any(name.lower().startswith(prefix) for prefix in ["auth", "token", "key", "secret"])
         ) and value.strip():
             redacted_cookies.append(f"{name}={REDACTED_VALUE}")
         else:
@@ -192,13 +180,7 @@ def _redact_set_cookie_header(set_cookie_value: str, sensitive_keys: Set[str]) -
     name, value = cookie_parts[0].strip(), cookie_parts[1]
 
     # Check if this cookie name is sensitive and value is not empty
-    if (
-        name.lower() in sensitive_keys
-        or any(
-            name.lower().startswith(prefix)
-            for prefix in ["auth", "token", "key", "secret"]
-        )
-    ) and value.strip():
+    if (name.lower() in sensitive_keys or any(name.lower().startswith(prefix) for prefix in ["auth", "token", "key", "secret"])) and value.strip():
         redacted_main_cookie = f"{name}={REDACTED_VALUE}"
     else:
         redacted_main_cookie = main_cookie

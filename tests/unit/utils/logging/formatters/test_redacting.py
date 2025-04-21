@@ -96,9 +96,7 @@ def test_redacting_formatter_structured_redaction(
     output = fmt.format(record)
     assert "[REDACTED]" in output or "%5BREDACTED%5D" in output
     assert (
-        expected in output
-        or expected.replace("%5BREDACTED%5D", "[REDACTED]") in output
-        or expected.replace("[REDACTED]", "%5BREDACTED%5D") in output
+        expected in output or expected.replace("%5BREDACTED%5D", "[REDACTED]") in output or expected.replace("[REDACTED]", "%5BREDACTED%5D") in output
     )
 
 
@@ -188,9 +186,7 @@ def test_redacting_formatter_redact_headers_exception(
     def bad_redact_headers(*a: Any, **kw: Any) -> dict[str, str]:
         raise RuntimeError("fail")
 
-    monkeypatch.setattr(
-        "apiconfig.utils.logging.formatters.redact_headers", bad_redact_headers
-    )
+    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_headers", bad_redact_headers)
     # We need to use monkeypatch instead of direct assignment
     monkeypatch.setattr(fmt, "_redact_headers_func", bad_redact_headers)
     fmt.format(record)
@@ -207,9 +203,7 @@ def test_redacting_formatter_redact_structured_exception(
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
 
-    monkeypatch.setattr(
-        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
-    )
+    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
     # We need to use monkeypatch instead of direct assignment
     monkeypatch.setattr(fmt, "_redact_body", bad_redact_body)
     output = fmt.format(record)
@@ -238,9 +232,7 @@ def test_redacting_formatter_structured_string_json_exception(
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
 
-    monkeypatch.setattr(
-        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
-    )
+    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
     monkeypatch.setattr(fmt, "_redact_body", bad_redact_body)
     output = fmt.format(record)
     assert '{"token": "abc"}' in output
@@ -256,9 +248,7 @@ def test_redacting_formatter_structured_dict_exception(
     def bad_redact_body(*a: Any, **kw: Any) -> Any:
         raise RuntimeError("fail")
 
-    monkeypatch.setattr(
-        "apiconfig.utils.logging.formatters.redact_body", bad_redact_body
-    )
+    monkeypatch.setattr("apiconfig.utils.logging.formatters.redact_body", bad_redact_body)
     output = fmt.format(record)
     assert "[REDACTED]" in output
 
@@ -509,9 +499,7 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
 
     try:
         # Call _redact_structured with our string input and form content type
-        result = fmt._redact_structured(
-            string_input, "application/x-www-form-urlencoded"
-        )
+        result = fmt._redact_structured(string_input, "application/x-www-form-urlencoded")
 
         # Verify json.dumps was called (line 220)
         import json

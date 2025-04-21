@@ -123,9 +123,7 @@ class TestCustomAuth:
         def param_callback() -> Dict[str, str]:
             return {"custom_param": "param_value"}
 
-        auth = CustomAuth(
-            header_callback=header_callback, param_callback=param_callback
-        )
+        auth = CustomAuth(header_callback=header_callback, param_callback=param_callback)
 
         headers, params = auth.prepare_request()
 
@@ -141,17 +139,13 @@ class TestCustomAuth:
         def param_callback() -> Dict[str, str]:
             return {"custom_param": "param_value"}
 
-        auth = CustomAuth(
-            header_callback=header_callback, param_callback=param_callback
-        )
+        auth = CustomAuth(header_callback=header_callback, param_callback=param_callback)
 
         # Provide initial headers and params
         initial_headers = {"Content-Type": "application/json"}
         initial_params = {"page": "1"}
 
-        headers, params = auth.prepare_request(
-            headers=initial_headers, params=initial_params
-        )
+        headers, params = auth.prepare_request(headers=initial_headers, params=initial_params)
 
         # Check that the result contains both initial and callback values
         assert headers == {

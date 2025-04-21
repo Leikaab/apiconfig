@@ -92,9 +92,7 @@ class TestEnvProvider:
                         try:
                             config[config_key] = int(value)
                         except ValueError:
-                            raise InvalidConfigError(
-                                f"Invalid integer value for env var {key}: {value}"
-                            )
+                            raise InvalidConfigError(f"Invalid integer value for env var {key}: {value}")
                     elif value.lower() in ("true", "false"):
                         config[config_key] = value.lower() == "true"
                     else:

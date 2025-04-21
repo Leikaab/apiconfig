@@ -38,9 +38,7 @@ class TestRefreshOAuth2Token:
                 token_url="https://example.com/token",
             )
 
-    def test_refresh_oauth2_token_success(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_success(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test successful token refresh."""
         # Call the function
         result = refresh_oauth2_token(
@@ -62,9 +60,7 @@ class TestRefreshOAuth2Token:
         assert kwargs["data"]["refresh_token"] == "test_refresh_token"
         assert kwargs["timeout"] == 10.0  # Default timeout
 
-    def test_refresh_oauth2_token_with_client_config(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_with_client_config(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test token refresh with ClientConfig for timeout and retries."""
         # Create a client config with custom timeout and retries
         client_config = ClientConfig(timeout=5.0, retries=2)
@@ -85,9 +81,7 @@ class TestRefreshOAuth2Token:
         args, kwargs = mock_http_client.post.call_args
         assert kwargs["timeout"] == 5.0  # Custom timeout from client_config
 
-    def test_refresh_oauth2_token_with_explicit_params(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_with_explicit_params(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test token refresh with explicit timeout and retries."""
         # Call the function with explicit parameters
         result = refresh_oauth2_token(
@@ -106,9 +100,7 @@ class TestRefreshOAuth2Token:
         args, kwargs = mock_http_client.post.call_args
         assert kwargs["timeout"] == 3.0  # Explicit timeout
 
-    def test_refresh_oauth2_token_with_auth_credentials(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_with_auth_credentials(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test token refresh with client credentials."""
         # Setup BasicAuth for the mock client
         mock_http_client.BasicAuth = MagicMock(return_value="basic_auth")
@@ -130,13 +122,9 @@ class TestRefreshOAuth2Token:
         args, kwargs = mock_http_client.post.call_args
         assert "auth" in kwargs
         assert kwargs["auth"] == "basic_auth"
-        mock_http_client.BasicAuth.assert_called_once_with(
-            username="test_client_id", password="test_client_secret"
-        )
+        mock_http_client.BasicAuth.assert_called_once_with(username="test_client_id", password="test_client_secret")
 
-    def test_refresh_oauth2_token_with_extra_params(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_with_extra_params(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test token refresh with extra parameters."""
         # Call the function with extra parameters
         result = refresh_oauth2_token(
@@ -155,9 +143,7 @@ class TestRefreshOAuth2Token:
         assert kwargs["data"]["scope"] == "read write"
         assert kwargs["data"]["audience"] == "api://default"
 
-    def test_refresh_oauth2_token_timeout_error(
-        self, mock_http_client: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_timeout_error(self, mock_http_client: MagicMock) -> None:
         """Test token refresh with timeout error."""
 
         # Setup the mock client to raise a timeout error
@@ -175,9 +161,7 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_network_error(
-        self, mock_http_client: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_network_error(self, mock_http_client: MagicMock) -> None:
         """Test token refresh with network error."""
 
         # Setup the mock client to raise a network error
@@ -215,9 +199,7 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_missing_access_token(
-        self, mock_http_client: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_missing_access_token(self, mock_http_client: MagicMock) -> None:
         """Test token refresh with missing access_token in response."""
         # Setup a mock response with missing access_token
         mock_response = MagicMock()
@@ -253,9 +235,7 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_retry_success(
-        self, mock_http_client: MagicMock, mock_response: MagicMock
-    ) -> None:
+    def test_refresh_oauth2_token_retry_success(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
         """Test token refresh with successful retry after network error."""
 
         # Create a custom exception class for network errors

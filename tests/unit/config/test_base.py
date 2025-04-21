@@ -239,9 +239,7 @@ class TestClientConfig:
         # Modify other_config's timeout to be negative (invalid)
         other_config.timeout = -1.0
 
-        with pytest.raises(
-            InvalidConfigError, match="Merged timeout must be non-negative"
-        ):
+        with pytest.raises(InvalidConfigError, match="Merged timeout must be non-negative"):
             base_config.merge(other_config)
 
     def test_merge_validation_non_numeric_timeout(self) -> None:
@@ -323,14 +321,10 @@ class TestClientConfig:
         """Test that merge_configs raises TypeError with incompatible types."""
         config = ClientConfig()
 
-        with pytest.raises(
-            TypeError, match="Both arguments must be instances of ClientConfig"
-        ):
+        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
             ClientConfig.merge_configs(config, "not a ClientConfig")  # type: ignore[type-var]
 
-        with pytest.raises(
-            TypeError, match="Both arguments must be instances of ClientConfig"
-        ):
+        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
             ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[type-var]
 
     def test_deep_copy_on_merge(self) -> None:

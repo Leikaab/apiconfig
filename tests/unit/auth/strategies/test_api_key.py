@@ -12,9 +12,7 @@ class TestApiKeyAuth:
     def test_init_requires_one_of_header_or_param_name(self) -> None:
         """Test that ApiKeyAuth requires one of header_name or param_name."""
         # Should raise when both are None
-        with pytest.raises(
-            AuthStrategyError, match="One of header_name or param_name must be provided"
-        ):
+        with pytest.raises(AuthStrategyError, match="One of header_name or param_name must be provided"):
             ApiKeyAuth(api_key="test_key")
 
         # Should not raise when header_name is provided
@@ -29,50 +27,36 @@ class TestApiKeyAuth:
             AuthStrategyError,
             match="Only one of header_name or param_name should be provided",
         ):
-            ApiKeyAuth(
-                api_key="test_key", header_name="X-API-Key", param_name="api_key"
-            )
+            ApiKeyAuth(api_key="test_key", header_name="X-API-Key", param_name="api_key")
 
     def test_init_rejects_empty_api_key(self) -> None:
         """Test that ApiKeyAuth rejects empty API keys."""
         # Empty string
-        with pytest.raises(
-            AuthStrategyError, match="API key cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="API key cannot be empty or whitespace"):
             ApiKeyAuth(api_key="", header_name="X-API-Key")
 
         # Whitespace only
-        with pytest.raises(
-            AuthStrategyError, match="API key cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="API key cannot be empty or whitespace"):
             ApiKeyAuth(api_key="   ", header_name="X-API-Key")
 
     def test_init_rejects_empty_header_name(self) -> None:
         """Test that ApiKeyAuth rejects empty header names."""
         # Empty string
-        with pytest.raises(
-            AuthStrategyError, match="Header name cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="Header name cannot be empty or whitespace"):
             ApiKeyAuth(api_key="test_key", header_name="")
 
         # Whitespace only
-        with pytest.raises(
-            AuthStrategyError, match="Header name cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="Header name cannot be empty or whitespace"):
             ApiKeyAuth(api_key="test_key", header_name="   ")
 
     def test_init_rejects_empty_param_name(self) -> None:
         """Test that ApiKeyAuth rejects empty parameter names."""
         # Empty string
-        with pytest.raises(
-            AuthStrategyError, match="Parameter name cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="Parameter name cannot be empty or whitespace"):
             ApiKeyAuth(api_key="test_key", param_name="")
 
         # Whitespace only
-        with pytest.raises(
-            AuthStrategyError, match="Parameter name cannot be empty or whitespace"
-        ):
+        with pytest.raises(AuthStrategyError, match="Parameter name cannot be empty or whitespace"):
             ApiKeyAuth(api_key="test_key", param_name="   ")
 
     def test_prepare_request_headers_with_header_name(self) -> None:

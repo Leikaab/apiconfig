@@ -30,9 +30,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called correctly
-        mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test", method="GET", ordered=False
-        )
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=False)
 
         # Check that respond_with_response was called correctly
         mock_expectation.respond_with_response.assert_called_once()
@@ -160,9 +158,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the query string
-        mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test", method="GET", ordered=False, query_string="page=1&limit=10"
-        )
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=False, query_string="page=1&limit=10")
 
     def test_configure_mock_response_with_match_json(self) -> None:
         """Test configure_mock_response with match_json."""
@@ -181,9 +177,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the json
-        mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test", method="POST", ordered=False, json={"name": "test"}
-        )
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", ordered=False, json={"name": "test"})
 
     def test_configure_mock_response_with_match_data(self) -> None:
         """Test configure_mock_response with match_data."""
@@ -202,9 +196,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the data
-        mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test", method="POST", ordered=False, data="name=test"
-        )
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", ordered=False, data="name=test")
 
     def test_configure_mock_response_with_ordered(self) -> None:
         """Test configure_mock_response with ordered=True."""
@@ -223,9 +215,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with ordered=True
-        mock_httpserver.expect_request.assert_called_once_with(
-            uri="/test", method="GET", ordered=True
-        )
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=True)
 
 
 class TestAssertRequestReceived:
@@ -419,9 +409,7 @@ class TestAssertRequestReceived:
 
         # Call the function and expect it to raise
         with pytest.raises(AssertionError, match="Expected 1 request"):
-            assert_request_received(
-                httpserver=mock_httpserver, path="/test", method="GET"
-            )
+            assert_request_received(httpserver=mock_httpserver, path="/test", method="GET")
 
     def test_assert_request_received_with_count(self) -> None:
         """Test assert_request_received with count parameter."""
@@ -452,17 +440,13 @@ class TestAssertRequestReceived:
         ]
 
         # Call the function with count=2
-        assert_request_received(
-            httpserver=mock_httpserver, path="/test", method="GET", count=2
-        )
+        assert_request_received(httpserver=mock_httpserver, path="/test", method="GET", count=2)
 
         # No assertion needed - if the function doesn't raise, it passed
 
         # Call the function with count=1 and expect it to raise
         with pytest.raises(AssertionError, match="Expected 1 request"):
-            assert_request_received(
-                httpserver=mock_httpserver, path="/test", method="GET", count=1
-            )
+            assert_request_received(httpserver=mock_httpserver, path="/test", method="GET", count=1)
 
     def test_assert_request_received_with_none_count(self) -> None:
         """Test assert_request_received with count=None."""
@@ -483,8 +467,6 @@ class TestAssertRequestReceived:
         mock_httpserver.log = [(mock_request, mock_response)]
 
         # Call the function with count=None
-        assert_request_received(
-            httpserver=mock_httpserver, path="/test", method="GET", count=None
-        )
+        assert_request_received(httpserver=mock_httpserver, path="/test", method="GET", count=None)
 
         # No assertion needed - if the function doesn't raise, it passed

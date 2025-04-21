@@ -71,9 +71,7 @@ class TestMakeRequestWithConfig:
             )
 
             # Check that auth_strategy.prepare_request was called
-            mock_auth_strategy.prepare_request.assert_called_once_with(
-                headers={}, params={}
-            )
+            mock_auth_strategy.prepare_request.assert_called_once_with(headers={}, params={})
 
     def test_make_request_with_config_with_additional_params(self) -> None:
         """Test make_request_with_config with additional parameters."""
@@ -139,9 +137,7 @@ class TestMakeRequestWithConfig:
             )
 
             # Check that auth_strategy.prepare_request was called with initial headers and params
-            mock_auth_strategy.prepare_request.assert_called_once_with(
-                headers={"Content-Type": "application/json"}, params={"page": "1"}
-            )
+            mock_auth_strategy.prepare_request.assert_called_once_with(headers={"Content-Type": "application/json"}, params={"page": "1"})
 
     def test_make_request_with_config_url_handling(self) -> None:
         """Test make_request_with_config handles URLs correctly."""
@@ -253,9 +249,7 @@ class TestSimulateTokenEndpoint:
         mock_expectation.respond_with_json = MagicMock()
 
         # Mock the configure_mock_response function
-        with patch(
-            "apiconfig.testing.integration.helpers.configure_mock_response"
-        ) as mock_configure:
+        with patch("apiconfig.testing.integration.helpers.configure_mock_response") as mock_configure:
             # Make sure expect_request is called when simulate_token_endpoint is called
             mock_httpserver.expect_request = MagicMock(return_value=mock_expectation)
 
@@ -293,9 +287,7 @@ class TestSimulateTokenEndpoint:
         assert mock_httpserver.expect_request.call_count == 2
 
         # Check that the first call was for the error response
-        mock_httpserver.expect_request.assert_any_call(
-            uri="/custom/token", method="POST"
-        )
+        mock_httpserver.expect_request.assert_any_call(uri="/custom/token", method="POST")
 
         # We can't easily check the second call with configure_mock_response without mocking it,
         # but we can verify that the function completed successfully

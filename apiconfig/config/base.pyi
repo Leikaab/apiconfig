@@ -130,9 +130,7 @@ class ClientConfig:
         ...
 
     @staticmethod
-    def merge_configs(
-        base_config: _TClientConfig, other_config: _TClientConfig
-    ) -> _TClientConfig:
+    def merge_configs(base_config: _TClientConfig, other_config: _TClientConfig) -> _TClientConfig:
         """
         Merges two ClientConfig instances.
 

@@ -27,7 +27,7 @@ python = "^3.10"
 pytest = "^8.1.1"
 pytest-cov = "*"
 pytest-xdist = "^3.5.0"
-isort = "*"
+isort = "^6.0.1"
 requests-mock = "^1.12.1"
 autopep8 = "*"
 black = "*"
@@ -52,6 +52,10 @@ httpx = "^0.28.1"
 pytest_httpserver = "*"
 [build-system]
 requires = ["poetry-core"]
+[tool.black]
+line-length = 150
+skip-string-normalization = false
+
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.urls]

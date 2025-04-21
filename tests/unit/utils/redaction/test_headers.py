@@ -322,9 +322,7 @@ def test_redact_set_cookie_header(set_cookie_value: str, expected_result: str) -
         ),
     ],
 )
-def test_redact_headers_multi_value(
-    input_headers: Dict[str, str], expected_headers: Dict[str, str]
-) -> None:
+def test_redact_headers_multi_value(input_headers: Dict[str, str], expected_headers: Dict[str, str]) -> None:
     """Tests the redact_headers function with multi-value headers."""
     result = redact_headers(input_headers)
     assert result == expected_headers

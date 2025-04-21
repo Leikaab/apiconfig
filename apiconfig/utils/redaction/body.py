@@ -7,9 +7,7 @@ from .headers import REDACTED_VALUE  # Use consistent placeholder
 
 # Constants
 # REDACTED_PLACEHOLDER = "[REDACTED]" # Replaced by REDACTED_VALUE from headers
-DEFAULT_SENSITIVE_KEYS_PATTERN = re.compile(
-    r"password|token|secret|key|auth", re.IGNORECASE
-)
+DEFAULT_SENSITIVE_KEYS_PATTERN = re.compile(r"password|token|secret|key|auth", re.IGNORECASE)
 REDACTED_BODY_PLACEHOLDER = "[REDACTED BODY]"
 
 
@@ -25,9 +23,7 @@ def _redact_recursive(
             if key_pattern.search(key):
                 redacted_dict[key] = REDACTED_VALUE
             else:
-                redacted_dict[key] = _redact_recursive(
-                    value, key_pattern, value_pattern
-                )
+                redacted_dict[key] = _redact_recursive(value, key_pattern, value_pattern)
         return redacted_dict
     elif isinstance(data, list):
         return [_redact_recursive(item, key_pattern, value_pattern) for item in data]
@@ -100,9 +96,7 @@ def redact_body(
         if is_json:
             if parsed_body is None and body_str is not None:
                 parsed_body = json.loads(body_str)
-            redacted_data = _redact_recursive(
-                parsed_body, sensitive_keys_pattern, sensitive_value_pattern
-            )
+            redacted_data = _redact_recursive(parsed_body, sensitive_keys_pattern, sensitive_value_pattern)
             # Return in original format (parsed dict/list or JSON string)
             return json.dumps(redacted_data) if body_str is not None else redacted_data
         elif is_form and body_str is not None:
@@ -114,10 +108,7 @@ def redact_body(
                 else:
                     # Check individual values if a value pattern is provided
                     if sensitive_value_pattern:
-                        redacted_values = [
-                            REDACTED_VALUE if sensitive_value_pattern.search(v) else v
-                            for v in values
-                        ]
+                        redacted_values = [REDACTED_VALUE if sensitive_value_pattern.search(v) else v for v in values]
                         redacted_form[key] = redacted_values
                     else:
                         redacted_form[key] = values
@@ -126,9 +117,7 @@ def redact_body(
 
     except (json.JSONDecodeError, TypeError, ValueError):
         # If parsing fails, return original string/bytes or placeholder
-        return (
-            body_str if body_str is not None else body
-        )  # Or consider REDACTED_BODY_PLACEHOLDER
+        return body_str if body_str is not None else body  # Or consider REDACTED_BODY_PLACEHOLDER
 
     # 4. If not JSON or form, or if parsing failed, return original/placeholder
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.

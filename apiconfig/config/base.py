@@ -39,12 +39,8 @@ class ClientConfig:
         # Store version value before validation
         version_value = version or self.__class__.version
         # Validate version (no leading/trailing slashes)
-        if version_value and (
-            version_value.startswith("/") or version_value.endswith("/")
-        ):
-            raise InvalidConfigError(
-                "Version must not contain leading or trailing slashes."
-            )
+        if version_value and (version_value.startswith("/") or version_value.endswith("/")):
+            raise InvalidConfigError("Version must not contain leading or trailing slashes.")
         self.version = version_value
 
         self.headers = headers or self.__class__.headers or {}
@@ -70,16 +66,8 @@ class ClientConfig:
         self.retries = retries_value
 
         self.auth_strategy = auth_strategy or self.__class__.auth_strategy
-        self.log_request_body = (
-            log_request_body
-            if log_request_body is not None
-            else self.__class__.log_request_body
-        )
-        self.log_response_body = (
-            log_response_body
-            if log_response_body is not None
-            else self.__class__.log_response_body
-        )
+        self.log_request_body = log_request_body if log_request_body is not None else self.__class__.log_request_body
+        self.log_response_body = log_response_body if log_response_body is not None else self.__class__.log_response_body
 
     @property
     def base_url(self) -> str:
@@ -94,9 +82,7 @@ class ClientConfig:
 
     def merge(self, other: "ClientConfig") -> "ClientConfig":
         if not isinstance(other, self.__class__):
-            logger.warning(
-                f"Attempted to merge ClientConfig with incompatible type: {type(other)}"
-            )
+            logger.warning(f"Attempted to merge ClientConfig with incompatible type: {type(other)}")
             return NotImplemented  # type: ignore[return-value]
 
         # Create a deep copy of self as the base for the new instance
@@ -116,34 +102,24 @@ class ClientConfig:
                 if hasattr(new_instance, key):
                     setattr(new_instance, key, copy.deepcopy(value))
                 else:
-                    logger.warning(
-                        f"Attribute '{key}' from other config not found in base config, skipping merge."
-                    )
+                    logger.warning(f"Attribute '{key}' from other config not found in base config, skipping merge.")
 
         # Re-validate merged config
         # Validate version (no leading/trailing slashes)
-        if new_instance.version and (
-            new_instance.version.startswith("/") or new_instance.version.endswith("/")
-        ):
-            raise InvalidConfigError(
-                "Merged version must not contain leading or trailing slashes."
-            )
+        if new_instance.version and (new_instance.version.startswith("/") or new_instance.version.endswith("/")):
+            raise InvalidConfigError("Merged version must not contain leading or trailing slashes.")
 
         # Validate timeout (must be non-negative number)
         if new_instance.timeout is not None:
             if not isinstance(new_instance.timeout, (int, float)):
-                raise InvalidConfigError(
-                    "Merged timeout must be a number (int or float)."
-                )
+                raise InvalidConfigError("Merged timeout must be a number (int or float).")
             if new_instance.timeout < 0:
                 raise InvalidConfigError("Merged timeout must be non-negative.")
 
         # Validate retries (must be non-negative number)
         if new_instance.retries is not None:
             if not isinstance(new_instance.retries, (int, float)):
-                raise InvalidConfigError(
-                    "Merged retries must be a number (int or float)."
-                )
+                raise InvalidConfigError("Merged retries must be a number (int or float).")
             if new_instance.retries < 0:
                 raise InvalidConfigError("Merged retries must be non-negative.")
 
@@ -158,18 +134,12 @@ class ClientConfig:
         merged = self.merge(other)
         if merged is NotImplemented:
             # Raise TypeError if merge returns NotImplemented
-            raise TypeError(
-                f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(other).__name__}'"
-            )
+            raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(other).__name__}'")
         return merged
 
     @staticmethod
-    def merge_configs(
-        base_config: "ClientConfig", other_config: "ClientConfig"
-    ) -> "ClientConfig":
-        if not isinstance(base_config, ClientConfig) or not isinstance(
-            other_config, ClientConfig
-        ):
+    def merge_configs(base_config: "ClientConfig", other_config: "ClientConfig") -> "ClientConfig":
+        if not isinstance(base_config, ClientConfig) or not isinstance(other_config, ClientConfig):
             raise TypeError("Both arguments must be instances of ClientConfig")
 
         return base_config.merge(other_config)

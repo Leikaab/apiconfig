@@ -13,9 +13,7 @@ from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.file import FileProvider
 
 # Type alias for the custom auth callable used in tests
-CustomAuthCallable = Callable[
-    [Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]
-]
+CustomAuthCallable = Callable[[Dict[str, str], Dict[str, str]], tuple[Dict[str, str], Dict[str, str]]]
 
 @pytest.fixture(scope="session")
 def httpserver_listen_address() -> tuple[str, int]:
@@ -45,16 +43,12 @@ def env_provider(monkeypatch: MonkeyPatch) -> EnvProvider:
     ...
 
 @pytest.fixture(scope="function")
-def config_manager(
-    file_provider: FileProvider, env_provider: EnvProvider
-) -> ConfigManager:
+def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> ConfigManager:
     """Provides a ConfigManager instance with file and env providers."""
     ...
 
 @pytest.fixture(scope="function")
-def custom_auth_strategy_factory() -> (
-    Callable[[Optional[CustomAuthCallable]], CustomAuth]
-):
+def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
     """
     Provides a factory fixture to create CustomAuth instances for testing.
 

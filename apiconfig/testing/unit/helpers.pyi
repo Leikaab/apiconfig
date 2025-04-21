@@ -3,6 +3,7 @@ import unittest
 from typing import Any, Dict, Generator, Optional, Protocol, Type
 
 from apiconfig.auth.base import AuthStrategy
+
 # Removed direct import of ConfigProvider
 from apiconfig.exceptions import AuthenticationError
 
@@ -19,9 +20,7 @@ def check_auth_strategy_interface(strategy_instance: Any) -> None:
     """
     ...
 
-def assert_auth_header_correct(
-    strategy: AuthStrategy, expected_header: str, expected_value: str
-) -> None:
+def assert_auth_header_correct(strategy: AuthStrategy, expected_header: str, expected_value: str) -> None:
     """
     Asserts that the strategy adds the correct authorization header.
 
@@ -61,9 +60,7 @@ def temp_config_file(content: str, suffix: str = ".tmp") -> Generator[str, None,
     """
     ...
 
-def assert_provider_loads(
-    provider: ConfigProviderProtocol, expected_config: Dict[str, Any]
-) -> None:
+def assert_provider_loads(provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
     """
     Asserts that a configuration provider-like object loads the expected dictionary.
 
@@ -89,9 +86,7 @@ class BaseAuthStrategyTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None: ...
-    def assertAuthHeaderCorrect(
-        self, expected_header: str, expected_value: str
-    ) -> None:
+    def assertAuthHeaderCorrect(self, expected_header: str, expected_value: str) -> None:
         """Asserts the strategy adds the correct authorization header."""
         ...
 
@@ -107,28 +102,20 @@ class BaseConfigProviderTest(unittest.TestCase):
     config_content: Optional[str]
     config_suffix: str
 
-    def get_provider_instance(
-        self, *args: Any, **kwargs: Any
-    ) -> ConfigProviderProtocol:
+    def get_provider_instance(self, *args: Any, **kwargs: Any) -> ConfigProviderProtocol:
         """Instantiates the provider_class."""
         ...
 
     @contextlib.contextmanager
-    def env_vars(
-        self, vars_to_set: Optional[Dict[str, str]] = ...
-    ) -> Generator[None, None, None]:
+    def env_vars(self, vars_to_set: Optional[Dict[str, str]] = ...) -> Generator[None, None, None]:
         """Context manager for temporary environment variables."""
         ...
 
     @contextlib.contextmanager
-    def config_file(
-        self, content: Optional[str] = ..., suffix: Optional[str] = ...
-    ) -> Generator[str, None, None]:
+    def config_file(self, content: Optional[str] = ..., suffix: Optional[str] = ...) -> Generator[str, None, None]:
         """Context manager for a temporary configuration file."""
         ...
 
-    def assertProviderLoads(
-        self, provider: ConfigProviderProtocol, expected_config: Dict[str, Any]
-    ) -> None:
+    def assertProviderLoads(self, provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
         """Asserts the provider loads the expected configuration."""
         ...

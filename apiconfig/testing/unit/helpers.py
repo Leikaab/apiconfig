@@ -22,17 +22,11 @@ def check_auth_strategy_interface(strategy_instance: Any) -> None:
     Raises:
         AssertionError: If the object does not have the required methods.
     """
-    assert hasattr(
-        strategy_instance, "prepare_request"
-    ), "Strategy instance must have a 'prepare_request' method."
-    assert callable(
-        strategy_instance.prepare_request
-    ), "'prepare_request' must be callable."
+    assert hasattr(strategy_instance, "prepare_request"), "Strategy instance must have a 'prepare_request' method."
+    assert callable(strategy_instance.prepare_request), "'prepare_request' must be callable."
 
 
-def assert_auth_header_correct(
-    strategy: AuthStrategy, expected_header: str, expected_value: str
-) -> None:
+def assert_auth_header_correct(strategy: AuthStrategy, expected_header: str, expected_value: str) -> None:
     """
     Asserts that the strategy adds the correct authorization header.
 
@@ -52,13 +46,9 @@ def assert_auth_header_correct(
     try:
         strategy.prepare_request(headers, params, data)
     except AuthenticationError as e:
-        raise AssertionError(
-            f"Strategy raised unexpected AuthenticationError: {e}"
-        ) from e
+        raise AssertionError(f"Strategy raised unexpected AuthenticationError: {e}") from e
 
-    assert (
-        expected_header in headers
-    ), f"Expected header '{expected_header}' not found in {headers}."
+    assert expected_header in headers, f"Expected header '{expected_header}' not found in {headers}."
     assert (
         headers[expected_header] == expected_value
     ), f"Header '{expected_header}' has value '{headers[expected_header]}', expected '{expected_value}'."
@@ -109,9 +99,7 @@ def temp_config_file(content: str, suffix: str = ".tmp") -> Generator[str, None,
         os.remove(path)
 
 
-def assert_provider_loads(
-    provider: ConfigProviderProtocol, expected_config: Dict[str, Any]
-) -> None:
+def assert_provider_loads(provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
     """
     Asserts that a configuration provider-like object loads the expected dictionary.
 
@@ -126,13 +114,9 @@ def assert_provider_loads(
     try:
         loaded_config = provider.load()
     except Exception as e:
-        raise AssertionError(
-            f"Provider '{type(provider).__name__}' raised unexpected error during load: {e}"
-        ) from e
+        raise AssertionError(f"Provider '{type(provider).__name__}' raised unexpected error during load: {e}") from e
 
-    assert (
-        loaded_config == expected_config
-    ), f"Provider loaded {loaded_config}, expected {expected_config}."
+    assert loaded_config == expected_config, f"Provider loaded {loaded_config}, expected {expected_config}."
 
 
 # --- Base Test Classes (Optional - Use Mixins or Helpers directly) ---
@@ -158,15 +142,10 @@ class BaseAuthStrategyTest(unittest.TestCase):
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
         if not hasattr(cls, "strategy") or not isinstance(cls.strategy, AuthStrategy):
-            raise NotImplementedError(
-                f"{cls.__name__} must define a class attribute 'strategy' "
-                "of type AuthStrategy."
-            )
+            raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy' " "of type AuthStrategy.")
         check_auth_strategy_interface(cls.strategy)
 
-    def assertAuthHeaderCorrect(
-        self, expected_header: str, expected_value: str
-    ) -> None:
+    def assertAuthHeaderCorrect(self, expected_header: str, expected_value: str) -> None:
         """Asserts the strategy adds the correct authorization header."""
         assert_auth_header_correct(self.strategy, expected_header, expected_value)
 
@@ -183,20 +162,14 @@ class BaseConfigProviderTest(unittest.TestCase):
     config_content: Optional[str] = None
     config_suffix: str = ".tmp"
 
-    def get_provider_instance(
-        self, *args: Any, **kwargs: Any
-    ) -> ConfigProviderProtocol:
+    def get_provider_instance(self, *args: Any, **kwargs: Any) -> ConfigProviderProtocol:
         """Instantiates the provider_class."""
         if self.provider_class is None:
-            raise NotImplementedError(
-                f"{type(self).__name__} must define 'provider_class'."
-            )
+            raise NotImplementedError(f"{type(self).__name__} must define 'provider_class'.")
         return self.provider_class(*args, **kwargs)
 
     @contextlib.contextmanager
-    def env_vars(
-        self, vars_to_set: Optional[Dict[str, str]] = None
-    ) -> Generator[None, None, None]:
+    def env_vars(self, vars_to_set: Optional[Dict[str, str]] = None) -> Generator[None, None, None]:
         """Context manager for temporary environment variables."""
         actual_vars = vars_to_set if vars_to_set is not None else {}
         if self.required_env_vars:
@@ -205,9 +178,7 @@ class BaseConfigProviderTest(unittest.TestCase):
             yield
 
     @contextlib.contextmanager
-    def config_file(
-        self, content: Optional[str] = None, suffix: Optional[str] = None
-    ) -> Generator[str, None, None]:
+    def config_file(self, content: Optional[str] = None, suffix: Optional[str] = None) -> Generator[str, None, None]:
         """Context manager for a temporary configuration file."""
         actual_content = content if content is not None else self.config_content
         actual_suffix = suffix if suffix is not None else self.config_suffix
@@ -216,8 +187,6 @@ class BaseConfigProviderTest(unittest.TestCase):
         with temp_config_file(actual_content, actual_suffix) as path:
             yield path
 
-    def assertProviderLoads(
-        self, provider: ConfigProviderProtocol, expected_config: Dict[str, Any]
-    ) -> None:
+    def assertProviderLoads(self, provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
         """Asserts the provider loads the expected configuration."""
         assert_provider_loads(provider, expected_config)

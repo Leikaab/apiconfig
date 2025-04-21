@@ -1,8 +1,6 @@
-"""Authentication-specific exception classes for the apiconfig library."""
-
 from .base import AuthenticationError
 
-__all__ = [
+__all__: list[str] = [
     "AuthenticationError",
     "InvalidCredentialsError",
     "ExpiredTokenError",
@@ -16,32 +14,32 @@ __all__ = [
 
 
 class InvalidCredentialsError(AuthenticationError):
-    """Raised when provided credentials are invalid."""
+    pass
 
 
 class ExpiredTokenError(AuthenticationError):
-    """Raised when an authentication token has expired."""
+    pass
 
 
 class MissingCredentialsError(AuthenticationError):
-    """Raised when required credentials are not provided."""
+    pass
 
 
 class TokenRefreshError(AuthenticationError):
-    """Raised when an attempt to refresh a token fails."""
+    pass
 
 
 class TokenRefreshJsonError(TokenRefreshError):
-    """Raised when JSON decoding of a token refresh response fails."""
+    pass
 
 
 class TokenRefreshTimeoutError(TokenRefreshError):
-    """Raised when a token refresh request times out."""
+    pass
 
 
 class TokenRefreshNetworkError(TokenRefreshError):
-    """Raised when a token refresh request fails due to network issues."""
+    pass
 
 
 class AuthStrategyError(AuthenticationError):
-    """Base exception for errors specific to an authentication strategy."""
+    pass

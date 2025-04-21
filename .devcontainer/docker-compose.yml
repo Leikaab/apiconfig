@@ -10,7 +10,6 @@ services:
 
     volumes:
       - ..:/workspace:cached # Mount the whole workspace read-write
-      - ../crudclient:/workspace/crudclient:ro # Overlay the crudclient subdir as read-only
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity

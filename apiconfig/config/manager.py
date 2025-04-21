@@ -1,0 +1,62 @@
+import logging
+from typing import Any, Dict, Sequence
+
+from apiconfig.exceptions.config import ConfigLoadError
+
+# Placeholder for a potential future ConfigProvider protocol or base class
+ConfigProvider = Any
+
+logger = logging.getLogger(__name__)
+
+
+class ConfigManager:
+    # Canonical docstrings are in the .pyi stub file
+
+    def __init__(self, providers: Sequence[ConfigProvider]) -> None:
+        # Canonical docstrings are in the .pyi stub file
+        self._providers = providers
+
+    def load_config(self) -> Dict[str, Any]:
+        # Canonical docstrings are in the .pyi stub file
+        merged_config: Dict[str, Any] = {}
+        logger.debug("Loading configuration from %d providers...", len(self._providers))
+
+        for provider in self._providers:
+            provider_name = getattr(provider, "__class__", type(provider)).__name__
+            try:
+                logger.debug("Loading configuration from provider: %s", provider_name)
+                # Assuming providers have a 'load' or 'get_config' method
+                # Let's standardize on 'load' for now.
+                # We might need a Protocol later.
+                if hasattr(provider, "load"):
+                    config_data = provider.load()
+                elif hasattr(provider, "get_config"):  # Fallback for potential variations
+                    config_data = provider.get_config()
+                else:
+                    raise AttributeError(f"Provider {provider_name} lacks a 'load' or 'get_config' method.")
+
+                if config_data:
+                    if not isinstance(config_data, dict):
+                        logger.warning(
+                            "Provider %s returned non-dict value: %r. Skipping.",
+                            provider_name,
+                            config_data,
+                        )
+                    else:
+                        merged_config.update(config_data)
+                        logger.debug("Merged config from %s", provider_name)
+                else:
+                    logger.debug("Provider %s returned no data.", provider_name)
+
+            except Exception as e:
+                logger.error(
+                    "Failed to load configuration from provider %s: %s",
+                    provider_name,
+                    e,
+                    exc_info=True,
+                )
+                # Wrap the original exception for context
+                raise ConfigLoadError(f"Failed to load configuration from provider {provider_name}: {e}") from e
+
+        logger.info("Configuration loaded successfully from all providers.")
+        return merged_config

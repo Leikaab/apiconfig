@@ -1,0 +1,51 @@
+from typing import Dict, Optional
+
+from apiconfig.auth.base import AuthStrategy
+
+class ApiKeyAuth(AuthStrategy):
+    """
+    Implements API Key authentication.
+
+    The API key can be sent either in a request header or as a query parameter.
+    You must provide exactly one of `header_name` or `param_name` to specify how
+    the API key should be sent.
+
+    Args:
+        api_key: The API key string.
+        header_name: The name of the HTTP header to use for the API key.
+        param_name: The name of the query parameter to use for the API key.
+
+    Raises:
+        AuthStrategyError: If the API key is empty or whitespace.
+        AuthStrategyError: If neither `header_name` nor `param_name` is provided.
+        AuthStrategyError: If both `header_name` and `param_name` are provided.
+        AuthStrategyError: If the provided `header_name` or `param_name` is empty or whitespace.
+    """
+
+    api_key: str
+    header_name: Optional[str]
+    param_name: Optional[str]
+
+    def __init__(
+        self,
+        api_key: str,
+        header_name: Optional[str] = None,
+        param_name: Optional[str] = None,
+    ) -> None: ...
+    def prepare_request_headers(self) -> Dict[str, str]:
+        """
+        Prepares headers for API key authentication if configured for headers.
+
+        Returns:
+            A dictionary containing the API key header, or an empty dictionary.
+        """
+        ...
+
+    def prepare_request_params(self) -> Dict[str, str]:
+        """
+        Prepares query parameters for API key authentication if configured for parameters.
+
+        Returns:
+            A dictionary containing the API key parameter, or an empty dictionary.
+        """
+        ...

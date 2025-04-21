@@ -1,5 +1,5 @@
 {
-	"name": "tripletex Dev Container",
+	"name": "apiconfig Dev Container",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
@@ -28,10 +28,11 @@
 				"github.vscode-github-actions",
 				"me-dutour-mathieu.vscode-github-actions",
 				"GitHub.vscode-pull-request-github",
-                "ms-toolsai.jupyter",
-                "ms-toolsai.jupyter-renderers",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.jupyter-renderers",
 				"tamasfe.even-better-toml",
-				"ms-azuretools.vscode-docker"
+				"ms-azuretools.vscode-docker",
+				"bierner.markdown-mermaid"
 			]
 		}
 	},

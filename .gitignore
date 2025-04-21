@@ -4,6 +4,7 @@ src/testing.ipynb
 logs/
 output/
 specs/
+prompt*.*
 
 private_*
 
@@ -347,4 +348,3 @@ pyrightconfig.json
 # Ollama models
 .ollama/
 models/
-apiconfig-project-plan.md

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "apiconfig"
-version = "0.1.1"
+version = "0.2.1"
 description = "api config library"
 authors = ["Leikaab <nordavindltd@gmail.com>"]
 license = "Proprietary"
@@ -27,17 +27,19 @@ python = "^3.10"
 pytest = "^8.1.1"
 pytest-cov = "*"
 pytest-xdist = "^3.5.0"
-isort = "*"
+isort = "^6.0.1"
 requests-mock = "^1.12.1"
 autopep8 = "*"
 black = "*"
 yapf = "*"
 bandit = "*"
 flake8 = "*"
+flake8-docstrings = "*"
 mypy = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 pylint = "*"
+pydantic = "*"
 pre-commit = "*"
 types-requests = "*"
 ipython = "*"
@@ -47,9 +49,15 @@ types-PyYAML = "*"
 python-dotenv = "^1.1.0"
 bravado-core = "^6.1.1"
 httpx = "^0.28.1"
+pytest_httpserver = "*"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 150
+skip-string-normalization = false
+
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"
+

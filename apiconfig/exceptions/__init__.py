@@ -1,5 +1,3 @@
-"""Internal implementation of exceptions package."""
-
 from .auth import (
     AuthStrategyError,
     ExpiredTokenError,
@@ -16,7 +14,7 @@ from .config import (
 )
 from .http import HTTPUtilsError, JSONDecodeError
 
-__all__ = [
+__all__: list[str] = [
     # Base exceptions
     "APIConfigError",
     "ConfigurationError",

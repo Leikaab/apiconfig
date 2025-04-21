@@ -55,7 +55,9 @@ def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[...
     record = log_record_factory(msg=msg)
     output = fmt.format(record)
     assert expected_in in output
-    assert f"({__file__.split('/')[-1]}:42)" in output
+    import os
+
+    assert f"({os.path.basename(__file__)}:42)" in output
 
 
 def test_detailed_formatter_custom_format(

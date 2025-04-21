@@ -10,12 +10,7 @@ if TYPE_CHECKING:
     pass
 
 from ...config.base import ClientConfig
-from ...exceptions.auth import (
-    TokenRefreshError,
-    TokenRefreshJsonError,
-    TokenRefreshNetworkError,
-    TokenRefreshTimeoutError,
-)
+from ...exceptions.auth import TokenRefreshError, TokenRefreshJsonError, TokenRefreshNetworkError, TokenRefreshTimeoutError
 
 # Set up logging
 logger = logging.getLogger(__name__)

@@ -3,7 +3,6 @@ import unittest
 from typing import Any, Dict, Generator, Optional, Protocol, Type
 
 from apiconfig.auth.base import AuthStrategy
-
 # Removed direct import of ConfigProvider
 from apiconfig.exceptions import AuthenticationError
 

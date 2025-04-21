@@ -1,12 +1,7 @@
 from typing import Any, Dict, Optional, Tuple
 
 from ...config.base import ClientConfig
-from ...exceptions.auth import (
-    TokenRefreshError,
-    TokenRefreshJsonError,
-    TokenRefreshNetworkError,
-    TokenRefreshTimeoutError,
-)
+from ...exceptions.auth import TokenRefreshError, TokenRefreshJsonError, TokenRefreshNetworkError, TokenRefreshTimeoutError
 
 def _extract_json_from_response(response: Any) -> Dict[str, Any]: ...
 def _check_http_status(response: Any) -> None: ...

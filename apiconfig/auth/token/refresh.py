@@ -1,24 +1,253 @@
-from typing import Any, Dict, Optional
+import json
+import logging
+import time
 
-from ...exceptions.auth import TokenRefreshError
+# Import httpx only for type annotations, not for actual use
+# This allows for proper type checking without runtime dependency
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+
+if TYPE_CHECKING:
+    pass
+
+from ...config.base import ClientConfig
+from ...exceptions.auth import (
+    TokenRefreshError,
+    TokenRefreshJsonError,
+    TokenRefreshNetworkError,
+    TokenRefreshTimeoutError,
+)
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 
-def refresh_oauth2_token(
-    refresh_token: str,
+def _extract_json_from_response(response: Any) -> Dict[str, Any]:
+    """
+    Extract JSON data from an HTTP response.
+
+    Args:
+        response: The HTTP response object.
+
+    Returns:
+        The parsed JSON data.
+
+    Raises:
+        TokenRefreshJsonError: If the response cannot be parsed as JSON.
+    """
+    # Try to use the client's json method first
+    if hasattr(response, "json"):
+        try:
+            return response.json()
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to decode JSON response: {e}")
+            raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+        except Exception as e:
+            if "json" in str(e).lower() or "decode" in str(e).lower():
+                logger.error(f"Failed to decode JSON response: {e}")
+                raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+            raise
+
+    # Fall back to manual JSON parsing
+    if hasattr(response, "text"):
+        try:
+            return json.loads(response.text)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to decode JSON response: {e}")
+            raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+
+    if hasattr(response, "content"):
+        try:
+            return json.loads(response.content.decode("utf-8"))
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to decode JSON response: {e}")
+            raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+
+    # No suitable content found
+    raise TokenRefreshJsonError("Unable to extract response content")
+
+
+def _check_http_status(response: Any) -> None:
+    """
+    Check if the HTTP response indicates an error.
+
+    Args:
+        response: The HTTP response object.
+
+    Raises:
+        TokenRefreshError: If the response indicates an HTTP error.
+    """
+    if hasattr(response, "raise_for_status"):
+        response.raise_for_status()
+    elif hasattr(response, "status_code") and response.status_code >= 400:
+        raise TokenRefreshError(f"HTTP error: {response.status_code}")
+
+
+def _handle_exception(e: Exception) -> None:
+    """
+    Handle exceptions from HTTP requests and classify them appropriately.
+
+    Args:
+        e: The exception to handle.
+
+    Raises:
+        TokenRefreshTimeoutError: If the exception indicates a timeout.
+        TokenRefreshNetworkError: If the exception indicates a network error.
+        TokenRefreshError: For other errors.
+    """
+    error_type = type(e).__name__
+    error_msg = str(e)
+
+    # Handle timeout errors
+    if "timeout" in error_type.lower() or "timeout" in error_msg.lower():
+        logger.error(f"Token refresh request timed out: {e}")
+        raise TokenRefreshTimeoutError(f"Token refresh request timed out: {e}") from e
+
+    # Handle network errors
+    if any(net_err in error_type.lower() for net_err in ["connect", "network", "connection"]):
+        logger.error(f"Network error during token refresh: {e}")
+        raise TokenRefreshNetworkError(f"Network error during token refresh: {e}") from e
+
+    # Handle HTTP status errors
+    if "status" in error_type.lower() or "http" in error_type.lower():
+        logger.error(f"Token refresh request failed with HTTP error: {e}")
+        raise TokenRefreshError(f"Token refresh failed with HTTP error: {e}") from e
+
+    # Re-raise other errors
+    logger.error(f"Unexpected error during token refresh: {e}")
+    raise TokenRefreshError(f"Token refresh failed: {e}") from e
+
+
+def _make_token_refresh_request(
     token_url: str,
-    client_id: Optional[str] = None,
-    client_secret: Optional[str] = None,
-    extra_params: Optional[Dict[str, Any]] = None,
-    # Placeholder for an HTTP client instance, to be added later
-    # http_client: Optional[Any] = None,
+    payload: Dict[str, Any],
+    auth: Optional[Any] = None,
+    timeout: float = 10.0,
+    http_client: Optional[Any] = None,
 ) -> Dict[str, Any]:
-    # Implementation Note:
-    # This function currently serves as a placeholder. A real implementation
-    # would require an HTTP client (like httpx or requests) to make a POST
-    # request to the token_url. This client is not yet part of apiconfig's
-    # core dependencies.
+    """
+    Make the actual HTTP request to refresh the token.
 
-    # 1. Construct the request payload
+    Args:
+        token_url: The URL of the token endpoint.
+        payload: The request payload.
+        auth: Optional authentication to use with the request.
+        timeout: Request timeout in seconds.
+        http_client: Optional HTTP client instance to use for the request.
+
+    Returns:
+        The parsed JSON response.
+
+    Raises:
+        TokenRefreshTimeoutError: If the request times out.
+        TokenRefreshNetworkError: If there's a network-related error.
+        TokenRefreshJsonError: If the response cannot be parsed as JSON.
+        TokenRefreshError: For other token refresh errors.
+    """
+    # Implementation Note:
+    # This function requires an HTTP client (like httpx or requests) to make a POST
+    # request to the token_url. This client is not part of apiconfig's core dependencies.
+    # The actual HTTP request implementation should be provided by the consumer of this library.
+
+    if http_client is None:
+        logger.error("No HTTP client provided for token refresh")
+        raise TokenRefreshError(
+            "Token refresh requires an HTTP client. Please provide an HTTP client instance."
+        )
+
+    try:
+        logger.debug(f"Making token refresh request to {token_url}")
+        start_time = time.time()
+
+        # Make the HTTP request using the provided client
+        response = http_client.post(
+            token_url,
+            data=payload,
+            auth=auth,
+            timeout=timeout,
+        )
+
+        elapsed = time.time() - start_time
+        logger.debug(f"Token refresh request completed in {elapsed:.2f}s")
+
+        # Check for HTTP errors
+        _check_http_status(response)
+
+        # Parse the JSON response
+        token_data = _extract_json_from_response(response)
+
+        # Validate the response
+        if "access_token" not in token_data:
+            logger.error("Token response missing 'access_token'")
+            raise TokenRefreshError("Refresh response missing 'access_token'")
+
+        return token_data
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Failed to decode JSON response: {e}")
+        raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+    except TokenRefreshJsonError:
+        # Re-raise JSON errors directly
+        raise
+    except Exception as e:
+        # Handle other exceptions
+        _handle_exception(e)
+
+
+def _get_effective_settings(
+    timeout: Optional[float],
+    max_retries: Optional[int],
+    client_config: Optional[ClientConfig],
+) -> Tuple[float, int]:
+    """
+    Determine effective timeout and retry values from provided parameters or defaults.
+
+    Args:
+        timeout: Explicit timeout value, if provided.
+        max_retries: Explicit max retries value, if provided.
+        client_config: Optional client configuration to use for defaults.
+
+    Returns:
+        A tuple of (effective_timeout, effective_max_retries)
+    """
+    effective_timeout = timeout
+    effective_max_retries = max_retries
+
+    if client_config is not None:
+        if effective_timeout is None:
+            effective_timeout = client_config.timeout
+        if effective_max_retries is None:
+            effective_max_retries = client_config.retries
+
+    # Use defaults if still None
+    if effective_timeout is None:
+        effective_timeout = 10.0
+    if effective_max_retries is None:
+        effective_max_retries = 3
+
+    return effective_timeout, effective_max_retries
+
+
+def _prepare_auth_and_payload(
+    client_id: Optional[str],
+    client_secret: Optional[str],
+    refresh_token: str,
+    extra_params: Optional[Dict[str, Any]],
+    http_client: Optional[Any],
+) -> Tuple[Optional[Any], Dict[str, Any]]:
+    """
+    Prepare authentication and payload for token refresh request.
+
+    Args:
+        client_id: Optional client ID for authentication.
+        client_secret: Optional client secret for authentication.
+        refresh_token: The refresh token to use.
+        extra_params: Additional parameters to include in the payload.
+        http_client: The HTTP client to use for authentication.
+
+    Returns:
+        A tuple of (auth, payload)
+    """
+    # Construct the request payload
     payload = {
         "grant_type": "refresh_token",
         "refresh_token": refresh_token,
@@ -30,23 +259,163 @@ def refresh_oauth2_token(
     if extra_params:
         payload.update(extra_params)
 
-    # 2. Prepare authentication (if client_id/secret are provided and not in payload)
-    #    This might involve Basic Auth if the provider requires it.
-    # Placeholder for Basic Auth logic if needed
-    # 3. Make the POST request using an HTTP client
-    # response = http_client.post(token_url, data=payload, auth=auth) # Example
+    # Prepare authentication (if client_id/secret are provided and not in payload)
+    auth = None
+    if client_id and client_secret and http_client is not None:
+        # Check if the HTTP client supports BasicAuth
+        if hasattr(http_client, "BasicAuth"):
+            # For httpx-like clients
+            auth = http_client.BasicAuth(username=client_id, password=client_secret)
+            # Remove from payload if using Basic Auth
+            if "client_id" in payload:
+                del payload["client_id"]
+            if "client_secret" in payload:
+                del payload["client_secret"]
+        elif hasattr(http_client, "auth") and callable(http_client.auth):
+            # For requests-like clients
+            auth = (client_id, client_secret)
+            # Remove from payload if using Basic Auth
+            if "client_id" in payload:
+                del payload["client_id"]
+            if "client_secret" in payload:
+                del payload["client_secret"]
 
-    # 4. Handle the response
-    # response.raise_for_status() # Check for HTTP errors
-    # token_data = response.json()
+    return auth, payload
 
-    # 5. Validate and return the new token data
-    # if "access_token" not in token_data:
-    #     raise TokenRefreshError("Refresh response missing 'access_token'")
 
-    # Placeholder return - replace with actual token data from response
-    print(f"Placeholder: Would refresh token at {token_url} with payload: {payload}")
-    raise TokenRefreshError(
-        "Token refresh not implemented yet. Requires HTTP client integration."
+def _execute_with_retry(
+    token_url: str,
+    payload: Dict[str, Any],
+    auth: Optional[Any],
+    timeout: float,
+    max_retries: int,
+    http_client: Optional[Any],
+) -> Dict[str, Any]:
+    """
+    Execute token refresh request with retry logic.
+
+    Args:
+        token_url: The URL to send the request to.
+        payload: The request payload.
+        auth: Optional authentication to use.
+        timeout: Request timeout in seconds.
+        max_retries: Maximum number of retry attempts.
+        http_client: The HTTP client to use.
+
+    Returns:
+        The token data from a successful response.
+
+    Raises:
+        TokenRefreshError: If all retry attempts fail.
+    """
+    last_exception = None
+
+    # Implement a simple retry mechanism
+    for attempt in range(max_retries):
+        try:
+            # If not the first attempt, add exponential backoff
+            if attempt > 0:
+                backoff_time = min(2 ** attempt, 10)  # Exponential backoff with max of 10 seconds
+                logger.debug(f"Retry attempt {attempt + 1}/{max_retries}, waiting {backoff_time}s")
+                time.sleep(backoff_time)
+
+            # Make the request
+            token_data = _make_token_refresh_request(
+                token_url=token_url,
+                payload=payload,
+                auth=auth,
+                timeout=timeout,
+                http_client=http_client,
+            )
+
+            # If successful, return the token data
+            return token_data
+
+        except (TokenRefreshNetworkError, TokenRefreshTimeoutError) as e:
+            # These are retryable errors
+            logger.warning(f"Retryable error during token refresh (attempt {attempt + 1}/{max_retries}): {e}")
+            last_exception = e
+            # Continue to the next retry attempt
+            continue
+
+        except Exception as e:
+            # Non-retryable errors
+            logger.error(f"Non-retryable error during token refresh: {e}")
+            if isinstance(e, (TokenRefreshJsonError, TokenRefreshError)):
+                raise
+            else:
+                raise TokenRefreshError(f"Token refresh failed: {e}") from e
+
+    # If we've exhausted all retries, raise the last exception
+    if last_exception:
+        logger.error(f"Token refresh failed after {max_retries} attempts: {last_exception}")
+        raise last_exception
+
+    # This should never happen, but just in case
+    raise TokenRefreshError(f"Token refresh failed after {max_retries} attempts")
+
+
+def refresh_oauth2_token(
+    refresh_token: str,
+    token_url: str,
+    client_id: Optional[str] = None,
+    client_secret: Optional[str] = None,
+    extra_params: Optional[Dict[str, Any]] = None,
+    timeout: Optional[float] = None,
+    max_retries: Optional[int] = None,
+    client_config: Optional[ClientConfig] = None,
+    http_client: Optional[Any] = None,
+) -> Dict[str, Any]:
+    """
+    Refreshes an OAuth2 token using a refresh token.
+
+    This function implements the standard OAuth2 refresh token grant type flow.
+    It constructs the necessary payload and makes an HTTP POST request to the
+    token endpoint with timeout and retry capabilities.
+
+    Args:
+        refresh_token: The refresh token obtained during the initial authorization.
+        token_url: The URL of the authorization server's token endpoint.
+        client_id: The client identifier issued to the client during registration.
+            Optional, depending on the provider's requirements.
+        client_secret: The client secret. Optional and should be used carefully,
+            typically only for confidential clients.
+        extra_params: Additional parameters to include in the request body,
+            as required by the specific authorization server.
+        timeout: Request timeout in seconds. If not provided, uses the value from
+            client_config or the default (10.0).
+        max_retries: Maximum number of retry attempts for transient errors.
+            If not provided, uses the value from client_config or the default (3).
+        client_config: Optional ClientConfig instance to use for timeout and retry settings.
+        http_client: An HTTP client instance to use for making the request.
+            This is required as apiconfig does not include HTTP client dependencies.
+
+    Returns:
+        A dictionary containing the new token information (e.g., access_token,
+        expires_in, potentially a new refresh_token).
+
+    Raises:
+        TokenRefreshError: If the token refresh fails (e.g., invalid refresh token,
+            server error, invalid response).
+        TokenRefreshJsonError: If the response cannot be parsed as JSON.
+        TokenRefreshTimeoutError: If the request times out.
+        TokenRefreshNetworkError: If there's a network-related error.
+    """
+    # Get effective timeout and retry settings
+    effective_timeout, effective_max_retries = _get_effective_settings(
+        timeout, max_retries, client_config
     )
-    # return token_data # Actual return
+
+    logger.debug(
+        f"Token refresh using timeout={effective_timeout}s, max_retries={effective_max_retries}"
+    )
+
+    # Prepare authentication and payload
+    auth, payload = _prepare_auth_and_payload(
+        client_id, client_secret, refresh_token, extra_params, http_client
+    )
+
+    # Execute the request with retry logic
+    return _execute_with_retry(
+        token_url, payload, auth, effective_timeout, effective_max_retries, http_client
+    )

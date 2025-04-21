@@ -8,6 +8,9 @@ __all__ = [
     "ExpiredTokenError",
     "MissingCredentialsError",
     "TokenRefreshError",
+    "TokenRefreshJsonError",
+    "TokenRefreshTimeoutError",
+    "TokenRefreshNetworkError",
     "AuthStrategyError",
 ]
 
@@ -26,6 +29,18 @@ class MissingCredentialsError(AuthenticationError):
 
 class TokenRefreshError(AuthenticationError):
     """Raised when an attempt to refresh a token fails."""
+
+
+class TokenRefreshJsonError(TokenRefreshError):
+    """Raised when JSON decoding of a token refresh response fails."""
+
+
+class TokenRefreshTimeoutError(TokenRefreshError):
+    """Raised when a token refresh request times out."""
+
+
+class TokenRefreshNetworkError(TokenRefreshError):
+    """Raised when a token refresh request fails due to network issues."""
 
 
 class AuthStrategyError(AuthenticationError):

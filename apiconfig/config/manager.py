@@ -10,32 +10,14 @@ logger = logging.getLogger(__name__)
 
 
 class ConfigManager:
-    """Manages loading configuration from multiple providers."""
+    # Canonical docstrings are in the .pyi stub file
 
     def __init__(self, providers: Sequence[ConfigProvider]) -> None:
-        """
-        Initializes the ConfigManager with a sequence of configuration providers.
-
-        Args:
-            providers: A sequence of configuration provider instances.
-                       Providers will be loaded in the order they appear in the sequence,
-                       with later providers overriding settings from earlier ones.
-        """
+        # Canonical docstrings are in the .pyi stub file
         self._providers = providers
 
     def load_config(self) -> Dict[str, Any]:
-        """
-        Loads configuration by iterating through all registered providers.
-
-        Configuration values from later providers in the sequence will override
-        values from earlier providers.
-
-        Returns:
-            A dictionary containing the merged configuration.
-
-        Raises:
-            ConfigLoadError: If any provider fails to load its configuration.
-        """
+        # Canonical docstrings are in the .pyi stub file
         merged_config: Dict[str, Any] = {}
         logger.debug("Loading configuration from %d providers...", len(self._providers))
 

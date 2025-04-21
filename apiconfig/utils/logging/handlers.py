@@ -6,9 +6,18 @@ from __future__ import annotations
 import logging
 import sys
 from typing import IO, Optional
+from typing import TYPE_CHECKING
 
 
-class ConsoleHandler(logging.StreamHandler[IO[str]]):
+if TYPE_CHECKING:
+    # Base type for type checkers
+    _StreamHandlerBase = logging.StreamHandler[IO[str]]
+else:
+    # Base type for runtime
+    _StreamHandlerBase = logging.StreamHandler
+
+
+class ConsoleHandler(_StreamHandlerBase):
     """
     A custom logging handler that writes log records to a stream (like stderr).
 
@@ -29,7 +38,7 @@ class ConsoleHandler(logging.StreamHandler[IO[str]]):
         super().__init__(stream or sys.stderr)
 
 
-class RedactingStreamHandler(logging.StreamHandler[IO[str]]):
+class RedactingStreamHandler(_StreamHandlerBase):
     """
     A basic stream handler, placeholder for potential redaction logic.
 

@@ -1,6 +1,7 @@
 """Tests for the FileProvider class."""
 
 import json
+import os
 import pathlib
 import tempfile
 from pathlib import Path
@@ -20,12 +21,12 @@ class TestFileProvider:
         # Test with string path
         provider1 = FileProvider(file_path="/path/to/config.json")
         assert isinstance(provider1._file_path, pathlib.Path)
-        assert str(provider1._file_path) == "/path/to/config.json"
+        assert os.path.normpath(str(provider1._file_path)) == os.path.normpath("/path/to/config.json")
 
         # Test with Path object
         path_obj = Path("/path/to/config.json")
         provider2 = FileProvider(file_path=path_obj)
-        assert provider2._file_path == path_obj
+        assert os.path.normpath(str(provider2._file_path)) == os.path.normpath(str(path_obj))
 
     def test_load_valid_json(self) -> None:
         """Test loading a valid JSON file."""
@@ -67,10 +68,15 @@ class TestFileProvider:
     def test_load_file_not_found(self) -> None:
         """Test loading a file that doesn't exist."""
         # Use a path that definitely doesn't exist
-        non_existent_path = "/path/that/definitely/does/not/exist/config.json"
+        import re
+
+        non_existent_path = os.path.join("path", "that", "definitely", "does", "not", "exist", "config.json")
         provider = FileProvider(file_path=non_existent_path)
 
-        with pytest.raises(ConfigLoadError, match="not found"):
+        # Accept both Windows and POSIX path separators in the error message
+        escaped_path = re.escape(os.path.normpath(non_existent_path))
+        pattern = rf"{escaped_path}.*not found|not found.*{escaped_path}"
+        with pytest.raises(ConfigLoadError, match=pattern):
             provider.load()
 
     def test_load_invalid_json(self) -> None:

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Utilities for building and manipulating URLs."""
 
+from __future__ import annotations
+
 import urllib.parse
 from typing import List, Mapping, Sequence, Tuple, Union
 

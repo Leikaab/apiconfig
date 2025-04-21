@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Custom logging handlers."""
 
+from __future__ import annotations
+
 import logging
 import sys
 from typing import IO, Optional

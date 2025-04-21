@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Logging formatter that redacts sensitive information."""
 
+from __future__ import annotations
+
 import logging
 import re
 from typing import Any, Literal, Mapping, Optional, Set, Tuple

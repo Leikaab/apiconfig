@@ -1,11 +1,6 @@
 # apiconfig/testing/integration/servers.py
 # -*- coding: utf-8 -*-
-"""
-Utilities for managing mock API servers during integration tests.
-
-This module leverages pytest-httpserver to provide a configurable mock server
-for testing interactions with external APIs, including custom authentication flows.
-"""
+"""Implementation of mock API server utilities for integration testing."""
 import json
 from typing import Any, Dict, Optional, Union
 
@@ -27,7 +22,7 @@ def configure_mock_response(
     ordered: bool = False,
     **kwargs: Any,
 ) -> None:
-    """Internal implementation for configure_mock_response."""
+    """Configure mock response for integration testing."""
     if response_headers is None:
         response_headers = {}
 
@@ -75,7 +70,7 @@ def assert_request_received(
     expected_data: Optional[str] = None,
     count: Optional[int] = 1,
 ) -> None:
-    """Internal implementation for assert_request_received."""
+    """Assert that specific requests were received by the mock server."""
     matching_requests = []
     lower_expected_headers = (
         {k.lower(): v for k, v in expected_headers.items()}

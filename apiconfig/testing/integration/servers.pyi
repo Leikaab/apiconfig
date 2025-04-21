@@ -1,14 +1,23 @@
 # apiconfig/testing/integration/servers.pyi
 # -*- coding: utf-8 -*-
 """
-Type stubs for mock API server utilities.
+Type stubs for mock API server utilities for integration testing.
 
-This module leverages pytest-httpserver to provide a configurable mock server
-for testing interactions with external APIs, including custom authentication flows.
+This module provides utilities for configuring and validating mock HTTP servers
+during integration tests. It leverages pytest-httpserver to create configurable
+mock servers that can simulate various API behaviors, including authentication
+flows, error conditions, and expected responses.
+
+These utilities are particularly useful for:
+- Testing client authentication mechanisms against controlled server responses
+- Verifying that clients send expected headers, query parameters, and request bodies
+- Simulating multi-step API interactions and stateful authentication flows
+- Validating error handling in API client code
 """
 from typing import Any, Dict, List, Optional, Union
 
 from pytest_httpserver import HTTPServer
+
 
 def configure_mock_response(
     httpserver: HTTPServer,
@@ -52,6 +61,7 @@ def configure_mock_response(
                   See pytest-httpserver documentation for more advanced matching.
     """
     ...
+
 
 def assert_request_received(
     httpserver: HTTPServer,

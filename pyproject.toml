@@ -15,6 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 
@@ -50,6 +51,7 @@ python-dotenv = "^1.1.0"
 bravado-core = "^6.1.1"
 httpx = "^0.28.1"
 pytest_httpserver = "*"
+tox = "*"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

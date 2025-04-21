@@ -1,9 +1,9 @@
 import re
 from collections.abc import Mapping
-from typing import Dict, Optional, Set, Tuple
+from typing import Dict, Final, Optional, Set, Tuple
 
 # Default set of sensitive header keys (lowercase)
-DEFAULT_SENSITIVE_HEADERS: Set[str] = {
+DEFAULT_SENSITIVE_HEADERS: Final[Set[str]] = {
     "authorization",
     "cookie",
     "set-cookie",
@@ -11,13 +11,13 @@ DEFAULT_SENSITIVE_HEADERS: Set[str] = {
 }
 
 # Default tuple of sensitive header prefixes (lowercase)
-DEFAULT_SENSITIVE_HEADER_PREFIXES: Tuple[str, ...] = (
+DEFAULT_SENSITIVE_HEADER_PREFIXES: Final[Tuple[str, ...]] = (
     "x-api-key",
     "x-auth-token",
 )
 
 # Default set of sensitive cookie keys (lowercase)
-DEFAULT_SENSITIVE_COOKIE_KEYS: Set[str] = {
+DEFAULT_SENSITIVE_COOKIE_KEYS: Final[Set[str]] = {
     "session",
     "token",
     "auth",
@@ -29,14 +29,14 @@ DEFAULT_SENSITIVE_COOKIE_KEYS: Set[str] = {
 }
 
 # Placeholder value for redacted headers
-REDACTED_VALUE: str = "[REDACTED]"
+REDACTED_VALUE: Final[str] = "[REDACTED]"
 
 
 def redact_headers(
     headers: Mapping[str, str],
     sensitive_keys: Set[str] = DEFAULT_SENSITIVE_HEADERS,
     sensitive_prefixes: Tuple[str, ...] = DEFAULT_SENSITIVE_HEADER_PREFIXES,
-    sensitive_name_pattern: Optional[re.Pattern] = None,
+    sensitive_name_pattern: Optional[re.Pattern[str]] = None,
     sensitive_cookie_keys: Set[str] = DEFAULT_SENSITIVE_COOKIE_KEYS,
 ) -> Dict[str, str]:
     """

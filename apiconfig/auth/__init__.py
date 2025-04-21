@@ -9,7 +9,7 @@ including the base strategy class and common implementations.
 from .base import AuthStrategy
 from .strategies import ApiKeyAuth, BasicAuth, BearerAuth, CustomAuth
 
-__all__ = [
+__all__: list[str] = [
     "AuthStrategy",
     "BasicAuth",
     "BearerAuth",

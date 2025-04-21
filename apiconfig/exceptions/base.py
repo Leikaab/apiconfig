@@ -1,4 +1,6 @@
-__all__ = [
+"""Base exception classes for the apiconfig library."""
+
+__all__: list[str] = [
     "APIConfigError",
     "ConfigurationError",
     "AuthenticationError",
@@ -6,12 +8,12 @@ __all__ = [
 
 
 class APIConfigError(Exception):
-    pass
+    """Base exception for all apiconfig errors."""
 
 
 class ConfigurationError(APIConfigError):
-    pass
+    """Base exception for configuration-related errors."""
 
 
 class AuthenticationError(APIConfigError):
-    pass
+    """Base exception for authentication-related errors."""

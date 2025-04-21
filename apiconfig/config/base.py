@@ -1,7 +1,7 @@
 import copy
 import logging
 import warnings
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional, TypeVar
 from urllib.parse import urljoin
 
 from apiconfig.exceptions.config import InvalidConfigError, MissingConfigError
@@ -13,7 +13,35 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+_TClientConfig = TypeVar("_TClientConfig", bound="ClientConfig")
+
+
 class ClientConfig:
+    """
+    Base configuration class for API clients.
+
+    Stores common configuration settings like hostname, API version, headers,
+    timeout, retries, and authentication strategy.
+
+    Attributes:
+        hostname: The base hostname of the API (e.g., "api.example.com").
+            If not provided, defaults to None.
+        version: The API version string (e.g., "v1"). Appended to the hostname.
+            Must not contain leading or trailing slashes. If not provided, defaults to None.
+        headers: Default headers to include in every request.
+            If not provided, defaults to an empty dictionary.
+        timeout: Default request timeout in seconds. Must be a non-negative number.
+            Defaults to 10.0 seconds.
+        retries: Default number of retries for failed requests. Must be a non-negative number.
+            Defaults to 3 retries.
+        auth_strategy: An instance of AuthStrategy for handling authentication.
+            If not provided, defaults to None.
+        log_request_body: Whether to log the request body (potentially sensitive).
+            Defaults to False.
+        log_response_body: Whether to log the response body (potentially sensitive).
+            Defaults to False.
+    """
+
     hostname: Optional[str] = None
     version: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
@@ -34,6 +62,24 @@ class ClientConfig:
         log_request_body: Optional[bool] = None,
         log_response_body: Optional[bool] = None,
     ) -> None:
+        """
+        Initializes the ClientConfig instance.
+
+        Args:
+            hostname: The base hostname of the API.
+            version: The API version string. Must not contain leading or trailing slashes.
+            headers: Default headers for requests.
+            timeout: Request timeout in seconds. Must be a non-negative number (int or float).
+            retries: Number of retries for failed requests. Must be a non-negative number (int or float).
+            auth_strategy: Authentication strategy instance.
+            log_request_body: Flag to enable request body logging.
+            log_response_body: Flag to enable response body logging.
+
+        Raises:
+            InvalidConfigError: If version contains leading or trailing slashes,
+                if timeout or retries are negative, or if timeout or retries
+                are not numbers (int or float).
+        """
         self.hostname = hostname or self.__class__.hostname
 
         # Store version value before validation
@@ -71,6 +117,18 @@ class ClientConfig:
 
     @property
     def base_url(self) -> str:
+        """
+        Constructs the base URL from hostname and version.
+
+        Ensures the hostname has a scheme (defaults to https) and handles
+        joining with the version correctly.
+
+        Returns:
+            The constructed base URL string.
+
+        Raises:
+            MissingConfigError: If hostname is not configured.
+        """
         if not self.hostname:
             logger.error("Hostname is required for base_url")
             raise MissingConfigError("hostname is required to construct base_url.")
@@ -80,10 +138,30 @@ class ClientConfig:
         # Join hostname and version, ensuring correct slash handling
         return urljoin(f"{full_hostname}/", self.version or "").rstrip("/")
 
-    def merge(self, other: "ClientConfig") -> "ClientConfig":
+    def merge(self, other: _TClientConfig) -> _TClientConfig:
+        """
+        Merges this configuration with another ClientConfig instance.
+
+        Creates a deep copy of the current instance and overrides its attributes
+        with non-None values from the 'other' instance. Headers are merged,
+        with 'other's headers taking precedence. All mutable attributes are
+        deep-copied to ensure the merged config is independent of the original configs.
+
+        Args:
+            other: Another ClientConfig instance to merge with.
+
+        Returns:
+            A new ClientConfig instance representing the merged configuration.
+            Returns NotImplemented if 'other' is not a ClientConfig instance.
+
+        Raises:
+            InvalidConfigError: If the merged version contains leading or trailing slashes,
+                if the merged timeout or retries are negative, or if the merged timeout
+                or retries are not numbers (int or float).
+        """
         if not isinstance(other, self.__class__):
             logger.warning(f"Attempted to merge ClientConfig with incompatible type: {type(other)}")
-            return NotImplemented  # type: ignore[return-value]
+            raise TypeError(f"Cannot merge ClientConfig with object of type {type(other)}")
 
         # Create a deep copy of self as the base for the new instance
         new_instance = copy.deepcopy(self)
@@ -123,9 +201,25 @@ class ClientConfig:
             if new_instance.retries < 0:
                 raise InvalidConfigError("Merged retries must be non-negative.")
 
-        return new_instance
+        from typing import cast
 
-    def __add__(self, other: "ClientConfig") -> "ClientConfig":
+        return cast(_TClientConfig, new_instance)
+
+    def __add__(self, other: _TClientConfig) -> _TClientConfig:
+        """
+        Deprecated: Merges this configuration with another using the '+' operator.
+
+        Warns about deprecation and calls the merge() method.
+
+        Args:
+            other: Another ClientConfig instance to merge with.
+
+        Returns:
+            A new ClientConfig instance representing the merged configuration.
+
+        Raises:
+            TypeError: If the merge operation is not supported between the types.
+        """
         warnings.warn(
             "The __add__ method for ClientConfig is deprecated. Use merge() instead.",
             DeprecationWarning,
@@ -138,7 +232,24 @@ class ClientConfig:
         return merged
 
     @staticmethod
-    def merge_configs(base_config: "ClientConfig", other_config: "ClientConfig") -> "ClientConfig":
+    def merge_configs(base_config: _TClientConfig, other_config: _TClientConfig) -> _TClientConfig:
+        """
+        Merges two ClientConfig instances.
+
+        Static method wrapper around the instance merge() method.
+        This is a convenience method that validates both arguments are
+        ClientConfig instances before calling merge().
+
+        Args:
+            base_config: The base ClientConfig instance.
+            other_config: The ClientConfig instance to merge into the base.
+
+        Returns:
+            A new ClientConfig instance representing the merged configuration.
+
+        Raises:
+            TypeError: If either argument is not an instance of ClientConfig.
+        """
         if not isinstance(base_config, ClientConfig) or not isinstance(other_config, ClientConfig):
             raise TypeError("Both arguments must be instances of ClientConfig")
 

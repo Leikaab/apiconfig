@@ -7,11 +7,13 @@ configuration management (`ConfigManager`), and various configuration
 providers (environment, file, memory).
 """
 
+from typing import List
+
 from .base import ClientConfig
 from .manager import ConfigManager
 from .providers import EnvProvider, FileProvider, MemoryProvider
 
-__all__ = [
+__all__: List[str] = [
     "ClientConfig",
     "ConfigManager",
     "EnvProvider",

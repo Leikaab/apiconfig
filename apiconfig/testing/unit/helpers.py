@@ -39,12 +39,8 @@ def assert_auth_header_correct(strategy: AuthStrategy, expected_header: str, exp
         AssertionError: If the header is missing or has an incorrect value.
         AuthenticationError: If the strategy raises an auth error during preparation.
     """
-    headers: Dict[str, str] = {}
-    params: Dict[str, Any] = {}
-    data: Optional[Any] = None
-
     try:
-        strategy.prepare_request(headers, params, data)
+        headers = strategy.prepare_request_headers()
     except AuthenticationError as e:
         raise AssertionError(f"Strategy raised unexpected AuthenticationError: {e}") from e
 

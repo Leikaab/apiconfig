@@ -9,6 +9,21 @@ class ContextFilter(logging.Filter):
     """
     A logging filter that injects context variables from thread-local storage
     into log records.
+
+    Usage
+    -----
+    Add this filter to a logger's handler. Then use `set_log_context`
+    to add context variables within your code (e.g., request ID, user ID).
+    These variables will be automatically added to log records processed
+    by handlers using this filter. Remember to clear the context when appropriate
+    (e.g., at the end of a request) using `clear_log_context`.
+
+    Example Formatter Usage
+    ----------------------
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] - %(message)s'
+    )
+    # Assuming 'request_id' was set using set_log_context('request_id', ...)
     """
 
     def filter(self, record: logging.LogRecord) -> bool:

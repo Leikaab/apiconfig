@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 from .formatters import RedactingFormatter
 from .handlers import RedactingStreamHandler
 
-_logger = logging.getLogger("apiconfig")
+_logger: logging.Logger = logging.getLogger("apiconfig")
 
 
 def setup_logging(

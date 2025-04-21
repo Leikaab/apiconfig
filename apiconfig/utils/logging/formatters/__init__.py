@@ -4,7 +4,7 @@ from apiconfig.utils.redaction.headers import DEFAULT_SENSITIVE_HEADER_PREFIXES,
 from .detailed import DetailedFormatter
 from .redacting import RedactingFormatter
 
-__all__ = [
+__all__: tuple[str, ...] = (
     "DetailedFormatter",
     "RedactingFormatter",
     "redact_body",
@@ -12,4 +12,4 @@ __all__ = [
     "REDACTED_VALUE",
     "DEFAULT_SENSITIVE_HEADERS",
     "DEFAULT_SENSITIVE_HEADER_PREFIXES",
-]
+)

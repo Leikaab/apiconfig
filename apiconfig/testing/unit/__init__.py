@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # File: apiconfig/testing/unit/__init__.py
-"""Unit testing utilities for apiconfig."""
+"""
+Unit testing utilities for apiconfig.
+
+This module re-exports utilities from submodules like mocks, factories, and assertions.
+"""
 
 from .assertions import assert_client_config_valid
 from .factories import create_auth_credentials, create_invalid_client_config, create_provider_dict, create_valid_client_config
@@ -15,7 +19,7 @@ from .helpers import (
 )
 from .mocks import MockConfigManager, MockConfigProvider, create_mock_client_config
 
-__all__ = [
+__all__: list[str] = [
     # Assertions (from assertions.py)
     "assert_client_config_valid",
     # Factories

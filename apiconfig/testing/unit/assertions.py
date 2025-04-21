@@ -17,7 +17,22 @@ if TYPE_CHECKING:
 
 
 def assert_client_config_valid(config: "ClientConfig") -> None:
-    """Assert that a ClientConfig instance appears valid."""
+    """
+    Assert that a ClientConfig instance appears valid.
+
+    Checks for correct type, non-empty hostname, non-negative timeout/retries,
+    and successful base_url construction.
+
+    Parameters
+    ----------
+    config : ClientConfig
+        The ClientConfig instance to validate.
+
+    Raises
+    ------
+    AssertionError
+        If the config is invalid.
+    """
     # Import locally to avoid potential circular dependency issues
     from apiconfig.config.base import ClientConfig
 
@@ -37,7 +52,25 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
 
 
 def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[str, str]) -> None:
-    """Assert that the AuthStrategy produces the expected headers."""
+    """
+    Assert that the AuthStrategy produces the expected headers.
+
+    Calls the strategy's `prepare_request_headers()` method and compares
+    the result to the expected dictionary.
+
+    Parameters
+    ----------
+    strategy : AuthStrategy
+        The AuthStrategy instance to test.
+    expected_header : Dict[str, str]
+        The dictionary of headers the strategy should produce.
+
+    Raises
+    ------
+    AssertionError
+        If the actual headers do not match the expected headers,
+        or if the strategy is not a valid AuthStrategy instance.
+    """
     # Import locally if needed
     from apiconfig.auth.base import AuthStrategy
 
@@ -49,7 +82,27 @@ def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[s
 
 
 def assert_provider_loads(provider: "ConfigProvider", expected_dict: Dict[str, Any]) -> None:
-    """Assert that the ConfigProvider loads the expected dictionary."""
+    """
+    Assert that the ConfigProvider loads the expected dictionary.
+
+    Calls the provider's `load()` method and compares the result to the
+    expected dictionary.
+
+    Parameters
+    ----------
+    provider : ConfigProvider
+        The configuration provider instance to test. Must have a
+        callable `load()` method.
+    expected_dict : Dict[str, Any]
+        The dictionary the provider should load.
+
+    Raises
+    ------
+    AssertionError
+        If the actual dictionary does not match the expected
+        dictionary, or if the provider does not have a callable
+        `load()` method.
+    """
     # Check if the provider has a 'load' method
     if not hasattr(provider, "load") or not callable(provider.load):
         raise AssertionError(f"Object {provider!r} does not have a callable 'load' method.")

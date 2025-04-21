@@ -21,12 +21,9 @@ class TestMakeRequestWithConfig:
         mock_config.timeout = 30.0
 
         mock_auth_strategy = MagicMock(spec=AuthStrategy)
-        # Ensure prepare_request is properly mocked
-        mock_auth_strategy.prepare_request = MagicMock()
-        mock_auth_strategy.prepare_request.return_value = (
-            {"X-Auth": "test_auth"},
-            {"auth_param": "test_param"},
-        )
+        # Mock prepare_request_headers and prepare_request_params
+        mock_auth_strategy.prepare_request_headers = MagicMock(return_value={"X-Auth": "test_auth"})
+        mock_auth_strategy.prepare_request_params = MagicMock(return_value={"auth_param": "test_param"})
 
         mock_response = MagicMock(spec=httpx.Response)
 
@@ -71,7 +68,8 @@ class TestMakeRequestWithConfig:
             )
 
             # Check that auth_strategy.prepare_request was called
-            mock_auth_strategy.prepare_request.assert_called_once_with(headers={}, params={})
+            mock_auth_strategy.prepare_request_headers.assert_called_once_with()
+            mock_auth_strategy.prepare_request_params.assert_called_once_with()
 
     def test_make_request_with_config_with_additional_params(self) -> None:
         """Test make_request_with_config with additional parameters."""
@@ -80,12 +78,9 @@ class TestMakeRequestWithConfig:
         mock_config.timeout = 30.0
 
         mock_auth_strategy = MagicMock(spec=AuthStrategy)
-        # Ensure prepare_request is properly mocked
-        mock_auth_strategy.prepare_request = MagicMock()
-        mock_auth_strategy.prepare_request.return_value = (
-            {"X-Auth": "test_auth"},
-            {"auth_param": "test_param"},
-        )
+        # Mock prepare_request_headers and prepare_request_params
+        mock_auth_strategy.prepare_request_headers = MagicMock(return_value={"X-Auth": "test_auth"})
+        mock_auth_strategy.prepare_request_params = MagicMock(return_value={"auth_param": "test_param"})
 
         mock_response = MagicMock(spec=httpx.Response)
 
@@ -129,23 +124,25 @@ class TestMakeRequestWithConfig:
             mock_client.request.assert_called_with(
                 method="POST",
                 url="http://example.com/test",
-                headers={"X-Auth": "test_auth"},
-                params={"auth_param": "test_param"},
+                headers={"X-Auth": "test_auth", "Content-Type": "application/json"},
+                params={"auth_param": "test_param", "page": "1"},
                 data="test_data",
                 json={"key": "value"},
                 cookies={"session": "abc123"},
             )
 
             # Check that auth_strategy.prepare_request was called with initial headers and params
-            mock_auth_strategy.prepare_request.assert_called_once_with(headers={"Content-Type": "application/json"}, params={"page": "1"})
+            mock_auth_strategy.prepare_request_headers.assert_called_once_with()
+            mock_auth_strategy.prepare_request_params.assert_called_once_with()
 
     def test_make_request_with_config_url_handling(self) -> None:
         """Test make_request_with_config handles URLs correctly."""
         # Create mock objects
         mock_config = MagicMock(spec=ClientConfig)
         mock_auth_strategy = MagicMock(spec=AuthStrategy)
-        # Ensure prepare_request is properly mocked
-        mock_auth_strategy.prepare_request = MagicMock(return_value=({}, {}))
+        # Mock prepare_request_headers and prepare_request_params
+        mock_auth_strategy.prepare_request_headers = MagicMock(return_value={})
+        mock_auth_strategy.prepare_request_params = MagicMock(return_value={})
 
         mock_response = MagicMock(spec=httpx.Response)
         mock_client = MagicMock()
@@ -221,9 +218,9 @@ class TestSetupMultiProviderManager:
 
         # Check that the providers are MemoryProviders with the correct data and names
         assert manager._providers[0]._config == {"api": {"hostname": "example1.com"}}
-        assert manager._providers[0]._name == "source1"
+        assert manager._providers[0].name == "source1"
         assert manager._providers[1]._config == {"api": {"version": "v1"}}
-        assert manager._providers[1]._name == "source2"
+        assert manager._providers[1].name == "source2"
 
     def test_setup_multi_provider_manager_empty_sources(self) -> None:
         """Test setup_multi_provider_manager with empty sources."""

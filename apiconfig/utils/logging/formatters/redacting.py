@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Mapping, Optional, Set, Tuple, Union
+from typing import Any, Literal, Mapping, Optional, Set, Tuple
 
 from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
 from apiconfig.utils.redaction.body import redact_body
@@ -60,7 +60,7 @@ class RedactingFormatter(logging.Formatter):
         self,
         fmt: Optional[str] = None,
         datefmt: Optional[str] = None,
-        style: Union[str, None] = "%",
+        style: Literal["%", "{", "$"] = "%",
         validate: bool = True,
         *,
         body_sensitive_keys_pattern: re.Pattern[str] = DEFAULT_BODY_KEYS_PATTERN,
@@ -121,8 +121,11 @@ class RedactingFormatter(logging.Formatter):
         redacted_msg: Any
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
-        if isinstance(orig_msg, bytes) or self._is_binary(msg):
-            redacted_msg = self._redact_binary(orig_msg if isinstance(orig_msg, bytes) else msg)
+        if isinstance(orig_msg, bytes):
+            redacted_msg = self._redact_binary(orig_msg)
+        elif self._is_binary(msg):
+            # msg is a str that is actually binary data, treat as redacted body
+            redacted_msg = "[REDACTED BODY]"
         # 2. If the original message is dict or list, always redact and serialize to JSON
         elif isinstance(orig_msg, (dict, list)):
             redacted_msg = self._redact_structured(orig_msg, content_type)
@@ -136,8 +139,7 @@ class RedactingFormatter(logging.Formatter):
         elif isinstance(msg, str):
             redacted_msg = self._redact_plain_string(msg)
         # 6. Fallback: for unknown types, just use str()
-        else:
-            redacted_msg = str(msg)
+        # This branch is unreachable, so we remove it to satisfy mypy.
 
         # Ensure the final message is always a string for logging
         # If _redact_structured returned a dict/list, always serialize to JSON
@@ -159,11 +161,12 @@ class RedactingFormatter(logging.Formatter):
         if isinstance(msg, (dict, list)):
             return True
         if isinstance(msg, str):
-            if content_type:
-                if "json" in str(content_type).lower() or "form" in str(content_type).lower():
-                    return True
+            if content_type and ("json" in str(content_type).lower() or "form" in str(content_type).lower()):
+                return True
             stripped = msg.strip()
-            if (stripped.startswith("{") and stripped.endswith("}")) or (stripped.startswith("[") and stripped.endswith("]")):
+            if stripped.startswith("{") and stripped.endswith("}"):
+                return True
+            if stripped.startswith("[") and stripped.endswith("]"):
                 return True
         return False
 

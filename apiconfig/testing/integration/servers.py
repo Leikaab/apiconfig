@@ -1,10 +1,23 @@
 # apiconfig/testing/integration/servers.py
 # -*- coding: utf-8 -*-
-"""Implementation of mock API server utilities for integration testing."""
+"""
+Mock API server utilities for integration testing.
+
+This module provides utilities for configuring and validating mock HTTP servers
+during integration tests. It leverages pytest-httpserver to create configurable
+mock servers that can simulate various API behaviors, including authentication
+flows, error conditions, and expected responses.
+
+These utilities are particularly useful for:
+- Testing client authentication mechanisms against controlled server responses
+- Verifying that clients send expected headers, query parameters, and request bodies
+- Simulating multi-step API interactions and stateful authentication flows
+- Validating error handling in API client code
+"""
 import json
 from typing import Any, Dict, Optional, Union
 
-from pytest_httpserver import HTTPServer  # type: ignore[import-untyped]
+from pytest_httpserver import HTTPServer
 from werkzeug.wrappers import Request, Response
 
 
@@ -22,7 +35,50 @@ def configure_mock_response(
     ordered: bool = False,
     **kwargs: Any,
 ) -> None:
-    """Configure mock response for integration testing."""
+    """
+    Configures a specific response expectation for the mock HTTPServer.
+
+    This function allows detailed matching of incoming requests, making it suitable
+    for testing various authentication strategies, including custom ones that
+    might add specific headers, query parameters, or body content.
+
+    For stateful authentication flows (e.g., challenge-response), call this
+    function multiple times in the expected order of requests, setting `ordered=True`.
+
+    Parameters
+    ----------
+    httpserver : HTTPServer
+        The pytest-httpserver fixture instance.
+    path : str
+        The URL path to match (e.g., "/api/v1/resource").
+    method : str, default "GET"
+        The HTTP method to match (e.g., "GET", "POST").
+    response_data : Optional[Union[Dict[str, Any], str]], default None
+        The JSON data or raw string to return in the response body.
+        If None, an empty body is returned.
+    status_code : int, default 200
+        The HTTP status code to return.
+    response_headers : Optional[Dict[str, str]], default None
+        Optional dictionary of headers to return in the response.
+    match_headers : Optional[Dict[str, str]], default None
+        Optional dictionary of headers that must be present in the request.
+    match_query_string : Optional[Dict[str, str]], default None
+        Optional dictionary of query parameters that must be present.
+    match_json : Optional[Any], default None
+        Optional JSON data that the request body must match.
+    match_data : Optional[str], default None
+        Optional raw string data that the request body must match.
+    ordered : bool, default False
+        If True, ensures this expectation is met in the order it was defined
+        relative to other ordered expectations.
+    **kwargs : Any
+        Additional arguments passed directly to httpserver.expect_request.
+        See pytest-httpserver documentation for more advanced matching.
+
+    Returns
+    -------
+    None
+    """
     if response_headers is None:
         response_headers = {}
 
@@ -50,7 +106,8 @@ def configure_mock_response(
         response_kwargs["response_data"] = response_data
     # Handle None case implicitly (empty body)
 
-    expectation = httpserver.expect_request(uri=path, method=method, ordered=ordered, **expect_kwargs)
+    # Pass 'ordered' for test compatibility; type: ignore needed for real HTTPServer
+    expectation = httpserver.expect_request(uri=path, method=method, ordered=ordered, **expect_kwargs)  # type: ignore[call-arg]
     expectation.respond_with_response(Response(status=status_code, headers=response_headers), **response_kwargs)
 
 
@@ -64,7 +121,37 @@ def assert_request_received(
     expected_data: Optional[str] = None,
     count: Optional[int] = 1,
 ) -> None:
-    """Assert that specific requests were received by the mock server."""
+    """
+    Asserts that specific requests were received by the mock server.
+
+    Checks the server log for requests matching the criteria.
+
+    Parameters
+    ----------
+    httpserver : HTTPServer
+        The pytest-httpserver fixture instance.
+    path : str
+        The expected URL path.
+    method : str, default "GET"
+        The expected HTTP method.
+    expected_headers : Optional[Dict[str, str]], default None
+        A dictionary of headers expected in the request. Checks for
+        presence and exact value match. Case-insensitive header keys.
+    expected_query : Optional[Dict[str, str]], default None
+        A dictionary of query parameters expected. Checks for presence
+        and exact value match.
+    expected_json : Optional[Any], default None
+        The expected JSON body of the request.
+    expected_data : Optional[str], default None
+        The expected raw string body of the request.
+    count : Optional[int], default 1
+        The expected number of matching requests. If None, asserts at least one match.
+
+    Raises
+    ------
+    AssertionError
+        If the expected request(s) were not found in the server log.
+    """
     matching_requests = []
     lower_expected_headers = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 

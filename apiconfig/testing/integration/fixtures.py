@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 import pytest
-from pytest_httpserver import HTTPServer  # type: ignore[import-untyped]
+from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.config.manager import ConfigManager
@@ -30,7 +30,7 @@ def httpserver_listen_address() -> tuple[str, int]:
 def mock_api_url(httpserver: HTTPServer) -> str:
     """Provides the base URL of the running mock API server."""
     # Ensures trailing slash for easy joining with paths
-    return httpserver.url_for("/")
+    return str(httpserver.url_for("/"))
 
 
 @pytest.fixture(scope="function")
@@ -110,7 +110,14 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
     """
 
     def _factory(auth_callable: Optional[CustomAuthCallable] = None) -> CustomAuth:
-        """Creates a CustomAuth instance with the given callable."""
+        """
+        Creates a CustomAuth instance with the given callable.
+
+        If a callable is provided, it will be used to modify headers and params.
+        The callable must accept (headers, params) and return (headers, params).
+        The CustomAuth strategy expects header_callback and param_callback that
+        return only headers or params, so we wrap the provided callable accordingly.
+        """
         if auth_callable is None:
             # Default no-op callable if none provided
             def default_callable(headers: Dict[str, str], params: Dict[str, str]) -> tuple[Dict[str, str], Dict[str, str]]:
@@ -118,7 +125,16 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
                 return headers, params
 
             auth_callable = default_callable
-        # Create and return the CustomAuth instance
-        return CustomAuth(auth_callable=auth_callable)
+
+        def header_callback() -> Dict[str, str]:
+            headers, _ = auth_callable({}, {})
+            return headers
+
+        def param_callback() -> Dict[str, str]:
+            _, params = auth_callable({}, {})
+            return params
+
+        # At least one callback must be provided, so we provide both
+        return CustomAuth(header_callback=header_callback, param_callback=param_callback)
 
     return _factory

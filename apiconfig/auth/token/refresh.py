@@ -4,7 +4,7 @@ import time
 
 # Import httpx only for type annotations, not for actual use
 # This allows for proper type checking without runtime dependency
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, cast
 
 if TYPE_CHECKING:
     pass
@@ -32,7 +32,7 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
     # Try to use the client's json method first
     if hasattr(response, "json"):
         try:
-            return response.json()
+            return cast(Dict[str, Any], response.json())
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
@@ -45,14 +45,14 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
     # Fall back to manual JSON parsing
     if hasattr(response, "text"):
         try:
-            return json.loads(response.text)
+            return cast(Dict[str, Any], json.loads(response.text))
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
 
     if hasattr(response, "content"):
         try:
-            return json.loads(response.content.decode("utf-8"))
+            return cast(Dict[str, Any], json.loads(response.content.decode("utf-8")))
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
@@ -184,6 +184,8 @@ def _make_token_refresh_request(
     except Exception as e:
         # Handle other exceptions
         _handle_exception(e)
+    # If we reach here, something went wrong; raise an error to satisfy the type checker
+    raise TokenRefreshError("Token refresh failed: unexpected error in _make_token_refresh_request")
 
 
 def _get_effective_settings(

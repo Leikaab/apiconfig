@@ -18,27 +18,116 @@ __all__ = [
 
 
 def is_success(status_code: int) -> bool:
+    """
+    Check if an HTTP status code indicates success (2xx).
+
+    Parameters
+    ----------
+    status_code : int
+        The HTTP status code.
+
+    Returns
+    -------
+    bool
+        True if the status code is in the 200-299 range, False otherwise.
+    """
     return 200 <= status_code <= 299
 
 
 def is_redirect(status_code: int) -> bool:
+    """
+    Check if an HTTP status code indicates redirection (3xx).
+
+    Parameters
+    ----------
+    status_code : int
+        The HTTP status code.
+
+    Returns
+    -------
+    bool
+        True if the status code is in the 300-399 range, False otherwise.
+    """
     return 300 <= status_code <= 399
 
 
 def is_client_error(status_code: int) -> bool:
+    """
+    Check if an HTTP status code indicates a client error (4xx).
+
+    Parameters
+    ----------
+    status_code : int
+        The HTTP status code.
+
+    Returns
+    -------
+    bool
+        True if the status code is in the 400-499 range, False otherwise.
+    """
     return 400 <= status_code <= 499
 
 
 def is_server_error(status_code: int) -> bool:
+    """
+    Check if an HTTP status code indicates a server error (5xx).
+
+    Parameters
+    ----------
+    status_code : int
+        The HTTP status code.
+
+    Returns
+    -------
+    bool
+        True if the status code is in the 500-599 range, False otherwise.
+    """
     return 500 <= status_code <= 599
 
 
 def normalize_header_name(name: str) -> str:
-    # Normalize to title case as per common convention (e.g., 'Content-Type')
+    """
+    Normalize an HTTP header name to a canonical format (Title-Case).
+
+    Example
+    -------
+    'content-type' -> 'Content-Type'
+    'X-CUSTOM-HEADER' -> 'X-Custom-Header'
+
+    Parameters
+    ----------
+    name : str
+        The header name string.
+
+    Returns
+    -------
+    str
+        The normalized header name.
+    """
     return "-".join(part.capitalize() for part in name.split("-"))
 
 
 def get_header_value(headers: Mapping[str, str], name: str, default: Optional[str] = None) -> Optional[str]:
+    """
+    Get a header value from a mapping, case-insensitively.
+
+    Normalizes both the provided header name and the keys in the mapping
+    before comparison.
+
+    Parameters
+    ----------
+    headers : Mapping[str, str]
+        A mapping (e.g., dictionary) of header names to values.
+    name : str
+        The name of the header to retrieve (case-insensitive).
+    default : Optional[str], optional
+        The value to return if the header is not found.
+
+    Returns
+    -------
+    Optional[str]
+        The header value if found, otherwise the default value.
+    """
     normalized_name = normalize_header_name(name)
     for key, value in headers.items():
         if normalize_header_name(key) == normalized_name:
@@ -51,6 +140,36 @@ def safe_json_decode(
     encoding: Optional[str] = None,
     max_size_bytes: int = 1 * 1024 * 1024,  # Default to 1MB
 ) -> Optional[Dict[str, Any]]:
+    """
+    Safely decode a JSON response body (string or bytes).
+
+    Handles potential JSONDecodeError and UnicodeDecodeError.
+    Returns None if the input content is empty.
+    Checks payload size before decoding to prevent excessive memory usage.
+
+    Parameters
+    ----------
+    response_text : Union[str, bytes]
+        The response body content as a string or bytes.
+    encoding : Optional[str], optional
+        The encoding to use if response_text is bytes. Defaults to 'utf-8'.
+    max_size_bytes : int, optional
+        Maximum allowed size of the payload in bytes. Defaults to 1MB.
+
+    Returns
+    -------
+    Optional[Dict[str, Any]]
+        The decoded JSON dictionary, or None if the input was empty.
+
+    Raises
+    ------
+    PayloadTooLargeError
+        If the payload size exceeds max_size_bytes.
+    JSONDecodeError
+        If JSON decoding fails or if byte decoding fails.
+    HTTPUtilsError
+        For other unexpected errors during processing.
+    """
     try:
         if isinstance(response_text, bytes):
             # Check size before decoding bytes
@@ -70,7 +189,10 @@ def safe_json_decode(
         if not stripped_content:
             return None  # Return None for empty or whitespace-only content
 
-        return json.loads(stripped_content)
+        result = json.loads(stripped_content)
+        if isinstance(result, dict):
+            return result
+        raise JSONDecodeError("Decoded JSON is not an object (dict).")
     except json.JSONDecodeError as e:
         raise JSONDecodeError(f"Failed to decode JSON: {e}") from e
     except UnicodeDecodeError as e:

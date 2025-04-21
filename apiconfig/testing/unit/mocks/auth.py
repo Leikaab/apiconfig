@@ -1,4 +1,3 @@
-# Implementation only, no docstrings or public type hints here
 from typing import Any, Dict, Optional, Tuple
 
 from apiconfig.auth.base import AuthStrategy
@@ -9,13 +8,32 @@ from apiconfig.auth.strategies.custom import CustomAuth
 
 
 class MockAuthStrategy(AuthStrategy):
+    """
+    Base mock implementation for AuthStrategy for testing purposes.
+
+    Handles common mocking logic like overriding headers/params and raising exceptions.
+    Specific mock strategies should inherit from this class.
+    """
+
+    override_headers: Dict[str, str]
+    override_params: Dict[str, Any]
+    raise_exception: Optional[Exception]
+
     def __init__(
         self,
         *,
         override_headers: Optional[Dict[str, str]] = None,
         override_params: Optional[Dict[str, Any]] = None,
         raise_exception: Optional[Exception] = None,
-    ):
+    ) -> None:
+        """
+        Initialize the MockAuthStrategy.
+
+        Args:
+            override_headers: Optional dictionary of headers to add/override in the result.
+            override_params: Optional dictionary of parameters to add/override in the result.
+            raise_exception: Optional exception instance to raise when prepare_request is called.
+        """
         self.override_headers = override_headers if override_headers is not None else {}
         self.override_params = override_params if override_params is not None else {}
         self.raise_exception = raise_exception
@@ -25,6 +43,23 @@ class MockAuthStrategy(AuthStrategy):
         headers: Optional[Dict[str, str]] = None,
         params: Optional[Dict[str, Any]] = None,
     ) -> Tuple[Dict[str, str], Dict[str, Any]]:
+        """
+        Prepare request headers and parameters, applying mock configurations.
+
+        If `raise_exception` was provided during initialization, it will be raised.
+        Otherwise, it merges the input headers/params with the `override_headers`
+        and `override_params` provided during initialization.
+
+        Args:
+            headers: Existing request headers.
+            params: Existing request parameters.
+
+        Returns:
+            A tuple containing the prepared headers and parameters dictionaries.
+
+        Raises:
+            Exception: The exception provided via `raise_exception` during init.
+        """
         if self.raise_exception:
             raise self.raise_exception
 
@@ -36,27 +71,22 @@ class MockAuthStrategy(AuthStrategy):
 
         return final_headers, final_params
 
-    # Add dummy implementations for abstract methods inherited from AuthStrategy
-    # to make MockAuthStrategy concrete and instantiable for tests.
-    # The actual mock logic is handled by the overridden prepare_request above.
     def prepare_request_headers(self, headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
-        # This method is required by AuthStrategy ABC.
-        # Ensure it always returns Dict[str, str] as per the signature.
-        # The actual mock logic uses the main prepare_request method.
+        """Dummy implementation required by AuthStrategy ABC."""
         current_headers = headers if headers is not None else {}
-        # In a real scenario, auth might be applied here. For the mock, just return.
         return current_headers
 
     def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        # This method is required by AuthStrategy ABC.
-        # Ensure it always returns Dict[str, Any] as per the signature.
-        # The actual mock logic uses the main prepare_request method.
+        """Dummy implementation required by AuthStrategy ABC."""
         current_params = params if params is not None else {}
-        # In a real scenario, auth might be applied here. For the mock, just return.
         return current_params
 
 
 class MockBasicAuth(MockAuthStrategy, BasicAuth):
+    """
+    Mock implementation of BasicAuth inheriting mock behavior from MockAuthStrategy.
+    """
+
     def __init__(
         self,
         username: str = "testuser",
@@ -65,10 +95,18 @@ class MockBasicAuth(MockAuthStrategy, BasicAuth):
         override_headers: Optional[Dict[str, str]] = None,
         override_params: Optional[Dict[str, Any]] = None,
         raise_exception: Optional[Exception] = None,
-    ):
-        # Initialize the real strategy first for type checking etc.
+    ) -> None:
+        """
+        Initialize the MockBasicAuth strategy.
+
+        Args:
+            username: The mock username (passed to real BasicAuth init).
+            password: The mock password (passed to real BasicAuth init).
+            override_headers: Optional dictionary of headers to add/override in the result.
+            override_params: Optional dictionary of parameters to add/override in the result.
+            raise_exception: Optional exception instance to raise when prepare_request is called.
+        """
         BasicAuth.__init__(self, username, password)
-        # Initialize the mock behavior
         MockAuthStrategy.__init__(
             self,
             override_headers=override_headers,
@@ -80,6 +118,10 @@ class MockBasicAuth(MockAuthStrategy, BasicAuth):
 
 
 class MockBearerAuth(MockAuthStrategy, BearerAuth):
+    """
+    Mock implementation of BearerAuth inheriting mock behavior from MockAuthStrategy.
+    """
+
     def __init__(
         self,
         token: str = "testtoken",
@@ -87,7 +129,16 @@ class MockBearerAuth(MockAuthStrategy, BearerAuth):
         override_headers: Optional[Dict[str, str]] = None,
         override_params: Optional[Dict[str, Any]] = None,
         raise_exception: Optional[Exception] = None,
-    ):
+    ) -> None:
+        """
+        Initialize the MockBearerAuth strategy.
+
+        Args:
+            token: The mock bearer token (passed to real BearerAuth init).
+            override_headers: Optional dictionary of headers to add/override in the result.
+            override_params: Optional dictionary of parameters to add/override in the result.
+            raise_exception: Optional exception instance to raise when prepare_request is called.
+        """
         BearerAuth.__init__(self, token)
         MockAuthStrategy.__init__(
             self,
@@ -100,6 +151,10 @@ class MockBearerAuth(MockAuthStrategy, BearerAuth):
 
 
 class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
+    """
+    Mock implementation of ApiKeyAuth inheriting mock behavior from MockAuthStrategy.
+    """
+
     def __init__(
         self,
         api_key: str = "testapikey",
@@ -109,7 +164,18 @@ class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
         override_headers: Optional[Dict[str, str]] = None,
         override_params: Optional[Dict[str, Any]] = None,
         raise_exception: Optional[Exception] = None,
-    ):
+    ) -> None:
+        """
+        Initialize the MockApiKeyAuth strategy.
+
+        Args:
+            api_key: The mock API key (passed to real ApiKeyAuth init).
+            header_name: The header name (passed to real ApiKeyAuth init).
+            param_name: The query parameter name (passed to real ApiKeyAuth init).
+            override_headers: Optional dictionary of headers to add/override in the result.
+            override_params: Optional dictionary of parameters to add/override in the result.
+            raise_exception: Optional exception instance to raise when prepare_request is called.
+        """
         ApiKeyAuth.__init__(self, api_key, header_name, param_name)
         MockAuthStrategy.__init__(
             self,
@@ -122,14 +188,25 @@ class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
 
 
 class MockCustomAuth(MockAuthStrategy, CustomAuth):
+    """
+    Mock implementation of CustomAuth inheriting mock behavior from MockAuthStrategy.
+    """
+
     def __init__(
         self,
         *,
         override_headers: Optional[Dict[str, str]] = None,
         override_params: Optional[Dict[str, Any]] = None,
         raise_exception: Optional[Exception] = None,
-    ):
-        # CustomAuth has no __init__, so just call MockAuthStrategy's
+    ) -> None:
+        """
+        Initialize the MockCustomAuth strategy.
+
+        Args:
+            override_headers: Optional dictionary of headers to add/override in the result.
+            override_params: Optional dictionary of parameters to add/override in the result.
+            raise_exception: Optional exception instance to raise when prepare_request is called.
+        """
         MockAuthStrategy.__init__(
             self,
             override_headers=override_headers,

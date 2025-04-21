@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # File: apiconfig/testing/__init__.py
-"""Testing utilities for apiconfig."""
+"""
+Testing utilities for apiconfig.
+
+This module provides access to unit and integration testing helpers.
+"""
 
 from .unit import (
     BaseAuthStrategyTest,
@@ -20,7 +24,7 @@ from .unit import (
     temp_env_vars,
 )
 
-__all__ = [
+__all__: list[str] = [
     # Unit Testing Helpers
     "BaseAuthStrategyTest",
     "BaseConfigProviderTest",

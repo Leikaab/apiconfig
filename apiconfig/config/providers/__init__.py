@@ -5,4 +5,4 @@ from .env import EnvProvider
 from .file import FileProvider
 from .memory import MemoryProvider
 
-__all__ = ["EnvProvider", "FileProvider", "MemoryProvider"]
+__all__: list[str] = ["EnvProvider", "FileProvider", "MemoryProvider"]

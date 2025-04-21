@@ -4,7 +4,7 @@
 
 from .config import MockConfigManager, MockConfigProvider, create_mock_client_config
 
-__all__ = [
+__all__: list[str] = [
     "MockConfigProvider",
     "create_mock_client_config",
     "MockConfigManager",

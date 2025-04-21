@@ -3,7 +3,7 @@ import typing
 import uuid
 
 import httpx
-from pytest_httpserver import HTTPServer  # type: ignore[import-untyped]
+from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
@@ -22,7 +22,31 @@ def make_request_with_config(
     method: str = "GET",
     **kwargs: typing.Any,
 ) -> httpx.Response:
-    """Internal implementation for make_request_with_config."""
+    """
+    Makes an HTTP request using the provided config and auth strategy to a mock server.
+
+    Handles applying authentication via the strategy's `prepare_request` method.
+
+    Args
+    ----
+    config : ClientConfig
+        The ClientConfig instance.
+    auth_strategy : AuthStrategy
+        The AuthStrategy instance.
+    mock_server_url : str
+        The base URL of the mock server (from fixture).
+    path : str
+        The request path.
+    method : str, optional
+        The HTTP method.
+    **kwargs : Any
+        Additional arguments passed to `httpx.Client.request`.
+
+    Returns
+    -------
+    httpx.Response
+        The httpx.Response object.
+    """
     base_url = mock_server_url.rstrip("/")
     url = f"{base_url}/{path.lstrip('/')}"
 
@@ -32,7 +56,15 @@ def make_request_with_config(
     json_data = kwargs.pop("json", None)
 
     # Prepare request using auth strategy
-    prepared_headers, prepared_params = auth_strategy.prepare_request(headers=headers, params=params)
+    prepared_headers = auth_strategy.prepare_request_headers()
+    prepared_params = auth_strategy.prepare_request_params()
+    # Merge any user-supplied headers/params (user takes precedence)
+    prepared_headers.update(headers)
+    prepared_params.update(params)
+
+    # Ensure headers and params are always dicts (not mocks)
+    safe_headers = dict(prepared_headers)
+    safe_params = dict(prepared_params)
 
     # Use httpx for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver
@@ -45,8 +77,8 @@ def make_request_with_config(
         response = client.request(
             method=method,
             url=url,
-            headers=prepared_headers,
-            params=prepared_params,
+            headers=safe_headers,
+            params=safe_params,
             data=data,
             json=json_data,
             **kwargs,
@@ -57,12 +89,25 @@ def make_request_with_config(
 def setup_multi_provider_manager(
     config_sources: typing.List[typing.Tuple[str, typing.Dict[str, typing.Any]]],
 ) -> ConfigManager:
-    """Internal implementation for setup_multi_provider_manager."""
+    """
+    Sets up a ConfigManager with multiple MemoryProviders for testing.
+
+    Args
+    ----
+    config_sources : list[tuple[str, dict[str, Any]]]
+        A list of tuples, where each tuple contains a provider
+        name (str) and its configuration data (dict).
+
+    Returns
+    -------
+    ConfigManager
+        A configured ConfigManager instance.
+    """
     providers = []
     for name, data in config_sources:
         providers.append(MemoryProvider(config_data=data))
         # Store name as an attribute for testing
-        providers[-1]._name = name
+        providers[-1].name = name  # type: ignore[attr-defined]
     return ConfigManager(providers=providers)
 
 
@@ -77,7 +122,37 @@ def simulate_token_endpoint(
     error_response: typing.Optional[typing.Dict[str, str]] = None,
     error_status_code: int = 400,
 ) -> str:
-    """Internal implementation for simulate_token_endpoint."""
+    """
+    Configures the mock server to simulate a simple token endpoint.
+
+    Useful for testing custom authentication flows involving token fetching.
+
+    Args
+    ----
+    httpserver : HTTPServer
+        The pytest-httpserver fixture instance.
+    token_path : str, optional
+        The path for the token endpoint.
+    expected_body : dict[str, str] | None, optional
+        The expected form-encoded body of the token request.
+    access_token : str | None, optional
+        The access token to return. If None, a random UUID is generated.
+    token_type : str, optional
+        The type of token (e.g., "Bearer").
+    expires_in : int, optional
+        The token expiry time in seconds.
+    status_code : int, optional
+        The HTTP status code for a successful token response.
+    error_response : dict[str, str] | None, optional
+        JSON error response if the request body doesn't match.
+    error_status_code : int, optional
+        The HTTP status code for an error response.
+
+    Returns
+    -------
+    str
+        The access token string that the simulated endpoint will return.
+    """
     if access_token is None:
         access_token = str(uuid.uuid4())
 

@@ -5,9 +5,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import IO, Optional
-from typing import TYPE_CHECKING
-
+from typing import IO, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     # Base type for type checkers

@@ -366,41 +366,6 @@ def refresh_oauth2_token(
     client_config: Optional[ClientConfig] = None,
     http_client: Optional[Any] = None,
 ) -> Dict[str, Any]:
-    """
-    Refreshes an OAuth2 token using a refresh token.
-
-    This function implements the standard OAuth2 refresh token grant type flow.
-    It constructs the necessary payload and makes an HTTP POST request to the
-    token endpoint with timeout and retry capabilities.
-
-    Args:
-        refresh_token: The refresh token obtained during the initial authorization.
-        token_url: The URL of the authorization server's token endpoint.
-        client_id: The client identifier issued to the client during registration.
-            Optional, depending on the provider's requirements.
-        client_secret: The client secret. Optional and should be used carefully,
-            typically only for confidential clients.
-        extra_params: Additional parameters to include in the request body,
-            as required by the specific authorization server.
-        timeout: Request timeout in seconds. If not provided, uses the value from
-            client_config or the default (10.0).
-        max_retries: Maximum number of retry attempts for transient errors.
-            If not provided, uses the value from client_config or the default (3).
-        client_config: Optional ClientConfig instance to use for timeout and retry settings.
-        http_client: An HTTP client instance to use for making the request.
-            This is required as apiconfig does not include HTTP client dependencies.
-
-    Returns:
-        A dictionary containing the new token information (e.g., access_token,
-        expires_in, potentially a new refresh_token).
-
-    Raises:
-        TokenRefreshError: If the token refresh fails (e.g., invalid refresh token,
-            server error, invalid response).
-        TokenRefreshJsonError: If the response cannot be parsed as JSON.
-        TokenRefreshTimeoutError: If the request times out.
-        TokenRefreshNetworkError: If there's a network-related error.
-    """
     # Get effective timeout and retry settings
     effective_timeout, effective_max_retries = _get_effective_settings(
         timeout, max_retries, client_config

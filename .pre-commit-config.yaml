@@ -74,3 +74,13 @@ repos:
         types: [python]
         pass_filenames: false
         verbose: true
+
+
+      - id: tox
+        name: tox
+        stages: [pre-push]
+        language: system
+        entry: poetry run tox
+        types: [python]
+        pass_filenames: false
+        verbose: true

@@ -21,16 +21,24 @@ class FileProvider:
             raise ConfigLoadError(f"Unsupported file type: {self._file_path.suffix}. Only .json is currently supported.")
 
         try:
-            with self._file_path.open("r", encoding="utf-8") as f:
-                config_data = json.load(f)
+            try:
+                with self._file_path.open("r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+            except FileNotFoundError as e:
+                raise ConfigLoadError(f"Configuration file not found: {file_path_str}") from e
+            except json.JSONDecodeError as e:
+                raise ConfigLoadError(f"Error decoding JSON in configuration file: {file_path_str}") from e
+            except OSError as e:
+                raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
+
             if not isinstance(config_data, dict):
                 raise ConfigLoadError(f"Configuration file must contain a JSON object: {file_path_str}")
             return config_data
-        except FileNotFoundError as e:
-            raise ConfigLoadError(f"Configuration file not found: {file_path_str}") from e
-        except json.JSONDecodeError as e:
-            raise ConfigLoadError(f"Error decoding JSON in configuration file: {file_path_str}") from e
-        except OSError as e:
+        except ConfigLoadError:
+            # Re-raise our own errors unchanged
+            raise
+        except Exception as e:
+            # Catch-all for any other unexpected errors
             raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
     def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:

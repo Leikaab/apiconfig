@@ -1,23 +1,30 @@
-"""Configuration-specific exception classes for the apiconfig library."""
-
 from .base import ConfigurationError
 
 
 class InvalidConfigError(ConfigurationError):
-    """Raised when configuration values are invalid."""
+    pass
 
 
 class MissingConfigError(ConfigurationError):
-    """Raised when required configuration values are missing."""
+    pass
 
 
 class ConfigLoadError(ConfigurationError):
-    """Raised when configuration loading fails."""
+    pass
 
 
 class ConfigProviderError(ConfigurationError):
-    """Raised for errors specific to a configuration provider."""
+    pass
 
 
 class ConfigValueError(ConfigurationError):
-    """Raised when a configuration value cannot be coerced to the expected type."""
+    pass
+
+
+__all__ = [
+    "InvalidConfigError",
+    "MissingConfigError",
+    "ConfigLoadError",
+    "ConfigProviderError",
+    "ConfigValueError",
+]

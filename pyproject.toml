@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "apiconfig"
-version = "0.2.0"
+version = "0.2.1"
 description = "api config library"
 authors = ["Leikaab <nordavindltd@gmail.com>"]
 license = "Proprietary"
@@ -34,6 +34,7 @@ black = "*"
 yapf = "*"
 bandit = "*"
 flake8 = "*"
+flake8-docstrings = "*"
 mypy = "*"
 pycodestyle = "*"
 pydocstyle = "*"

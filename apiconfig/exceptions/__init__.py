@@ -1,8 +1,4 @@
-"""
-Exceptions for the apiconfig library.
-
-This module re-exports all core exception classes for convenient access.
-"""
+"""Internal implementation of exceptions package."""
 
 from .auth import (
     AuthStrategyError,

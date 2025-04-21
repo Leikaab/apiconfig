@@ -1,7 +1,15 @@
 """
 Exceptions for the apiconfig library.
 
-This module re-exports all core exception classes for convenient access.
+This module re-exports all core exception classes from the apiconfig.exceptions
+submodules for convenient access. Import exceptions directly from this module
+rather than from individual submodules for better maintainability.
+
+The exceptions are organized into categories:
+- Base exceptions: Core exception hierarchy
+- Auth exceptions: Authentication and credential-related errors
+- Config exceptions: Configuration loading and validation errors
+- HTTP exceptions: HTTP request/response and JSON handling errors
 """
 
 from .auth import AuthStrategyError as AuthStrategyError

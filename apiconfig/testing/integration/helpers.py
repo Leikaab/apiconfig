@@ -79,28 +79,7 @@ def simulate_token_endpoint(
     error_response: typing.Optional[typing.Dict[str, str]] = None,
     error_status_code: int = 400,
 ) -> str:
-    """
-    Configures the mock server to simulate a simple token endpoint.
-
-    This is useful for testing custom authentication flows that involve
-    fetching an access token (e.g., OAuth2 client credentials flow).
-
-    Args:
-        httpserver: The pytest-httpserver fixture instance.
-        token_path: The path for the token endpoint.
-        expected_body: The expected form-encoded body of the token request
-                       (e.g., {'grant_type': 'client_credentials'}).
-        access_token: The access token to return. If None, a random UUID is generated.
-        token_type: The type of token (e.g., "Bearer").
-        expires_in: The token expiry time in seconds.
-        status_code: The HTTP status code for a successful token response.
-        error_response: A dictionary representing the JSON error response if the
-                        request body does not match `expected_body`.
-        error_status_code: The HTTP status code for an error response.
-
-    Returns:
-        The access token string that the simulated endpoint will return.
-    """
+    """Internal implementation for simulate_token_endpoint."""
     if access_token is None:
         access_token = str(uuid.uuid4())
 

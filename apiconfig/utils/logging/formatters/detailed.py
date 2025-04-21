@@ -1,16 +1,26 @@
+# -*- coding: utf-8 -*-
+"""Detailed logging formatter."""
+
 import logging
 import textwrap
-from typing import Any, Mapping, Optional, Union
+import types
+from typing import Any, Literal, Mapping, Optional
 
 
 class DetailedFormatter(logging.Formatter):
-    """A logging formatter that provides detailed, potentially multi-line output."""
+    """
+    A logging formatter that provides detailed, potentially multi-line output.
+
+    Includes timestamp, level name, logger name, message, filename, and line number.
+    Handles multi-line messages, exception information, and stack information
+    with appropriate indentation.
+    """
 
     def __init__(
         self,
         fmt: Optional[str] = None,
         datefmt: Optional[str] = None,
-        style: Union[str, None] = "%",
+        style: Literal["%", "{", "$"] = "%",
         validate: bool = True,
         *,
         defaults: Optional[Mapping[str, Any]] = None,
@@ -26,6 +36,20 @@ class DetailedFormatter(logging.Formatter):
         )
 
     def format(self, record: logging.LogRecord) -> str:
+        """Format the specified record as text.
+
+        Handles multi-line messages, exception text, and stack information.
+
+        Args
+        ----
+        record
+            The log record to format.
+
+        Returns
+        -------
+        str
+            The formatted log record.
+        """
         if not hasattr(record, "exc_text"):
             record.exc_text = None
         formatted = super().format(record)
@@ -50,6 +74,43 @@ class DetailedFormatter(logging.Formatter):
         if len(message_lines) > 1:
             other_lines.extend(textwrap.indent(line, " " * (metadata_len)) for line in message_lines[1:])
         return "\n".join(other_lines)
+
+    def formatException(
+        self,
+        ei: tuple[type[BaseException], BaseException, types.TracebackType | None] | tuple[None, None, None],
+    ) -> str:
+        """Format the specified exception information as a string.
+
+        This implementation delegates to the base class.
+
+        Args
+        ----
+        ei
+            Exception info tuple as returned by sys.exc_info().
+
+        Returns
+        -------
+        str
+            The formatted exception string.
+        """
+        return super().formatException(ei)
+
+    def formatStack(self, stack_info: str) -> str:
+        """Format the specified stack information as a string.
+
+        This implementation delegates to the base class.
+
+        Args
+        ----
+        stack_info
+            Stack information string.
+
+        Returns
+        -------
+        str
+            The formatted stack string.
+        """
+        return super().formatStack(stack_info)
 
     def _format_exception_text(self, formatted: str, record: logging.LogRecord) -> str:
         if record.exc_info and not getattr(record, "exc_text", None):

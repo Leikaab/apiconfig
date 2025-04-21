@@ -198,10 +198,10 @@ class TestClientConfig:
         assert merged.retries == 3  # From base
 
     def test_merge_with_incompatible_type(self) -> None:
-        """Test merging with an incompatible type returns NotImplemented."""
+        """Test merging with an incompatible type raises TypeError."""
         config = ClientConfig()
-        result = config.merge("not a ClientConfig")  # type: ignore[arg-type]
-        assert result is NotImplemented
+        with pytest.raises(TypeError, match="Cannot merge ClientConfig with object of type"):
+            config.merge("not a ClientConfig")  # type: ignore[type-var]
 
     def test_merge_with_none_values(self) -> None:
         """Test that None values in other don't override base values."""
@@ -302,10 +302,8 @@ class TestClientConfig:
     def test_merge_with_incompatible_type_raises_error(self) -> None:
         """Test that merge method raises TypeError with incompatible type."""
         config = ClientConfig()
-
-        # The merge method returns NotImplemented, not raises TypeError
-        result = config.merge("not a ClientConfig")  # type: ignore[arg-type]
-        assert result is NotImplemented
+        with pytest.raises(TypeError, match="Cannot merge ClientConfig with object of type"):
+            config.merge("not a ClientConfig")  # type: ignore[type-var]
 
     def test_merge_configs_static_method(self) -> None:
         """Test the merge_configs static method."""

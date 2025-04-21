@@ -153,7 +153,9 @@ def test_detailed_formatter_exc_info_and_stack_full_branch(
 
 @pytest.mark.parametrize("style", ["%"])
 def test_detailed_formatter_style_variants(log_record_factory: Callable[..., logging.LogRecord], style: str) -> None:
-    fmt = DetailedFormatter(style=style)
+    from typing import Literal, cast
+
+    fmt = DetailedFormatter(style=cast(Literal["%", "{", "$"], style))
     record = log_record_factory(msg="style test")
     output = fmt.format(record)
     assert "style test" in output
@@ -243,7 +245,7 @@ def test_detailed_formatter_format_exception_text_direct(
 
         # Call _format_exception_text directly
         formatted = ""
-        formatted = fmt._format_exception_text(formatted, record)  # type: ignore[attr-defined]
+        formatted = fmt._format_exception_text(formatted, record)
 
         # Verify exc_text was set by the method
         assert hasattr(record, "exc_text")

@@ -1,29 +1,32 @@
+"""A configuration provider that stores data in memory."""
+
 from typing import Any, Mapping, MutableMapping
 
 
 class MemoryProvider:
-    """
-    A simple configuration provider that stores configuration in memory.
-    """
+    """A simple configuration provider that stores configuration in memory."""
 
     _config: MutableMapping[str, Any]
 
     def __init__(self, config_data: Mapping[str, Any] | None = None) -> None:
         """
-        Initializes the MemoryProvider.
+        Initialize the MemoryProvider.
 
-        Args:
-            config_data: An optional dictionary containing the initial
-                         configuration data. If None, an empty dictionary
-                         is used.
+        Parameters
+        ----------
+        config_data : Mapping[str, Any] | None, optional
+            An optional dictionary containing the initial configuration data.
+            If None, an empty dictionary is used.
         """
         self._config = dict(config_data) if config_data is not None else {}
 
     def get_config(self) -> Mapping[str, Any]:
         """
-        Returns the configuration data stored in memory.
+        Return the configuration data stored in memory.
 
-        Returns:
+        Returns
+        -------
+        Mapping[str, Any]
             A dictionary representing the configuration.
         """
         return self._config

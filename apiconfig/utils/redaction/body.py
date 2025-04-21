@@ -1,20 +1,23 @@
+# -*- coding: utf-8 -*-
+"""Utilities for redacting sensitive data from request/response bodies."""
+
 import json
 import re
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import parse_qs, urlencode
 
-from .headers import REDACTED_VALUE  # Use consistent placeholder
+from .headers import REDACTED_VALUE
 
 # Constants
-# REDACTED_PLACEHOLDER = "[REDACTED]" # Replaced by REDACTED_VALUE from headers
-DEFAULT_SENSITIVE_KEYS_PATTERN = re.compile(r"password|token|secret|key|auth", re.IGNORECASE)
-REDACTED_BODY_PLACEHOLDER = "[REDACTED BODY]"
+REDACTED_PLACEHOLDER: str
+DEFAULT_SENSITIVE_KEYS_PATTERN: re.Pattern[str] = re.compile(r"password|token|secret|key|auth", re.IGNORECASE)
+REDACTED_BODY_PLACEHOLDER: str = "[REDACTED BODY]"
 
 
 def _redact_recursive(
     data: Any,
-    key_pattern: re.Pattern,
-    value_pattern: Optional[re.Pattern] = None,
+    key_pattern: re.Pattern[str],
+    value_pattern: Optional[re.Pattern[str]] = None,
 ) -> Any:
     """Recursively redact sensitive data in dictionaries and lists."""
     if isinstance(data, dict):
@@ -37,26 +40,35 @@ def _redact_recursive(
 def redact_body(
     body: Union[str, bytes, Any],
     content_type: Optional[str] = None,
-    sensitive_keys_pattern: re.Pattern = DEFAULT_SENSITIVE_KEYS_PATTERN,
-    sensitive_value_pattern: Optional[re.Pattern] = None,
+    sensitive_keys_pattern: re.Pattern[str] = DEFAULT_SENSITIVE_KEYS_PATTERN,
+    sensitive_value_pattern: Optional[re.Pattern[str]] = None,
 ) -> Union[str, bytes, Any]:
-    """
-    Redacts sensitive information from request or response bodies.
+    """Redact sensitive information from request or response bodies.
 
     Attempts to parse JSON or form-urlencoded bodies and recursively redacts
     values associated with keys matching `sensitive_keys_pattern` or string
     values matching `sensitive_value_pattern`.
 
-    Args:
-        body: The request or response body (str, bytes, or already parsed).
-        content_type: The Content-Type header value (e.g., 'application/json').
-        sensitive_keys_pattern: A compiled regex pattern to identify sensitive keys.
-        sensitive_value_pattern: An optional compiled regex pattern to identify
-                                 sensitive string values.
+    Args
+    ----
+    body
+        The request or response body (str, bytes, or already parsed).
+    content_type
+        The Content-Type header value (e.g., 'application/json').
+    sensitive_keys_pattern
+        A compiled regex pattern to identify sensitive keys.
+        Defaults to matching 'password', 'token', 'secret',
+        'key', 'auth' case-insensitively.
+    sensitive_value_pattern
+        An optional compiled regex pattern to identify
+        sensitive string values. Defaults to `None`.
 
-    Returns:
+    Returns
+    -------
+    Union[str, bytes, Any]
         The body with sensitive information redacted, or the original body
-        if parsing/redaction is not applicable or fails.
+        if parsing/redaction is not applicable or fails. Returns a generic
+        placeholder if the body is bytes and cannot be decoded.
     """
     if body is None:
         return None

@@ -3,4 +3,4 @@
 from .refresh import refresh_oauth2_token
 from .storage import InMemoryTokenStorage, TokenStorage
 
-__all__ = ["TokenStorage", "InMemoryTokenStorage", "refresh_oauth2_token"]
+__all__: list[str] = ["TokenStorage", "InMemoryTokenStorage", "refresh_oauth2_token"]

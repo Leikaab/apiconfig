@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
+"""Pytest fixtures for integration tests."""
+
 # apiconfig/testing/integration/fixtures.py
 import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 import pytest
-from pytest_httpserver import HTTPServer  # type: ignore[import-untyped]
+from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.config.manager import ConfigManager
@@ -28,14 +31,14 @@ def httpserver_listen_address() -> tuple[str, int]:
 
 @pytest.fixture(scope="function")
 def mock_api_url(httpserver: HTTPServer) -> str:
-    """Provides the base URL of the running mock API server."""
+    """Provide the base URL of the running mock API server."""
     # Ensures trailing slash for easy joining with paths
-    return httpserver.url_for("/")
+    return str(httpserver.url_for("/"))
 
 
 @pytest.fixture(scope="function")
 def temp_config_file(tmp_path: Path) -> Path:
-    """Creates a temporary JSON config file for testing."""
+    """Create a temporary JSON config file for testing."""
     config_data: Dict[str, Any] = {
         "api": {
             "hostname": "file.example.com",
@@ -50,13 +53,13 @@ def temp_config_file(tmp_path: Path) -> Path:
 
 @pytest.fixture(scope="function")
 def file_provider(temp_config_file: Path) -> FileProvider:
-    """Provides a FileProvider instance pointing to a temporary config file."""
+    """Provide a FileProvider instance pointing to a temporary config file."""
     return FileProvider(file_path=str(temp_config_file))
 
 
 @pytest.fixture(scope="function")
 def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected type hint
-    """Provides an EnvProvider with predefined env vars."""
+    """Provide an EnvProvider with predefined env vars."""
     monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
     monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
@@ -65,15 +68,14 @@ def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected t
 
 @pytest.fixture(scope="function")
 def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> ConfigManager:  # Corrected type hint
-    """Provides a ConfigManager instance with file and env providers."""
+    """Provide a ConfigManager instance with file and env providers."""
     # Order matters: env overrides file by default
     return ConfigManager(providers=[file_provider, env_provider])
 
 
 @pytest.fixture(scope="function")
 def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
-    """
-    Provides a factory fixture to create CustomAuth instances for testing.
+    """Provide a factory fixture to create CustomAuth instances for testing.
 
     This allows tests to easily define and inject specific custom authentication
     logic via a callable.
@@ -85,10 +87,13 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
 
     If no callable is provided, a default no-op callable is used.
 
-    Returns:
+    Returns
+    -------
+    Callable[[Optional[CustomAuthCallable]], CustomAuth]
         A factory function that creates CustomAuth instances.
 
-    Example Usage in a test:
+    Example Usage in a test
+    -----------------------
     ```python
     def test_custom_header_auth(custom_auth_strategy_factory, httpserver, mock_api_url):
         # Define the custom logic
@@ -110,7 +115,13 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
     """
 
     def _factory(auth_callable: Optional[CustomAuthCallable] = None) -> CustomAuth:
-        """Creates a CustomAuth instance with the given callable."""
+        """Create a CustomAuth instance with the given callable.
+
+        If a callable is provided, it will be used to modify headers and params.
+        The callable must accept (headers, params) and return (headers, params).
+        The CustomAuth strategy expects header_callback and param_callback that
+        return only headers or params, so we wrap the provided callable accordingly.
+        """
         if auth_callable is None:
             # Default no-op callable if none provided
             def default_callable(headers: Dict[str, str], params: Dict[str, str]) -> tuple[Dict[str, str], Dict[str, str]]:
@@ -118,7 +129,16 @@ def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], C
                 return headers, params
 
             auth_callable = default_callable
-        # Create and return the CustomAuth instance
-        return CustomAuth(auth_callable=auth_callable)
+
+        def header_callback() -> Dict[str, str]:
+            headers, _ = auth_callable({}, {})
+            return headers
+
+        def param_callback() -> Dict[str, str]:
+            _, params = auth_callable({}, {})
+            return params
+
+        # At least one callback must be provided, so we provide both
+        return CustomAuth(header_callback=header_callback, param_callback=param_callback)
 
     return _factory

@@ -1,3 +1,5 @@
+"""Helper functions and base classes for unit tests."""
+
 import contextlib
 import os
 import tempfile
@@ -10,17 +12,39 @@ from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions import AuthenticationError
 
 
-# Define a Protocol for duck typing ConfigProvider
 class ConfigProviderProtocol(Protocol):
-    def load(self) -> Dict[str, Any]: ...
+    """
+    Protocol for duck typing ConfigProvider.
+
+    Defines the expected interface for objects that can be treated as
+    configuration providers in tests.
+    """
+
+    def load(self) -> Dict[str, Any]:
+        """
+        Load configuration data.
+
+        Returns
+        -------
+        Dict[str, Any]
+            The loaded configuration as a dictionary.
+        """
+        ...
 
 
 def check_auth_strategy_interface(strategy_instance: Any) -> None:
     """
-    Verifies that an object implements the basic AuthStrategy interface.
+    Verify that an object implements the basic AuthStrategy interface.
 
-    Raises:
-        AssertionError: If the object does not have the required methods.
+    Parameters
+    ----------
+    strategy_instance : Any
+        The object to check.
+
+    Raises
+    ------
+    AssertionError
+        If the object does not have the required methods.
     """
     assert hasattr(strategy_instance, "prepare_request"), "Strategy instance must have a 'prepare_request' method."
     assert callable(strategy_instance.prepare_request), "'prepare_request' must be callable."
@@ -28,23 +52,26 @@ def check_auth_strategy_interface(strategy_instance: Any) -> None:
 
 def assert_auth_header_correct(strategy: AuthStrategy, expected_header: str, expected_value: str) -> None:
     """
-    Asserts that the strategy adds the correct authorization header.
+    Assert that the strategy adds the correct authorization header.
 
-    Args:
-        strategy: The AuthStrategy instance to test.
-        expected_header: The name of the expected header (e.g., "Authorization").
-        expected_value: The expected value of the header.
+    Parameters
+    ----------
+    strategy : AuthStrategy
+        The AuthStrategy instance to test.
+    expected_header : str
+        The name of the expected header (e.g., "Authorization").
+    expected_value : str
+        The expected value of the header.
 
-    Raises:
-        AssertionError: If the header is missing or has an incorrect value.
-        AuthenticationError: If the strategy raises an auth error during preparation.
+    Raises
+    ------
+    AssertionError
+        If the header is missing or has an incorrect value.
+    AuthenticationError
+        If the strategy raises an auth error during preparation.
     """
-    headers: Dict[str, str] = {}
-    params: Dict[str, Any] = {}
-    data: Optional[Any] = None
-
     try:
-        strategy.prepare_request(headers, params, data)
+        headers = strategy.prepare_request_headers()
     except AuthenticationError as e:
         raise AssertionError(f"Strategy raised unexpected AuthenticationError: {e}") from e
 
@@ -59,9 +86,11 @@ def temp_env_vars(vars_to_set: Dict[str, str]) -> Generator[None, None, None]:
     """
     Context manager to temporarily set environment variables.
 
-    Args:
-        vars_to_set: A dictionary where keys are variable names and values are
-                     the values to set.
+    Parameters
+    ----------
+    vars_to_set : Dict[str, str]
+        A dictionary where keys are variable names and values are
+        the values to set.
     """
     original_values: Dict[str, Optional[str]] = {}
     try:
@@ -83,11 +112,17 @@ def temp_config_file(content: str, suffix: str = ".tmp") -> Generator[str, None,
     """
     Context manager to create a temporary file with given content.
 
-    Args:
-        content: The string content to write to the file.
-        suffix: The suffix for the temporary file (e.g., '.json', '.yaml').
+    Parameters
+    ----------
+    content : str
+        The string content to write to the file.
+    suffix : str, optional
+        The suffix for the temporary file (e.g., '.json', '.yaml').
+        Defaults to ".tmp".
 
-    Yields:
+    Yields
+    ------
+    str
         The path to the temporary file.
     """
     fd, path = tempfile.mkstemp(suffix=suffix)
@@ -101,15 +136,21 @@ def temp_config_file(content: str, suffix: str = ".tmp") -> Generator[str, None,
 
 def assert_provider_loads(provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
     """
-    Asserts that a configuration provider-like object loads the expected dictionary.
+    Assert that a configuration provider-like object loads the expected dictionary.
 
-    Args:
-        provider: An object implementing the ConfigProviderProtocol (i.e., has a load() method).
-        expected_config: The dictionary the provider is expected to load.
+    Parameters
+    ----------
+    provider : ConfigProviderProtocol
+        An object implementing the ConfigProviderProtocol (i.e., has a load() method).
+    expected_config : Dict[str, Any]
+        The dictionary the provider is expected to load.
 
-    Raises:
-        AssertionError: If the loaded config does not match the expected config.
-        Exception: If the provider raises an unexpected error during loading.
+    Raises
+    ------
+    AssertionError
+        If the loaded config does not match the expected config.
+    Exception
+        If the provider raises an unexpected error during loading.
     """
     try:
         loaded_config = provider.load()
@@ -138,7 +179,7 @@ class BaseAuthStrategyTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        """Ensures subclasses provide a strategy."""
+        """Ensure subclasses provide a strategy."""
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
         if not hasattr(cls, "strategy") or not isinstance(cls.strategy, AuthStrategy):
@@ -146,7 +187,16 @@ class BaseAuthStrategyTest(unittest.TestCase):
         check_auth_strategy_interface(cls.strategy)
 
     def assertAuthHeaderCorrect(self, expected_header: str, expected_value: str) -> None:
-        """Asserts the strategy adds the correct authorization header."""
+        """
+        Assert the strategy adds the correct authorization header.
+
+        Parameters
+        ----------
+        expected_header : str
+            The name of the expected header (e.g., "Authorization").
+        expected_value : str
+            The expected value of the header.
+        """
         assert_auth_header_correct(self.strategy, expected_header, expected_value)
 
 
@@ -163,14 +213,34 @@ class BaseConfigProviderTest(unittest.TestCase):
     config_suffix: str = ".tmp"
 
     def get_provider_instance(self, *args: Any, **kwargs: Any) -> ConfigProviderProtocol:
-        """Instantiates the provider_class."""
+        """
+        Instantiate the provider_class.
+
+        Returns
+        -------
+        ConfigProviderProtocol
+            An instance of the configured provider class.
+
+        Raises
+        ------
+        NotImplementedError
+            If `provider_class` is not defined in the subclass.
+        """
         if self.provider_class is None:
             raise NotImplementedError(f"{type(self).__name__} must define 'provider_class'.")
         return self.provider_class(*args, **kwargs)
 
     @contextlib.contextmanager
     def env_vars(self, vars_to_set: Optional[Dict[str, str]] = None) -> Generator[None, None, None]:
-        """Context manager for temporary environment variables."""
+        """
+        Context manager for temporary environment variables.
+
+        Parameters
+        ----------
+        vars_to_set : Optional[Dict[str, str]], optional
+            A dictionary of environment variables to set temporarily.
+            Defaults to None.
+        """
         actual_vars = vars_to_set if vars_to_set is not None else {}
         if self.required_env_vars:
             actual_vars.update(self.required_env_vars)
@@ -179,7 +249,28 @@ class BaseConfigProviderTest(unittest.TestCase):
 
     @contextlib.contextmanager
     def config_file(self, content: Optional[str] = None, suffix: Optional[str] = None) -> Generator[str, None, None]:
-        """Context manager for a temporary configuration file."""
+        """
+        Context manager for a temporary configuration file.
+
+        Parameters
+        ----------
+        content : Optional[str], optional
+            The content to write to the temporary file. Defaults to None,
+            in which case `self.config_content` is used.
+        suffix : Optional[str], optional
+            The suffix for the temporary file. Defaults to None, in which case
+            `self.config_suffix` is used.
+
+        Yields
+        ------
+        str
+            The path to the temporary file.
+
+        Raises
+        ------
+        ValueError
+            If no content is provided and `self.config_content` is None.
+        """
         actual_content = content if content is not None else self.config_content
         actual_suffix = suffix if suffix is not None else self.config_suffix
         if actual_content is None:
@@ -188,5 +279,14 @@ class BaseConfigProviderTest(unittest.TestCase):
             yield path
 
     def assertProviderLoads(self, provider: ConfigProviderProtocol, expected_config: Dict[str, Any]) -> None:
-        """Asserts the provider loads the expected configuration."""
+        """
+        Assert the provider loads the expected configuration.
+
+        Parameters
+        ----------
+        provider : ConfigProviderProtocol
+            The configuration provider instance to test.
+        expected_config : Dict[str, Any]
+            The expected configuration dictionary.
+        """
         assert_provider_loads(provider, expected_config)

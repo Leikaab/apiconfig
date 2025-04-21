@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Dict, List, Union  # Add missing imports
 from urllib.parse import ParseResult
 

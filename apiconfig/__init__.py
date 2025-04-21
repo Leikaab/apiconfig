@@ -27,10 +27,10 @@ from .exceptions.base import APIConfigError, ConfigurationError
 from .exceptions.config import ConfigLoadError, ConfigProviderError, InvalidConfigError, MissingConfigError
 from .types import AuthCredentials, ConfigDict, DataType, HeadersType, JsonObject, JsonValue, ParamsType, TokenRefreshCallable, TokenStorageStrategy
 
-__version__ = "0.1.0"
+__version__: str = "0.1.0"
 
 # Define public API
-__all__ = [
+__all__: list[str] = [
     # Config
     "ClientConfig",
     "ConfigManager",

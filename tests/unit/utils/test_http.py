@@ -1,3 +1,5 @@
+"""Unit tests for apiconfig.utils.http module."""
+
 from typing import Any
 
 import pytest
@@ -30,6 +32,7 @@ from apiconfig.utils.http import (
     ],
 )
 def test_is_success(code: int, expected: bool) -> None:
+    """Verify the is_success function correctly identifies success status codes."""
     assert is_success(code) == expected
 
 
@@ -45,6 +48,7 @@ def test_is_success(code: int, expected: bool) -> None:
     ],
 )
 def test_is_redirect(code: int, expected: bool) -> None:
+    """Verify the is_redirect function correctly identifies redirect status codes."""
     assert is_redirect(code) == expected
 
 
@@ -60,6 +64,7 @@ def test_is_redirect(code: int, expected: bool) -> None:
     ],
 )
 def test_is_client_error(code: int, expected: bool) -> None:
+    """Verify the is_client_error function correctly identifies client error status codes."""
     assert is_client_error(code) == expected
 
 
@@ -75,6 +80,7 @@ def test_is_client_error(code: int, expected: bool) -> None:
     ],
 )
 def test_is_server_error(code: int, expected: bool) -> None:
+    """Verify the is_server_error function correctly identifies server error status codes."""
     assert is_server_error(code) == expected
 
 
@@ -90,6 +96,7 @@ def test_is_server_error(code: int, expected: bool) -> None:
     ],
 )
 def test_normalize_header_name(name: str, expected: str) -> None:
+    """Verify the normalize_header_name function correctly normalizes header names."""
     assert normalize_header_name(name) == expected
 
 
@@ -113,6 +120,7 @@ def test_normalize_header_name(name: str, expected: str) -> None:
     ],
 )
 def test_get_header_value(headers: dict[str, str], name: str, default: str | None, expected: str | None) -> None:
+    """Verify the get_header_value function correctly retrieves header values, including handling case-insensitivity and defaults."""
     assert get_header_value(headers, name, default=default) == expected
 
 
@@ -130,6 +138,7 @@ def test_get_header_value(headers: dict[str, str], name: str, default: str | Non
     ],
 )
 def test_safe_json_decode_success(content: str | bytes, encoding: str | None, expected: dict[str, Any] | None) -> None:
+    """Verify the safe_json_decode function successfully decodes valid JSON content."""
     assert safe_json_decode(content, encoding=encoding) == expected
 
 
@@ -158,6 +167,7 @@ def test_safe_json_decode_failure(
     expected_exception: type[APIConfigError],
     match: str,
 ) -> None:
+    """Verify the safe_json_decode function raises the correct exceptions for invalid input or decoding errors."""
     with pytest.raises(expected_exception, match=match):
         safe_json_decode(content, encoding=encoding)
 

@@ -1,5 +1,3 @@
-"""Core type definitions for the apiconfig library."""
-
 from typing import Any, Callable, Dict, List, Mapping, Optional, TypeAlias, Union
 
 # JSON Types

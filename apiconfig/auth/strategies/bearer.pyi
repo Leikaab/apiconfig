@@ -3,7 +3,6 @@ from typing import Dict
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
 
-
 class BearerAuth(AuthStrategy):
     """
     Implements Bearer Token authentication.

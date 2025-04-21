@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 T = TypeVar("T")
 
-
 class EnvProvider:
     """
     Loads configuration values from environment variables.

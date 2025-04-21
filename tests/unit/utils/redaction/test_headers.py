@@ -336,10 +336,7 @@ def test_redact_headers_with_custom_cookie_keys() -> None:
     custom_cookie_keys = {"custom"}
     expected_headers = {"Cookie": "custom=[REDACTED]; session=abc"}
 
-    result = redact_headers(
-        input_headers,
-        sensitive_cookie_keys=custom_cookie_keys
-    )
+    result = redact_headers(input_headers, sensitive_cookie_keys=custom_cookie_keys)
     assert result == expected_headers
 
 

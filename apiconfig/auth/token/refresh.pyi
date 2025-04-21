@@ -8,16 +8,9 @@ from ...exceptions.auth import (
     TokenRefreshTimeoutError,
 )
 
-
 def _extract_json_from_response(response: Any) -> Dict[str, Any]: ...
-
-
 def _check_http_status(response: Any) -> None: ...
-
-
 def _handle_exception(e: Exception) -> None: ...
-
-
 def _make_token_refresh_request(
     token_url: str,
     payload: Dict[str, Any],
@@ -25,15 +18,11 @@ def _make_token_refresh_request(
     timeout: float = ...,
     http_client: Optional[Any] = ...,
 ) -> Dict[str, Any]: ...
-
-
 def _get_effective_settings(
     timeout: Optional[float],
     max_retries: Optional[int],
     client_config: Optional[ClientConfig],
 ) -> Tuple[float, int]: ...
-
-
 def _prepare_auth_and_payload(
     client_id: Optional[str],
     client_secret: Optional[str],
@@ -41,8 +30,6 @@ def _prepare_auth_and_payload(
     extra_params: Optional[Dict[str, Any]],
     http_client: Optional[Any],
 ) -> Tuple[Optional[Any], Dict[str, Any]]: ...
-
-
 def _execute_with_retry(
     token_url: str,
     payload: Dict[str, Any],
@@ -51,8 +38,6 @@ def _execute_with_retry(
     max_retries: int,
     http_client: Optional[Any],
 ) -> Dict[str, Any]: ...
-
-
 def refresh_oauth2_token(
     refresh_token: str,
     token_url: str,

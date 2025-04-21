@@ -139,7 +139,9 @@ def test_redacting_formatter_integration_cookie_header(log_stream: io.StringIO) 
     assert "theme=dark" in headers["Cookie"]
 
 
-def test_redacting_formatter_integration_set_cookie_header(log_stream: io.StringIO) -> None:
+def test_redacting_formatter_integration_set_cookie_header(
+    log_stream: io.StringIO,
+) -> None:
     """Test that Set-Cookie headers are properly redacted while preserving attributes."""
     _ = get_logger_with_formatter(log_stream)
 

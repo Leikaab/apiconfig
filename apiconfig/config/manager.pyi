@@ -8,7 +8,6 @@ ConfigProvider = Any
 
 logger: logging.Logger
 
-
 class ConfigManager:
     """
     Manages loading configuration from multiple providers.

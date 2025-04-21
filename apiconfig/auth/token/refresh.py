@@ -44,7 +44,9 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
         except Exception as e:
             if "json" in str(e).lower() or "decode" in str(e).lower():
                 logger.error(f"Failed to decode JSON response: {e}")
-                raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
+                raise TokenRefreshJsonError(
+                    f"Failed to decode token response: {e}"
+                ) from e
             raise
 
     # Fall back to manual JSON parsing
@@ -103,9 +105,14 @@ def _handle_exception(e: Exception) -> None:
         raise TokenRefreshTimeoutError(f"Token refresh request timed out: {e}") from e
 
     # Handle network errors
-    if any(net_err in error_type.lower() for net_err in ["connect", "network", "connection"]):
+    if any(
+        net_err in error_type.lower()
+        for net_err in ["connect", "network", "connection"]
+    ):
         logger.error(f"Network error during token refresh: {e}")
-        raise TokenRefreshNetworkError(f"Network error during token refresh: {e}") from e
+        raise TokenRefreshNetworkError(
+            f"Network error during token refresh: {e}"
+        ) from e
 
     # Handle HTTP status errors
     if "status" in error_type.lower() or "http" in error_type.lower():
@@ -315,8 +322,12 @@ def _execute_with_retry(
         try:
             # If not the first attempt, add exponential backoff
             if attempt > 0:
-                backoff_time = min(2 ** attempt, 10)  # Exponential backoff with max of 10 seconds
-                logger.debug(f"Retry attempt {attempt + 1}/{max_retries}, waiting {backoff_time}s")
+                backoff_time = min(
+                    2**attempt, 10
+                )  # Exponential backoff with max of 10 seconds
+                logger.debug(
+                    f"Retry attempt {attempt + 1}/{max_retries}, waiting {backoff_time}s"
+                )
                 time.sleep(backoff_time)
 
             # Make the request
@@ -333,7 +344,9 @@ def _execute_with_retry(
 
         except (TokenRefreshNetworkError, TokenRefreshTimeoutError) as e:
             # These are retryable errors
-            logger.warning(f"Retryable error during token refresh (attempt {attempt + 1}/{max_retries}): {e}")
+            logger.warning(
+                f"Retryable error during token refresh (attempt {attempt + 1}/{max_retries}): {e}"
+            )
             last_exception = e
             # Continue to the next retry attempt
             continue
@@ -348,7 +361,9 @@ def _execute_with_retry(
 
     # If we've exhausted all retries, raise the last exception
     if last_exception:
-        logger.error(f"Token refresh failed after {max_retries} attempts: {last_exception}")
+        logger.error(
+            f"Token refresh failed after {max_retries} attempts: {last_exception}"
+        )
         raise last_exception
 
     # This should never happen, but just in case

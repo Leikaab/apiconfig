@@ -2,7 +2,6 @@ from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 
-
 class ApiKeyAuth(AuthStrategy):
     """
     Implements API Key authentication.
@@ -33,7 +32,6 @@ class ApiKeyAuth(AuthStrategy):
         header_name: Optional[str] = None,
         param_name: Optional[str] = None,
     ) -> None: ...
-
     def prepare_request_headers(self) -> Dict[str, str]:
         """
         Prepares headers for API key authentication if configured for headers.

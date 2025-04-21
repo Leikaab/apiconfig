@@ -43,7 +43,9 @@ class TestRefreshOAuth2Token:
                 token_url="https://example.com/token",
             )
 
-    def test_refresh_oauth2_token_success(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
+    def test_refresh_oauth2_token_success(
+        self, mock_http_client: MagicMock, mock_response: MagicMock
+    ) -> None:
         """Test successful token refresh."""
         # Call the function
         result = refresh_oauth2_token(
@@ -158,8 +160,11 @@ class TestRefreshOAuth2Token:
         assert kwargs["data"]["scope"] == "read write"
         assert kwargs["data"]["audience"] == "api://default"
 
-    def test_refresh_oauth2_token_timeout_error(self, mock_http_client: MagicMock) -> None:
+    def test_refresh_oauth2_token_timeout_error(
+        self, mock_http_client: MagicMock
+    ) -> None:
         """Test token refresh with timeout error."""
+
         # Setup the mock client to raise a timeout error
         class TimeoutException(Exception):
             pass
@@ -175,8 +180,11 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_network_error(self, mock_http_client: MagicMock) -> None:
+    def test_refresh_oauth2_token_network_error(
+        self, mock_http_client: MagicMock
+    ) -> None:
         """Test token refresh with network error."""
+
         # Setup the mock client to raise a network error
         class ConnectError(Exception):
             pass
@@ -212,7 +220,9 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_missing_access_token(self, mock_http_client: MagicMock) -> None:
+    def test_refresh_oauth2_token_missing_access_token(
+        self, mock_http_client: MagicMock
+    ) -> None:
         """Test token refresh with missing access_token in response."""
         # Setup a mock response with missing access_token
         mock_response = MagicMock()
@@ -248,8 +258,11 @@ class TestRefreshOAuth2Token:
                 http_client=mock_http_client,
             )
 
-    def test_refresh_oauth2_token_retry_success(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
+    def test_refresh_oauth2_token_retry_success(
+        self, mock_http_client: MagicMock, mock_response: MagicMock
+    ) -> None:
         """Test token refresh with successful retry after network error."""
+
         # Create a custom exception class for network errors
         class ConnectError(Exception):
             pass

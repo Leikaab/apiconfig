@@ -14,7 +14,6 @@ DEFAULT_SENSITIVE_COOKIE_KEYS: Final[Set[str]]
 # Placeholder value for redacted headers
 REDACTED_VALUE: Final[str]
 
-
 def redact_headers(
     headers: Mapping[str, str],
     sensitive_keys: Set[str] = ...,
@@ -51,7 +50,6 @@ def redact_headers(
     """
     ...
 
-
 def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
     """
     Redacts sensitive values from a Cookie header while preserving its structure.
@@ -64,7 +62,6 @@ def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
         A string with sensitive cookie values redacted.
     """
     ...
-
 
 def _redact_set_cookie_header(set_cookie_value: str, sensitive_keys: Set[str]) -> str:
     """

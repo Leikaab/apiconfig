@@ -18,7 +18,6 @@ from typing import Any, Dict, List, Optional, Union
 
 from pytest_httpserver import HTTPServer
 
-
 def configure_mock_response(
     httpserver: HTTPServer,
     path: str,
@@ -61,7 +60,6 @@ def configure_mock_response(
                   See pytest-httpserver documentation for more advanced matching.
     """
     ...
-
 
 def assert_request_received(
     httpserver: HTTPServer,

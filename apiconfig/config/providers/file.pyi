@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional, Type, TypeVar, Union
 
 T = TypeVar("T")
 
-
 class FileProvider:
     """
     Loads configuration data from a file.

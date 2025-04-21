@@ -12,8 +12,7 @@ from apiconfig.exceptions import AuthenticationError
 
 # Define a Protocol for duck typing ConfigProvider
 class ConfigProviderProtocol(Protocol):
-    def load(self) -> Dict[str, Any]:
-        ...
+    def load(self) -> Dict[str, Any]: ...
 
 
 def check_auth_strategy_interface(strategy_instance: Any) -> None:
@@ -90,9 +89,7 @@ def temp_env_vars(vars_to_set: Dict[str, str]) -> Generator[None, None, None]:
 
 
 @contextlib.contextmanager
-def temp_config_file(
-    content: str, suffix: str = ".tmp"
-) -> Generator[str, None, None]:
+def temp_config_file(content: str, suffix: str = ".tmp") -> Generator[str, None, None]:
     """
     Context manager to create a temporary file with given content.
 
@@ -160,9 +157,7 @@ class BaseAuthStrategyTest(unittest.TestCase):
         """Ensures subclasses provide a strategy."""
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
-        if not hasattr(cls, "strategy") or not isinstance(
-            cls.strategy, AuthStrategy
-        ):
+        if not hasattr(cls, "strategy") or not isinstance(cls.strategy, AuthStrategy):
             raise NotImplementedError(
                 f"{cls.__name__} must define a class attribute 'strategy' "
                 "of type AuthStrategy."
@@ -173,9 +168,7 @@ class BaseAuthStrategyTest(unittest.TestCase):
         self, expected_header: str, expected_value: str
     ) -> None:
         """Asserts the strategy adds the correct authorization header."""
-        assert_auth_header_correct(
-            self.strategy, expected_header, expected_value
-        )
+        assert_auth_header_correct(self.strategy, expected_header, expected_value)
 
 
 class BaseConfigProviderTest(unittest.TestCase):
@@ -190,7 +183,9 @@ class BaseConfigProviderTest(unittest.TestCase):
     config_content: Optional[str] = None
     config_suffix: str = ".tmp"
 
-    def get_provider_instance(self, *args: Any, **kwargs: Any) -> ConfigProviderProtocol:
+    def get_provider_instance(
+        self, *args: Any, **kwargs: Any
+    ) -> ConfigProviderProtocol:
         """Instantiates the provider_class."""
         if self.provider_class is None:
             raise NotImplementedError(

@@ -20,14 +20,14 @@ repos:
         name: isort
         stages: [pre-commit]
         language: system
-        entry: poetry run isort --profile black
+        entry: poetry run isort --profile black {files}
         types: [python]
 
       - id: black
         name: black
         stages: [pre-commit]
         language: system
-        entry: poetry run black .
+        entry: poetry run black {files}
         types: [python, pyi]
 
       - id: flake8

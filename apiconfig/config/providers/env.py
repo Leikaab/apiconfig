@@ -1,7 +1,9 @@
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Type, TypeVar
 
 from apiconfig.exceptions.config import ConfigValueError, InvalidConfigError
+
+T = TypeVar("T")
 
 
 class EnvProvider:
@@ -41,21 +43,9 @@ class EnvProvider:
                         config[config_key] = value
         return config
 
-    def get(self, key: str, default: Any = None, expected_type: type = None) -> Any:
-        """Get a configuration value from environment variables.
-
-        Args:
-            key: The configuration key to get (without the prefix).
-            default: The default value to return if the key is not found.
-            expected_type: The expected type of the value. If provided, the value
-                will be coerced to this type.
-
-        Returns:
-            The configuration value, or the default if not found.
-
-        Raises:
-            ConfigValueError: If the value cannot be coerced to the expected type.
-        """
+    def get(
+        self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None
+    ) -> Any:
         env_key = f"{self._prefix}{key}"
         value = os.environ.get(env_key)
 

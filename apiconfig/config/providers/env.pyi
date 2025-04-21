@@ -2,13 +2,21 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 T = TypeVar("T")
 
+
 class EnvProvider:
     """
     Loads configuration values from environment variables.
 
     Looks for environment variables starting with a specific prefix (defaulting
-    to "APICONFIG_"), strips the prefix, converts the remaining key to lowercase,
-    and attempts basic type inference (int, bool, float, str).
+    to "APICONFIG_"), strips the prefix, preserves the original case of the key,
+    and attempts basic type inference:
+    - Strings containing only digits are converted to integers
+    - "true" and "false" (case-insensitive) are converted to boolean values
+    - Strings that can be parsed as floats are converted to float values
+    - All other values remain as strings
+
+    Type coercion is also available through the `get` method with the `expected_type`
+    parameter, which supports special handling for boolean values.
     """
 
     _prefix: str
@@ -19,6 +27,7 @@ class EnvProvider:
 
         Args:
             prefix: The prefix to look for in environment variable names.
+                   Defaults to "APICONFIG_".
         """
         ...
 
@@ -30,11 +39,19 @@ class EnvProvider:
         """
         Loads configuration from environment variables matching the prefix.
 
+        Performs automatic type inference for common data types:
+        - Strings containing only digits are converted to integers
+        - "true" and "false" (case-insensitive) are converted to boolean values
+        - Strings that can be parsed as floats are converted to float values
+        - All other values remain as strings
+
         Returns:
             A dictionary containing the loaded configuration key-value pairs.
+            Keys maintain their original case after the prefix is removed.
 
         Raises:
-            InvalidConfigError: If a value intended as an integer cannot be parsed.
+            InvalidConfigError: If a value identified as an integer (via isdigit())
+                               cannot be parsed as an integer.
         """
         ...
 
@@ -52,8 +69,15 @@ class EnvProvider:
 
         Returns:
             The configuration value, or the default if not found.
+            If expected_type is provided, the value will be coerced to that type.
 
         Raises:
             ConfigValueError: If the value cannot be coerced to the expected type.
+
+        Notes:
+            For boolean conversion, the following string values are recognized:
+            - True: "true", "1", "yes", "y", "on" (case-insensitive)
+            - False: "false", "0", "no", "n", "off" (case-insensitive)
+            Any other string will raise a ConfigValueError when converting to bool.
         """
         ...

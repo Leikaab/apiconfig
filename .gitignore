@@ -7,6 +7,8 @@ specs/
 prompt*.*
 
 private_*
+.devcontainer/privatesetup.sh
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,flask,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,flask,python,visualstudiocode

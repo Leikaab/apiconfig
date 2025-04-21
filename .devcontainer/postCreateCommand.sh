@@ -43,6 +43,16 @@ else
     echo "Poetry could not be found"
 fi
 
+# Run private setup script if it exists
+if [ -f ".devcontainer/privatesetup.sh" ]; then
+    echo "Making privatesetup.sh executable..."
+    chmod +x .devcontainer/privatesetup.sh
+    echo "Running privatesetup.sh..."
+    bash .devcontainer/privatesetup.sh
+else
+    echo "privatesetup.sh not found, skipping."
+fi
+
 echo "Development environment setup complete!"
 # Append .env loading logic to /root/.bashrc if not already present
 BASHRC_CONTENT=$(cat /root/.bashrc 2>/dev/null || true) # Read bashrc, ignore error if missing

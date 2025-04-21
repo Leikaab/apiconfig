@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 _TClientConfig = TypeVar("_TClientConfig", bound="ClientConfig")
 
+
 class ClientConfig:
     """
     Base configuration class for API clients.
@@ -16,13 +17,21 @@ class ClientConfig:
 
     Attributes:
         hostname: The base hostname of the API (e.g., "api.example.com").
+            If not provided, defaults to None.
         version: The API version string (e.g., "v1"). Appended to the hostname.
+            Must not contain leading or trailing slashes. If not provided, defaults to None.
         headers: Default headers to include in every request.
-        timeout: Default request timeout in seconds.
-        retries: Default number of retries for failed requests.
+            If not provided, defaults to an empty dictionary.
+        timeout: Default request timeout in seconds. Must be a non-negative number.
+            Defaults to 10.0 seconds.
+        retries: Default number of retries for failed requests. Must be a non-negative number.
+            Defaults to 3 retries.
         auth_strategy: An instance of AuthStrategy for handling authentication.
+            If not provided, defaults to None.
         log_request_body: Whether to log the request body (potentially sensitive).
+            Defaults to False.
         log_response_body: Whether to log the response body (potentially sensitive).
+            Defaults to False.
     """
 
     hostname: Optional[str]
@@ -50,10 +59,10 @@ class ClientConfig:
 
         Args:
             hostname: The base hostname of the API.
-            version: The API version string.
+            version: The API version string. Must not contain leading or trailing slashes.
             headers: Default headers for requests.
-            timeout: Request timeout in seconds.
-            retries: Number of retries for failed requests.
+            timeout: Request timeout in seconds. Must be a non-negative number (int or float).
+            retries: Number of retries for failed requests. Must be a non-negative number (int or float).
             auth_strategy: Authentication strategy instance.
             log_request_body: Flag to enable request body logging.
             log_response_body: Flag to enable response body logging.
@@ -87,13 +96,15 @@ class ClientConfig:
 
         Creates a deep copy of the current instance and overrides its attributes
         with non-None values from the 'other' instance. Headers are merged,
-        with 'other's headers taking precedence.
+        with 'other's headers taking precedence. All mutable attributes are
+        deep-copied to ensure the merged config is independent of the original configs.
 
         Args:
             other: Another ClientConfig instance to merge with.
 
         Returns:
             A new ClientConfig instance representing the merged configuration.
+            Returns NotImplemented if 'other' is not a ClientConfig instance.
 
         Raises:
             InvalidConfigError: If the merged version contains leading or trailing slashes,
@@ -127,6 +138,8 @@ class ClientConfig:
         Merges two ClientConfig instances.
 
         Static method wrapper around the instance merge() method.
+        This is a convenience method that validates both arguments are
+        ClientConfig instances before calling merge().
 
         Args:
             base_config: The base ClientConfig instance.

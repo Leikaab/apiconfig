@@ -4,9 +4,12 @@ from typing import Dict, Set, Tuple
 import pytest
 
 from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_COOKIE_KEYS,
     DEFAULT_SENSITIVE_HEADER_PREFIXES,
     DEFAULT_SENSITIVE_HEADERS,
     REDACTED_VALUE,
+    _redact_cookie_header,
+    _redact_set_cookie_header,
     redact_headers,
 )
 
@@ -26,7 +29,7 @@ from apiconfig.utils.redaction.headers import (
         ),
         (
             {"Cookie": "session=abc", "Accept": "text/html"},
-            {"Cookie": REDACTED_VALUE, "Accept": "text/html"},
+            {"Cookie": "session=[REDACTED]", "Accept": "text/html"},
             DEFAULT_SENSITIVE_HEADERS,
             DEFAULT_SENSITIVE_HEADER_PREFIXES,
             None,
@@ -170,3 +173,191 @@ def test_redact_headers_immutable() -> None:
     input_copy = input_headers.copy()
     redact_headers(input_headers)  # Call the function
     assert input_headers == input_copy  # Check if original is unchanged
+
+
+# New tests for multi-value header redaction
+
+
+@pytest.mark.parametrize(
+    "cookie_value, expected_result",
+    [
+        # Simple cookie
+        ("session=abc123", "session=[REDACTED]"),
+        # Multiple cookies
+        (
+            "session=abc123; user=john; theme=dark",
+            "session=[REDACTED]; user=john; theme=dark",
+        ),
+        # Multiple sensitive cookies
+        (
+            "session=abc123; token=xyz789; theme=dark",
+            "session=[REDACTED]; token=[REDACTED]; theme=dark",
+        ),
+        # Cookies with spaces
+        (
+            "session=abc123;  token=xyz789;  theme=dark",
+            "session=[REDACTED];  token=[REDACTED];  theme=dark",
+        ),
+        # Empty cookie value
+        ("", ""),
+        # Cookie without value
+        ("session", "session"),
+        # Cookie with empty value
+        ("session=", "session="),
+        # Cookie with special characters
+        (
+            "session=abc%20123; user=john@example.com",
+            "session=[REDACTED]; user=john@example.com",
+        ),
+        # Custom sensitive cookie
+        (
+            "custom_secret=value; public=ok",
+            "custom_secret=value; public=ok",
+        ),
+        # Cookie with prefix matching
+        (
+            "auth_token=value; public=ok",
+            "auth_token=[REDACTED]; public=ok",
+        ),
+    ],
+)
+def test_redact_cookie_header(cookie_value: str, expected_result: str) -> None:
+    """Tests the _redact_cookie_header function with various inputs."""
+    result = _redact_cookie_header(cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "set_cookie_value, expected_result",
+    [
+        # Simple Set-Cookie
+        ("session=abc123", "session=[REDACTED]"),
+        # Set-Cookie with attributes
+        (
+            "session=abc123; Path=/; HttpOnly; Secure",
+            "session=[REDACTED]; Path=/; HttpOnly; Secure",
+        ),
+        # Set-Cookie with Expires and Domain
+        (
+            "token=xyz789; Expires=Wed, 21 Oct 2025 07:28:00 GMT; Domain=example.com",
+            "token=[REDACTED]; Expires=Wed, 21 Oct 2025 07:28:00 GMT; Domain=example.com",
+        ),
+        # Set-Cookie with Max-Age
+        (
+            "auth=secret; Max-Age=3600; Path=/api",
+            "auth=[REDACTED]; Max-Age=3600; Path=/api",
+        ),
+        # Empty Set-Cookie value
+        ("", ""),
+        # Set-Cookie without value
+        ("session", "session"),
+        # Set-Cookie with empty value
+        ("session=", "session="),
+        # Set-Cookie with special characters
+        (
+            "session=abc%20123; Path=/",
+            "session=[REDACTED]; Path=/",
+        ),
+        # Non-sensitive cookie
+        (
+            "theme=dark; Path=/; HttpOnly",
+            "theme=dark; Path=/; HttpOnly",
+        ),
+        # Cookie with prefix matching
+        (
+            "auth_token=value; Path=/",
+            "auth_token=[REDACTED]; Path=/",
+        ),
+    ],
+)
+def test_redact_set_cookie_header(set_cookie_value: str, expected_result: str) -> None:
+    """Tests the _redact_set_cookie_header function with various inputs."""
+    result = _redact_set_cookie_header(set_cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "input_headers, expected_headers",
+    [
+        # Cookie header with multiple values
+        (
+            {"Cookie": "session=abc123; user=john; token=xyz789"},
+            {"Cookie": "session=[REDACTED]; user=john; token=[REDACTED]"},
+        ),
+        # Set-Cookie header with attributes
+        (
+            {"Set-Cookie": "session=abc123; Path=/; HttpOnly; Secure"},
+            {"Set-Cookie": "session=[REDACTED]; Path=/; HttpOnly; Secure"},
+        ),
+        # Multiple headers including Cookie and Set-Cookie
+        (
+            {
+                "Authorization": "Bearer token123",
+                "Cookie": "session=abc; theme=dark",
+                "Set-Cookie": "token=xyz; Path=/",
+                "Content-Type": "application/json",
+            },
+            {
+                "Authorization": REDACTED_VALUE,
+                "Cookie": "session=[REDACTED]; theme=dark",
+                "Set-Cookie": "token=[REDACTED]; Path=/",
+                "Content-Type": "application/json",
+            },
+        ),
+        # Case insensitivity for header names
+        (
+            {
+                "cookie": "session=abc; theme=dark",
+                "set-cookie": "token=xyz; Path=/",
+            },
+            {
+                "cookie": "session=[REDACTED]; theme=dark",
+                "set-cookie": "token=[REDACTED]; Path=/",
+            },
+        ),
+        # Custom sensitive cookie keys
+        (
+            {"Cookie": "custom=value; session=abc"},
+            {"Cookie": "custom=value; session=[REDACTED]"},
+        ),
+    ],
+)
+def test_redact_headers_multi_value(
+    input_headers: Dict[str, str], expected_headers: Dict[str, str]
+) -> None:
+    """Tests the redact_headers function with multi-value headers."""
+    result = redact_headers(input_headers)
+    assert result == expected_headers
+
+
+def test_redact_headers_with_custom_cookie_keys() -> None:
+    """Tests redact_headers with custom sensitive cookie keys."""
+    input_headers = {"Cookie": "custom=value; session=abc"}
+    custom_cookie_keys = {"custom"}
+    expected_headers = {"Cookie": "custom=[REDACTED]; session=abc"}
+
+    result = redact_headers(
+        input_headers,
+        sensitive_cookie_keys=custom_cookie_keys
+    )
+    assert result == expected_headers
+
+
+def test_redact_cookie_header_with_custom_keys() -> None:
+    """Tests _redact_cookie_header with custom sensitive keys."""
+    cookie_value = "custom=value; public=ok"
+    custom_keys = {"custom"}
+    expected_result = "custom=[REDACTED]; public=ok"
+
+    result = _redact_cookie_header(cookie_value, custom_keys)
+    assert result == expected_result
+
+
+def test_redact_set_cookie_header_with_custom_keys() -> None:
+    """Tests _redact_set_cookie_header with custom sensitive keys."""
+    set_cookie_value = "custom=value; Path=/"
+    custom_keys = {"custom"}
+    expected_result = "custom=[REDACTED]; Path=/"
+
+    result = _redact_set_cookie_header(set_cookie_value, custom_keys)
+    assert result == expected_result

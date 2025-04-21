@@ -7,6 +7,7 @@ from apiconfig.utils.redaction.body import (
     redact_body,
 )
 from apiconfig.utils.redaction.headers import (
+    DEFAULT_SENSITIVE_COOKIE_KEYS,
     DEFAULT_SENSITIVE_HEADER_PREFIXES,
     DEFAULT_SENSITIVE_HEADERS,
     REDACTED_VALUE,
@@ -69,6 +70,7 @@ class RedactingFormatter(logging.Formatter):
         header_sensitive_keys: Set[str] = DEFAULT_SENSITIVE_HEADERS,
         header_sensitive_prefixes: Tuple[str, ...] = DEFAULT_SENSITIVE_HEADER_PREFIXES,
         header_sensitive_name_pattern: Optional[re.Pattern[str]] = None,
+        header_sensitive_cookie_keys: Set[str] = DEFAULT_SENSITIVE_COOKIE_KEYS,
         defaults: Optional[Mapping[str, Any]] = None,
     ) -> None:
         super().__init__(
@@ -83,6 +85,7 @@ class RedactingFormatter(logging.Formatter):
         self.header_sensitive_keys = header_sensitive_keys
         self.header_sensitive_prefixes = header_sensitive_prefixes
         self.header_sensitive_name_pattern = header_sensitive_name_pattern
+        self.header_sensitive_cookie_keys = header_sensitive_cookie_keys
         # For testability: allow monkeypatching
         self._redact_body = redact_body
         self._redact_headers_func = redact_headers
@@ -100,6 +103,7 @@ class RedactingFormatter(logging.Formatter):
                     sensitive_keys=self.header_sensitive_keys,
                     sensitive_prefixes=self.header_sensitive_prefixes,
                     sensitive_name_pattern=self.header_sensitive_name_pattern,
+                    sensitive_cookie_keys=self.header_sensitive_cookie_keys,
                 )
                 record.headers = redacted_headers
             except Exception:

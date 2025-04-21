@@ -1,7 +1,7 @@
 import io
 import logging
 import re
-from typing import Any, Generator, Protocol
+from typing import Any, Generator, Protocol, cast
 
 import pytest
 
@@ -80,7 +80,6 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
         func=None,
         sinfo=None,
     )
-    from typing import cast
 
     setattr(
         record,
@@ -99,6 +98,85 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
     assert headers["Authorization"] == "[REDACTED]"
     assert headers["X-Api-Key"] == "[REDACTED]"
     assert headers["X-Other"] == "ok"
+
+
+def test_redacting_formatter_integration_cookie_header(log_stream: io.StringIO) -> None:
+    """Test that Cookie headers are properly redacted while preserving structure."""
+    _ = get_logger_with_formatter(log_stream)
+
+    # Create a record with a Cookie header
+    record = logging.LogRecord(
+        name="integration.redact",
+        level=logging.INFO,
+        pathname=__file__,
+        lineno=1,
+        msg="cookie header test",
+        args=(),
+        exc_info=None,
+        func=None,
+        sinfo=None,
+    )
+
+    # Add headers with a Cookie header containing multiple values
+    setattr(
+        record,
+        "headers",
+        {"Cookie": "session=abc123; user=john; theme=dark"},
+    )
+
+    class TypedLogRecord(Protocol):
+        headers: dict[str, str]
+
+    # Format the record
+    handler = logging.StreamHandler(io.StringIO())
+    handler.setFormatter(RedactingFormatter())
+    handler.format(record)
+
+    # Check that sensitive cookie values are redacted but structure is preserved
+    headers = cast(TypedLogRecord, record).headers
+    assert "session=[REDACTED]" in headers["Cookie"]
+    assert "user=john" in headers["Cookie"]
+    assert "theme=dark" in headers["Cookie"]
+
+
+def test_redacting_formatter_integration_set_cookie_header(log_stream: io.StringIO) -> None:
+    """Test that Set-Cookie headers are properly redacted while preserving attributes."""
+    _ = get_logger_with_formatter(log_stream)
+
+    # Create a record with a Set-Cookie header
+    record = logging.LogRecord(
+        name="integration.redact",
+        level=logging.INFO,
+        pathname=__file__,
+        lineno=1,
+        msg="set-cookie header test",
+        args=(),
+        exc_info=None,
+        func=None,
+        sinfo=None,
+    )
+
+    # Add headers with a Set-Cookie header containing attributes
+    setattr(
+        record,
+        "headers",
+        {"Set-Cookie": "session=abc123; Path=/; HttpOnly; Secure"},
+    )
+
+    class TypedLogRecord(Protocol):
+        headers: dict[str, str]
+
+    # Format the record
+    handler = logging.StreamHandler(io.StringIO())
+    handler.setFormatter(RedactingFormatter())
+    handler.format(record)
+
+    # Check that sensitive cookie value is redacted but attributes are preserved
+    headers = cast(TypedLogRecord, record).headers
+    assert "session=[REDACTED]" in headers["Set-Cookie"]
+    assert "Path=/" in headers["Set-Cookie"]
+    assert "HttpOnly" in headers["Set-Cookie"]
+    assert "Secure" in headers["Set-Cookie"]
 
 
 def test_redacting_formatter_integration_plain_string(log_stream: io.StringIO) -> None:

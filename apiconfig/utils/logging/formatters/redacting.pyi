@@ -2,6 +2,7 @@ import logging
 import re
 from typing import Any, Mapping, Optional, Set, Tuple, Union
 
+
 class RedactingFormatter(logging.Formatter):
     """
     A logging formatter that automatically redacts sensitive information from log messages and HTTP headers.
@@ -57,6 +58,7 @@ class RedactingFormatter(logging.Formatter):
         header_sensitive_keys: Set[str] = ...,
         header_sensitive_prefixes: Tuple[str, ...] = ...,
         header_sensitive_name_pattern: Optional[re.Pattern[str]] = ...,
+        header_sensitive_cookie_keys: Set[str] = ...,
         defaults: Optional[Mapping[str, Any]] = ...,
     ) -> None: ...
     def format(self, record: logging.LogRecord) -> str: ...

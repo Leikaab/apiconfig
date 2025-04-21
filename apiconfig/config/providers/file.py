@@ -12,6 +12,10 @@ class FileProvider:
         self._file_path = pathlib.Path(file_path)
 
     def load(self) -> Dict[str, Any]:
+        import os
+
+        file_path_str = os.path.normpath(str(self._file_path))
+
         if self._file_path.suffix.lower() != ".json":
             # TODO: Add support for YAML later if needed
             raise ConfigLoadError(f"Unsupported file type: {self._file_path.suffix}. Only .json is currently supported.")
@@ -20,14 +24,14 @@ class FileProvider:
             with self._file_path.open("r", encoding="utf-8") as f:
                 config_data = json.load(f)
             if not isinstance(config_data, dict):
-                raise ConfigLoadError(f"Configuration file '{self._file_path.as_posix()}' must contain a JSON object (dict).")
+                raise ConfigLoadError(f"Configuration file must contain a JSON object: {file_path_str}")
             return config_data
         except FileNotFoundError as e:
-            raise ConfigLoadError(f"Configuration file not found: {self._file_path.as_posix()}") from e
+            raise ConfigLoadError(f"Configuration file not found: {file_path_str}") from e
         except json.JSONDecodeError as e:
-            raise ConfigLoadError(f"Error decoding JSON from configuration file: {self._file_path.as_posix()}") from e
+            raise ConfigLoadError(f"Error decoding JSON in configuration file: {file_path_str}") from e
         except OSError as e:
-            raise ConfigLoadError(f"Error reading configuration file: {self._file_path.as_posix()}") from e
+            raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
     def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
         config = self.load()

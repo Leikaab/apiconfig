@@ -62,7 +62,12 @@ class TestFileProvider:
 
             provider = FileProvider(file_path=temp_file.name)
 
-            with pytest.raises(ConfigLoadError, match="must contain a JSON object"):
+            import re
+
+            # Match the new error message with colon and normalized path
+            expected_path = re.escape(os.path.normpath(temp_file.name))
+            pattern = rf"must contain a JSON object: {expected_path}"
+            with pytest.raises(ConfigLoadError, match=pattern):
                 provider.load()
 
     def test_load_file_not_found(self) -> None:
@@ -88,7 +93,12 @@ class TestFileProvider:
 
             provider = FileProvider(file_path=temp_file.name)
 
-            with pytest.raises(ConfigLoadError, match="Error decoding JSON"):
+            import re
+
+            # Match the new error message with colon and normalized path
+            expected_path = re.escape(os.path.normpath(temp_file.name))
+            pattern = rf"Error decoding JSON in configuration file: {expected_path}"
+            with pytest.raises(ConfigLoadError, match=pattern):
                 provider.load()
 
     def test_load_permission_error(self, monkeypatch: pytest.MonkeyPatch) -> None:

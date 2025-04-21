@@ -52,11 +52,11 @@ httpx = "^0.28.1"
 pytest_httpserver = "*"
 [build-system]
 requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.black]
 line-length = 150
 skip-string-normalization = false
-
-build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"

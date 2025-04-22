@@ -20,7 +20,7 @@ author = "Leikaab"
 try:
     version = importlib.metadata.version("apiconfig")
 except importlib.metadata.PackageNotFoundError:
-    version = "0.2.1"  # Fallback version
+    version = "0.3.0"  # Fallback version
 release = version
 
 # -- General configuration ---------------------------------------------------

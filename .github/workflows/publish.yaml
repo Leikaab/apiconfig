@@ -1,16 +1,81 @@
-name: Publish to PyPI
+# .github/workflows/publish.yaml
+name: Publish Python Package
 
 on:
-  workflow_run:
-    workflows: ["Run Tests"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+      - develop
 
 jobs:
-  publish:
-    if: github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main'
+  publish-prerelease:
+    name: Publish Pre-release to PyPI
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Get base version and calculate pre-release version
+        id: versioning
+        run: |
+          BASE_VERSION=$(poetry version -s)
+          # Count commits since the last tag. If no tags, count all commits.
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMIT_COUNT=$(git rev-list --count HEAD)
+          else
+            COMMIT_COUNT=$(git rev-list ${LAST_TAG}..HEAD --count)
+          fi
+          # Ensure commit count is not 0 if on the tag commit itself
+          if [ "$COMMIT_COUNT" -eq 0 ]; then
+             # If the current commit IS the tag, check if it's the initial commit
+             if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
+               COMMIT_COUNT=0 # Or 1, depending on desired initial dev version (e.g., .dev0 or .dev1)
+             else
+               # Re-calculate count from the commit *before* the tag
+               PREVIOUS_COMMIT_TO_TAG=$(git rev-list -n 1 ${LAST_TAG}^)
+               COMMIT_COUNT=$(git rev-list ${PREVIOUS_COMMIT_TO_TAG}..HEAD --count)
+             fi
+          fi
+          PRE_RELEASE_VERSION="${BASE_VERSION}.dev${COMMIT_COUNT}"
+          echo "Base version: $BASE_VERSION"
+          echo "Commit count since last tag ($LAST_TAG): $COMMIT_COUNT"
+          echo "Calculated pre-release version: $PRE_RELEASE_VERSION"
+          echo "version=${PRE_RELEASE_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Set version in pyproject.toml
+        run: poetry version ${{ steps.versioning.outputs.version }}
+
+      - name: Build package
+        run: poetry build
+
+      - name: Publish pre-release package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
+
+
+  publish-stable:
+    name: Publish Stable Release to PyPI
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: write
@@ -26,52 +91,62 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-          poetry install --no-root --without dev --no-interaction --no-ansi
 
-      - name: Get current version
+      - name: Install dependencies
+        run: poetry install --no-root --without dev --no-interaction --no-ansi
+
+      - name: Get current version from pyproject.toml
         id: get_version
-        run: |
-            echo "version=$(poetry version -s)" >> $GITHUB_OUTPUT
-            echo "Current version is $CURRENT_VERSION"
+        run: echo "version=$(poetry version -s)" >> $GITHUB_OUTPUT
 
       - name: Get latest tag
         id: get_tag
         run: |
-            echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-            echo "Latest tag is $LATEST_TAG"
+          # Fetch all tags
+          git fetch --tags
+          # Get the latest tag, handle case where no tags exist
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Latest tag is $LATEST_TAG"
 
       - name: Check if version bump is required
         id: check_version
         run: |
-          CURRENT=${{ steps.get_version.outputs.version }}
-          TAG=${{ steps.get_tag.outputs.tag }}
-          if [ "$(echo "$CURRENT $TAG" | awk '{print ($1 > $2)}')" = "1" ]; then
+          CURRENT_VERSION=${{ steps.get_version.outputs.version }}
+          LATEST_TAG=${{ steps.get_tag.outputs.tag }}
+
+          # Use Python for robust version comparison
+          if python -c "from packaging.version import Version; exit(0) if Version('$CURRENT_VERSION') > Version('$LATEST_TAG') else exit(1)"; then
+            echo "Version $CURRENT_VERSION > $LATEST_TAG. Proceeding with publish."
             echo "should_publish=true" >> $GITHUB_OUTPUT
           else
-            echo "Version has not been bumped. Skipping publish."
+            echo "Version $CURRENT_VERSION <= $LATEST_TAG. Skipping publish."
             echo "should_publish=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build with Poetry
+
+      - name: Build package
         if: steps.check_version.outputs.should_publish == 'true'
         run: poetry build
 
-      - name: Publish to PyPI
+      - name: Publish stable package to PyPI
         if: steps.check_version.outputs.should_publish == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
 
-      - name: Create new tag
+      - name: Create and push new tag
         if: steps.check_version.outputs.should_publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          echo "Tagging commit with $VERSION"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git tag ${{ steps.get_version.outputs.version }}
-          git push origin --tags
+          git tag "$VERSION"
+          git push origin "$VERSION"

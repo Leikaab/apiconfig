@@ -6,11 +6,10 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       args:
-        VARIANT: 1-3.12-bullseye
+        VARIANT: 1-3.13-bullseye
 
     volumes:
       - ..:/workspace:cached # Mount the whole workspace read-write
-      - ../crudclient:/workspace/crudclient:ro # Overlay the crudclient subdir as read-only
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -21,3 +20,17 @@ services:
     # Commented out the env file so it does not crash the container build, if not present
     #env_file:
     #  - ../.env
+
+  docs:
+    build:
+      context: ..
+      dockerfile: docs/Dockerfile
+
+    volumes:
+      - ..:/workspace:cached # Mount the whole workspace read-write
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Use root user for consistency with the app service and Sphinx build steps
+    user: root

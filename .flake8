@@ -1,0 +1,19 @@
+[flake8]
+# Include docstring checks (D), but suppress them globally
+select = B,C,D,E,F,W,T4
+ignore = E203, E266, E501, E704, W503
+max-line-length = 150
+max-complexity = 18
+
+# Don't run checks on these files
+exclude =
+    .coveragerc
+    artifacts/*
+    .tox
+
+docstring-convention = numpy
+
+# Only run docstring checks (D) on these files — others still ignore D
+per-file-ignores =
+    tests/*: D
+    docs/source/conf.py: D

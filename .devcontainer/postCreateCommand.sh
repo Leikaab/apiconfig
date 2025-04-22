@@ -43,4 +43,31 @@ else
     echo "Poetry could not be found"
 fi
 
+# Run private setup script if it exists
+if [ -f ".devcontainer/privatesetup.sh" ]; then
+    echo "Making privatesetup.sh executable..."
+    chmod +x .devcontainer/privatesetup.sh
+    echo "Running privatesetup.sh..."
+    bash .devcontainer/privatesetup.sh
+else
+    echo "privatesetup.sh not found, skipping."
+fi
+
 echo "Development environment setup complete!"
+# Append .env loading logic to /root/.bashrc if not already present
+BASHRC_CONTENT=$(cat /root/.bashrc 2>/dev/null || true) # Read bashrc, ignore error if missing
+ENV_LOAD_MARKER="# Load workspace .env"
+if ! echo "$BASHRC_CONTENT" | grep -qF "$ENV_LOAD_MARKER"; then
+  echo "Appending .env loading logic to /root/.bashrc..."
+  echo '' >> /root/.bashrc # Add a newline for separation
+  echo "$ENV_LOAD_MARKER" >> /root/.bashrc
+  echo 'if [ -f "/workspace/.env" ]; then' >> /root/.bashrc
+  echo '  set -a # Automatically export all variables' >> /root/.bashrc
+  echo '  source "/workspace/.env"' >> /root/.bashrc
+  echo '  set +a # Stop automatically exporting variables' >> /root/.bashrc
+  # Optional: echo '  echo "Loaded environment variables from /workspace/.env"' >> /root/.bashrc
+  echo 'fi' >> /root/.bashrc
+  echo "Logic appended to /root/.bashrc."
+else
+  echo ".env loading logic already present in /root/.bashrc."
+fi

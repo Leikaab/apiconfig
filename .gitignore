@@ -4,8 +4,11 @@ src/testing.ipynb
 logs/
 output/
 specs/
+prompt*.*
 
 private_*
+.devcontainer/privatesetup.sh
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,flask,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,flask,python,visualstudiocode
@@ -347,4 +350,4 @@ pyrightconfig.json
 # Ollama models
 .ollama/
 models/
-apiconfig-project-plan.md
+.devcontainer/privatesetup.sh

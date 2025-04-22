@@ -4,8 +4,8 @@ _Flexible, extensible configuration and authentication for Python API clients._
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/apiconfig)](https://pypi.org/project/apiconfig/)
 [![PyPI - Version](https://img.shields.io/pypi/v/apiconfig)](https://pypi.org/project/apiconfig/)
-[![Test Status](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml)
-[![Publish to PyPI](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml)
+[![Test Status](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yaml)
+[![Publish to PyPI](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yaml)
 
 ---
 

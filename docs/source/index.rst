@@ -11,12 +11,12 @@ Welcome to apiconfig's documentation!
    :target: https://pypi.org/project/apiconfig/
    :alt: PyPI - Version
 
-.. image:: https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml/badge.svg
-   :target: https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml
+.. image:: https://github.com/Leikaab/apiconfig/actions/workflows/tests.yaml/badge.svg
+   :target: https://github.com/Leikaab/apiconfig/actions/workflows/tests.yaml
    :alt: Test Status
 
-.. image:: https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml/badge.svg
-   :target: https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml
+.. image:: https://github.com/Leikaab/apiconfig/actions/workflows/publish.yaml/badge.svg
+   :target: https://github.com/Leikaab/apiconfig/actions/workflows/publish.yaml
    :alt: Publish to PyPI
 
 Key Features
@@ -41,7 +41,7 @@ Quick Example
 
    # Set up authentication
    auth = ApiKeyAuth(api_key="my-secret-key", header_name="X-API-Key")
-   
+
    # Create configuration
    config = ClientConfig(
        hostname="api.example.com",
@@ -49,12 +49,12 @@ Quick Example
        auth_strategy=auth,
        timeout=10.0,
    )
-   
+
    # Use with any HTTP client
    headers = {}
    if config.auth_strategy:
        headers.update(config.auth_strategy.prepare_request_headers())
-   
+
    with httpx.Client(timeout=config.timeout) as client:
        response = client.get(f"{config.base_url}/resource", headers=headers)
        data = response.json()

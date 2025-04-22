@@ -350,3 +350,4 @@ pyrightconfig.json
 # Ollama models
 .ollama/
 models/
+.devcontainer/privatesetup.sh

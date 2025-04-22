@@ -20,3 +20,17 @@ services:
     # Commented out the env file so it does not crash the container build, if not present
     #env_file:
     #  - ../.env
+
+  docs:
+    build:
+      context: ..
+      dockerfile: docs/Dockerfile
+
+    volumes:
+      - ..:/workspace:cached # Mount the whole workspace read-write
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Use root user for consistency with the app service and Sphinx build steps
+    user: root

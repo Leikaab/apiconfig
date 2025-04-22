@@ -1,11 +1,32 @@
 # apiconfig
 
-Flexible, extensible configuration and authentication for Python API clients.
+_Flexible, extensible configuration and authentication for Python API clients._
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/apiconfig)](https://pypi.org/project/apiconfig/)
 [![PyPI - Version](https://img.shields.io/pypi/v/apiconfig)](https://pypi.org/project/apiconfig/)
 [![Test Status](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/tests.yml)
 [![Publish to PyPI](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml/badge.svg)](https://github.com/Leikaab/apiconfig/actions/workflows/publish.yml)
+
+---
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Quickstart](#quickstart)
+- [Installation](#installation)
+- [Key Features](#key-features)
+- [Usage](#usage)
+  - [Basic Configuration](#basic-configuration)
+  - [Authentication Strategies](#authentication-strategies)
+  - [Using Configuration Providers](#using-configuration-providers)
+  - [Merging Configurations](#merging-configurations)
+- [Practical Example: Real API Client Setup](#practical-example-real-api-client-setup)
+- [Logging](#logging)
+- [Error Handling](#error-handling)
+- [Testing and Coverage](#testing-and-coverage)
+- [CI/CD](#cicd)
+- [Further Documentation](#further-documentation)
+- [License](#license)
 
 ---
 
@@ -20,16 +41,25 @@ apiconfig is designed for:
 
 ---
 
-## Key Features
+## Quickstart
 
-- **Unified API Client Configuration**: Manage base URLs, versions, headers, timeouts, retries, and more with a single, validated config object.
-- **Authentication Strategies**: Built-in support for API Key, Basic, Bearer, and custom authentication via the Strategy Pattern.
-- **Config Providers**: Load configuration from environment variables, files, or in-memory sources.
-- **Extensible**: Easily add new authentication methods or config providers.
-- **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
-- **Type Safety**: Strong type hints and type-checked public API.
-- **Logging Integration**: Standard logging hooks for debugging and auditability.
-- **100% Test Coverage**: Fully tested with unit and integration tests.
+```bash
+pip install apiconfig
+```
+
+```python
+from apiconfig import ClientConfig, ApiKeyAuth
+
+auth = ApiKeyAuth(api_key="my-secret-key", header_name="X-API-Key")
+config = ClientConfig(
+    hostname="api.example.com",
+    version="v1",
+    auth_strategy=auth,
+    timeout=10.0,
+    retries=3,
+)
+print(config.base_url)  # https://api.example.com/v1
+```
 
 ---
 
@@ -46,6 +76,19 @@ Or with Poetry:
 ```bash
 poetry add apiconfig
 ```
+
+---
+
+## Key Features
+
+- **Unified API Client Configuration**: Manage base URLs, versions, headers, timeouts, retries, and more with a single, validated config object.
+- **Authentication Strategies**: Built-in support for API Key, Basic, Bearer, and custom authentication via the Strategy Pattern.
+- **Config Providers**: Load configuration from environment variables, files, or in-memory sources.
+- **Extensible**: Easily add new authentication methods or config providers.
+- **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
+- **Type Safety**: Strong type hints and type-checked public API.
+- **Logging Integration**: Standard logging hooks for debugging and auditability.
+- **100% Test Coverage**: Fully tested with unit and integration tests.
 
 ---
 
@@ -140,6 +183,8 @@ override = ClientConfig(timeout=5, retries=2)
 merged = base.merge(override)
 ```
 
+---
+
 ## Practical Example: Real API Client Setup
 
 Below is a real-world example based on the integration tests. This pattern demonstrates how to use apiconfig to load configuration and secrets from environment variables, set up authentication, and make a request with an HTTP client (e.g., httpx):
@@ -178,6 +223,7 @@ with httpx.Client(timeout=10.0) as client:
 ```
 
 This approach can be adapted for any API and authentication method supported by apiconfig. See the [integration tests](tests/integration/) for more real-world examples.
+
 ---
 
 ## Logging

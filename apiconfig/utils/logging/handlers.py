@@ -5,14 +5,9 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import IO, TYPE_CHECKING, Optional
+from typing import IO, Optional
 
-if TYPE_CHECKING:
-    # Base type for type checkers
-    _StreamHandlerBase = logging.StreamHandler[IO[str]]
-else:
-    # Base type for runtime
-    _StreamHandlerBase = logging.StreamHandler
+_StreamHandlerBase = logging.StreamHandler[IO[str]]
 
 
 class ConsoleHandler(_StreamHandlerBase):

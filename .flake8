@@ -9,9 +9,11 @@ max-complexity = 18
 exclude =
     .coveragerc
     artifacts/*
+    .tox
 
 docstring-convention = numpy
 
 # Only run docstring checks (D) on these files — others still ignore D
 per-file-ignores =
     tests/*: D
+    docs/source/conf.py: D

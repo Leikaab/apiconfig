@@ -12,7 +12,6 @@ keywords = ["api", "config", "apiauth"]
 classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -21,7 +20,7 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -52,6 +51,13 @@ bravado-core = "^6.1.1"
 httpx = "^0.28.1"
 pytest_httpserver = "*"
 tox = "*"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8.0"
+sphinx-rtd-theme = "^3.0"
+myst-parser = "^4.0"
+sphinx-autodoc-typehints = "^3.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

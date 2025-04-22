@@ -3,7 +3,11 @@ from typing import Any, Generator
 
 import pytest
 
-from apiconfig.utils.logging.filters import ContextFilter, clear_log_context, set_log_context
+from apiconfig.utils.logging.filters import (
+    ContextFilter,
+    clear_log_context,
+    set_log_context,
+)
 
 
 @pytest.fixture(autouse=True)

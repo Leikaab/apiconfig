@@ -9,6 +9,7 @@ max-complexity = 18
 exclude =
     .coveragerc
     artifacts/*
+    .tox
 
 docstring-convention = numpy
 

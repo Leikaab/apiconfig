@@ -65,7 +65,10 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 150
 skip-string-normalization = false
-
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"
+
+[tool.isort]
+profile = "black"
+skip = [".tox"]
 

@@ -5,7 +5,12 @@ import pytest
 
 from apiconfig.auth.token.refresh import refresh_oauth2_token
 from apiconfig.config.base import ClientConfig
-from apiconfig.exceptions.auth import TokenRefreshError, TokenRefreshJsonError, TokenRefreshNetworkError, TokenRefreshTimeoutError
+from apiconfig.exceptions.auth import (
+    TokenRefreshError,
+    TokenRefreshJsonError,
+    TokenRefreshNetworkError,
+    TokenRefreshTimeoutError,
+)
 
 
 class TestRefreshOAuth2Token:

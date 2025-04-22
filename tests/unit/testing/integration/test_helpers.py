@@ -8,7 +8,11 @@ from pytest_httpserver import HTTPServer
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
 from apiconfig.config.manager import ConfigManager
-from apiconfig.testing.integration.helpers import make_request_with_config, setup_multi_provider_manager, simulate_token_endpoint
+from apiconfig.testing.integration.helpers import (
+    make_request_with_config,
+    setup_multi_provider_manager,
+    simulate_token_endpoint,
+)
 
 
 class TestMakeRequestWithConfig:

@@ -12,9 +12,20 @@ The exceptions are organized into categories:
 - HTTP exceptions: HTTP request/response and JSON handling errors
 """
 
-from .auth import AuthStrategyError, ExpiredTokenError, InvalidCredentialsError, MissingCredentialsError, TokenRefreshError
+from .auth import (
+    AuthStrategyError,
+    ExpiredTokenError,
+    InvalidCredentialsError,
+    MissingCredentialsError,
+    TokenRefreshError,
+)
 from .base import APIConfigError, AuthenticationError, ConfigurationError
-from .config import ConfigLoadError, ConfigProviderError, InvalidConfigError, MissingConfigError
+from .config import (
+    ConfigLoadError,
+    ConfigProviderError,
+    InvalidConfigError,
+    MissingConfigError,
+)
 from .http import HTTPUtilsError, JSONDecodeError
 
 __all__: list[str] = [

@@ -48,9 +48,9 @@ class MockConfigProvider:
 def create_mock_client_config(
     *,
     hostname: str = "mock.example.com",
-    api_version: Optional[str] = "v1",
+    version: Optional[str] = "v1",
     timeout: int = 30,
-    max_retries: int = 3,
+    retries: int = 3,
     **kwargs: Any,
 ) -> ClientConfig:
     """Create ClientConfig instances with sensible defaults.
@@ -62,11 +62,11 @@ def create_mock_client_config(
     ----------
     hostname : str, optional
         The mock hostname. Defaults to "mock.example.com".
-    api_version : Optional[str], optional
+    version : Optional[str], optional
         The mock API version. Defaults to "v1".
     timeout : int, optional
         The mock timeout. Defaults to 30.
-    max_retries : int, optional
+    retries : int, optional
         The mock max retries. Defaults to 3.
     **kwargs : Any
         Additional keyword arguments to pass to the ClientConfig constructor,
@@ -79,9 +79,9 @@ def create_mock_client_config(
     """
     config_data = {
         "hostname": hostname,
-        "api_version": api_version,
+        "version": version,
         "timeout": timeout,
-        "max_retries": max_retries,
+        "retries": retries,
         **kwargs,
     }
     return ClientConfig(**config_data)
@@ -139,7 +139,8 @@ class MockConfigManager(ConfigManager):
         # Allow predefining the config to be returned by load_config
         self._mock_config = mock_config
         # Use MagicMock for load_config to allow spying/assertions
-        self.load_config = MagicMock(spec=self.load_config)
+        # Don't use spec to allow arbitrary arguments for testing
+        self.load_config = MagicMock()
 
         if mock_config:
             self.load_config.return_value = mock_config

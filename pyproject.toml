@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "apiconfig"
-version = "0.3.0"
+version = "0.3.1"
 description = "api config library"
 authors = ["Leikaab <nordavindltd@gmail.com>"]
 license = "Proprietary"
 readme = "README.md"
 homepage = "https://github.com/Leikaab/apiconfig"
 repository = "https://github.com/Leikaab/apiconfig"
-documentation = "https://github.com/Leikaab/apiconfig#readme"
+documentation = "https://leikaab.github.io/apiconfig/"
 keywords = ["api", "config", "apiauth"]
 classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
@@ -67,6 +67,7 @@ line-length = 150
 skip-string-normalization = false
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"
+"Documentation" = "https://leikaab.github.io/apiconfig/"
 
 [tool.isort]
 profile = "black"

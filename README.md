@@ -28,6 +28,8 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Further Documentation](#further-documentation)
 - [License](#license)
 
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://leikaab.github.io/apiconfig/)
+
 ---
 
 ## Project Overview
@@ -269,6 +271,7 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ## Further Documentation
 
+- [Documentation (latest)](https://leikaab.github.io/apiconfig/)
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines
 - [Bug Tracker](https://github.com/Leikaab/apiconfig/issues)
 - [PyPI Project Page](https://pypi.org/project/apiconfig/)

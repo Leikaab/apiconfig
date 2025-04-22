@@ -1,6 +1,11 @@
 Welcome to apiconfig's documentation!
 =====================================
 
+.. note::
+
+   The latest documentation is always available at https://leikaab.github.io/apiconfig/
+
+
 **apiconfig** is a standalone Python library for managing API client configuration and authentication. It provides a robust, extensible foundation for building API clients, handling configuration (base URLs, timeouts, retries, headers) and supporting multiple authentication strategies (API key, Basic, Bearer, custom).
 
 .. image:: https://img.shields.io/pypi/pyversions/apiconfig

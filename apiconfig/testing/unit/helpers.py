@@ -29,7 +29,7 @@ class ConfigProviderProtocol(Protocol):
         Dict[str, Any]
             The loaded configuration as a dictionary.
         """
-        ...
+        ...  # pragma: no cover
 
 
 def check_auth_strategy_interface(strategy_instance: Any) -> None:

@@ -33,13 +33,13 @@ RUN curl https://pyenv.run | bash
 
 # Install required Python versions
 # Using recent stable patch versions
-RUN pyenv install 3.10.14 && \
-    pyenv install 3.11.9 && \
-    pyenv install 3.12.4
+RUN pyenv install 3.11.9 && \
+    pyenv install 3.12.4 && \
+    pyenv install 3.13.0
 
 # Set global versions - pyenv will manage these, tox will find them
 # The base image's 3.13 is also available directly
-RUN pyenv global 3.12.4 3.11.9 3.10.14
+RUN pyenv global 3.12.4 3.11.9 3.13.0
 
 # Install pipx
 RUN pip install --user pipx

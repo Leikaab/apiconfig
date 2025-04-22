@@ -5,6 +5,7 @@
 
 import os
 import sys
+import importlib.metadata
 
 sys.path.insert(0, os.path.abspath("../../"))  # Add project root to path
 
@@ -15,8 +16,12 @@ project = "apiconfig"
 copyright = "2025, Leikaab"
 author = "Leikaab"
 
-version = "0.2.1"
-release = "0.2.1"
+# Get version from package metadata
+try:
+    version = importlib.metadata.version("apiconfig")
+except importlib.metadata.PackageNotFoundError:
+    version = "0.2.1"  # Fallback version
+release = version
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -68,6 +73,21 @@ exclude_patterns = []
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+html_css_files = [
+    "css/custom.css",
+]
+
+# Theme options for Read the Docs
+html_theme_options = {
+    "navigation_depth": 4,
+    "titles_only": False,
+    "prev_next_buttons_location": "both",
+    "style_external_links": True,
+    "collapse_navigation": False,
+    "sticky_navigation": True,
+    "display_version": True,
+    "logo_only": False,
+}
 
 # -- Options for intersphinx extension ---------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#configuration
@@ -75,4 +95,31 @@ html_static_path = ["_static"]
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "requests": ("https://requests.readthedocs.io/en/latest/", None),
+    "httpx": ("https://www.python-httpx.org/", None),
 }
+
+# -- Additional configuration ------------------------------------------------
+
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
+
+# The suffix(es) of source filenames.
+source_suffix = [".rst", ".md"]
+
+# The master toctree document.
+master_doc = "index"
+
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = False
+
+# If true, links to the reST sources are added to the pages.
+html_show_sourcelink = True
+
+# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
+html_show_sphinx = True
+
+# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
+html_show_copyright = True
+
+# Output file base name for HTML help builder.
+htmlhelp_basename = "apiconfigdoc"

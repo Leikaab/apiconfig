@@ -1,0 +1,213 @@
+/* Custom styles for apiconfig documentation */
+
+/* Improve the overall readability */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Make headings more prominent */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+h1 {
+    font-size: 2.2em;
+    color: #2980b9;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #2980b9;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+}
+
+h4 {
+    font-size: 1.3em;
+    color: #2c3e50;
+}
+
+/* Improve code blocks */
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #e1e4e5;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 0.9em;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+code {
+    background-color: #f8f8f8;
+    border: 1px solid #e1e4e5;
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-size: 0.9em;
+    color: #e74c3c;
+}
+
+pre code {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* Improve tables */
+table.docutils {
+    border-collapse: collapse;
+    border: 1px solid #e1e4e5;
+    margin-bottom: 1.5em;
+    width: 100%;
+}
+
+table.docutils th {
+    background-color: #f3f6f6;
+    border: 1px solid #e1e4e5;
+    padding: 8px;
+    font-weight: bold;
+    text-align: left;
+}
+
+table.docutils td {
+    border: 1px solid #e1e4e5;
+    padding: 8px;
+}
+
+/* Improve links */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Improve navigation sidebar */
+.wy-side-nav-search {
+    background-color: #2980b9;
+}
+
+.wy-side-nav-search input[type="text"] {
+    border-color: #2980b9;
+}
+
+.wy-nav-side {
+    background-color: #343131;
+}
+
+/* Improve admonitions (notes, warnings, etc.) */
+.admonition {
+    border-radius: 4px;
+    margin: 20px 0;
+    padding: 12px;
+    border-left: 6px solid #31708f;
+    background-color: #d9edf7;
+}
+
+.admonition.note {
+    border-left-color: #31708f;
+    background-color: #d9edf7;
+}
+
+.admonition.warning {
+    border-left-color: #8a6d3b;
+    background-color: #fcf8e3;
+}
+
+.admonition.danger {
+    border-left-color: #a94442;
+    background-color: #f2dede;
+}
+
+.admonition.tip {
+    border-left-color: #3c763d;
+    background-color: #dff0d8;
+}
+
+.admonition-title {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+/* Improve footer */
+footer {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid #e1e4e5;
+}
+
+/* Improve API documentation */
+dl.class, dl.function, dl.method, dl.attribute {
+    margin-bottom: 2em;
+    padding: 1em;
+    border: 1px solid #e1e4e5;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
+
+dl.class > dt, dl.function > dt, dl.method > dt, dl.attribute > dt {
+    background-color: #e7f2fa;
+    border-top: 3px solid #6ab0de;
+    padding: 6px;
+    margin-bottom: 12px;
+}
+
+/* Improve parameter lists */
+dl.field-list {
+    margin-bottom: 1em;
+}
+
+dl.field-list > dt {
+    font-weight: bold;
+    padding: 3px 0;
+}
+
+dl.field-list > dd {
+    margin-left: 1.5em;
+    padding: 3px 0;
+}
+
+/* Improve search results */
+ul.search li {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #e1e4e5;
+}
+
+/* Improve mobile responsiveness */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    h3 {
+        font-size: 1.3em;
+    }
+    
+    h4 {
+        font-size: 1.1em;
+    }
+}

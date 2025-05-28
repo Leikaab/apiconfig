@@ -473,3 +473,163 @@ class TestAssertRequestReceived:
         assert_request_received(httpserver=mock_httpserver, path="/test", method="GET", count=None)
 
         # No assertion needed - if the function doesn't raise, it passed
+
+    def test_assert_request_received_header_mismatch(self) -> None:
+        """Test assert_request_received when headers don't match."""
+        # Create a mock HTTPServer with a log entry
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request with different headers
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/test"
+        mock_request.method = "GET"
+        mock_request.headers = {"Content-Type": "text/plain"}
+        mock_request.args = {}
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with different expected headers
+        with pytest.raises(AssertionError, match="Expected 1 request"):
+            assert_request_received(
+                httpserver=mock_httpserver,
+                path="/test",
+                method="GET",
+                expected_headers={"Content-Type": "application/json"},
+            )
+
+    def test_assert_request_received_query_mismatch(self) -> None:
+        """Test assert_request_received when query parameters don't match."""
+        # Create a mock HTTPServer with a log entry
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request with different query parameters
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/test"
+        mock_request.method = "GET"
+        mock_request.headers = {}
+        mock_request.args = {"page": "2"}
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with different expected query parameters
+        with pytest.raises(AssertionError, match="Expected 1 request"):
+            assert_request_received(
+                httpserver=mock_httpserver,
+                path="/test",
+                method="GET",
+                expected_query={"page": "1"},
+            )
+
+    def test_assert_request_received_json_mismatch(self) -> None:
+        """Test assert_request_received when JSON body doesn't match."""
+        # Create a mock HTTPServer with a log entry
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request with different JSON body
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/test"
+        mock_request.method = "POST"
+        mock_request.headers = {"Content-Type": "application/json"}
+        mock_request.args = {}
+        mock_request.get_data.return_value = json.dumps({"name": "different", "value": 456})
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with different expected JSON
+        with pytest.raises(AssertionError, match="Expected 1 request"):
+            assert_request_received(
+                httpserver=mock_httpserver,
+                path="/test",
+                method="POST",
+                expected_json={"name": "test", "value": 123},
+            )
+
+    def test_assert_request_received_invalid_json(self) -> None:
+        """Test assert_request_received when request body is not valid JSON."""
+        # Create a mock HTTPServer with a log entry
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request with invalid JSON body
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/test"
+        mock_request.method = "POST"
+        mock_request.headers = {"Content-Type": "application/json"}
+        mock_request.args = {}
+        mock_request.get_data.return_value = "invalid json"
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with expected JSON
+        with pytest.raises(AssertionError, match="Expected 1 request"):
+            assert_request_received(
+                httpserver=mock_httpserver,
+                path="/test",
+                method="POST",
+                expected_json={"name": "test"},
+            )
+
+    def test_assert_request_received_data_mismatch(self) -> None:
+        """Test assert_request_received when raw data body doesn't match."""
+        # Create a mock HTTPServer with a log entry
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request with different raw data body
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/test"
+        mock_request.method = "POST"
+        mock_request.headers = {"Content-Type": "text/plain"}
+        mock_request.args = {}
+        mock_request.get_data.return_value = "Different data"
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with different expected data
+        with pytest.raises(AssertionError, match="Expected 1 request"):
+            assert_request_received(
+                httpserver=mock_httpserver,
+                path="/test",
+                method="POST",
+                expected_data="Hello, world!",
+            )
+
+    def test_assert_request_received_with_none_count_no_matches(self) -> None:
+        """Test assert_request_received with count=None when no requests match."""
+        # Create a mock HTTPServer with a log entry for a different path
+        mock_httpserver = MagicMock(spec=HTTPServer)
+
+        # Create a mock request
+        mock_request = MagicMock(spec=Request)
+        mock_request.path = "/other"
+        mock_request.method = "GET"
+        mock_request.headers = {}
+        mock_request.args = {}
+
+        # Create a mock response
+        mock_response = MagicMock()
+
+        # Set up the log with the request and response
+        mock_httpserver.log = [(mock_request, mock_response)]
+
+        # Call the function with count=None and expect it to raise
+        with pytest.raises(AssertionError, match="Expected at least one request"):
+            assert_request_received(httpserver=mock_httpserver, path="/test", method="GET", count=None)

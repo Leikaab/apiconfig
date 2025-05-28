@@ -37,7 +37,7 @@ from .types import (
     HeadersType,
     JsonObject,
     JsonValue,
-    ParamsType,
+    QueryParamType,
     TokenRefreshCallable,
     TokenStorageStrategy,
 )
@@ -73,7 +73,7 @@ __all__: list[str] = [
     "AuthStrategyError",
     # Types
     "HeadersType",
-    "ParamsType",
+    "QueryParamType",
     "DataType",
     "ConfigDict",
     "AuthCredentials",

@@ -26,7 +26,7 @@ from .config import (
     InvalidConfigError,
     MissingConfigError,
 )
-from .http import HTTPUtilsError, JSONDecodeError
+from .http import HTTPUtilsError, JSONDecodeError, JSONEncodeError, PayloadTooLargeError
 
 __all__: list[str] = [
     # Base exceptions
@@ -47,4 +47,6 @@ __all__: list[str] = [
     # HTTP exceptions
     "HTTPUtilsError",
     "JSONDecodeError",
+    "JSONEncodeError",
+    "PayloadTooLargeError",
 ]

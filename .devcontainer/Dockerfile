@@ -51,8 +51,9 @@ RUN pipx install poetry
 # Set the PATH environment variable
 ENV PATH="/root/.local/bin:$PATH"
 
-# Disable poetry from creating virtual environments globally
-RUN poetry config virtualenvs.create false
+# Ensure Poetry respects project settings for virtual environments
+# (Commented out or remove the line below)
+# RUN poetry config virtualenvs.create false
 
 # Verify the poetry configuration
 #RUN poetry config --list | grep virtualenvs.create

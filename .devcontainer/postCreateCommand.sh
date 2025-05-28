@@ -38,7 +38,7 @@ echo "Checking poetry by direct invocation:"
 if /usr/local/py-utils/bin/poetry --version &> /dev/null
 then
     echo "Poetry is available and working"
-    poetry config virtualenvs.create false --local
+    poetry config virtualenvs.create true --local
 else
     echo "Poetry could not be found"
 fi

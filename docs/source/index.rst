@@ -71,6 +71,8 @@ Quick Example
    installation
    getting_started
    user_guide
+   auth_refresh_guide
+   crudclient_integration
    examples
    contributing
 

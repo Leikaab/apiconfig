@@ -10,6 +10,7 @@ exclude =
     .coveragerc
     artifacts/*
     .tox
+    .venv
 
 docstring-convention = numpy
 

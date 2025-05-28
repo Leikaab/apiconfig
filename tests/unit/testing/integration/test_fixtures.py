@@ -17,7 +17,7 @@ from apiconfig.config.providers.file import FileProvider
 class TestHttpserverListenAddress:
     """Tests for the httpserver_listen_address fixture."""
 
-    def test_httpserver_listen_address(self) -> None:
+    def test_httpserver_listen_address_manual(self) -> None:
         """Test that httpserver_listen_address returns a tuple with localhost and port 0."""
         # Create our own implementation that mimics the fixture
         address = ("127.0.0.1", 0)
@@ -30,7 +30,7 @@ class TestHttpserverListenAddress:
 class TestMockApiUrl:
     """Tests for the mock_api_url fixture."""
 
-    def test_mock_api_url(self) -> None:
+    def test_mock_api_url_manual(self) -> None:
         """Test that mock_api_url returns the URL from the httpserver."""
         # Create a mock HTTPServer
         mock_httpserver = MagicMock(spec=HTTPServer)
@@ -49,7 +49,7 @@ class TestMockApiUrl:
 class TestTempConfigFile:
     """Tests for the temp_config_file fixture."""
 
-    def test_temp_config_file(self, tmp_path: Path) -> None:
+    def test_temp_config_file_manual(self, tmp_path: Path) -> None:
         """Test that temp_config_file creates a valid JSON config file."""
         # Create our own implementation that mimics the fixture
         config_data = {
@@ -84,7 +84,7 @@ class TestTempConfigFile:
 class TestFileProvider:
     """Tests for the file_provider fixture."""
 
-    def test_file_provider(self, tmp_path: Path) -> None:
+    def test_file_provider_manual(self, tmp_path: Path) -> None:
         """Test that file_provider returns a FileProvider pointing to the temp config file."""
         # Create a config file
         config_data = {
@@ -108,7 +108,7 @@ class TestFileProvider:
 class TestEnvProvider:
     """Tests for the env_provider fixture."""
 
-    def test_env_provider(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_env_provider_manual(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test that env_provider sets environment variables and returns an EnvProvider."""
         # Set environment variables directly
         monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")
@@ -134,7 +134,7 @@ class TestEnvProvider:
 class TestConfigManager:
     """Tests for the config_manager fixture."""
 
-    def test_config_manager(self) -> None:
+    def test_config_manager_manual(self) -> None:
         """Test that config_manager returns a ConfigManager with file and env providers."""
         # Create mock providers
         mock_file_provider = MagicMock(spec=FileProvider)

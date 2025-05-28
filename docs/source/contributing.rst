@@ -41,10 +41,10 @@ If you prefer not to use Dev Containers:
 
    # Install dependencies
    poetry install --all-extras
-   
+
    # Activate the virtual environment
    poetry shell
-   
+
    # Install pre-commit hooks
    pre-commit install
    pre-commit install --hook-type pre-push
@@ -75,7 +75,7 @@ Coverage
 
    # Generate coverage report
    pytest tests/unit/ --cov=apiconfig --cov-report=html
-   
+
    # Open the report
    open htmlcov/index.html
 
@@ -144,10 +144,10 @@ Building the Documentation
 
    # Navigate to the docs directory
    cd docs
-   
+
    # Build the documentation
    make html
-   
+
    # Open the documentation
    open build/html/index.html
 

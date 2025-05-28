@@ -8,6 +8,7 @@ from apiconfig.exceptions.base import APIConfigError
 from apiconfig.utils.http import (
     HTTPUtilsError,
     JSONDecodeError,
+    JSONEncodeError,
     PayloadTooLargeError,
     get_header_value,
     is_client_error,
@@ -16,6 +17,7 @@ from apiconfig.utils.http import (
     is_success,
     normalize_header_name,
     safe_json_decode,
+    safe_json_encode,
 )
 
 
@@ -206,6 +208,97 @@ def test_safe_json_decode_exceeds_size_limit_string() -> None:
 
     with pytest.raises(PayloadTooLargeError, match="Payload size .* exceeds maximum allowed size"):
         safe_json_decode(large_payload, max_size_bytes=50)
+
+
+# --- Safe JSON Encode Tests ---
+@pytest.mark.parametrize(
+    "data, ensure_ascii, indent, expected",
+    [
+        ({"key": "value"}, False, None, '{"key": "value"}'),
+        ({"number": 42}, False, None, '{"number": 42}'),
+        ({"bool": True}, False, None, '{"bool": true}'),
+        ({"null": None}, False, None, '{"null": null}'),
+        ({"list": [1, 2, 3]}, False, None, '{"list": [1, 2, 3]}'),
+        ({"nested": {"key": "value"}}, False, None, '{"nested": {"key": "value"}}'),
+        ({"unicode": "café"}, False, None, '{"unicode": "café"}'),
+        ({"unicode": "café"}, True, None, '{"unicode": "caf\\u00e9"}'),
+        ({"key": "value"}, False, 2, '{\n  "key": "value"\n}'),
+    ],
+)
+def test_safe_json_encode_success(data: Any, ensure_ascii: bool, indent: int | None, expected: str) -> None:
+    """Verify the safe_json_encode function successfully encodes valid data."""
+    result = safe_json_encode(data, ensure_ascii=ensure_ascii, indent=indent)
+    assert result == expected
+
+
+def test_safe_json_encode_with_custom_max_size() -> None:
+    """Test that safe_json_encode works with a custom max_size_bytes."""
+    # Small data with small limit should work
+    small_data = {"key": "value"}
+    result = safe_json_encode(small_data, max_size_bytes=100)
+    assert result == '{"key": "value"}'
+
+
+def test_safe_json_encode_at_size_limit() -> None:
+    """Test that safe_json_encode works with output exactly at the size limit."""
+    # Create data that results in exactly 13 bytes when encoded
+    data = {"x": "test"}  # Results in '{"x": "test"}' which is 13 bytes
+    result = safe_json_encode(data, max_size_bytes=13)
+    assert result == '{"x": "test"}'
+    assert len(result.encode("utf-8")) == 13
+
+
+def test_safe_json_encode_exceeds_size_limit() -> None:
+    """Test that safe_json_encode raises PayloadTooLargeError when output exceeds the limit."""
+    # Create data that results in a large JSON string
+    large_data = {"large": "a" * 100}
+
+    with pytest.raises(PayloadTooLargeError, match="Encoded JSON size .* exceeds maximum allowed size"):
+        safe_json_encode(large_data, max_size_bytes=50)
+
+
+@pytest.mark.parametrize(
+    "data, expected_exception, match",
+    [
+        (object(), JSONEncodeError, "Failed to encode data as JSON"),
+        (set([1, 2, 3]), JSONEncodeError, "Failed to encode data as JSON"),
+        (lambda x: x, JSONEncodeError, "Failed to encode data as JSON"),
+    ],
+)
+def test_safe_json_encode_non_serializable(data: Any, expected_exception: type[APIConfigError], match: str) -> None:
+    """Verify the safe_json_encode function raises JSONEncodeError for non-serializable objects."""
+    with pytest.raises(expected_exception, match=match):
+        safe_json_encode(data)
+
+
+def test_safe_json_encode_unicode_handling() -> None:
+    """Test that safe_json_encode properly handles unicode characters."""
+    unicode_data = {"message": "Hello 世界", "emoji": "🚀"}
+
+    # Without ensure_ascii (default)
+    result_unicode = safe_json_encode(unicode_data, ensure_ascii=False)
+    assert "世界" in result_unicode
+    assert "🚀" in result_unicode
+
+    # With ensure_ascii=True
+    result_ascii = safe_json_encode(unicode_data, ensure_ascii=True)
+    assert "世界" not in result_ascii
+    assert "🚀" not in result_ascii
+    assert "\\u" in result_ascii  # Should contain unicode escapes
+
+
+def test_safe_json_encode_indentation() -> None:
+    """Test that safe_json_encode properly handles indentation."""
+    data = {"outer": {"inner": "value"}}
+
+    # No indentation (compact)
+    compact = safe_json_encode(data, indent=None)
+    assert "\n" not in compact
+
+    # With indentation
+    indented = safe_json_encode(data, indent=2)
+    assert "\n" in indented
+    assert "  " in indented  # Should contain spaces for indentation
 
 
 def test_safe_json_decode_exceeds_size_limit_bytes() -> None:

@@ -6,10 +6,11 @@ credentials (base64-encoded username:password) to HTTP requests.
 
 import base64
 import logging
-from typing import Dict
+from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
+from apiconfig.types import QueryParamType
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class BasicAuth(AuthStrategy):
         encoded_auth = base64.b64encode(auth_string.encode()).decode()
         return {"Authorization": f"Basic {encoded_auth}"}
 
-    def prepare_request_params(self) -> Dict[str, str]:
+    def prepare_request_params(self) -> Optional[QueryParamType]:
         """Return an empty dictionary as Basic Auth uses headers, not query parameters.
 
         Basic Authentication is implemented exclusively through the 'Authorization' header
@@ -93,7 +94,7 @@ class BasicAuth(AuthStrategy):
 
         Returns
         -------
-        Dict[str, str]
+        Optional[QueryParamType]
             An empty dictionary, as no query parameters are needed for Basic Authentication.
 
         """

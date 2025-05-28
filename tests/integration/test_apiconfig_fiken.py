@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from apiconfig.auth.strategies.bearer import BearerAuth
@@ -32,6 +34,7 @@ def config_manager() -> ConfigManager:
     return create_fiken_config_manager()
 
 
+@pytest.mark.skipif(not os.getenv("FIKEN_ACCESS_TOKEN"), reason="Fiken test credentials not available (FIKEN_ACCESS_TOKEN not set)")
 class TestFikenIntegration:
     """Integration tests for Fiken API using comprehensive apiconfig patterns."""
 

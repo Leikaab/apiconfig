@@ -8,6 +8,8 @@ This test demonstrates comprehensive usage of apiconfig patterns:
 - Modern HTTP client integration with proper error handling
 """
 
+import os
+
 import pytest
 
 from apiconfig.auth.strategies.api_key import ApiKeyAuth
@@ -49,6 +51,7 @@ def config_manager() -> ConfigManager:
     return create_oneflow_config_manager()
 
 
+@pytest.mark.skipif(not os.getenv("ONEFLOW_API_KEY"), reason="OneFlow test credentials not available (ONEFLOW_API_KEY not set)")
 class TestOneFlowIntegration:
     """Integration tests for OneFlow API using comprehensive apiconfig patterns."""
 
@@ -216,6 +219,7 @@ class TestOneFlowConfigurationPatterns:
         assert timeout is not None
 
 
+@pytest.mark.skipif(not os.getenv("ONEFLOW_API_KEY"), reason="OneFlow test credentials not available (ONEFLOW_API_KEY not set)")
 def test_oneflow_auth_and_list_users(oneflow_config: ClientConfig, oneflow_client: OneFlowClient) -> None:
     """
     Legacy test name preserved for backward compatibility.

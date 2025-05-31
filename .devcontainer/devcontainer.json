@@ -18,36 +18,47 @@
             "version": "18",
             "nvmVersion": "latest"
         }
-	},
-	"customizations": {
-		"vscode": {
-			"settings": "./settings.json",
-			"extensions": [
-				"ms-python.python",
-				"ms-python.vscode-pylance",
-				"github.vscode-github-actions",
-				"me-dutour-mathieu.vscode-github-actions",
-				"GitHub.vscode-pull-request-github",
-				"ms-toolsai.jupyter",
-				"ms-toolsai.jupyter-renderers",
-				"tamasfe.even-better-toml",
-				"ms-azuretools.vscode-docker",
-				"bierner.markdown-mermaid"
-			]
-		}
-	},
-	"forwardPorts": [
-		5051 // forward custom liveserver port for coverage
-	],
+ },
+ "customizations": {
+  "vscode": {
+   "settings": "./settings.json",
+   "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "github.vscode-github-actions",
+    "me-dutour-mathieu.vscode-github-actions",
+    "GitHub.vscode-pull-request-github",
+    "ms-toolsai.jupyter",
+    "ms-toolsai.jupyter-renderers",
+    "tamasfe.even-better-toml",
+    "ms-azuretools.vscode-docker",
+    "bierner.markdown-mermaid",
+    "RooVeterinaryInc.roo-cline"
+   ]
+  }
+ },
+ "forwardPorts": [
+  5051, // forward custom liveserver port for coverage
+  6333, // Qdrant HTTP API
+  6334  // Qdrant gRPC API
+ ],
 
-	"portsAttributes": {
-		"5051":{
-			"label": "Coverage - Live Server",
-			"onAutoForward": "notify"
-		}
-	},
-	"postCreateCommand": "chmod +x ./.devcontainer/postCreateCommand.sh; sh -c ./.devcontainer/postCreateCommand.sh",
-    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+ "portsAttributes": {
+  "5051":{
+   "label": "Coverage - Live Server",
+   "onAutoForward": "notify"
+  },
+  "6333": {
+   "label": "Qdrant HTTP API",
+   "onAutoForward": "notify"
+  },
+  "6334": {
+   "label": "Qdrant gRPC API",
+   "onAutoForward": "notify"
+  }
+ },
+ "postCreateCommand": "chmod +x ./.devcontainer/postCreateCommand.sh; sh -c ./.devcontainer/postCreateCommand.sh",
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}; chmod -R 777 /root/.vscode-server/data/User/globalStorage",
 	"remoteUser": "root",
 	"initializeCommand": "chmod +x ./.devcontainer/initializeCommand.sh && ./.devcontainer/initializeCommand.sh"
 }

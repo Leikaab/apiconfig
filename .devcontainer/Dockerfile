@@ -69,3 +69,12 @@ COPY poetry.lock README.md ./
 
 # Install dependencies using Poetry
 RUN poetry install --no-interaction --no-ansi --with dev --no-root
+
+# Install act (for running GitHub Actions locally)
+# Install curl if not present (though it usually is)
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN curl -s https://raw.githubusercontent.com/nektos/act/master/install.sh | bash
+
+# Configure act to use the large image by default
+RUN mkdir -p /root/.config/act && \
+    echo "-P ubuntu-latest=catthehacker/ubuntu:full-latest" > /root/.config/act/actrc

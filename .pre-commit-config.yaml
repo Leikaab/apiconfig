@@ -75,6 +75,14 @@ repos:
         pass_filenames: false
         verbose: true
 
+      - id: act-tests
+        name: Run GitHub Actions tests locally with act
+        stages: [pre-push]
+        language: system
+        entry: bash -c 'command -v act >/dev/null 2>&1 && act -j test || echo "act not installed, skipping local GitHub Actions test"'
+        pass_filenames: false
+        verbose: true
+        always_run: true
 
       - id: tox
         name: tox

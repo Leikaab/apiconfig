@@ -354,3 +354,7 @@ pyrightconfig.json
 .ollama/
 models/
 .devcontainer/privatesetup.sh
+
+# act (GitHub Actions runner) temporary files
+.act/
+act_logs/

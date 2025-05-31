@@ -53,7 +53,7 @@ repos:
         stages: [pre-commit]
         language: system
         entry: poetry run mypy
-        types: [python, pyi]
+        types_or: [python, pyi]
         require_serial: true
 
       - id: pytest

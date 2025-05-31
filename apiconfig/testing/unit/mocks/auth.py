@@ -255,6 +255,7 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         self._max_refresh_attempts = max_refresh_attempts
         self._refresh_attempts = 0
         self._is_expired = False
+        self._expiry_time: Optional[float] = None
 
     def can_refresh(self) -> bool:
         """Check if this auth strategy supports refresh and is configured to do so.
@@ -274,6 +275,9 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         bool
             True if credentials are known to be expired, False otherwise.
         """
+        # Check timestamp-based expiry first
+        if self._expiry_time is not None and time.time() >= self._expiry_time:
+            return True
         return self._is_expired
 
     def set_expired(self, expired: bool = True) -> None:
@@ -520,11 +524,9 @@ class AuthTestScenarioBuilder:
         """
         strategy = MockBearerAuthWithRefresh(initial_token=initial_token)
 
-        def expire_token() -> None:
-            time.sleep(expires_after_seconds)
-            strategy.set_expired(True)
-
-        threading.Thread(target=expire_token, daemon=True).start()
+        # Set expiry time based on current time + expiry duration
+        # This avoids race conditions with background threads
+        strategy._expiry_time = time.time() + expires_after_seconds  # type: ignore[attr-defined]
         return strategy
 
     @staticmethod

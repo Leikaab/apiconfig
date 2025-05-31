@@ -49,15 +49,22 @@ class HttpContextMixin:
             # If no explicit request was provided, try to extract from response
             if request is None:
                 try:
-                    if hasattr(response, 'request'):
-                        req = response.request
-                        if req is not None:
-                            self.request = req
-                            self._extract_from_request(req)
-                except (RuntimeError, AttributeError):
-                    # httpx Response without request throws RuntimeError
-                    # Other libraries might raise AttributeError
-                    pass
+                    # Check if response has a request attribute
+                    # Note: hasattr() would trigger the property getter in httpx, causing RuntimeError
+                    req = getattr(response, 'request', None)
+                    if req is not None:
+                        self.request = req
+                        self._extract_from_request(req)
+                except RuntimeError as e:
+                    # httpx raises RuntimeError when accessing request on a Response
+                    # created without a request. This is expected behavior.
+                    # The error message is: "The request instance has not been set on this response."
+                    if "request instance has not been set" in str(e):
+                        # This is the expected httpx behavior - no request available
+                        pass
+                    else:
+                        # This is an unexpected RuntimeError - re-raise it
+                        raise
 
     def _extract_from_request(self, request: Any) -> None:
         """Extract attributes from protocol-compliant request object."""

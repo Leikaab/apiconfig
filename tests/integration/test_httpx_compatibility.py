@@ -135,13 +135,23 @@ class TestHttpxEdgeCases:
     """Test edge cases specific to httpx."""
 
     def test_httpx_response_without_request(self) -> None:
-        """Test httpx response created without request."""
+        """Test httpx response created without request.
+
+        httpx has a design choice where Response.request raises RuntimeError
+        instead of returning None when no request is associated. Our code
+        handles this specific case gracefully.
+        """
         # httpx allows creating responses without requests
         response = httpx.Response(
             status_code=500,
             content=b"Internal error",
         )
 
+        # Verify httpx behavior - it raises RuntimeError
+        with pytest.raises(RuntimeError, match="request instance has not been set"):
+            _ = response.request
+
+        # Our exception handles this gracefully
         exc = ApiClientError("Server error", response=response)
 
         assert exc.status_code == 500

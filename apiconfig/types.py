@@ -9,10 +9,12 @@ from typing import (
     List,
     Mapping,
     Optional,
+    Protocol,
     Sequence,
     TypeAlias,
     TypedDict,
     Union,
+    runtime_checkable,
 )
 
 # JSON Types
@@ -64,67 +66,23 @@ ResponseBodyType: TypeAlias = Union[JsonObject, JsonList, bytes, str, None]
 """Type alias for API response body types that apiconfig components might process."""
 
 
-class HttpRequestContext(TypedDict, total=False):
-    """
-    Library-agnostic HTTP request context for exception enrichment.
-
-    This structure holds essential request information that can be used
-    to provide meaningful context in exceptions without coupling to
-    specific HTTP client libraries.
-
-    Attributes
-    ----------
-    method : str
-        HTTP method (GET, POST, etc.).
-    url : str
-        Request URL.
-    headers : Optional[Mapping[str, str]]
-        Request headers (redacted if needed).
-    body_preview : Optional[str]
-        Safe preview of request body (redacted).
-
-    Notes
-    -----
-    This TypedDict uses `total=False` to allow partial dictionaries where
-    only some fields are present, providing flexibility in exception handling
-    scenarios where not all request information may be available.
-    """
+@runtime_checkable
+class HttpRequestProtocol(Protocol):
+    """Protocol matching common HTTP request objects (requests.Request, httpx.Request, etc.)."""
 
     method: str
     url: str
-    headers: Optional[Mapping[str, str]]
-    body_preview: Optional[str]
+    headers: Any  # Different libraries use different header types
 
 
-class HttpResponseContext(TypedDict, total=False):
-    """
-    Library-agnostic HTTP response context for exception enrichment.
-
-    This structure holds essential response information that can be used
-    to provide meaningful context in exceptions without coupling to
-    specific HTTP client libraries.
-
-    Attributes
-    ----------
-    status_code : int
-        HTTP status code.
-    headers : Optional[Mapping[str, str]]
-        Response headers (redacted if needed).
-    body_preview : Optional[str]
-        Safe preview of response body (redacted).
-    reason : Optional[str]
-        HTTP reason phrase (e.g., "Not Found").
-
-    Notes
-    -----
-    This TypedDict uses `total=False` to allow partial dictionaries where
-    only some fields are present, providing flexibility in exception handling
-    scenarios where not all response information may be available.
-    """
+@runtime_checkable
+class HttpResponseProtocol(Protocol):
+    """Protocol matching common HTTP response objects (requests.Response, httpx.Response, etc.)."""
 
     status_code: int
-    headers: Optional[Mapping[str, str]]
-    body_preview: Optional[str]
+    headers: Any
+    text: str  # For body preview
+    request: Optional[Any]  # Most responses have .request
     reason: Optional[str]
 
 
@@ -283,8 +241,8 @@ __all__ = [
     "_UrlencodeParamsType",
     "DataType",
     "ResponseBodyType",
-    "HttpRequestContext",
-    "HttpResponseContext",
+    "HttpRequestProtocol",
+    "HttpResponseProtocol",
     "HttpMethod",
     "ConfigDict",
     "ConfigProviderCallable",

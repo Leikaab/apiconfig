@@ -26,7 +26,22 @@ from .config import (
     InvalidConfigError,
     MissingConfigError,
 )
-from .http import HTTPUtilsError, JSONDecodeError, JSONEncodeError, PayloadTooLargeError
+from .http import (
+    ApiClientBadRequestError,
+    ApiClientConflictError,
+    ApiClientError,
+    ApiClientForbiddenError,
+    ApiClientInternalServerError,
+    ApiClientNotFoundError,
+    ApiClientRateLimitError,
+    ApiClientUnauthorizedError,
+    ApiClientUnprocessableEntityError,
+    HTTPUtilsError,
+    JSONDecodeError,
+    JSONEncodeError,
+    PayloadTooLargeError,
+    create_api_client_error,
+)
 
 __all__: list[str] = [
     # Base exceptions
@@ -49,4 +64,15 @@ __all__: list[str] = [
     "JSONDecodeError",
     "JSONEncodeError",
     "PayloadTooLargeError",
+    # API client exceptions
+    "ApiClientError",
+    "ApiClientBadRequestError",
+    "ApiClientUnauthorizedError",
+    "ApiClientForbiddenError",
+    "ApiClientNotFoundError",
+    "ApiClientConflictError",
+    "ApiClientUnprocessableEntityError",
+    "ApiClientRateLimitError",
+    "ApiClientInternalServerError",
+    "create_api_client_error",
 ]

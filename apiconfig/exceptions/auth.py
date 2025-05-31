@@ -1,8 +1,8 @@
 """Authentication-specific exception classes for the apiconfig library."""
 
-from typing import Any, Optional
+from typing import Optional
 
-from apiconfig.types import HttpRequestContext, HttpResponseContext
+from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
 from .base import AuthenticationError
 
@@ -26,25 +26,20 @@ class InvalidCredentialsError(AuthenticationError):
     ----------
     message : str
         Error message describing the invalid credentials (default: "Invalid credentials provided")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Invalid credentials provided",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class ExpiredTokenError(AuthenticationError):
@@ -54,25 +49,20 @@ class ExpiredTokenError(AuthenticationError):
     ----------
     message : str
         Error message describing the token expiration (default: "Authentication token has expired")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Authentication token has expired",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class MissingCredentialsError(AuthenticationError):
@@ -82,25 +72,20 @@ class MissingCredentialsError(AuthenticationError):
     ----------
     message : str
         Error message describing the missing credentials (default: "Required credentials not provided")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Required credentials not provided",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class TokenRefreshError(AuthenticationError):
@@ -110,25 +95,20 @@ class TokenRefreshError(AuthenticationError):
     ----------
     message : str
         Error message describing the token refresh failure (default: "Failed to refresh authentication token")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Failed to refresh authentication token",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class TokenRefreshJsonError(TokenRefreshError):
@@ -138,25 +118,20 @@ class TokenRefreshJsonError(TokenRefreshError):
     ----------
     message : str
         Error message describing the JSON decoding failure (default: "Failed to decode JSON from token refresh response")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Failed to decode JSON from token refresh response",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class TokenRefreshTimeoutError(TokenRefreshError):
@@ -166,25 +141,20 @@ class TokenRefreshTimeoutError(TokenRefreshError):
     ----------
     message : str
         Error message describing the timeout (default: "Token refresh request timed out")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Token refresh request timed out",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class TokenRefreshNetworkError(TokenRefreshError):
@@ -194,25 +164,20 @@ class TokenRefreshNetworkError(TokenRefreshError):
     ----------
     message : str
         Error message describing the network failure (default: "Token refresh request failed due to network issues")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Token refresh request failed due to network issues",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)
 
 
 class AuthStrategyError(AuthenticationError):
@@ -222,22 +187,17 @@ class AuthStrategyError(AuthenticationError):
     ----------
     message : str
         Error message describing the authentication strategy error (default: "Authentication strategy error")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
-    *args : Any
-        Additional positional arguments for base exception
-    **kwargs : Any
-        Additional keyword arguments for base exception
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     """
 
     def __init__(
         self,
         message: str = "Authentication strategy error",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, request_context, response_context, *args, **kwargs)
+        super().__init__(message, request=request, response=response)

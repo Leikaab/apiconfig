@@ -68,19 +68,3 @@ class OneFlowClient(BaseClient):
             JSON response containing contract data.
         """
         return self._request(HttpMethod.GET, "/contracts", params=params)
-
-    def list_templates(self, params: Optional[QueryParamType] = None) -> Union[JsonObject, JsonList]:
-        """
-        List templates from OneFlow API.
-
-        Args
-        ----
-        params : Optional[QueryParamType]
-            Optional query parameters for filtering/sorting.
-
-        Returns
-        -------
-        Union[JsonObject, JsonList]
-            JSON response containing template data.
-        """
-        return self._request(HttpMethod.GET, "/templates", params=params)

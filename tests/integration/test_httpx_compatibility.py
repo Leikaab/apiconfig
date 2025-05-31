@@ -1,13 +1,14 @@
 """Integration tests for httpx library compatibility."""
 
-from apiconfig.exceptions.auth import AuthenticationError, ExpiredTokenError
+import pytest
+
 from apiconfig.exceptions import (
     ApiClientError,
     ApiClientForbiddenError,
     ApiClientRateLimitError,
     create_api_client_error,
 )
-import pytest
+from apiconfig.exceptions.auth import ExpiredTokenError
 
 # Only run if httpx is available
 httpx = pytest.importorskip("httpx")
@@ -69,6 +70,7 @@ class TestHttpxResponseObjects:
         assert exc.method == "POST"
         assert exc.url == "https://api.example.com/async/data"
         # Can access headers through original response
+        assert exc.response is not None
         assert exc.response.headers["Retry-After"] == "60"
 
     def test_httpx_with_json_response(self) -> None:
@@ -84,17 +86,12 @@ class TestHttpxResponseObjects:
         exc = create_api_client_error(422, "Validation failed", response=response)
 
         # Can access JSON through original response
-        assert exc.response.json() == {
-            "errors": [{"field": "email", "message": "Invalid format"}]
-        }
+        assert exc.response is not None
+        assert exc.response.json() == {"errors": [{"field": "email", "message": "Invalid format"}]}  # type: ignore[attr-defined]
 
     def test_httpx_auth_error(self) -> None:
         """Test authentication error with httpx."""
-        request = httpx.Request(
-            "GET",
-            "https://api.example.com/protected",
-            headers={"Authorization": "Bearer expired_token"}
-        )
+        request = httpx.Request("GET", "https://api.example.com/protected", headers={"Authorization": "Bearer expired_token"})
         response = httpx.Response(
             status_code=401,
             headers={"WWW-Authenticate": "Bearer realm='api'"},
@@ -176,4 +173,5 @@ class TestHttpxEdgeCases:
         assert exc.method == "PATCH"
         assert exc.url == "https://custom.transport/api"
         # Can access extensions through original response
-        assert exc.response.extensions["custom"] == "transport_data"
+        assert exc.response is not None
+        assert exc.response.extensions["custom"] == "transport_data"  # type: ignore[attr-defined]

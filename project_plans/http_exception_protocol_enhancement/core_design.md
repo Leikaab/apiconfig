@@ -37,8 +37,8 @@ To avoid code duplication between `ApiClientError` and `AuthenticationError`, we
 
 class HttpContextMixin:
     """Mixin to add HTTP context extraction capabilities to exceptions."""
-    
-    def _init_http_context(self, 
+
+    def _init_http_context(self,
                           request: Optional[Union[HttpRequestContext, HttpRequestProtocol]] = None,
                           response: Optional[Union[HttpResponseContext, HttpResponseProtocol]] = None,
                           status_code: Optional[int] = None) -> None:
@@ -50,7 +50,7 @@ class HttpContextMixin:
         self.reason: Optional[str] = None
         self.request = None  # Original request object
         self.response = None  # Original response object
-        
+
         # Handle response parameter
         if response is not None:
             if isinstance(response, dict):  # TypedDict
@@ -63,12 +63,12 @@ class HttpContextMixin:
             else:  # Protocol object (requests.Response, httpx.Response, etc.)
                 self.response = response
                 self._extract_from_response(response)
-                
+
                 # Extract request from response if available
                 if hasattr(response, 'request') and response.request:
                     self.request = response.request
                     self._extract_from_request(response.request)
-        
+
         # Handle direct request parameter (less common case)
         elif request is not None:
             if isinstance(request, dict):  # TypedDict
@@ -88,27 +88,27 @@ from .base import APIConfigError, HttpContextMixin
 
 class ApiClientError(APIConfigError, HttpContextMixin):
     """Base exception for errors during HTTP API client operations."""
-    
+
     def __init__(self, message: str, status_code: Optional[int] = None,
                  request: Optional[Union[HttpRequestContext, HttpRequestProtocol]] = None,
                  response: Optional[Union[HttpResponseContext, HttpResponseProtocol]] = None) -> None:
         super().__init__(message)
         self._init_http_context(request=request, response=response, status_code=status_code)
-    
+
     def __str__(self) -> str:
         """Return string representation with HTTP context."""
         base_message = super().__str__()
-        
+
         context_parts = []
         if self.status_code:
             context_parts.append(f"HTTP {self.status_code}")
-        
+
         if self.method and self.url:
             context_parts.append(f"{self.method} {self.url}")
-        
+
         if context_parts:
             return f"{base_message} ({', '.join(context_parts)})"
-        
+
         return base_message
 ```
 
@@ -117,32 +117,32 @@ class ApiClientError(APIConfigError, HttpContextMixin):
 ```python
 class AuthenticationError(APIConfigError, HttpContextMixin):
     """Base exception for authentication-related errors."""
-    
+
     def __init__(self, message: str,
                  request: Optional[Union[HttpRequestContext, HttpRequestProtocol]] = None,
                  response: Optional[Union[HttpResponseContext, HttpResponseProtocol]] = None,
                  *args: Any, **kwargs: Any) -> None:
         super().__init__(message, *args, **kwargs)
         self._init_http_context(request=request, response=response)
-    
+
     def __str__(self) -> str:
         """Return string representation with context if available."""
         base_message = super().__str__()
-        
+
         context_parts = []
-        
+
         if self.method and self.url:
             context_parts.append(f"Request: {self.method} {self.url}")
-        
+
         if self.status_code is not None:
             status_info = f"{self.status_code}"
             if self.reason:
                 status_info += f" {self.reason}"
             context_parts.append(f"Response: {status_info}")
-        
+
         if context_parts:
             return f"{base_message} ({', '.join(context_parts)})"
-        
+
         return base_message
 ```
 

@@ -17,6 +17,11 @@
             "installYarnUsingApt": true,
             "version": "18",
             "nvmVersion": "latest"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "moby": true,
+            "dockerDashComposeVersion": "v2"
         }
  },
  "customizations": {

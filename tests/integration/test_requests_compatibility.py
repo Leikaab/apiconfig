@@ -1,13 +1,14 @@
 """Integration tests for requests library compatibility."""
 
-from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
+import pytest
+
 from apiconfig.exceptions import (
     ApiClientBadRequestError,
     ApiClientError,
     ApiClientNotFoundError,
     create_api_client_error,
 )
-import pytest
+from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
 
 # Only run if requests is available
 requests = pytest.importorskip("requests")
@@ -72,11 +73,7 @@ class TestRequestsResponseObjects:
         """Test with response from requests.Session."""
         # Create a session and prepare a request
         session = requests.Session()
-        request = requests.Request(
-            method="DELETE",
-            url="https://api.example.com/item/123",
-            headers={"Authorization": "Bearer token123"}
-        )
+        request = requests.Request(method="DELETE", url="https://api.example.com/item/123", headers={"Authorization": "Bearer token123"})
         prepared = session.prepare_request(request)
 
         # Create a response
@@ -114,9 +111,7 @@ class TestRequestsResponseObjects:
         """Test token refresh error with requests."""
         # Simulate a token refresh request
         refresh_request = requests.Request(
-            method="POST",
-            url="https://auth.example.com/oauth/token",
-            data={"grant_type": "refresh_token", "refresh_token": "expired_token"}
+            method="POST", url="https://auth.example.com/oauth/token", data={"grant_type": "refresh_token", "refresh_token": "expired_token"}
         ).prepare()
 
         response = requests.Response()
@@ -159,10 +154,7 @@ class TestRequestsEdgeCases:
         response.status_code = 404
         response.reason = "Not Found"
         response.url = "https://api.example.com/final/location"
-        response.request = requests.Request(
-            method="GET",
-            url="https://api.example.com/final/location"
-        ).prepare()
+        response.request = requests.Request(method="GET", url="https://api.example.com/final/location").prepare()
 
         # Add redirect history
         redirect1 = requests.Response()
@@ -182,4 +174,5 @@ class TestRequestsEdgeCases:
         assert exc.status_code == 404
 
         # Can access history through original response
+        assert exc.response is not None and hasattr(exc.response, "history")
         assert len(exc.response.history) == 2

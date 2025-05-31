@@ -11,7 +11,7 @@ def _extract_from_request(self, request: Any) -> None:
     """Extract attributes from protocol-compliant request object."""
     if hasattr(request, 'method'):
         self.method = str(request.method)
-    
+
     if hasattr(request, 'url'):
         self.url = str(request.url)
 
@@ -19,7 +19,7 @@ def _extract_from_response(self, response: Any) -> None:
     """Extract attributes from protocol-compliant response object."""
     if hasattr(response, 'status_code'):
         self.status_code = int(response.status_code)
-    
+
     if hasattr(response, 'reason'):
         self.reason = str(response.reason) if response.reason else None
 ```
@@ -38,7 +38,7 @@ try:
 except requests.HTTPError as e:
     # Just pass the response directly!
     raise ApiClientBadRequestError("API request failed", response=e.response)
-    
+
     # The exception now has:
     # - exception.response (original requests.Response)
     # - exception.request (original requests.Request via response.request)

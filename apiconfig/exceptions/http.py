@@ -410,10 +410,6 @@ def create_api_client_error(
         elif status_code == 500:
             return ApiClientInternalServerError(request=request, response=response)
         else:
-            return ApiClientInternalServerError(
-                f"Server Error (HTTP {status_code})", status_code=status_code, request=request, response=response
-            )
+            return ApiClientInternalServerError(f"Server Error (HTTP {status_code})", status_code=status_code, request=request, response=response)
     else:
-        return ApiClientError(
-            message or f"HTTP Error {status_code}", status_code=status_code, request=request, response=response
-        )
+        return ApiClientError(message or f"HTTP Error {status_code}", status_code=status_code, request=request, response=response)

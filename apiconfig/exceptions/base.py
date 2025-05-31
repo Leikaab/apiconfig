@@ -23,10 +23,9 @@ class ConfigurationError(APIConfigError):
 class HttpContextMixin:
     """Mixin to add HTTP context extraction capabilities to exceptions."""
 
-    def _init_http_context(self,
-                           request: Optional[HttpRequestProtocol] = None,
-                           response: Optional[HttpResponseProtocol] = None,
-                           status_code: Optional[int] = None) -> None:
+    def _init_http_context(
+        self, request: Optional[HttpRequestProtocol] = None, response: Optional[HttpResponseProtocol] = None, status_code: Optional[int] = None
+    ) -> None:
         """Initialize HTTP context attributes from request/response objects."""
         # Initialize all attributes
         self.status_code = status_code
@@ -51,7 +50,7 @@ class HttpContextMixin:
                 try:
                     # Check if response has a request attribute
                     # Note: hasattr() would trigger the property getter in httpx, causing RuntimeError
-                    req = getattr(response, 'request', None)
+                    req = getattr(response, "request", None)
                     if req is not None:
                         self.request = req
                         self._extract_from_request(req)
@@ -68,18 +67,18 @@ class HttpContextMixin:
 
     def _extract_from_request(self, request: Any) -> None:
         """Extract attributes from protocol-compliant request object."""
-        if hasattr(request, 'method') and request.method is not None:
+        if hasattr(request, "method") and request.method is not None:
             self.method = str(request.method)
 
-        if hasattr(request, 'url') and request.url is not None:
+        if hasattr(request, "url") and request.url is not None:
             self.url = str(request.url)
 
     def _extract_from_response(self, response: Any) -> None:
         """Extract attributes from protocol-compliant response object."""
-        if hasattr(response, 'status_code') and response.status_code is not None:
+        if hasattr(response, "status_code") and response.status_code is not None:
             self.status_code = int(response.status_code)
 
-        if hasattr(response, 'reason'):
+        if hasattr(response, "reason"):
             self.reason = str(response.reason) if response.reason else None
 
 

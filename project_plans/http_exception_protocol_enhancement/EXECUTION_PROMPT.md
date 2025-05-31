@@ -77,7 +77,7 @@ Before marking any phase complete, verify:
 
 ### WRONG (Backwards Compatible):
 ```python
-def __init__(self, message, request=None, response=None, 
+def __init__(self, message, request=None, response=None,
              request_context=None, response_context=None):  # NO!
     # Backwards compatibility handling - FORBIDDEN
     if request_context:
@@ -86,7 +86,7 @@ def __init__(self, message, request=None, response=None,
 
 ### RIGHT (Clean Break):
 ```python
-def __init__(self, message: str, *, 
+def __init__(self, message: str, *,
              request: Optional[HttpRequestProtocol] = None,
              response: Optional[HttpResponseProtocol] = None) -> None:
     super().__init__(message)
@@ -108,7 +108,7 @@ def test_exception_with_request():
     mock_request.method = 'GET'
     mock_request.url = 'https://api.example.com'
     mock_request.headers = {'Authorization': 'Bearer token'}
-    
+
     exc = ApiClientError("test", request=mock_request)
     assert exc.method == 'GET'
 ```

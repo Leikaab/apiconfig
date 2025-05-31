@@ -33,7 +33,7 @@ class TestAuthenticationError:
 
     def test_initialization_with_request_object(self) -> None:
         """Test initialization with request object."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/token"
 
@@ -45,7 +45,7 @@ class TestAuthenticationError:
 
     def test_initialization_with_response_object(self) -> None:
         """Test initialization with response object."""
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text'])
+        response = Mock(spec=["status_code", "reason", "headers", "text"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -59,11 +59,11 @@ class TestAuthenticationError:
 
     def test_initialization_with_both_objects(self) -> None:
         """Test initialization with both request and response objects."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/token"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -85,7 +85,7 @@ class TestAuthenticationError:
 
     def test_str_with_request_context_only(self) -> None:
         """Test string representation with request context only."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/token"
 
@@ -95,7 +95,7 @@ class TestAuthenticationError:
 
     def test_str_with_response_context_only(self) -> None:
         """Test string representation with response context only."""
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text'])
+        response = Mock(spec=["status_code", "reason", "headers", "text"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -107,11 +107,11 @@ class TestAuthenticationError:
 
     def test_str_with_both_contexts(self) -> None:
         """Test string representation with both contexts."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/token"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -124,7 +124,7 @@ class TestAuthenticationError:
 
     def test_str_with_partial_request_context(self) -> None:
         """Test string representation with partial request context."""
-        request = Mock(spec=['method'])
+        request = Mock(spec=["method"])
         request.method = "POST"
         # Missing URL attribute
 
@@ -134,7 +134,7 @@ class TestAuthenticationError:
 
     def test_str_with_partial_response_context(self) -> None:
         """Test string representation with partial response context."""
-        response = Mock(spec=['status_code', 'headers', 'text'])
+        response = Mock(spec=["status_code", "headers", "text"])
         response.status_code = 401
         response.headers = {}
         response.text = ""
@@ -180,11 +180,11 @@ class TestExpiredTokenError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/data"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Token Expired"
         response.headers = {}
@@ -216,11 +216,11 @@ class TestTokenRefreshError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/oauth/token"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 400
         response.reason = "Bad Request"
         response.headers = {}
@@ -252,11 +252,11 @@ class TestAuthStrategyError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/auth"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 500
         response.reason = "Internal Server Error"
         response.headers = {}
@@ -288,11 +288,11 @@ class TestInvalidCredentialsError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/login"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -324,11 +324,11 @@ class TestMissingCredentialsError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/protected"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -360,11 +360,11 @@ class TestTokenRefreshJsonError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/oauth/token"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 200
         response.reason = "OK"
         response.headers = {}
@@ -397,7 +397,7 @@ class TestTokenRefreshTimeoutError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/oauth/token"
 
@@ -427,7 +427,7 @@ class TestTokenRefreshNetworkError:
 
     def test_with_context(self) -> None:
         """Test with HTTP context."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/oauth/token"
 
@@ -493,11 +493,11 @@ class TestContextEdgeCases:
 
     def test_none_values_in_context(self) -> None:
         """Test handling of None values in context dictionaries."""
-        request = Mock(spec=['method', 'url'])
+        request = Mock(spec=["method", "url"])
         request.method = "POST"
         request.url = None  # None value
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = None  # None value
         response.reason = "OK"
         response.headers = {}
@@ -521,10 +521,10 @@ class TestContextEdgeCases:
 
     def test_context_with_unknown_values(self) -> None:
         """Test handling when context has keys but with None/missing values."""
-        request = Mock(spec=['method'])  # Has method but no url
+        request = Mock(spec=["method"])  # Has method but no url
         request.method = "POST"
 
-        response = Mock(spec=['status_code', 'headers', 'text'])  # Has status_code but no reason
+        response = Mock(spec=["status_code", "headers", "text"])  # Has status_code but no reason
         response.status_code = 401
         response.headers = {}
         response.text = ""
@@ -536,12 +536,12 @@ class TestContextEdgeCases:
 
     def test_extra_keys_in_context(self) -> None:
         """Test that extra keys in context don't break functionality."""
-        request = Mock(spec=['method', 'url', 'extra_field'])
+        request = Mock(spec=["method", "url", "extra_field"])
         request.method = "POST"
         request.url = "https://api.example.com/token"
         request.extra_field = "should_be_ignored"
 
-        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request', 'extra_field'])
+        response = Mock(spec=["status_code", "reason", "headers", "text", "request", "extra_field"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}

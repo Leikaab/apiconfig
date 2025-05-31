@@ -13,7 +13,7 @@ Instead of manually extracting context:
     # Old approach (no longer supported)
     request_context = {"method": "GET", "url": "https://api.example.com"}
     response_context = {"status_code": 404, "reason": "Not Found"}
-    raise ApiClientNotFoundError("Resource not found", 
+    raise ApiClientNotFoundError("Resource not found",
                                 request_context=request_context,
                                 response_context=response_context)
 
@@ -24,7 +24,7 @@ You can now pass HTTP library objects directly:
     # New approach with requests
     import requests
     from apiconfig.exceptions import ApiClientNotFoundError
-    
+
     try:
         response = requests.get("https://api.example.com/users/123")
         response.raise_for_status()
@@ -34,7 +34,7 @@ You can now pass HTTP library objects directly:
     # New approach with httpx
     import httpx
     from apiconfig.exceptions import create_api_client_error
-    
+
     response = httpx.get("https://api.example.com/data")
     if response.status_code >= 400:
         raise create_api_client_error(
@@ -116,10 +116,10 @@ With httpx Library
 
     async with httpx.AsyncClient() as client:
         response = await client.get("https://api.example.com/protected")
-        
+
         if response.status_code == 401:
             raise AuthenticationError("Invalid credentials", response=response)
-        
+
         if response.is_error:
             raise ApiClientError(f"Request failed: {response.text}", response=response)
 
@@ -139,7 +139,7 @@ Authentication Exceptions
         "https://auth.example.com/token/refresh",
         data={"refresh_token": refresh_token}
     )
-    
+
     if refresh_response.status_code == 400:
         raise TokenRefreshError(
             "Failed to refresh access token",
@@ -166,17 +166,17 @@ The original request and response objects are always accessible:
         response.raise_for_status()
     except requests.HTTPError as e:
         exc = ApiClientError("Request failed", response=e.response)
-        
+
         # Access original objects
         original_response = exc.response  # requests.Response
         original_request = exc.request    # requests.PreparedRequest
-        
+
         # Access extracted attributes
         print(f"Method: {exc.method}")
         print(f"URL: {exc.url}")
         print(f"Status: {exc.status_code}")
         print(f"Reason: {exc.reason}")
-        
+
         # Access response data through original object
         if original_response.headers.get("content-type") == "application/json":
             error_details = original_response.json()
@@ -199,7 +199,7 @@ Any HTTP client that provides objects with the required attributes will work:
                 'url': url,
                 'headers': {}
             })()
-    
+
     # Works seamlessly
     custom_response = CustomHttpResponse(500, "GET", "https://api.example.com")
     raise ApiClientError("Custom client error", response=custom_response)
@@ -221,7 +221,7 @@ If you're migrating from the old TypedDict-based API:
 
     # Old code
     from apiconfig.types import HttpRequestContext, HttpResponseContext
-    
+
     request_context: HttpRequestContext = {
         "method": "POST",
         "url": "https://api.example.com/data"
@@ -230,7 +230,7 @@ If you're migrating from the old TypedDict-based API:
         "status_code": 400,
         "reason": "Bad Request"
     }
-    raise ApiClientError("Failed", 
+    raise ApiClientError("Failed",
                         request_context=request_context,
                         response_context=response_context)
 

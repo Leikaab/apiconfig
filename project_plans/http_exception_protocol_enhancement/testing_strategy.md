@@ -35,7 +35,7 @@ def test_exception_with_response_protocol():
     """Test creating exception with protocol-compliant response."""
     response = MockResponse(400, "Bad Request")
     exc = ApiClientBadRequestError("Failed", response=response)
-    
+
     assert exc.response is response
     assert exc.request is response.request
     assert exc.status_code == 400
@@ -47,7 +47,7 @@ def test_exception_with_request_only():
     """Test creating exception with only request object."""
     request = MockRequest("POST", "https://api.example.com/users")
     exc = ApiClientError("Request failed", request=request)
-    
+
     assert exc.request is request
     assert exc.response is None
     assert exc.method == 'POST'
@@ -60,7 +60,7 @@ def test_exception_with_typeddict():
         request={"method": "PUT", "url": "/api/resource"},
         response={"status_code": 409, "reason": "Conflict"}
     )
-    
+
     assert exc.request is None  # No protocol object stored
     assert exc.response is None
     assert exc.method == "PUT"
@@ -72,7 +72,7 @@ def test_auth_exception_with_response():
     """Test authentication exception with response object."""
     response = MockResponse(401, "Unauthorized")
     exc = AuthenticationError("Auth failed", response=response)
-    
+
     assert exc.response is response
     assert exc.status_code == 401
     assert exc.method == 'GET'
@@ -94,7 +94,7 @@ def test_create_api_client_error_with_protocol():
     """Test factory function with protocol objects."""
     response = MockResponse(422, "Unprocessable Entity")
     error = create_api_client_error(422, "Validation failed", response=response)
-    
+
     assert error.__class__.__name__ == "ApiClientUnprocessableEntityError"
     assert error.response is response
     assert error.status_code == 422
@@ -103,7 +103,7 @@ def test_exception_without_request_attribute():
     """Test response object without .request attribute."""
     response = Mock(status_code=500, reason="Server Error")
     # Don't set response.request
-    
+
     exc = ApiClientError("Server error", response=response)
     assert exc.response is response
     assert exc.request is None
@@ -113,7 +113,7 @@ def test_partial_protocol_compliance():
     """Test objects with only some expected attributes."""
     response = Mock(status_code=404)
     # No reason attribute
-    
+
     exc = ApiClientError("Not found", response=response)
     assert exc.status_code == 404
     assert exc.reason is None
@@ -121,12 +121,12 @@ def test_partial_protocol_compliance():
 def test_inheritance_chain():
     """Test all subclasses inherit the new functionality."""
     response = MockResponse(404)
-    
+
     # Test different subclasses
     not_found = ApiClientNotFoundError("Not found", response=response)
     assert not_found.status_code == 404
     assert not_found.method == 'GET'
-    
+
     unauthorized = ApiClientUnauthorizedError("Unauthorized", response=response)
     assert unauthorized.status_code == 404  # From response, not hardcoded 401
     assert unauthorized.url == 'https://api.example.com/data'
@@ -156,9 +156,9 @@ def test_with_real_requests_response():
     response.reason = "Bad Request"
     response.url = "https://api.example.com/test"
     response.request = requests.Request(method="POST", url=response.url).prepare()
-    
+
     exc = ApiClientBadRequestError("Request failed", response=response)
-    
+
     assert exc.response is response
     assert exc.request is response.request
     assert exc.status_code == 400
@@ -170,7 +170,7 @@ def test_requests_error_chaining():
     response = requests.Response()
     response.status_code = 404
     response.reason = "Not Found"
-    
+
     try:
         response.raise_for_status()
     except requests.HTTPError as e:
@@ -201,9 +201,9 @@ async def test_with_real_httpx_response():
         headers={"content-type": "application/json"},
         request=request,
     )
-    
+
     exc = ApiClientError("Not found", response=response)
-    
+
     assert exc.response is response
     assert exc.request is request
     assert exc.status_code == 404
@@ -216,9 +216,9 @@ def test_httpx_sync_client():
         status_code=403,
         request=request,
     )
-    
+
     exc = create_api_client_error(403, "Forbidden", response=response)
-    
+
     assert exc.__class__.__name__ == "ApiClientForbiddenError"
     assert exc.method == "DELETE"
 ```

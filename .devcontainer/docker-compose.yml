@@ -11,6 +11,7 @@ services:
     volumes:
       - ..:/workspace:cached # Mount the whole workspace read-write
       - vscode_extensions_data:/root/.vscode-server/data/User/globalStorage:cached # Persist VS Code extension data
+      - /var/run/docker.sock:/var/run/docker.sock # Mount Docker socket for act
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity

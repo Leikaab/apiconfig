@@ -69,6 +69,7 @@ ResponseBodyType: TypeAlias = Union[JsonObject, JsonList, bytes, str, None]
 @runtime_checkable
 class HttpRequestProtocol(Protocol):
     """Protocol matching common HTTP request objects (requests.Request, httpx.Request, etc.)."""
+
     method: str
     url: str
     headers: Any  # Different libraries use different header types
@@ -77,6 +78,7 @@ class HttpRequestProtocol(Protocol):
 @runtime_checkable
 class HttpResponseProtocol(Protocol):
     """Protocol matching common HTTP response objects (requests.Response, httpx.Response, etc.)."""
+
     status_code: int
     headers: Any
     text: str  # For body preview

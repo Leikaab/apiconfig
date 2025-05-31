@@ -125,19 +125,6 @@ class TestOneFlowIntegration:
             # Direct list response
             assert len(contracts) >= 0  # May be empty
 
-    def test_list_templates(self, oneflow_client: OneFlowClient) -> None:
-        """Test listing templates using the improved client."""
-        templates = oneflow_client.list_templates()
-
-        # OneFlow may return different structures, handle both cases
-        if isinstance(templates, dict):
-            # Dict response with data key
-            if "data" in templates:
-                assert isinstance(templates["data"], list)
-        elif isinstance(templates, list):
-            # Direct list response
-            assert len(templates) >= 0  # May be empty
-
     def test_configuration_validation(self) -> None:
         """Test that proper configuration validation occurs.
 

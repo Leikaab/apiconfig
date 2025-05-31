@@ -55,6 +55,7 @@ repos:
         entry: poetry run mypy
         types_or: [python, pyi]
         require_serial: true
+        always_run: true
 
       - id: pytest
         name: pytest (all tests)

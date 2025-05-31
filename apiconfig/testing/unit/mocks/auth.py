@@ -526,7 +526,7 @@ class AuthTestScenarioBuilder:
 
         # Set expiry time based on current time + expiry duration
         # This avoids race conditions with background threads
-        strategy._expiry_time = time.time() + expires_after_seconds  # type: ignore[attr-defined]
+        strategy._expiry_time = time.time() + expires_after_seconds
         return strategy
 
     @staticmethod

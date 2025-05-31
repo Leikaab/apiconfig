@@ -2,12 +2,13 @@
 
 from typing import Any, Optional
 
-from apiconfig.types import HttpRequestContext, HttpResponseContext
+from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
 __all__: list[str] = [
     "APIConfigError",
     "ConfigurationError",
     "AuthenticationError",
+    "HttpContextMixin",
 ]
 
 
@@ -19,17 +20,73 @@ class ConfigurationError(APIConfigError):
     """Base exception for configuration-related errors."""
 
 
-class AuthenticationError(APIConfigError):
+class HttpContextMixin:
+    """Mixin to add HTTP context extraction capabilities to exceptions."""
+
+    def _init_http_context(self,
+                           request: Optional[HttpRequestProtocol] = None,
+                           response: Optional[HttpResponseProtocol] = None,
+                           status_code: Optional[int] = None) -> None:
+        """Initialize HTTP context attributes from request/response objects."""
+        # Initialize all attributes
+        self.status_code = status_code
+        self.method: Optional[str] = None
+        self.url: Optional[str] = None
+        self.reason: Optional[str] = None
+        self.request = None  # Original request object
+        self.response = None  # Original response object
+
+        # Handle explicit request parameter first - it takes precedence
+        if request is not None:
+            self.request = request
+            self._extract_from_request(request)
+
+        # Handle response parameter
+        if response is not None:
+            self.response = response
+            self._extract_from_response(response)
+
+            # If no explicit request was provided, try to extract from response
+            if request is None:
+                try:
+                    if hasattr(response, 'request'):
+                        req = response.request
+                        if req is not None:
+                            self.request = req
+                            self._extract_from_request(req)
+                except (RuntimeError, AttributeError):
+                    # httpx Response without request throws RuntimeError
+                    # Other libraries might raise AttributeError
+                    pass
+
+    def _extract_from_request(self, request: Any) -> None:
+        """Extract attributes from protocol-compliant request object."""
+        if hasattr(request, 'method') and request.method is not None:
+            self.method = str(request.method)
+
+        if hasattr(request, 'url') and request.url is not None:
+            self.url = str(request.url)
+
+    def _extract_from_response(self, response: Any) -> None:
+        """Extract attributes from protocol-compliant response object."""
+        if hasattr(response, 'status_code') and response.status_code is not None:
+            self.status_code = int(response.status_code)
+
+        if hasattr(response, 'reason'):
+            self.reason = str(response.reason) if response.reason else None
+
+
+class AuthenticationError(APIConfigError, HttpContextMixin):
     """Base exception for authentication-related errors.
 
     Parameters
     ----------
     message : str
         Error message describing the authentication failure
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging (optional)
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging (optional)
+    request : Optional[HttpRequestProtocol]
+        HTTP request object (optional)
+    response : Optional[HttpResponseProtocol]
+        HTTP response object (optional)
     *args : Any
         Additional positional arguments for base exception
     **kwargs : Any
@@ -39,10 +96,9 @@ class AuthenticationError(APIConfigError):
     def __init__(
         self,
         message: str,
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
-        *args: Any,
-        **kwargs: Any,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
         """
         Initialize authentication error with optional HTTP context.
@@ -51,18 +107,13 @@ class AuthenticationError(APIConfigError):
         ----------
         message : str
             Error message describing the authentication failure
-        request_context : Optional[HttpRequestContext]
-            HTTP request context for debugging (optional)
-        response_context : Optional[HttpResponseContext]
-            HTTP response context for debugging (optional)
-        *args : Any
-            Additional positional arguments for base exception
-        **kwargs : Any
-            Additional keyword arguments for base exception
+        request : Optional[HttpRequestProtocol]
+            HTTP request object (optional)
+        response : Optional[HttpResponseProtocol]
+            HTTP response object (optional)
         """
-        super().__init__(message, *args, **kwargs)
-        self.request_context = request_context
-        self.response_context = response_context
+        super().__init__(message)
+        self._init_http_context(request=request, response=response)
 
     def __str__(self) -> str:
         """Return string representation with context if available."""
@@ -70,16 +121,13 @@ class AuthenticationError(APIConfigError):
 
         context_parts = []
 
-        # Only add context if the context dict is not None and has meaningful content
-        if self.request_context and (self.request_context.get("method") or self.request_context.get("url")):
-            method = self.request_context.get("method", "UNKNOWN")
-            url = self.request_context.get("url", "UNKNOWN")
-            context_parts.append(f"Request: {method} {url}")
+        if self.method and self.url:
+            context_parts.append(f"Request: {self.method} {self.url}")
 
-        if self.response_context and (self.response_context.get("status_code") is not None or self.response_context.get("reason")):
-            status = self.response_context.get("status_code", "UNKNOWN")
-            reason = self.response_context.get("reason", "")
-            status_info = f"{status} {reason}".strip()
+        if self.status_code is not None:
+            status_info = f"{self.status_code}"
+            if self.reason:
+                status_info += f" {self.reason}"
             context_parts.append(f"Response: {status_info}")
 
         if context_parts:

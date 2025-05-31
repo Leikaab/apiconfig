@@ -1,5 +1,7 @@
 """Unit tests for HTTP exception classes."""
 
+from unittest.mock import Mock
+
 from apiconfig.exceptions.base import APIConfigError, AuthenticationError
 from apiconfig.exceptions.http import (
     ApiClientBadRequestError,
@@ -13,7 +15,6 @@ from apiconfig.exceptions.http import (
     ApiClientUnprocessableEntityError,
     create_api_client_error,
 )
-from apiconfig.types import HttpRequestContext, HttpResponseContext
 
 
 class TestApiClientError:
@@ -24,8 +25,11 @@ class TestApiClientError:
         error = ApiClientError("Test error")
         assert str(error) == "Test error"
         assert error.status_code is None
-        assert error.request_context is None
-        assert error.response_context is None
+        assert error.request is None
+        assert error.response is None
+        assert error.method is None
+        assert error.url is None
+        assert error.reason is None
 
     def test_initialization_with_status_code(self) -> None:
         """Test initialization with status code."""
@@ -33,36 +37,81 @@ class TestApiClientError:
         assert str(error) == "Test error (HTTP 500)"
         assert error.status_code == 500
 
-    def test_initialization_with_request_context(self) -> None:
-        """Test initialization with request context."""
-        request_context: HttpRequestContext = {"method": "GET", "url": "https://api.example.com/users"}
-        error = ApiClientError("Test error", request_context=request_context)
+    def test_initialization_with_request_object(self) -> None:
+        """Test initialization with request object."""
+        request = Mock(spec=['method', 'url'])
+        request.method = "GET"
+        request.url = "https://api.example.com/users"
+
+        error = ApiClientError("Test error", request=request)
         assert str(error) == "Test error (GET https://api.example.com/users)"
-        assert error.request_context == request_context
+        assert error.request is request
+        assert error.method == "GET"
+        assert error.url == "https://api.example.com/users"
 
     def test_initialization_with_full_context(self) -> None:
-        """Test initialization with both status code and request context."""
-        request_context: HttpRequestContext = {"method": "POST", "url": "https://api.example.com/users"}
-        error = ApiClientError("Test error", status_code=400, request_context=request_context)
-        assert str(error) == "Test error (HTTP 400, POST https://api.example.com/users)"
+        """Test initialization with both status code and request object."""
+        request = Mock(spec=['method', 'url'])
+        request.method = "POST"
+        request.url = "https://api.example.com/users"
 
-    def test_str_with_partial_request_context(self) -> None:
-        """Test string representation with partial request context."""
+        error = ApiClientError("Test error", status_code=400, request=request)
+        assert str(error) == "Test error (HTTP 400, POST https://api.example.com/users)"
+        assert error.status_code == 400
+        assert error.method == "POST"
+        assert error.url == "https://api.example.com/users"
+
+    def test_initialization_with_response_object(self) -> None:
+        """Test initialization with response object that includes request."""
+        # Create mock request
+        request = Mock(spec=['method', 'url'])
+        request.method = "DELETE"
+        request.url = "https://api.example.com/item/123"
+
+        # Create mock response with request
+        response = Mock(spec=['status_code', 'reason', 'request', 'headers', 'text'])
+        response.status_code = 404
+        response.reason = "Not Found"
+        response.request = request
+        response.headers = {}
+        response.text = ""
+
+        error = ApiClientError("Resource not found", response=response)
+        assert str(error) == "Resource not found (HTTP 404, DELETE https://api.example.com/item/123)"
+        assert error.response is response
+        assert error.request is request
+        assert error.status_code == 404
+        assert error.reason == "Not Found"
+        assert error.method == "DELETE"
+        assert error.url == "https://api.example.com/item/123"
+
+    def test_str_with_partial_request_object(self) -> None:
+        """Test string representation with partial request object."""
         # Only method
-        request_context: HttpRequestContext = {"method": "GET"}
-        error = ApiClientError("Test error", request_context=request_context)
-        assert str(error) == "Test error (GET UNKNOWN)"
+        request = Mock(spec=['method'])
+        request.method = "GET"
+
+        error = ApiClientError("Test error", request=request)
+        assert str(error) == "Test error"  # URL is missing, so no context shown
+        assert error.method == "GET"
+        assert error.url is None
 
         # Only URL
-        request_context = {"url": "https://api.example.com/users"}
-        error = ApiClientError("Test error", request_context=request_context)
-        assert str(error) == "Test error (UNKNOWN https://api.example.com/users)"
+        request = Mock(spec=['url'])
+        request.url = "https://api.example.com/users"
 
-    def test_str_with_empty_request_context(self) -> None:
-        """Test string representation with empty request context."""
-        request_context: HttpRequestContext = {}
-        error = ApiClientError("Test error", request_context=request_context)
+        error = ApiClientError("Test error", request=request)
+        assert str(error) == "Test error"  # Method is missing, so no context shown
+        assert error.method is None
+        assert error.url == "https://api.example.com/users"
+
+    def test_str_with_empty_request_object(self) -> None:
+        """Test string representation with empty request object."""
+        request = Mock(spec=[])  # No attributes
+        error = ApiClientError("Test error", request=request)
         assert str(error) == "Test error"
+        assert error.method is None
+        assert error.url is None
 
     def test_inheritance(self) -> None:
         """Test that ApiClientError inherits from APIConfigError."""
@@ -88,9 +137,15 @@ class TestApiClientBadRequestError:
 
     def test_with_context(self) -> None:
         """Test initialization with context."""
-        request_context: HttpRequestContext = {"method": "POST", "url": "https://api.example.com/users"}
-        error = ApiClientBadRequestError("Invalid input", request_context=request_context)
+        request = Mock(spec=['method', 'url'])
+        request.method = "POST"
+        request.url = "https://api.example.com/users"
+
+        error = ApiClientBadRequestError("Invalid input", request=request)
         assert str(error) == "Invalid input (HTTP 400, POST https://api.example.com/users)"
+        assert error.request is request
+        assert error.method == "POST"
+        assert error.url == "https://api.example.com/users"
 
     def test_inheritance(self) -> None:
         """Test inheritance hierarchy."""
@@ -122,40 +177,64 @@ class TestApiClientUnauthorizedError:
 
     def test_with_context(self) -> None:
         """Test initialization with context."""
-        request_context: HttpRequestContext = {"method": "GET", "url": "https://api.example.com/protected"}
-        response_context: HttpResponseContext = {"status_code": 401, "reason": "Unauthorized"}
-        error = ApiClientUnauthorizedError("Token expired", request_context=request_context, response_context=response_context)
+        request = Mock(spec=['method', 'url'])
+        request.method = "GET"
+        request.url = "https://api.example.com/protected"
+
+        response = Mock(spec=['status_code', 'reason', 'headers', 'text', 'request'])
+        response.status_code = 401
+        response.reason = "Unauthorized"
+        response.headers = {}
+        response.text = ""
+        response.request = request  # Link the request to the response
+
+        error = ApiClientUnauthorizedError("Token expired", response=response)
         assert str(error) == "Token expired (HTTP 401, GET https://api.example.com/protected)"
-        assert error.request_context == request_context
-        assert error.response_context == response_context
+        assert error.request is request
+        assert error.response is response
+        assert error.method == "GET"
+        assert error.url == "https://api.example.com/protected"
+        assert error.status_code == 401
+        assert error.reason == "Unauthorized"
 
     def test_both_parent_init_called(self) -> None:
         """Test that both parent __init__ methods are called properly."""
-        request_context: HttpRequestContext = {"method": "GET", "url": "https://api.example.com/test"}
-        error = ApiClientUnauthorizedError("Test", request_context=request_context)
+        request = Mock(spec=['method', 'url'])
+        request.method = "GET"
+        request.url = "https://api.example.com/test"
+
+        error = ApiClientUnauthorizedError("Test", request=request)
 
         # Should have ApiClientError attributes
         assert error.status_code == 401
-        assert error.request_context == request_context
+        assert error.request is request
+        assert error.method == "GET"
+        assert error.url == "https://api.example.com/test"
 
-        # Should also have AuthenticationError attributes (inherited from base)
-        assert hasattr(error, "request_context")
-        assert hasattr(error, "response_context")
+        # Should also have attributes from HttpContextMixin
+        assert hasattr(error, "request")
+        assert hasattr(error, "response")
+        assert hasattr(error, "method")
+        assert hasattr(error, "url")
+        assert hasattr(error, "reason")
 
     def test_str_without_context(self) -> None:
         """Test string representation without any context information."""
         error = ApiClientUnauthorizedError("Test message")
-        # This should hit the return base_message line (line 216)
         assert str(error) == "Test message (HTTP 401)"
 
-        # Test with empty request context
-        error_empty_context = ApiClientUnauthorizedError("Test message", request_context={})
+        # Test with empty request object
+        empty_request = Mock(spec=[])
+        error_empty_context = ApiClientUnauthorizedError("Test message", request=empty_request)
         assert str(error_empty_context) == "Test message (HTTP 401)"
 
-        # Test with request context that has UNKNOWN values for both method and url
-        error_unknown_context = ApiClientUnauthorizedError("Test message", request_context={"method": "UNKNOWN", "url": "UNKNOWN"})
-        # This should not add context parts since both are UNKNOWN, hitting line 216
-        assert str(error_unknown_context) == "Test message (HTTP 401)"
+        # Test with response but no request - should still get status from response
+        response = Mock(spec=['status_code', 'headers', 'text'])
+        response.status_code = 401
+        response.headers = {}
+        response.text = ""
+        error_response_only = ApiClientUnauthorizedError("Test message", response=response)
+        assert str(error_response_only) == "Test message (HTTP 401)"
 
         # Test by manually setting status_code to None to force the return base_message path
         error_no_status = ApiClientUnauthorizedError("Test message")
@@ -338,15 +417,27 @@ class TestCreateApiClientError:
         assert str(error) == "I'm a teapot (HTTP 418)"
 
     def test_with_context(self) -> None:
-        """Test creation with request and response context."""
-        request_context: HttpRequestContext = {"method": "GET", "url": "https://api.example.com/users"}
-        response_context: HttpResponseContext = {"status_code": 404, "reason": "Not Found"}
+        """Test creation with request and response objects."""
+        request = Mock(spec=['method', 'url'])
+        request.method = "GET"
+        request.url = "https://api.example.com/users"
 
-        error = create_api_client_error(404, "User not found", request_context=request_context, response_context=response_context)
+        response = Mock(spec=['status_code', 'reason', 'request', 'headers', 'text'])
+        response.status_code = 404
+        response.reason = "Not Found"
+        response.request = request
+        response.headers = {}
+        response.text = ""
+
+        error = create_api_client_error(404, "User not found", request=request, response=response)
 
         assert isinstance(error, ApiClientNotFoundError)
-        assert error.request_context == request_context
-        assert error.response_context == response_context
+        assert error.request is request
+        assert error.response is response
+        assert error.method == "GET"
+        assert error.url == "https://api.example.com/users"
+        assert error.status_code == 404
+        assert error.reason == "Not Found"
         assert str(error) == "User not found (HTTP 404, GET https://api.example.com/users)"
 
     def test_default_messages_used(self) -> None:
@@ -413,22 +504,24 @@ class TestHttpExceptionIntegration:
 
     def test_context_preservation_through_factory(self) -> None:
         """Test that context is preserved when using the factory function."""
-        request_context: HttpRequestContext = {
-            "method": "POST",
-            "url": "https://api.example.com/users",
-            "headers": {"Content-Type": "application/json"},
-            "body_preview": '{"name": "test"}',
-        }
-        response_context: HttpResponseContext = {
-            "status_code": 422,
-            "headers": {"Content-Type": "application/json"},
-            "body_preview": '{"error": "validation failed"}',
-            "reason": "Unprocessable Entity",
-        }
+        request = Mock(spec=['method', 'url', 'headers'])
+        request.method = "POST"
+        request.url = "https://api.example.com/users"
+        request.headers = {"Content-Type": "application/json"}
 
-        error = create_api_client_error(422, "Validation failed", request_context=request_context, response_context=response_context)
+        response = Mock(spec=['status_code', 'headers', 'text', 'reason', 'request'])
+        response.status_code = 422
+        response.headers = {"Content-Type": "application/json"}
+        response.text = '{"error": "validation failed"}'
+        response.reason = "Unprocessable Entity"
+        response.request = request
+
+        error = create_api_client_error(422, "Validation failed", request=request, response=response)
 
         assert isinstance(error, ApiClientUnprocessableEntityError)
-        assert error.request_context == request_context
-        assert error.response_context == response_context
+        assert error.request is request
+        assert error.response is response
         assert error.status_code == 422
+        assert error.method == "POST"
+        assert error.url == "https://api.example.com/users"
+        assert error.reason == "Unprocessable Entity"

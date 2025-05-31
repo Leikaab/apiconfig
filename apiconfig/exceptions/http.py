@@ -8,9 +8,9 @@ exceptions where applicable.
 import json
 from typing import Dict, Optional, Type, final
 
-from apiconfig.types import HttpRequestContext, HttpResponseContext
+from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
-from .base import APIConfigError, AuthenticationError
+from .base import APIConfigError, AuthenticationError, HttpContextMixin
 
 __all__ = [
     "HTTPUtilsError",
@@ -80,7 +80,7 @@ class PayloadTooLargeError(HTTPUtilsError):
 # HTTP API Client Error Hierarchy
 
 
-class ApiClientError(APIConfigError):
+class ApiClientError(APIConfigError, HttpContextMixin):
     """
     Base exception for errors during HTTP API client operations.
 
@@ -93,18 +93,19 @@ class ApiClientError(APIConfigError):
         Error message describing the API client failure
     status_code : Optional[int]
         HTTP status code associated with the error
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str,
         status_code: Optional[int] = None,
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
         """
         Initialize API client error with HTTP context.
@@ -115,29 +116,25 @@ class ApiClientError(APIConfigError):
             Error message describing the API client failure
         status_code : Optional[int]
             HTTP status code associated with the error
-        request_context : Optional[HttpRequestContext]
-            HTTP request context for debugging
-        response_context : Optional[HttpResponseContext]
-            HTTP response context for debugging
+        request : Optional[HttpRequestProtocol]
+            HTTP request object
+        response : Optional[HttpResponseProtocol]
+            HTTP response object
         """
         super().__init__(message)
-        self.status_code = status_code
-        self.request_context = request_context
-        self.response_context = response_context
+        self._init_http_context(request=request, response=response, status_code=status_code)
 
     def __str__(self) -> str:
         """Return string representation with HTTP context."""
-        base_message = super().__str__()
+        # Get the base message directly from Exception to avoid multiple inheritance issues
+        base_message = Exception.__str__(self)
 
         context_parts = []
         if self.status_code:
             context_parts.append(f"HTTP {self.status_code}")
 
-        if self.request_context:
-            method = self.request_context.get("method", "UNKNOWN")
-            url = self.request_context.get("url", "UNKNOWN")
-            if method != "UNKNOWN" or url != "UNKNOWN":
-                context_parts.append(f"{method} {url}")
+        if self.method and self.url:
+            context_parts.append(f"{self.method} {self.url}")
 
         if context_parts:
             return f"{base_message} ({', '.join(context_parts)})"
@@ -153,19 +150,20 @@ class ApiClientBadRequestError(ApiClientError):
     ----------
     message : str
         Error message describing the bad request (default: "Bad Request")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Bad Request",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=400, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=400, request=request, response=response)
 
 
 class ApiClientUnauthorizedError(ApiClientError, AuthenticationError):
@@ -180,40 +178,26 @@ class ApiClientUnauthorizedError(ApiClientError, AuthenticationError):
     ----------
     message : str
         Error message describing the unauthorized access (default: "Unauthorized")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Unauthorized",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        ApiClientError.__init__(self, message, status_code=401, request_context=request_context, response_context=response_context)
-        AuthenticationError.__init__(self, message, request_context=request_context, response_context=response_context)
+        # Only call ApiClientError.__init__ since it already handles HTTP context initialization
+        ApiClientError.__init__(self, message, status_code=401, request=request, response=response)
 
     def __str__(self) -> str:
         """Return string representation using ApiClientError's format."""
         # Use ApiClientError's __str__ method explicitly to avoid AuthenticationError's format
-        base_message = Exception.__str__(self)
-
-        context_parts = []
-        if self.status_code:
-            context_parts.append(f"HTTP {self.status_code}")
-
-        if self.request_context:
-            method = self.request_context.get("method", "UNKNOWN")
-            url = self.request_context.get("url", "UNKNOWN")
-            if method != "UNKNOWN" or url != "UNKNOWN":
-                context_parts.append(f"{method} {url}")
-
-        if context_parts:
-            return f"{base_message} ({', '.join(context_parts)})"
-
-        return base_message
+        return ApiClientError.__str__(self)
 
 
 class ApiClientForbiddenError(ApiClientError):
@@ -224,19 +208,20 @@ class ApiClientForbiddenError(ApiClientError):
     ----------
     message : str
         Error message describing the forbidden access (default: "Forbidden")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Forbidden",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=403, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=403, request=request, response=response)
 
 
 class ApiClientNotFoundError(ApiClientError):
@@ -247,19 +232,20 @@ class ApiClientNotFoundError(ApiClientError):
     ----------
     message : str
         Error message describing the not found resource (default: "Not Found")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Not Found",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=404, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=404, request=request, response=response)
 
 
 class ApiClientConflictError(ApiClientError):
@@ -270,19 +256,20 @@ class ApiClientConflictError(ApiClientError):
     ----------
     message : str
         Error message describing the conflict (default: "Conflict")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Conflict",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=409, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=409, request=request, response=response)
 
 
 class ApiClientUnprocessableEntityError(ApiClientError):
@@ -293,19 +280,20 @@ class ApiClientUnprocessableEntityError(ApiClientError):
     ----------
     message : str
         Error message describing the unprocessable entity (default: "Unprocessable Entity")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Unprocessable Entity",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=422, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=422, request=request, response=response)
 
 
 class ApiClientRateLimitError(ApiClientError):
@@ -316,19 +304,20 @@ class ApiClientRateLimitError(ApiClientError):
     ----------
     message : str
         Error message describing the rate limit (default: "Rate Limit Exceeded")
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Rate Limit Exceeded",
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=429, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=429, request=request, response=response)
 
 
 class ApiClientInternalServerError(ApiClientError):
@@ -341,27 +330,29 @@ class ApiClientInternalServerError(ApiClientError):
         Error message describing the server error (default: "Internal Server Error")
     status_code : int
         HTTP status code (default: 500)
-    request_context : Optional[HttpRequestContext]
-        HTTP request context for debugging
-    response_context : Optional[HttpResponseContext]
-        HTTP response context for debugging
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
     """
 
     def __init__(
         self,
         message: str = "Internal Server Error",
         status_code: int = 500,
-        request_context: Optional[HttpRequestContext] = None,
-        response_context: Optional[HttpResponseContext] = None,
+        *,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
     ) -> None:
-        super().__init__(message, status_code=status_code, request_context=request_context, response_context=response_context)
+        super().__init__(message, status_code=status_code, request=request, response=response)
 
 
 def create_api_client_error(
     status_code: int,
     message: Optional[str] = None,
-    request_context: Optional[HttpRequestContext] = None,
-    response_context: Optional[HttpResponseContext] = None,
+    *,
+    request: Optional[HttpRequestProtocol] = None,
+    response: Optional[HttpResponseProtocol] = None,
 ) -> ApiClientError:
     """
     Create appropriate ApiClientError subclass based on HTTP status code.
@@ -376,10 +367,10 @@ def create_api_client_error(
         HTTP status code
     message : Optional[str]
         Custom error message (uses default if not provided)
-    request_context : Optional[HttpRequestContext]
-        HTTP request context
-    response_context : Optional[HttpResponseContext]
-        HTTP response context
+    request : Optional[HttpRequestProtocol]
+        HTTP request object
+    response : Optional[HttpResponseProtocol]
+        HTTP response object
 
     Returns
     -------
@@ -408,21 +399,21 @@ def create_api_client_error(
     if status_code in error_classes:
         error_class = error_classes[status_code]
         if message is not None:
-            return error_class(message, request_context=request_context, response_context=response_context)
+            return error_class(message, request=request, response=response)
         else:
             # All subclasses have default message values, so we can call without message
             # mypy doesn't understand this, so we use type: ignore
-            return error_class(request_context=request_context, response_context=response_context)  # type: ignore[call-arg]
+            return error_class(request=request, response=response)  # type: ignore[call-arg]
     elif 500 <= status_code < 600:
         if message:
-            return ApiClientInternalServerError(message, status_code=status_code, request_context=request_context, response_context=response_context)
+            return ApiClientInternalServerError(message, status_code=status_code, request=request, response=response)
         elif status_code == 500:
-            return ApiClientInternalServerError(request_context=request_context, response_context=response_context)
+            return ApiClientInternalServerError(request=request, response=response)
         else:
             return ApiClientInternalServerError(
-                f"Server Error (HTTP {status_code})", status_code=status_code, request_context=request_context, response_context=response_context
+                f"Server Error (HTTP {status_code})", status_code=status_code, request=request, response=response
             )
     else:
         return ApiClientError(
-            message or f"HTTP Error {status_code}", status_code=status_code, request_context=request_context, response_context=response_context
+            message or f"HTTP Error {status_code}", status_code=status_code, request=request, response=response
         )

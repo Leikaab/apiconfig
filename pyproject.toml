@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-
+include = ["apiconfig/py.typed"]
 
 
 [tool.poetry.dependencies]

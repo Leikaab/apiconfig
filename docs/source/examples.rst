@@ -24,7 +24,7 @@ JSONPlaceholder API
    with httpx.Client(timeout=config.timeout) as client:
        response = client.get(f"{config.base_url}/posts")
        posts = response.json()
-       
+
        # Print the first post
        if posts:
            print(f"Post #{posts[0]['id']}: {posts[0]['title']}")
@@ -35,7 +35,7 @@ JSONPlaceholder API
        "body": "This is a test post created using apiconfig",
        "userId": 1
    }
-   
+
    with httpx.Client(timeout=config.timeout) as client:
        response = client.post(
            f"{config.base_url}/posts",
@@ -80,11 +80,11 @@ Fiken API (OAuth2)
    # Make a request to get a list of companies
    with httpx.Client(timeout=10.0) as client:
        response = client.get(f"{client_config.base_url}/companies", headers=headers)
-       
+
        if response.status_code == 200:
            companies = response.json()
            print(f"Found {len(companies)} companies")
-           
+
            # Print company names
            for company in companies:
                print(f"Company: {company['name']}")
@@ -119,7 +119,7 @@ Tripletex API (API Key + Token)
            "employeeToken": employee_token,
            "expirationDate": "2025-04-23",  # Tomorrow
        }
-       
+
        response = httpx.PUT(url, params=params)
        if response.status_code == 200:
            data = response.json()
@@ -152,7 +152,7 @@ Tripletex API (API Key + Token)
    # Make a request to get company information
    with httpx.Client(timeout=10.0) as client:
        response = client.get(f"{client_config.base_url}/company", headers=headers)
-       
+
        if response.status_code == 200:
            company = response.json()
            print(f"Company: {company['value']['name']}")
@@ -195,11 +195,11 @@ OneFlow API (API Key)
    # Make a request to get a list of contracts
    with httpx.Client(timeout=10.0) as client:
        response = client.get(f"{client_config.base_url}/contracts", headers=headers)
-       
+
        if response.status_code == 200:
            contracts = response.json()
            print(f"Found {len(contracts['data'])} contracts")
-           
+
            # Print contract names
            for contract in contracts['data']:
                print(f"Contract: {contract['name']}")
@@ -219,7 +219,7 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
 
    class MyApiClient:
        """A reusable API client for MyAPI."""
-       
+
        def __init__(
            self,
            hostname: str = "api.example.com",
@@ -229,7 +229,7 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            retries: int = 3,
        ):
            """Initialize the API client.
-           
+
            Args:
                hostname: The API hostname
                version: The API version
@@ -239,7 +239,7 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            """
            # Set up authentication if token is provided
            auth_strategy = BearerAuth(token) if token else None
-           
+
            # Create the configuration
            self.config = ClientConfig(
                hostname=hostname,
@@ -248,22 +248,22 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
                timeout=timeout,
                retries=retries,
            )
-           
+
            # Create a persistent HTTP client
            self.client = httpx.Client(timeout=self.config.timeout)
-       
+
        def __del__(self):
            """Close the HTTP client when the API client is destroyed."""
            if hasattr(self, 'client'):
                self.client.close()
-       
+
        def _get_headers(self) -> Dict[str, str]:
            """Get request headers including authentication."""
            headers = {}
            if self.config.auth_strategy:
                headers.update(self.config.auth_strategy.prepare_request_headers())
            return headers
-       
+
        def get_users(self) -> List[Dict[str, Any]]:
            """Get a list of users."""
            response = self.client.get(
@@ -272,7 +272,7 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            )
            response.raise_for_status()
            return response.json()
-       
+
        def get_user(self, user_id: str) -> Dict[str, Any]:
            """Get a specific user by ID."""
            response = self.client.get(
@@ -281,7 +281,7 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            )
            response.raise_for_status()
            return response.json()
-       
+
        def create_user(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
            """Create a new user."""
            response = self.client.post(
@@ -300,15 +300,15 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            version="v1",
            token="my-auth-token",
        )
-       
+
        # Get all users
        users = client.get_users()
        print(f"Found {len(users)} users")
-       
+
        # Get a specific user
        user = client.get_user("user123")
        print(f"User: {user['name']}")
-       
+
        # Create a new user
        new_user = client.create_user({
            "name": "John Doe",

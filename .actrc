@@ -1,0 +1,4 @@
+--pull=false
+-W .github/workflows/tests.yaml
+--matrix os:ubuntu-latest
+--matrix python-version:3.12

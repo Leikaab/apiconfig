@@ -51,6 +51,8 @@ bravado-core = "^6.1.1"
 httpx = "^0.28.1"
 pytest_httpserver = "*"
 tox = "*"
+crudclient = "0.7.1"
+pytest-asyncio = "^1.0.0"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0"
@@ -65,11 +67,12 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 150
 skip-string-normalization = false
+exclude = '''(?x)( \.venv | \.tox | \.eggs | \.git | \.hg | \.mypy_cache | \.pytest_cache | build | dist )'''
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/Leikaab/apiconfig/issues"
 "Documentation" = "https://leikaab.github.io/apiconfig/"
 
 [tool.isort]
 profile = "black"
-skip = [".tox"]
+skip = [".tox", ".venv"]
 

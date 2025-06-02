@@ -132,7 +132,7 @@ HTTP Basic Authentication with username and password:
    from apiconfig import BasicAuth
 
    auth = BasicAuth(username="user", password="pass")
-   
+
    # Get headers for a request
    headers = auth.prepare_request_headers()
    # {'Authorization': 'Basic dXNlcjpwYXNz'}
@@ -147,7 +147,7 @@ JWT or OAuth token authentication:
    from apiconfig import BearerAuth
 
    auth = BearerAuth(token="my-jwt-token")
-   
+
    # Get headers for a request
    headers = auth.prepare_request_headers()
    # {'Authorization': 'Bearer my-jwt-token'}
@@ -167,7 +167,7 @@ For APIs with custom authentication schemes:
        return {"Authorization": "Custom xyz123"}
 
    auth = CustomAuth(auth_callable=my_auth_function)
-   
+
    # Get headers for a request
    headers = auth.prepare_request_headers()
    # {'Authorization': 'Custom xyz123'}
@@ -218,14 +218,14 @@ Store tokens securely:
 
    # Store tokens in a file
    storage = FileTokenStorage(filepath=".tokens.json")
-   
+
    # Save tokens
    storage.save({
        "access_token": "my-access-token",
        "refresh_token": "my-refresh-token",
        "expires_at": 1619712000
    })
-   
+
    # Load tokens
    tokens = storage.load()
 
@@ -268,7 +268,7 @@ Logging
 
    # Basic logging setup
    logging.basicConfig(level=logging.INFO)
-   
+
    # Or use the built-in configuration
    configure_logging(
        level=logging.DEBUG,
@@ -293,7 +293,7 @@ Best Practices
       # Load API key from environment
       env = EnvProvider(prefix="MYAPI_")
       config_dict = env.load()
-      
+
       # Create auth strategy with the API key
       auth = ApiKeyAuth(
           api_key=config_dict.get("API_KEY"),
@@ -310,7 +310,7 @@ Best Practices
       def get_config():
           env = EnvProvider(prefix="MYAPI_")
           config_dict = env.load()
-          
+
           auth = BearerAuth(token=config_dict.get("TOKEN"))
           return ClientConfig(
               hostname=config_dict.get("HOSTNAME", "api.default.com"),
@@ -327,7 +327,7 @@ Best Practices
           headers = {}
           if config.auth_strategy:
               headers.update(config.auth_strategy.prepare_request_headers())
-          
+
           with httpx.Client(timeout=config.timeout) as client:
               return client.get(
                   f"{config.base_url}/resources/{resource_id}",
@@ -342,7 +342,7 @@ Best Practices
 
       # Instead of modifying
       config.timeout = 20.0  # Don't do this
-      
+
       # Create a new config with the updated value
       new_config = ClientConfig(
           hostname=config.hostname,
@@ -350,7 +350,7 @@ Best Practices
           timeout=20.0,
           auth_strategy=config.auth_strategy,
       )
-      
+
       # Or use merge
       override = ClientConfig(timeout=20.0)
       new_config = config.merge(override)

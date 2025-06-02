@@ -8,6 +8,7 @@ from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
+from apiconfig.types import QueryParamType
 
 
 class ApiKeyAuth(AuthStrategy):
@@ -86,13 +87,13 @@ class ApiKeyAuth(AuthStrategy):
 
         return {}
 
-    def prepare_request_params(self) -> Dict[str, str]:
+    def prepare_request_params(self) -> Optional[QueryParamType]:
         """
         Prepare query parameters for API key authentication if configured for parameters.
 
         Returns
         -------
-        Dict[str, str]
+        Optional[QueryParamType]
             A dictionary containing the API key parameter, or an empty dictionary.
         """
         if self.param_name is not None:

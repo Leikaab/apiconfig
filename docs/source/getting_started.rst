@@ -104,7 +104,7 @@ From Environment Variables
    # Load from environment variables with prefix
    env = EnvProvider(prefix="MYAPI_")
    config_dict = env.load()
-   
+
    # Create config from loaded values
    config = ClientConfig(**config_dict)
 
@@ -118,7 +118,7 @@ From a File
    # Load from a JSON file
    file_provider = FileProvider(filepath="config.json")
    config_dict = file_provider.load()
-   
+
    # Create config from loaded values
    config = ClientConfig(**config_dict)
 

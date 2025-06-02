@@ -7,7 +7,9 @@ import logging
 import re
 from typing import Any, Literal, Mapping, Optional, Set, Tuple
 
-from apiconfig.utils.redaction.body import DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN
+from apiconfig.utils.redaction.body import (
+    DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN,
+)
 from apiconfig.utils.redaction.body import (
     redact_body,
 )

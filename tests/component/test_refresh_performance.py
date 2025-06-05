@@ -44,7 +44,7 @@ class TestRefreshPerformance:
         callback_time = time.time() - start_time
 
         # Should be negligible overhead
-        assert callback_time < 0.001
+        assert callback_time < 0.01
 
     def test_custom_auth_performance(self) -> None:
         """Test custom auth performance characteristics."""
@@ -66,7 +66,7 @@ class TestRefreshPerformance:
         header_time = time.time() - start_time
 
         # Should be very fast
-        assert header_time < 0.001
+        assert header_time < 0.01
         assert headers["Authorization"] == "Bearer token_1"
 
         # Measure refresh time

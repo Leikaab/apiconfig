@@ -40,6 +40,14 @@ from apiconfig.utils.url import add_query_params, get_query_params, parse_url
             "/api",
         ),  # IP address with port
         ("https://[2001:db8::1]/path", "https", "[2001:db8::1]", "/path"),  # IPv6
+        (
+            "[2001:db8::1]:8080/path",
+            "https",
+            "[2001:db8::1]:8080",
+            "/path",
+        ),  # IPv6 with port
+        ("localhost", "", "", "localhost"),  # No scheme for bare hostname
+        ("relative/path", "", "", "relative/path"),  # Relative path without leading slash
     ],
 )
 def test_parse_url(url_in: str, expected_scheme: str, expected_netloc: str, expected_path: str) -> None:

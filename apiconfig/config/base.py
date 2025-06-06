@@ -194,9 +194,13 @@ class ClientConfig:
         TypeError
             If 'other' is not a ClientConfig instance.
         """
-        if not isinstance(other, self.__class__):
-            logger.warning(f"Attempted to merge ClientConfig with incompatible type: {type(other)}")
-            raise TypeError(f"Cannot merge ClientConfig with object of type {type(other)}")
+        if not isinstance(other, ClientConfig):
+            logger.warning(
+                "Attempted to merge ClientConfig with incompatible type: %s", type(other)
+            )
+            raise TypeError(
+                f"Cannot merge ClientConfig with object of type {type(other)}"
+            )
 
         # Create a deep copy of self as the base for the new instance
         new_instance = copy.deepcopy(self)

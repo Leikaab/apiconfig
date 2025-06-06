@@ -364,3 +364,18 @@ class TestClientConfig:
 
         assert config2.hostname == "override.example.com"
         assert config2.version == "v2"  # Still from class
+
+    def test_merge_allows_base_instance(self) -> None:
+        """Merging a subclass with a base ClientConfig should succeed."""
+
+        class CustomConfig(ClientConfig):
+            pass
+
+        base_config = CustomConfig(hostname="api.example.com")
+        other_config = ClientConfig(version="v1")
+
+        merged = base_config.merge(other_config)
+
+        assert isinstance(merged, CustomConfig)
+        assert merged.hostname == "api.example.com"
+        assert merged.version == "v1"

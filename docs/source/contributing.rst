@@ -40,7 +40,7 @@ If you prefer not to use Dev Containers:
 .. code-block:: bash
 
    # Install dependencies
-   poetry install --all-extras
+   poetry install --with dev,docs
 
    # Activate the virtual environment
    poetry shell

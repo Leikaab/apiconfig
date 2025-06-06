@@ -8,6 +8,7 @@ strategies (Basic, Bearer, API Key, etc.).
 """
 
 import logging
+from importlib.metadata import version
 
 # Core components re-exported for easier access
 from .auth.base import AuthStrategy
@@ -42,7 +43,7 @@ from .types import (
     TokenStorageStrategy,
 )
 
-__version__: str = "0.3.0"
+__version__: str = version("apiconfig")
 
 # Define public API
 __all__: list[str] = [

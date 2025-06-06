@@ -63,7 +63,7 @@ def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected t
     monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
     monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
-    return EnvProvider(prefix="APICONFIG")  # Corrected class instantiation
+    return EnvProvider(prefix="APICONFIG_")  # Corrected prefix with underscore
 
 
 @pytest.fixture(scope="function")

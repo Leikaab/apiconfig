@@ -116,7 +116,7 @@ class TestEnvProvider:
         monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
 
         # Create an EnvProvider directly
-        provider = EnvProvider(prefix="APICONFIG")
+        provider = EnvProvider(prefix="APICONFIG_")
 
         # Check that the provider is an EnvProvider
         assert isinstance(provider, EnvProvider)
@@ -129,6 +129,7 @@ class TestEnvProvider:
         # Check that the provider has the correct prefix
         # Check that the provider has the expected prefix
         assert hasattr(provider, "_prefix")
+        assert provider._prefix == "APICONFIG_"
 
 
 class TestConfigManager:

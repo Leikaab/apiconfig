@@ -356,3 +356,21 @@ def test_redact_set_cookie_header_with_custom_keys() -> None:
 
     result = _redact_set_cookie_header(set_cookie_value, custom_keys)
     assert result == expected_result
+
+
+def test_redact_cookie_header_case_insensitive_names() -> None:
+    """Tests that cookie names are matched case-insensitively."""
+    cookie_value = "SESSION=abc; TokEn=xyz; Key=value; other=1"
+    expected_result = "SESSION=[REDACTED]; TokEn=[REDACTED]; Key=[REDACTED]; other=1"
+
+    result = _redact_cookie_header(cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    assert result == expected_result
+
+
+def test_redact_set_cookie_header_case_insensitive_name() -> None:
+    """Tests Set-Cookie names are matched case-insensitively."""
+    set_cookie_value = "SESSION=abc; Path=/"
+    expected_result = "SESSION=[REDACTED]; Path=/"
+
+    result = _redact_set_cookie_header(set_cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    assert result == expected_result

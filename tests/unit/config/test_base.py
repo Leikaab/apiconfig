@@ -307,13 +307,43 @@ class TestClientConfig:
 
     def test_merge_configs_static_method(self) -> None:
         """Test the merge_configs static method."""
-        base_config = ClientConfig(hostname="api.example.com")
-        other_config = ClientConfig(version="v1")
+        base_config = ClientConfig(
+            hostname="api.example.com",
+            headers={"User-Agent": "Base"},
+            retries=5,
+        )
+        other_config = ClientConfig(
+            version="v1",
+            headers={"Authorization": "Bearer token"},
+            timeout=20.0,
+        )
+        other_config.retries = None  # type: ignore[assignment]
 
         merged = ClientConfig.merge_configs(base_config, other_config)
 
+        # Base and other fields should be combined correctly
         assert merged.hostname == "api.example.com"
         assert merged.version == "v1"
+        assert merged.headers == {
+            "User-Agent": "Base",
+            "Authorization": "Bearer token",
+        }
+        assert merged.timeout == 20.0
+        assert merged.retries == 5
+
+        # Changing originals shouldn't affect merged result
+        assert base_config.headers is not None
+        base_config.headers["User-Agent"] = "Modified"
+        base_config.timeout = 30.0
+        assert other_config.headers is not None
+        other_config.headers["Authorization"] = "Modified"
+        other_config.timeout = 5.0
+
+        assert merged.headers == {
+            "User-Agent": "Base",
+            "Authorization": "Bearer token",
+        }
+        assert merged.timeout == 20.0
 
     def test_merge_configs_with_incompatible_types(self) -> None:
         """Test that merge_configs raises TypeError with incompatible types."""

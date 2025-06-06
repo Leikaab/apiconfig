@@ -116,7 +116,7 @@ From a File
    from apiconfig import FileProvider, ClientConfig
 
    # Load from a JSON file
-   file_provider = FileProvider(filepath="config.json")
+   file_provider = FileProvider(file_path="config.json")
    config_dict = file_provider.load()
 
    # Create config from loaded values

@@ -168,7 +168,7 @@ config_dict = env.load()
 ```python
 from apiconfig import FileProvider, MemoryProvider
 
-file_provider = FileProvider(filepath="config.json")
+file_provider = FileProvider(file_path="config.json")
 file_config = file_provider.load()
 
 memory_provider = MemoryProvider(data={"hostname": "api.example.com"})

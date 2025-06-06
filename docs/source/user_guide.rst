@@ -65,11 +65,11 @@ Load configuration from JSON or YAML files:
    from apiconfig import FileProvider
 
    # JSON file
-   json_provider = FileProvider(filepath="config.json")
+   json_provider = FileProvider(file_path="config.json")
    json_config = json_provider.load()
 
    # YAML file
-   yaml_provider = FileProvider(filepath="config.yaml")
+   yaml_provider = FileProvider(file_path="config.yaml")
    yaml_config = yaml_provider.load()
 
 Memory Provider
@@ -217,7 +217,7 @@ Store tokens securely:
    from apiconfig.auth.token import FileTokenStorage
 
    # Store tokens in a file
-   storage = FileTokenStorage(filepath=".tokens.json")
+   storage = FileTokenStorage(file_path=".tokens.json")
 
    # Save tokens
    storage.save({

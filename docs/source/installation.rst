@@ -36,7 +36,7 @@ For development or contributing to the project, clone the repository and install
 
    git clone https://github.com/Leikaab/apiconfig.git
    cd apiconfig
-   poetry install --all-extras
+   poetry install --with dev,docs
 
 Verifying Installation
 ---------------------

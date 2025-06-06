@@ -69,7 +69,7 @@ All contributions and interactions must align with the project's [Code of Conduc
    ```
 2. **Install dependencies:**
    ```bash
-   poetry install --all-extras
+   poetry install --with dev,docs
    poetry shell
    ```
    (Or prefix commands with `poetry run`, e.g., `poetry run pytest`)

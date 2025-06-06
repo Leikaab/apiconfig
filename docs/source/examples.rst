@@ -120,7 +120,7 @@ Tripletex API (API Key + Token)
            "expirationDate": "2025-04-23",  # Tomorrow
        }
 
-       response = httpx.PUT(url, params=params)
+       response = httpx.put(url, params=params)
        if response.status_code == 200:
            data = response.json()
            return data["value"]["token"]

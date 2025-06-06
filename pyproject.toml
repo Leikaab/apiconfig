@@ -21,7 +21,7 @@ include = [
     "apiconfig/**/*.pyi",
     "apiconfig/py.typed"
 ]
-
+include = ["apiconfig/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.11"

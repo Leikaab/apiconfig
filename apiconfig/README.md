@@ -16,7 +16,10 @@ internal subpackages provide the implementation details.
 ```python
 from apiconfig import ClientConfig, ApiKeyAuth
 
-config = ClientConfig(hostname="api.example.com", auth_strategy=ApiKeyAuth("key"))
+config = ClientConfig(
+    hostname="api.example.com",
+    auth_strategy=ApiKeyAuth(api_key="key", header_name="X-API-Key"),
+)
 print(config.base_url)
 ```
 

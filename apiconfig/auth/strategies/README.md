@@ -45,7 +45,7 @@ config = ClientConfig(hostname="api.example.com", auth_strategy=header_auth)
 | `ApiKeyAuth` | Sender API‑nøkkel enten i en header eller som query‑parameter. |
 | `BasicAuth` | Legger til `Authorization: Basic ...` header basert på brukernavn og passord. |
 | `BearerAuth` | Bruker bearer token og kan oppdateres hvis `expires_at` er satt og refresh‑funksjon er tilgjengelig. |
-| `CustomAuth` | Tillater helt egne callbacks for både headers, parametre og refresh‑logikk. |
+| `CustomAuth` | Tillater helt egne callbacks for både headers, parameters og refresh‑logikk. |
 
 ### Designmønster
 

@@ -394,3 +394,24 @@ class TestClientConfig:
 
         assert config2.hostname == "override.example.com"
         assert config2.version == "v2"  # Still from class
+
+    def test_add_operator_merges_configs(self) -> None:
+        """Using the "+" operator should merge configs like ``merge()``."""
+        base_config = ClientConfig(hostname="api.example.com", timeout=10.0)
+        other_config = ClientConfig(version="v1", timeout=20.0)
+
+        merged_via_method = base_config.merge(other_config)
+
+        with pytest.deprecated_call():
+            merged_via_add = base_config + other_config
+
+        assert merged_via_add.hostname == merged_via_method.hostname
+        assert merged_via_add.version == merged_via_method.version
+        assert merged_via_add.timeout == merged_via_method.timeout
+
+    def test_add_operator_type_error(self) -> None:
+        """Adding a non-``ClientConfig`` should raise ``TypeError``."""
+        config = ClientConfig()
+        with pytest.deprecated_call():
+            with pytest.raises(TypeError):
+                _ = config + "not a ClientConfig"  # type: ignore[operator]

@@ -8,7 +8,7 @@ strategies (Basic, Bearer, API Key, etc.).
 """
 
 import logging
-from importlib.metadata import version
+import importlib.metadata
 
 # Core components re-exported for easier access
 from .auth.base import AuthStrategy
@@ -43,7 +43,10 @@ from .types import (
     TokenStorageStrategy,
 )
 
-__version__: str = version("apiconfig")
+try:
+    __version__: str = importlib.metadata.version("apiconfig")
+except importlib.metadata.PackageNotFoundError:  # pragma: no cover - fallback for local use
+    __version__ = "0.0.0"
 
 # Define public API
 __all__: list[str] = [

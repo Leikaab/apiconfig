@@ -1,9 +1,8 @@
 import os
 from typing import Any, Dict
 
-import pytest
-
 import httpx
+import pytest
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.config.providers.env import EnvProvider

@@ -9,6 +9,7 @@ This test demonstrates comprehensive usage of apiconfig patterns:
 """
 
 import os
+
 import pytest
 
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":

@@ -28,7 +28,7 @@ logger.info("Configuration loaded")
 secure_handler = logging.StreamHandler()
 secure_handler.setFormatter(RedactingFormatter())
 logger.addHandler(secure_handler)
-logger.warning({"token": "secret", "msg": "unauthorised"})
+logger.warning({"token": "secret", "msg": "unauthorized"})
 ```
 
 ## Key classes

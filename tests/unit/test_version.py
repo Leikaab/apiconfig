@@ -17,3 +17,11 @@ class TestVersion:
 
         module = importlib.reload(importlib.import_module("apiconfig"))
         assert module.__version__ == "0.0.0"
+
+    def test_version_uses_metadata_when_available(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """__version__ should use the value from package metadata when available."""
+
+        monkeypatch.setattr(importlib.metadata, "version", lambda _name: "1.2.3")
+
+        module = importlib.reload(importlib.import_module("apiconfig"))
+        assert module.__version__ == "1.2.3"

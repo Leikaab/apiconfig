@@ -185,7 +185,7 @@ def test_existing_functionality():
     headers = bearer_auth.prepare_request_headers()
     assert headers["Authorization"] == "Bearer token"
 
-    api_key_auth = ApiKeyAuth("key")
+    api_key_auth = ApiKeyAuth(api_key="key", header_name="X-API-Key")
     headers = api_key_auth.prepare_request_headers()
     assert headers["X-API-Key"] == "key"
 

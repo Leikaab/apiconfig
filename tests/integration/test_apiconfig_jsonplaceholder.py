@@ -1,10 +1,18 @@
 import os
 from typing import Any, Dict
 
+import pytest
+
 import httpx
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.config.providers.env import EnvProvider
+
+if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
+    pytest.skip(
+        "Integration tests disabled (PYTEST_SKIP_INTEGRATION=true)",
+        allow_module_level=True,
+    )
 
 
 def test_jsonplaceholder_get_post_1() -> None:

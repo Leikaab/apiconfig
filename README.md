@@ -140,7 +140,7 @@ auth = ApiKeyAuth(api_key="my-secret-key", param_name="api_key")
 from apiconfig import BasicAuth, BearerAuth
 
 basic = BasicAuth(username="user", password="pass")
-bearer = BearerAuth(token="my-jwt-token")
+bearer = BearerAuth(access_token="my-jwt-token")
 ```
 
 #### Custom Authentication

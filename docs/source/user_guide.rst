@@ -146,7 +146,7 @@ JWT or OAuth token authentication:
 
    from apiconfig import BearerAuth
 
-   auth = BearerAuth(token="my-jwt-token")
+   auth = BearerAuth(access_token="my-jwt-token")
 
    # Get headers for a request
    headers = auth.prepare_request_headers()
@@ -311,7 +311,7 @@ Best Practices
           env = EnvProvider(prefix="MYAPI_")
           config_dict = env.load()
 
-          auth = BearerAuth(token=config_dict.get("TOKEN"))
+        auth = BearerAuth(access_token=config_dict.get("TOKEN"))
           return ClientConfig(
               hostname=config_dict.get("HOSTNAME", "api.default.com"),
               version=config_dict.get("VERSION", "v1"),

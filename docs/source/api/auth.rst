@@ -24,7 +24,10 @@ The refresh callback interface is designed for integration with HTTP client retr
 .. code-block:: python
 
     # Get refresh callback for integration with retry logic
-    auth_strategy = BearerAuth(token="your_token", refresh_token="refresh_token")
+    auth_strategy = BearerAuth(
+        access_token="your_token",
+        http_request_callable=http_request_func,
+    )  # BearerAuth.refresh() requires custom implementation
     refresh_callback = auth_strategy.get_refresh_callback()
 
     if refresh_callback:

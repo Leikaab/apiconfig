@@ -255,9 +255,12 @@ All errors are structured and documented. Common exceptions include:
 
 ## Testing and Coverage
 
-apiconfig is fully tested with `pytest` and `coverage.py`. To run tests and check coverage:
+apiconfig is fully tested with `pytest` and `coverage.py`. Install the test
+dependencies before running the suite:
 
 ```bash
+python -m pip install -e .
+python -m pip install pytest pytest-httpserver pytest-xdist httpx
 pytest --cov=apiconfig --cov-report=html
 ```
 

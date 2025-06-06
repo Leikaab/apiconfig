@@ -154,6 +154,12 @@ def test_safe_json_decode_success(content: str | bytes, encoding: str | None, ex
             JSONDecodeError,
             "Failed to decode response body",
         ),  # Invalid UTF-8 start byte
+        (
+            "[]",
+            None,
+            JSONDecodeError,
+            "Decoded JSON is not an object",
+        ),  # JSON array instead of object
         # Removed problematic test case: (b'{"key": "value"}', "ascii", JSONDecodeError, "Failed to decode response body"),
         (
             123,

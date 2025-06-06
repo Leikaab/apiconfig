@@ -7,8 +7,8 @@ This library provides components for managing API client configurations
 strategies (Basic, Bearer, API Key, etc.).
 """
 
-import logging
 import importlib.metadata
+import logging
 
 # Core components re-exported for easier access
 from .auth.base import AuthStrategy

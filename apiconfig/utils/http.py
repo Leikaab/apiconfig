@@ -7,12 +7,14 @@ from typing import Any, Dict, Mapping, Optional, Union
 from apiconfig.exceptions.http import (
     HTTPUtilsError,
     JSONDecodeError,
+    JSONEncodeError,
     PayloadTooLargeError,
 )
 
 __all__ = [
     "HTTPUtilsError",
     "JSONDecodeError",
+    "JSONEncodeError",
     "PayloadTooLargeError",
     "is_success",
     "is_redirect",
@@ -21,6 +23,7 @@ __all__ = [
     "normalize_header_name",
     "get_header_value",
     "safe_json_decode",
+    "safe_json_encode",
 ]
 
 
@@ -210,3 +213,64 @@ def safe_json_decode(
     except Exception as e:
         # Catch other potential errors during processing
         raise HTTPUtilsError(f"An unexpected error occurred during JSON decoding: {e}") from e
+
+
+def safe_json_encode(
+    data: Any,
+    ensure_ascii: bool = False,
+    indent: Optional[int] = None,
+    max_size_bytes: int = 1 * 1024 * 1024,  # Default to 1MB
+) -> str:
+    """
+    Safely encode data to a JSON string.
+
+    Handles potential errors during JSON encoding and checks the resulting
+    string size to prevent excessive memory usage.
+
+    Parameters
+    ----------
+    data : Any
+        The data to encode as JSON.
+    ensure_ascii : bool, optional
+        If True, escape non-ASCII characters. Defaults to False.
+    indent : Optional[int], optional
+        Number of spaces for indentation. None for compact output.
+    max_size_bytes : int, optional
+        Maximum allowed size of the resulting JSON string in bytes. Defaults to 1MB.
+
+    Returns
+    -------
+    str
+        The JSON-encoded string.
+
+    Raises
+    ------
+    JSONEncodeError
+        If JSON encoding fails or if the data is not serializable.
+    PayloadTooLargeError
+        If the resulting JSON string exceeds max_size_bytes.
+    HTTPUtilsError
+        For other unexpected errors during processing.
+    """
+    try:
+        # Attempt to encode the data as JSON
+        json_string = json.dumps(data, ensure_ascii=ensure_ascii, indent=indent)
+
+        # Check the size of the resulting string
+        encoded_size = len(json_string.encode("utf-8"))
+        if encoded_size > max_size_bytes:
+            raise PayloadTooLargeError(f"Encoded JSON size ({encoded_size} bytes) exceeds maximum allowed size ({max_size_bytes} bytes)")
+
+        return json_string
+    except TypeError as e:
+        # json.dumps raises TypeError for non-serializable objects
+        raise JSONEncodeError(f"Failed to encode data as JSON: {e}") from e
+    except ValueError as e:
+        # json.dumps can raise ValueError for certain edge cases
+        raise JSONEncodeError(f"Failed to encode data as JSON: {e}") from e
+    except PayloadTooLargeError:
+        # Re-raise PayloadTooLargeError directly without wrapping
+        raise
+    except Exception as e:
+        # Catch other potential errors during processing
+        raise HTTPUtilsError(f"An unexpected error occurred during JSON encoding: {e}") from e

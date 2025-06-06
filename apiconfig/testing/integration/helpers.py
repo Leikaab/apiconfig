@@ -60,13 +60,16 @@ def make_request_with_config(
     # Prepare request using auth strategy
     prepared_headers = auth_strategy.prepare_request_headers()
     prepared_params = auth_strategy.prepare_request_params()
+
     # Merge any user-supplied headers/params (user takes precedence)
     prepared_headers.update(headers)
-    prepared_params.update(params)
 
-    # Ensure headers and params are always dicts (not mocks)
+    # Convert prepared_params to dict and merge with user params
+    safe_params = dict(prepared_params) if prepared_params else {}
+    safe_params.update(params)
+
+    # Ensure headers are always dicts (not mocks)
     safe_headers = dict(prepared_headers)
-    safe_params = dict(prepared_params)
 
     # Use httpx for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver

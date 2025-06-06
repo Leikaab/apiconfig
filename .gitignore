@@ -13,6 +13,7 @@ private_*
 data/qdrant/
 
 
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos,flask,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,flask,python,visualstudiocode
 
@@ -354,6 +355,11 @@ pyrightconfig.json
 .ollama/
 models/
 .devcontainer/privatesetup.sh
+
+# act (GitHub Actions runner) temporary files
+.act/
+act_logs/
+changes.diff
 
 # act (GitHub Actions runner) temporary files
 .act/

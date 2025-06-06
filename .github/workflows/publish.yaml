@@ -54,7 +54,20 @@ jobs:
                COMMIT_COUNT=$(git rev-list ${PREVIOUS_COMMIT_TO_TAG}..HEAD --count)
              fi
           fi
-          PRE_RELEASE_VERSION="${BASE_VERSION}.dev${COMMIT_COUNT}"
+
+          # Parse version and increment patch level for pre-releases
+          # This ensures prereleases are considered newer than the last stable release
+          IFS='.' read -ra VERSION_PARTS <<< "$BASE_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+
+          # Increment patch version
+          NEXT_PATCH=$((PATCH + 1))
+
+          # Create pre-release version with incremented patch
+          PRE_RELEASE_VERSION="${MAJOR}.${MINOR}.${NEXT_PATCH}.dev${COMMIT_COUNT}"
+
           echo "Base version: $BASE_VERSION"
           echo "Commit count since last tag ($LAST_TAG): $COMMIT_COUNT"
           echo "Calculated pre-release version: $PRE_RELEASE_VERSION"

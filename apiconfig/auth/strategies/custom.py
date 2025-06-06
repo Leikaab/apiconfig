@@ -4,44 +4,144 @@ from typing import Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
+from apiconfig.types import HttpRequestCallable, QueryParamType, TokenRefreshResult
 
 
 class CustomAuth(AuthStrategy):
     """
-    Implement custom authentication logic using provided callback functions.
+    Custom authentication strategy with optional refresh capabilities.
 
-    This strategy allows users to define their own functions to generate
-    authentication headers or parameters dynamically.
+    This strategy allows for completely custom authentication logic while
+    still supporting the refresh interface for integration with retry mechanisms.
+
+    Examples
+    --------
+    Basic custom auth without refresh:
+
+    >>> def my_header_callback():
+    ...     return {"X-Custom-Auth": "my-secret-token"}
+    >>> auth = CustomAuth(header_callback=my_header_callback)
+
+    Custom auth with refresh capabilities:
+
+    >>> current_token = {"value": "initial-token"}
+    >>> def my_header_callback():
+    ...     return {"Authorization": f"Bearer {current_token['value']}"}
+    >>> def my_refresh():
+    ...     new_token = fetch_new_token()
+    ...     current_token['value'] = new_token
+    ...     return {"token_data": {"access_token": new_token}}
+    >>> auth = CustomAuth(
+    ...     header_callback=my_header_callback,
+    ...     refresh_func=my_refresh,
+    ...     can_refresh_func=lambda: True
+    ... )
+
+    Using factory methods:
+
+    >>> auth = CustomAuth.create_api_key_custom(
+    ...     api_key="my-key",
+    ...     header_name="X-API-Key"
+    ... )
     """
 
     def __init__(
         self,
         header_callback: Optional[Callable[[], Dict[str, str]]] = None,
         param_callback: Optional[Callable[[], Dict[str, str]]] = None,
+        refresh_func: Optional[Callable[[], Optional[TokenRefreshResult]]] = None,
+        can_refresh_func: Optional[Callable[[], bool]] = None,
+        is_expired_func: Optional[Callable[[], bool]] = None,
+        http_request_callable: Optional[HttpRequestCallable] = None,
     ) -> None:
         """
-        Initialize the CustomAuth strategy.
+        Initialize custom authentication with optional refresh capabilities.
 
         Parameters
         ----------
         header_callback : Optional[Callable[[], Dict[str, str]]]
-            A callable that returns a dictionary of headers to add to the request.
+            Function to generate authentication headers.
         param_callback : Optional[Callable[[], Dict[str, str]]]
-            A callable that returns a dictionary of parameters to add to the request.
+            Function to generate authentication parameters.
+        refresh_func : Optional[Callable[[], Optional[TokenRefreshResult]]]
+            Optional function to perform refresh operations.
+        can_refresh_func : Optional[Callable[[], bool]]
+            Optional function to check if refresh is possible.
+        is_expired_func : Optional[Callable[[], bool]]
+            Optional function to check if credentials are expired.
+        http_request_callable : Optional[HttpRequestCallable]
+            Optional HTTP callable for refresh operations.
 
         Raises
         ------
         AuthStrategyError
             If neither header_callback nor param_callback is provided.
         """
+        super().__init__(http_request_callable)
+
+        # Validate that at least one callback is provided (existing validation)
         if header_callback is None and param_callback is None:
             raise AuthStrategyError("At least one callback (header or param) must be provided for CustomAuth.")
+
         self._header_callback = header_callback
         self._param_callback = param_callback
+        self.refresh_func = refresh_func
+        self.can_refresh_func = can_refresh_func
+        self.is_expired_func = is_expired_func
+
+    def can_refresh(self) -> bool:
+        """
+        Check if this custom auth strategy can perform refresh operations.
+
+        Returns
+        -------
+        bool
+            True if refresh function is provided and indicates refresh is possible.
+        """
+        if self.can_refresh_func is not None:
+            return self.can_refresh_func()
+        return self.refresh_func is not None
+
+    def is_expired(self) -> bool:
+        """
+        Check if current credentials are expired.
+
+        Returns
+        -------
+        bool
+            True if expired function indicates expiration, False otherwise.
+        """
+        if self.is_expired_func is not None:
+            return self.is_expired_func()
+        return False  # Default to not expired if no function provided
+
+    def refresh(self) -> Optional[TokenRefreshResult]:
+        """
+        Refresh authentication credentials using the provided refresh function.
+
+        Returns
+        -------
+        Optional[TokenRefreshResult]
+            Result from refresh function or None.
+
+        Raises
+        ------
+        AuthStrategyError
+            If no refresh function is configured or if refresh fails.
+        """
+        if self.refresh_func is None:
+            raise AuthStrategyError("Custom auth strategy has no refresh function configured")
+
+        try:
+            return self.refresh_func()
+        except Exception as e:
+            raise AuthStrategyError(f"Custom auth refresh failed: {str(e)}") from e
 
     def prepare_request_headers(self) -> Dict[str, str]:
         """
         Generate request headers using the header_callback, if provided.
+
+        Enhanced to work with refresh scenarios.
 
         Returns
         -------
@@ -51,7 +151,7 @@ class CustomAuth(AuthStrategy):
         Raises
         ------
         AuthStrategyError
-            If the header_callback does not return a dictionary or raises an exception.
+            If the header_callback fails or returns invalid data.
         """
         if self._header_callback:
             try:
@@ -89,23 +189,30 @@ class CustomAuth(AuthStrategy):
 
         # Update with authentication headers and params
         headers.update(self.prepare_request_headers())
-        params.update(self.prepare_request_params())
+        auth_params = self.prepare_request_params()
+        if auth_params:
+            # Convert QueryParamType to Dict[str, str] for compatibility
+            for key, value in auth_params.items():
+                if value is not None:
+                    params[key] = str(value)
 
         return headers, params
 
-    def prepare_request_params(self) -> Dict[str, str]:
+    def prepare_request_params(self) -> Optional[QueryParamType]:
         """
         Generate request parameters using the param_callback, if provided.
 
+        Enhanced to work with refresh scenarios.
+
         Returns
         -------
-        Dict[str, str]
+        Optional[QueryParamType]
             A dictionary of parameters.
 
         Raises
         ------
         AuthStrategyError
-            If the param_callback does not return a dictionary or raises an exception.
+            If the param_callback fails or returns invalid data.
         """
         if self._param_callback:
             try:
@@ -116,3 +223,78 @@ class CustomAuth(AuthStrategy):
             except Exception as e:
                 raise AuthStrategyError(f"CustomAuth parameter callback failed: {e}") from e
         return {}
+
+    @classmethod
+    def create_api_key_custom(
+        cls,
+        api_key: str,
+        header_name: str = "X-API-Key",
+        http_request_callable: Optional[HttpRequestCallable] = None,
+    ) -> "CustomAuth":
+        """
+        Create a custom auth strategy for simple API key authentication.
+
+        Parameters
+        ----------
+        api_key : str
+            The API key value.
+        header_name : str, optional
+            Header name for the API key (default: "X-API-Key").
+        http_request_callable : Optional[HttpRequestCallable], optional
+            Optional HTTP callable for operations.
+
+        Returns
+        -------
+        CustomAuth
+            Configured custom auth strategy.
+        """
+
+        def header_callback() -> Dict[str, str]:
+            return {header_name: api_key}
+
+        return cls(header_callback=header_callback, http_request_callable=http_request_callable)
+
+    @classmethod
+    def create_session_token_custom(
+        cls,
+        session_token: str,
+        session_refresh_func: Callable[[], str],
+        header_name: str = "Authorization",
+        token_prefix: str = "Session",
+        http_request_callable: Optional[HttpRequestCallable] = None,
+    ) -> "CustomAuth":
+        """
+        Create a custom auth strategy for session token authentication with refresh.
+
+        Parameters
+        ----------
+        session_token : str
+            Initial session token.
+        session_refresh_func : Callable[[], str]
+            Function to refresh the session token.
+        header_name : str, optional
+            Header name for the token (default: "Authorization").
+        token_prefix : str, optional
+            Prefix for the token value (default: "Session").
+        http_request_callable : Optional[HttpRequestCallable], optional
+            Optional HTTP callable for refresh operations.
+
+        Returns
+        -------
+        CustomAuth
+            Configured custom auth strategy.
+        """
+        current_token = {"token": session_token}
+
+        def header_callback() -> Dict[str, str]:
+            return {header_name: f"{token_prefix} {current_token['token']}"}
+
+        def refresh_func() -> Optional[TokenRefreshResult]:
+            new_token = session_refresh_func()
+            current_token["token"] = new_token
+
+            return {"token_data": {"access_token": new_token, "token_type": "session"}, "config_updates": None}
+
+        return cls(
+            header_callback=header_callback, refresh_func=refresh_func, can_refresh_func=lambda: True, http_request_callable=http_request_callable
+        )

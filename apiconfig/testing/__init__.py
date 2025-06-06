@@ -6,6 +6,11 @@ Testing utilities for apiconfig.
 This module provides access to unit and integration testing helpers.
 """
 
+from .auth_verification import (
+    AdvancedAuthVerification,
+    AuthHeaderVerification,
+    AuthTestHelpers,
+)
 from .unit import (
     BaseAuthStrategyTest,
     BaseConfigProviderTest,
@@ -25,6 +30,10 @@ from .unit import (
 )
 
 __all__: list[str] = [
+    # Auth Verification Utilities
+    "AdvancedAuthVerification",
+    "AuthHeaderVerification",
+    "AuthTestHelpers",
     # Unit Testing Helpers
     "BaseAuthStrategyTest",
     "BaseConfigProviderTest",

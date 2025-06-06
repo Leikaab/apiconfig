@@ -46,3 +46,12 @@ def test_handle_response_invalid_json() -> None:
     response = httpx.Response(status_code=200, text="{invalid json")
     with pytest.raises(JSONDecodeError):
         client._handle_response(response, HttpMethod.GET, "https://example.com/test")
+
+
+@pytest.mark.parametrize("body", ["", "null", "123", '"text"'])
+def test_handle_response_empty_or_non_object_returns_empty_dict(body: str) -> None:
+    """Non-object JSON bodies should result in an empty dict."""
+    client = _make_client()
+    response = httpx.Response(status_code=200, text=body)
+    result = client._handle_response(response, HttpMethod.GET, "https://example.com/test")
+    assert result == {}

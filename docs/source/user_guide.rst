@@ -264,17 +264,13 @@ Logging
 .. code-block:: python
 
    import logging
-   from apiconfig.utils.logging.setup import configure_logging
+   from apiconfig.utils.logging import setup_logging
 
    # Basic logging setup
    logging.basicConfig(level=logging.INFO)
 
-   # Or use the built-in configuration
-   configure_logging(
-       level=logging.DEBUG,
-       format="detailed",  # or "simple"
-       redact_sensitive=True,
-   )
+   # Or use the built-in helper
+   setup_logging(level=logging.DEBUG)
 
    # Use the logger
    logger = logging.getLogger("apiconfig")

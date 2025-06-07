@@ -34,7 +34,7 @@ Key Features
 - **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
 - **Type Safety**: Strong type hints and type-checked public API.
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
-- **100% Test Coverage**: Fully tested with unit and integration tests.
+- **High Test Coverage**: Over 95% coverage with unit and integration tests.
 
 Quick Example
 -----------

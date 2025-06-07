@@ -58,16 +58,16 @@ def file_provider(temp_config_file: Path) -> FileProvider:
 
 
 @pytest.fixture(scope="function")
-def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:  # Corrected type hint
-    """Provide an EnvProvider with predefined env vars."""
+def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:
+    """Provide an EnvProvider with predefined environment variables."""
     monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
     monkeypatch.setenv("APICONFIG_AUTH_TOKEN", "env_token_123")
-    return EnvProvider(prefix="APICONFIG")  # Corrected class instantiation
+    return EnvProvider(prefix="APICONFIG")
 
 
 @pytest.fixture(scope="function")
-def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> ConfigManager:  # Corrected type hint
+def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> ConfigManager:
     """Provide a ConfigManager instance with file and env providers."""
     # Order matters: env overrides file by default
     return ConfigManager(providers=[file_provider, env_provider])

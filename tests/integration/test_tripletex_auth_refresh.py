@@ -6,11 +6,18 @@ successful API calls.
 """
 
 import logging
+import os
 import threading
 from datetime import datetime, timedelta, timezone
 
 import pytest
 from pytest import LogCaptureFixture
+
+if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
+    pytest.skip(
+        "Integration tests disabled (PYTEST_SKIP_INTEGRATION=true)",
+        allow_module_level=True,
+    )
 
 from apiconfig.exceptions.auth import TokenRefreshError
 from helpers_for_tests.tripletex.tripletex_auth import TripletexSessionAuth

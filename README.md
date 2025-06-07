@@ -140,7 +140,7 @@ auth = ApiKeyAuth(api_key="my-secret-key", param_name="api_key")
 from apiconfig import BasicAuth, BearerAuth
 
 basic = BasicAuth(username="user", password="pass")
-bearer = BearerAuth(token="my-jwt-token")
+bearer = BearerAuth(access_token="my-jwt-token")
 ```
 
 #### Custom Authentication
@@ -168,7 +168,7 @@ config_dict = env.load()
 ```python
 from apiconfig import FileProvider, MemoryProvider
 
-file_provider = FileProvider(filepath="config.json")
+file_provider = FileProvider(file_path="config.json")
 file_config = file_provider.load()
 
 memory_provider = MemoryProvider(data={"hostname": "api.example.com"})

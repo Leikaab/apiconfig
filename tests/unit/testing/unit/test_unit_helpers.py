@@ -272,7 +272,7 @@ def test_base_config_provider_test_config_file_raises_if_no_content() -> None:
 def test_config_provider_protocol_load_signature() -> None:
     """
     Test that ConfigProviderProtocol can be used for duck typing and its load method is present.
-    This is a dummy test to ensure coverage of the protocol ellipsis (line 32).
+    This dummy test ensures coverage of the protocol ellipsis.
     """
 
     class Dummy(helpers.ConfigProviderProtocol):
@@ -288,7 +288,7 @@ def test_config_provider_protocol_load_signature() -> None:
 
 def test_base_auth_strategy_test_setUpClass_on_base() -> None:
     """
-    Test BaseAuthStrategyTest.setUpClass returns early when called on the base class itself (line 184).
+    Test BaseAuthStrategyTest.setUpClass returns early when called on the base class itself.
     """
     # Should not raise or do anything
     helpers.BaseAuthStrategyTest.setUpClass()
@@ -296,7 +296,7 @@ def test_base_auth_strategy_test_setUpClass_on_base() -> None:
 
 def test_base_auth_strategy_test_assertAuthHeaderCorrect() -> None:
     """
-    Test BaseAuthStrategyTest.assertAuthHeaderCorrect method (line 200).
+    Test BaseAuthStrategyTest.assertAuthHeaderCorrect method.
     """
 
     class SubTest(helpers.BaseAuthStrategyTest):
@@ -308,7 +308,7 @@ def test_base_auth_strategy_test_assertAuthHeaderCorrect() -> None:
 
 def test_base_config_provider_test_get_provider_instance_with_class() -> None:
     """
-    Test BaseConfigProviderTest.get_provider_instance when provider_class is set (line 231).
+    Test BaseConfigProviderTest.get_provider_instance when provider_class is set.
     """
 
     class DummyProviderClass:
@@ -328,7 +328,7 @@ def test_base_config_provider_test_get_provider_instance_with_class() -> None:
 
 def test_base_config_provider_test_env_vars_merges(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Test BaseConfigProviderTest.env_vars merges vars_to_set and required_env_vars (lines 244-248).
+    Test BaseConfigProviderTest.env_vars merges vars_to_set and required_env_vars.
     """
 
     class SubTest(helpers.BaseConfigProviderTest):
@@ -348,7 +348,7 @@ def test_base_config_provider_test_env_vars_merges(monkeypatch: pytest.MonkeyPat
 
 def test_base_config_provider_test_config_file_variants() -> None:
     """
-    Test BaseConfigProviderTest.config_file with content, config_content, suffix, and config_suffix (lines 278-279).
+    Test BaseConfigProviderTest.config_file with content, config_content, suffix, and config_suffix.
     """
 
     class SubTest(helpers.BaseConfigProviderTest):
@@ -374,7 +374,7 @@ def test_base_config_provider_test_config_file_variants() -> None:
 
 def test_base_config_provider_test_assertProviderLoads() -> None:
     """
-    Test BaseConfigProviderTest.assertProviderLoads method (line 292).
+    Test BaseConfigProviderTest.assertProviderLoads method.
     """
 
     class Dummy(helpers.ConfigProviderProtocol):

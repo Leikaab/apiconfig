@@ -40,6 +40,14 @@ from apiconfig.utils.url import add_query_params, get_query_params, parse_url
             "/api",
         ),  # IP address with port
         ("https://[2001:db8::1]/path", "https", "[2001:db8::1]", "/path"),  # IPv6
+        (
+            "[2001:db8::1]:8080/path",
+            "https",
+            "[2001:db8::1]:8080",
+            "/path",
+        ),  # IPv6 with port
+        ("localhost", "", "", "localhost"),  # No scheme for bare hostname
+        ("relative/path", "", "", "relative/path"),  # Relative path without leading slash
     ],
 )
 def test_parse_url(url_in: str, expected_scheme: str, expected_netloc: str, expected_path: str) -> None:
@@ -92,6 +100,18 @@ def test_parse_url_edge_cases() -> None:
     assert result.params == "param1=value1"
     assert result.query == "query=value"
     assert result.fragment == "frag"
+
+
+def test_parse_url_custom_default_scheme() -> None:
+    """Ensure parse_url uses the provided default scheme when missing."""
+    # When the URL lacks a scheme, the provided default should be applied
+    result = parse_url("example.org/api", default_scheme="http")
+    assert result.scheme == "http"
+    assert result.netloc == "example.org"
+
+    # Existing schemes should be preserved regardless of default
+    result = parse_url("https://example.org/api", default_scheme="http")
+    assert result.scheme == "https"
 
 
 # --- Tests for get_query_params ---
@@ -310,3 +330,14 @@ def test_add_query_params_edge_cases() -> None:
     long_value = "x" * 1000  # 1000 character string
     result = add_query_params("https://example.com", {"long": long_value})
     assert get_query_params(result)["long"] == long_value
+
+
+def test_add_query_params_replace() -> None:
+    """Test add_query_params with replace=True overwrites existing params."""
+    url = "https://example.com/path?a=1&b=2"
+    result = add_query_params(url, {"b": None, "c": "3"}, replace=True)
+    assert result == "https://example.com/path?c=3"
+
+    url2 = "https://example.com/path?a=1"
+    result2 = add_query_params(url2, {"b": "2"}, replace=True)
+    assert result2 == "https://example.com/path?b=2"

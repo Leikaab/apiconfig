@@ -189,14 +189,14 @@ SENSITIVE_VALUE_PATTERN_UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-
             SENSITIVE_KEY_PATTERN,
             None,
             "not json",
-        ),  # Unparseable JSON
+        ),  # Unparsable JSON
         (
             "a=b=c",
             "application/x-www-form-urlencoded",
             SENSITIVE_KEY_PATTERN,
             None,
             "a=b%3Dc",
-        ),  # Unparseable form (sort of)
+        ),  # Unparsable form (sort of)
         (
             {"password": "secret", "user": "test"},
             None,

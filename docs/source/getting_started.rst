@@ -68,7 +68,7 @@ Bearer Token Authentication
 
    from apiconfig import ClientConfig, BearerAuth
 
-   auth = BearerAuth(token="my-jwt-token")
+   auth = BearerAuth(access_token="my-jwt-token")
    config = ClientConfig(
        hostname="api.example.com",
        version="v1",
@@ -116,7 +116,7 @@ From a File
    from apiconfig import FileProvider, ClientConfig
 
    # Load from a JSON file
-   file_provider = FileProvider(filepath="config.json")
+   file_provider = FileProvider(file_path="config.json")
    config_dict = file_provider.load()
 
    # Create config from loaded values
@@ -133,7 +133,7 @@ Using with HTTP Clients
    from apiconfig import ClientConfig, BearerAuth
 
    # Set up configuration
-   auth = BearerAuth(token="my-jwt-token")
+   auth = BearerAuth(access_token="my-jwt-token")
    config = ClientConfig(
        hostname="api.example.com",
        version="v1",

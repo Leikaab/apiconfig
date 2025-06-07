@@ -2,6 +2,12 @@ import os
 
 import pytest
 
+if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
+    pytest.skip(
+        "Integration tests disabled (PYTEST_SKIP_INTEGRATION=true)",
+        allow_module_level=True,
+    )
+
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.config.base import ClientConfig
 from apiconfig.config.manager import ConfigManager

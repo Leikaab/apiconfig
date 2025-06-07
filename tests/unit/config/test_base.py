@@ -307,13 +307,43 @@ class TestClientConfig:
 
     def test_merge_configs_static_method(self) -> None:
         """Test the merge_configs static method."""
-        base_config = ClientConfig(hostname="api.example.com")
-        other_config = ClientConfig(version="v1")
+        base_config = ClientConfig(
+            hostname="api.example.com",
+            headers={"User-Agent": "Base"},
+            retries=5,
+        )
+        other_config = ClientConfig(
+            version="v1",
+            headers={"Authorization": "Bearer token"},
+            timeout=20.0,
+        )
+        other_config.retries = None  # type: ignore[assignment]
 
         merged = ClientConfig.merge_configs(base_config, other_config)
 
+        # Base and other fields should be combined correctly
         assert merged.hostname == "api.example.com"
         assert merged.version == "v1"
+        assert merged.headers == {
+            "User-Agent": "Base",
+            "Authorization": "Bearer token",
+        }
+        assert merged.timeout == 20.0
+        assert merged.retries == 5
+
+        # Changing originals shouldn't affect merged result
+        assert base_config.headers is not None
+        base_config.headers["User-Agent"] = "Modified"
+        base_config.timeout = 30.0
+        assert other_config.headers is not None
+        other_config.headers["Authorization"] = "Modified"
+        other_config.timeout = 5.0
+
+        assert merged.headers == {
+            "User-Agent": "Base",
+            "Authorization": "Bearer token",
+        }
+        assert merged.timeout == 20.0
 
     def test_merge_configs_with_incompatible_types(self) -> None:
         """Test that merge_configs raises TypeError with incompatible types."""
@@ -364,3 +394,24 @@ class TestClientConfig:
 
         assert config2.hostname == "override.example.com"
         assert config2.version == "v2"  # Still from class
+
+    def test_add_operator_merges_configs(self) -> None:
+        """Using the "+" operator should merge configs like ``merge()``."""
+        base_config = ClientConfig(hostname="api.example.com", timeout=10.0)
+        other_config = ClientConfig(version="v1", timeout=20.0)
+
+        merged_via_method = base_config.merge(other_config)
+
+        with pytest.deprecated_call():
+            merged_via_add = base_config + other_config
+
+        assert merged_via_add.hostname == merged_via_method.hostname
+        assert merged_via_add.version == merged_via_method.version
+        assert merged_via_add.timeout == merged_via_method.timeout
+
+    def test_add_operator_type_error(self) -> None:
+        """Adding a non-``ClientConfig`` should raise ``TypeError``."""
+        config = ClientConfig()
+        with pytest.deprecated_call():
+            with pytest.raises(TypeError):
+                _ = config + "not a ClientConfig"  # type: ignore[type-var]

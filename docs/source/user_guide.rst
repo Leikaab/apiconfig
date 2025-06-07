@@ -65,11 +65,11 @@ Load configuration from JSON or YAML files:
    from apiconfig import FileProvider
 
    # JSON file
-   json_provider = FileProvider(filepath="config.json")
+   json_provider = FileProvider(file_path="config.json")
    json_config = json_provider.load()
 
    # YAML file
-   yaml_provider = FileProvider(filepath="config.yaml")
+   yaml_provider = FileProvider(file_path="config.yaml")
    yaml_config = yaml_provider.load()
 
 Memory Provider
@@ -146,7 +146,7 @@ JWT or OAuth token authentication:
 
    from apiconfig import BearerAuth
 
-   auth = BearerAuth(token="my-jwt-token")
+   auth = BearerAuth(access_token="my-jwt-token")
 
    # Get headers for a request
    headers = auth.prepare_request_headers()
@@ -217,7 +217,7 @@ Store tokens securely:
    from apiconfig.auth.token import FileTokenStorage
 
    # Store tokens in a file
-   storage = FileTokenStorage(filepath=".tokens.json")
+   storage = FileTokenStorage(file_path=".tokens.json")
 
    # Save tokens
    storage.save({
@@ -311,7 +311,7 @@ Best Practices
           env = EnvProvider(prefix="MYAPI_")
           config_dict = env.load()
 
-          auth = BearerAuth(token=config_dict.get("TOKEN"))
+        auth = BearerAuth(access_token=config_dict.get("TOKEN"))
           return ClientConfig(
               hostname=config_dict.get("HOSTNAME", "api.default.com"),
               version=config_dict.get("VERSION", "v1"),

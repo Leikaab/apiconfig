@@ -7,6 +7,7 @@ This library provides components for managing API client configurations
 strategies (Basic, Bearer, API Key, etc.).
 """
 
+import importlib.metadata
 import logging
 
 # Core components re-exported for easier access
@@ -42,7 +43,10 @@ from .types import (
     TokenStorageStrategy,
 )
 
-__version__: str = "0.3.0"
+try:
+    __version__: str = importlib.metadata.version("apiconfig")
+except importlib.metadata.PackageNotFoundError:  # pragma: no cover - fallback for local use
+    __version__ = "0.0.0"
 
 # Define public API
 __all__: list[str] = [

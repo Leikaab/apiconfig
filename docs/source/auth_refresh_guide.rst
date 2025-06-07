@@ -28,18 +28,19 @@ Basic Refresh Pattern
         return requests.request(method, url, headers=headers, data=data)
 
     auth_strategy = BearerAuth(
-        token="current_access_token",
-        refresh_token="current_refresh_token",
-        token_url="https://api.example.com/oauth/token",
-        http_request_callable=http_request_func
+        access_token="current_access_token",
+        http_request_callable=http_request_func,
     )
+
+    # BearerAuth.refresh() must be implemented by a subclass
+    # or by providing custom logic using the HTTP callback.
 
     # Check if refresh is supported
     if auth_strategy.can_refresh():
         print("Auth strategy supports refresh")
 
-    # Manually refresh if needed
-    if auth_strategy.is_expired():
+    # Manually refresh if your subclass implements it
+    if auth_strategy.can_refresh() and auth_strategy.is_expired():
         result = auth_strategy.refresh()
         if result and result.get("token_data"):
             # Save new tokens

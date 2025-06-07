@@ -292,7 +292,7 @@ def test_redacting_formatter_redact_structured_dict_from_string(
     # Test with a JSON string that should be parsed and redacted
     result = fmt._redact_structured('{"token": "secret"}', "application/json")
 
-    # Verify json.dumps was called (line 200)
+    # Verify json.dumps was called
     import json
 
     expected = json.dumps({"redacted": True, "original": False}, ensure_ascii=False)
@@ -302,7 +302,7 @@ def test_redacting_formatter_redact_structured_dict_from_string(
 def test_redacting_formatter_redact_structured_list_from_string_direct(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test that directly targets line 220 in _redact_structured."""
+    """Test _redact_structured when a list is returned from redact_body."""
     fmt = RedactingFormatter()
 
     # Create a string that looks like JSON
@@ -321,7 +321,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
         # Call _redact_structured with a string that will be processed as JSON
         result = fmt._redact_structured(json_string, "application/json")
 
-        # Verify json.dumps was called (line 220)
+        # Verify json.dumps was called
         import json
 
         expected = json.dumps([{"redacted": True}], ensure_ascii=False)
@@ -334,7 +334,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
 def test_redacting_formatter_redact_structured_other_type_direct(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test that directly targets line 224 in _redact_structured."""
+    """Test _redact_structured when redact_body returns an unexpected type."""
     fmt = RedactingFormatter()
 
     # Create a string input
@@ -353,7 +353,7 @@ def test_redacting_formatter_redact_structured_other_type_direct(
         # Call _redact_structured with a string
         result = fmt._redact_structured(test_input, "text/plain")
 
-        # Verify str() was called (line 224)
+        # Verify str() was called on the returned value
         assert result == "42"
     finally:
         # No need to restore when using monkeypatch
@@ -364,7 +364,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
     monkeypatch: pytest.MonkeyPatch,
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
-    """Test that directly targets lines 143-144 in _redact_message."""
+    """Test that a dict message is converted to JSON in _redact_message."""
     fmt = RedactingFormatter()
 
     # Create a dict to be returned by the mocked redact_body
@@ -384,7 +384,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
         # Call _redact_message directly
         fmt._redact_message(record)
 
-        # Verify the message was converted to a JSON string (lines 143-144)
+        # Verify the message was converted to a JSON string
         assert isinstance(record.msg, str)
         import json
 
@@ -399,7 +399,7 @@ def test_redacting_formatter_unknown_type_fallback_direct(
     log_record_factory: Callable[..., logging.LogRecord],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test that directly targets line 138 in _redact_message."""
+    """Test the fallback branch in _redact_message for unknown types."""
     fmt = RedactingFormatter()
 
     # Create a custom type that will trigger the fallback branch
@@ -420,7 +420,7 @@ def test_redacting_formatter_unknown_type_fallback_direct(
         # Call _redact_message directly
         fmt._redact_message(record)
 
-        # Verify str() was called on the object (line 138)
+        # Verify str() was called on the object
         assert record.msg == "custom object"
     finally:
         # No need to restore when using monkeypatch
@@ -444,12 +444,12 @@ def test_redacting_formatter_redact_structured_string_exception_fallback(
     test_string = "test string"
     result = fmt._redact_structured(test_string, "text/plain")
 
-    # Verify the original string is returned (line 228)
+    # Verify the original string is returned
     assert result == test_string
 
 
 def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that directly targets line 138 in _redact_message."""
+    """Exercise the _redact_message fallback path using a custom object."""
     fmt = RedactingFormatter()
 
     # Create a custom object that will trigger the fallback branch
@@ -478,12 +478,12 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
     # Call _redact_message directly
     fmt._redact_message(record)
 
-    # Verify str() was called on the object (line 138)
+    # Verify str() was called on the object
     assert record.msg == "custom object str representation"
 
 
 def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that directly targets line 220 in _redact_structured."""
+    """Ensure _redact_structured handles URL-encoded form data."""
     fmt = RedactingFormatter()
 
     # Create a string input
@@ -503,7 +503,7 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
         # Call _redact_structured with our string input and form content type
         result = fmt._redact_structured(string_input, "application/x-www-form-urlencoded")
 
-        # Verify json.dumps was called (line 220)
+        # Verify json.dumps was called
         import json
 
         expected = json.dumps(redacted_dict, ensure_ascii=False)
@@ -514,7 +514,7 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
 
 
 def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that directly targets line 224 in _redact_structured."""
+    """Ensure _redact_structured stringifies custom outputs."""
     fmt = RedactingFormatter()
 
     # Create a non-string, non-dict, non-list input
@@ -541,7 +541,7 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
         # Call _redact_structured with our custom input
         result = fmt._redact_structured(custom_input, None)
 
-        # Verify str() was called (line 224)
+        # Verify str() was called
         assert result == "custom output str representation"
     finally:
         # No need to restore when using monkeypatch
@@ -552,7 +552,7 @@ def test_redacting_formatter_line_138_direct_with_format(
     monkeypatch: pytest.MonkeyPatch,
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
-    """Test that directly targets line 138 in _redact_message using format method."""
+    """Exercise _redact_message via format() with a custom object."""
     fmt = RedactingFormatter()
 
     # Create a custom object that will trigger the fallback branch
@@ -586,7 +586,7 @@ def test_redacting_formatter_line_138_direct_with_format(
 
 
 def test_redacting_formatter_line_138_with_subclass() -> None:
-    """Test line 138 by creating a subclass that forces the fallback branch."""
+    """Create a subclass forcing the fallback branch in _redact_message."""
 
     # Create a subclass that overrides the necessary methods to force the fallback branch
     class TestRedactingFormatter(RedactingFormatter):
@@ -594,7 +594,7 @@ def test_redacting_formatter_line_138_with_subclass() -> None:
             # Get the original message
             orig_msg = getattr(record, "msg", None)
 
-            # Force the fallback branch (line 138)
+            # Force the fallback branch
             redacted_msg = str(orig_msg)
 
             # Set the message

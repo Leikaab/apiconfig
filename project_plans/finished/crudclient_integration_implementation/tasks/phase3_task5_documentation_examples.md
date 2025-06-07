@@ -239,12 +239,12 @@ Advanced Integration with Custom Configuration
 .. code-block:: python
 
     from apiconfig.config import ConfigManager
-    from apiconfig.config.providers import EnvConfigProvider
+    from apiconfig.config.providers import EnvProvider
     from apiconfig.auth.strategies import BearerAuth
 
     # Load configuration
     config_manager = ConfigManager()
-    config_manager.add_provider(EnvConfigProvider())
+    config_manager.add_provider(EnvProvider())
     config = config_manager.get_config()
 
     # Set up auth with configuration

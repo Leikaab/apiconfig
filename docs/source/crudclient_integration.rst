@@ -18,10 +18,8 @@ Basic Integration
         return requests.request(method, url, headers=headers, json=data)
 
     auth_strategy = BearerAuth(
-        token="your_access_token",
-        refresh_token="your_refresh_token",
-        token_url="https://api.example.com/oauth/token",
-        http_request_callable=make_http_request
+        access_token="your_access_token",
+        http_request_callable=make_http_request,
     )
 
     # Create crudclient with auth refresh integration
@@ -43,20 +41,19 @@ Advanced Integration with Custom Configuration
 .. code-block:: python
 
     from apiconfig.config import ConfigManager
-    from apiconfig.config.providers import EnvConfigProvider
+    from apiconfig.config.providers import EnvProvider
     from apiconfig.auth.strategies import BearerAuth
 
     # Load configuration
-    config_manager = ConfigManager()
-    config_manager.add_provider(EnvConfigProvider())
-    config = config_manager.get_config()
+    # ConfigManager accepts the providers in its constructor and
+    # ``load_config`` returns the merged dictionary.
+    config_manager = ConfigManager([EnvProvider()])
+    config = config_manager.load_config()
 
     # Set up auth with configuration
     auth_strategy = BearerAuth(
-        token=config["access_token"],
-        refresh_token=config["refresh_token"],
-        token_url=config["token_url"],
-        http_request_callable=make_http_request
+        access_token=config["access_token"],
+        http_request_callable=make_http_request,
     )
 
     # Use with crudclient

@@ -243,9 +243,9 @@ Advanced Integration with Custom Configuration
     from apiconfig.auth.strategies import BearerAuth
 
     # Load configuration
-    config_manager = ConfigManager()
-    config_manager.add_provider(EnvProvider())
-    config = config_manager.get_config()
+    providers = [EnvProvider()]
+    config_manager = ConfigManager(providers)
+    config = config_manager.load_config()
 
     # Set up auth with configuration
     auth_strategy = BearerAuth(

@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apiconfig.testing.unit.mocks.config &mdash; apiconfig 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=23fbc494" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            apiconfig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#installing-with-poetry">Installing with Poetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#verifying-installation">Verifying Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting_started.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting_started.html#authentication">Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#api-key-authentication">API Key Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#basic-authentication">Basic Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#bearer-token-authentication">Bearer Token Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#custom-authentication">Custom Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting_started.html#loading-configuration">Loading Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#from-environment-variables">From Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting_started.html#from-a-file">From a File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting_started.html#using-with-http-clients">Using with HTTP Clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting_started.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#configuration-management">Configuration Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#merging-configurations">Merging Configurations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#configuration-providers">Configuration Providers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../user_guide.html#environment-variables-provider">Environment Variables Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../user_guide.html#file-provider">File Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../user_guide.html#memory-provider">Memory Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#authentication-strategies">Authentication Strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#api-key-authentication">API Key Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#basic-authentication">Basic Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#bearer-authentication">Bearer Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#custom-authentication">Custom Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#token-management">Token Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#refresh-tokens">Refresh Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../user_guide.html#token-storage">Token Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../user_guide.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auth_refresh_guide.html">Authentication Refresh Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../auth_refresh_guide.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../auth_refresh_guide.html#basic-refresh-pattern">Basic Refresh Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../auth_refresh_guide.html#integration-with-http-clients">Integration with HTTP Clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../auth_refresh_guide.html#custom-auth-strategy-with-refresh">Custom Auth Strategy with Refresh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../auth_refresh_guide.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../crudclient_integration.html">CrudClient Integration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../crudclient_integration.html#basic-integration">Basic Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../crudclient_integration.html#advanced-integration-with-custom-configuration">Advanced Integration with Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../crudclient_integration.html#tripletex-example">Tripletex Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Real-World Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../examples.html#jsonplaceholder-api">JSONPlaceholder API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../examples.html#fiken-api-oauth2">Fiken API (OAuth2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../examples.html#tripletex-api-api-key-token">Tripletex API (API Key + Token)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../examples.html#oneflow-api-api-key">OneFlow API (API Key)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../examples.html#creating-a-reusable-api-client">Creating a Reusable API Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#setting-up-the-development-environment">Setting Up the Development Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#clone-the-repository">Clone the Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#using-dev-containers-recommended">Using Dev Containers (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#manual-setup">Manual Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#coverage">Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#code-style-and-quality">Code Style and Quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#branching-strategy">Branching Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#commit-message-guidelines">Commit Message Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../contributing.html#building-the-documentation">Building the Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#release-process">Release Process</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/auth.html">apiconfig.auth</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy"><code class="docutils literal notranslate"><span class="pre">AuthStrategy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.__init__"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.can_refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.get_refresh_callback"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.get_refresh_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.is_expired"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.AuthStrategy.refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.refresh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth"><code class="docutils literal notranslate"><span class="pre">BasicAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth.__init__"><code class="docutils literal notranslate"><span class="pre">BasicAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">BasicAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">BasicAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth.username"><code class="docutils literal notranslate"><span class="pre">BasicAuth.username</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BasicAuth.password"><code class="docutils literal notranslate"><span class="pre">BasicAuth.password</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth"><code class="docutils literal notranslate"><span class="pre">BearerAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.__init__"><code class="docutils literal notranslate"><span class="pre">BearerAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.can_refresh"><code class="docutils literal notranslate"><span class="pre">BearerAuth.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.is_expired"><code class="docutils literal notranslate"><span class="pre">BearerAuth.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">BearerAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">BearerAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.refresh"><code class="docutils literal notranslate"><span class="pre">BearerAuth.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.BearerAuth.access_token"><code class="docutils literal notranslate"><span class="pre">BearerAuth.access_token</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth.api_key"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.api_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth.header_name"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.header_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.ApiKeyAuth.param_name"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.param_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth"><code class="docutils literal notranslate"><span class="pre">CustomAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.__init__"><code class="docutils literal notranslate"><span class="pre">CustomAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.can_refresh"><code class="docutils literal notranslate"><span class="pre">CustomAuth.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.create_api_key_custom"><code class="docutils literal notranslate"><span class="pre">CustomAuth.create_api_key_custom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.create_session_token_custom"><code class="docutils literal notranslate"><span class="pre">CustomAuth.create_session_token_custom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.is_expired"><code class="docutils literal notranslate"><span class="pre">CustomAuth.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.prepare_request"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.CustomAuth.refresh"><code class="docutils literal notranslate"><span class="pre">CustomAuth.refresh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/auth.html#auth-strategy-refresh-interface">Auth Strategy Refresh Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.base.AuthStrategy.can_refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.can_refresh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.base.AuthStrategy.refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.refresh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.base.AuthStrategy.is_expired"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.is_expired()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#apiconfig.auth.base.AuthStrategy.get_refresh_callback"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.get_refresh_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/auth.html#refresh-callback-integration">Refresh Callback Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/config.html">apiconfig.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig"><code class="docutils literal notranslate"><span class="pre">ClientConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.hostname"><code class="docutils literal notranslate"><span class="pre">ClientConfig.hostname</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.version"><code class="docutils literal notranslate"><span class="pre">ClientConfig.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.headers"><code class="docutils literal notranslate"><span class="pre">ClientConfig.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.timeout"><code class="docutils literal notranslate"><span class="pre">ClientConfig.timeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.retries"><code class="docutils literal notranslate"><span class="pre">ClientConfig.retries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.auth_strategy"><code class="docutils literal notranslate"><span class="pre">ClientConfig.auth_strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.log_request_body"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_request_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.log_response_body"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_response_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.__init__"><code class="docutils literal notranslate"><span class="pre">ClientConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id0"><code class="docutils literal notranslate"><span class="pre">ClientConfig.auth_strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.base_url"><code class="docutils literal notranslate"><span class="pre">ClientConfig.base_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id1"><code class="docutils literal notranslate"><span class="pre">ClientConfig.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id2"><code class="docutils literal notranslate"><span class="pre">ClientConfig.hostname</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id3"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_request_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id4"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_response_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.merge"><code class="docutils literal notranslate"><span class="pre">ClientConfig.merge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ClientConfig.merge_configs"><code class="docutils literal notranslate"><span class="pre">ClientConfig.merge_configs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id5"><code class="docutils literal notranslate"><span class="pre">ClientConfig.retries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id6"><code class="docutils literal notranslate"><span class="pre">ClientConfig.timeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#id7"><code class="docutils literal notranslate"><span class="pre">ClientConfig.version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ConfigManager"><code class="docutils literal notranslate"><span class="pre">ConfigManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ConfigManager.__init__"><code class="docutils literal notranslate"><span class="pre">ConfigManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.ConfigManager.load_config"><code class="docutils literal notranslate"><span class="pre">ConfigManager.load_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.EnvProvider"><code class="docutils literal notranslate"><span class="pre">EnvProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.EnvProvider.__init__"><code class="docutils literal notranslate"><span class="pre">EnvProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.EnvProvider.get"><code class="docutils literal notranslate"><span class="pre">EnvProvider.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.EnvProvider.load"><code class="docutils literal notranslate"><span class="pre">EnvProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.FileProvider"><code class="docutils literal notranslate"><span class="pre">FileProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.FileProvider.__init__"><code class="docutils literal notranslate"><span class="pre">FileProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.FileProvider.get"><code class="docutils literal notranslate"><span class="pre">FileProvider.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.FileProvider.load"><code class="docutils literal notranslate"><span class="pre">FileProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.MemoryProvider"><code class="docutils literal notranslate"><span class="pre">MemoryProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.MemoryProvider.__init__"><code class="docutils literal notranslate"><span class="pre">MemoryProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/config.html#apiconfig.config.MemoryProvider.get_config"><code class="docutils literal notranslate"><span class="pre">MemoryProvider.get_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/exceptions.html">apiconfig.exceptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.APIConfigError"><code class="docutils literal notranslate"><span class="pre">APIConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ConfigurationError"><code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.AuthenticationError"><code class="docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.AuthenticationError.__init__"><code class="docutils literal notranslate"><span class="pre">AuthenticationError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.InvalidCredentialsError"><code class="docutils literal notranslate"><span class="pre">InvalidCredentialsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ExpiredTokenError"><code class="docutils literal notranslate"><span class="pre">ExpiredTokenError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.MissingCredentialsError"><code class="docutils literal notranslate"><span class="pre">MissingCredentialsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.TokenRefreshError"><code class="docutils literal notranslate"><span class="pre">TokenRefreshError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.AuthStrategyError"><code class="docutils literal notranslate"><span class="pre">AuthStrategyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.InvalidConfigError"><code class="docutils literal notranslate"><span class="pre">InvalidConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.MissingConfigError"><code class="docutils literal notranslate"><span class="pre">MissingConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ConfigLoadError"><code class="docutils literal notranslate"><span class="pre">ConfigLoadError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ConfigProviderError"><code class="docutils literal notranslate"><span class="pre">ConfigProviderError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.HTTPUtilsError"><code class="docutils literal notranslate"><span class="pre">HTTPUtilsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.JSONDecodeError"><code class="docutils literal notranslate"><span class="pre">JSONDecodeError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.JSONDecodeError.__init__"><code class="docutils literal notranslate"><span class="pre">JSONDecodeError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.JSONEncodeError"><code class="docutils literal notranslate"><span class="pre">JSONEncodeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.PayloadTooLargeError"><code class="docutils literal notranslate"><span class="pre">PayloadTooLargeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientError"><code class="docutils literal notranslate"><span class="pre">ApiClientError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientError.__init__"><code class="docutils literal notranslate"><span class="pre">ApiClientError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientBadRequestError"><code class="docutils literal notranslate"><span class="pre">ApiClientBadRequestError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientUnauthorizedError"><code class="docutils literal notranslate"><span class="pre">ApiClientUnauthorizedError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientForbiddenError"><code class="docutils literal notranslate"><span class="pre">ApiClientForbiddenError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientNotFoundError"><code class="docutils literal notranslate"><span class="pre">ApiClientNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientConflictError"><code class="docutils literal notranslate"><span class="pre">ApiClientConflictError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientUnprocessableEntityError"><code class="docutils literal notranslate"><span class="pre">ApiClientUnprocessableEntityError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientRateLimitError"><code class="docutils literal notranslate"><span class="pre">ApiClientRateLimitError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.ApiClientInternalServerError"><code class="docutils literal notranslate"><span class="pre">ApiClientInternalServerError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/exceptions.html#apiconfig.exceptions.create_api_client_error"><code class="docutils literal notranslate"><span class="pre">create_api_client_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/testing.html">apiconfig.testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AdvancedAuthVerification"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AdvancedAuthVerification.verify_jwt_structure"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_jwt_structure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AdvancedAuthVerification.verify_oauth2_token_format"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_oauth2_token_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AdvancedAuthVerification.verify_session_token_format"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_session_token_format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_api_key_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_api_key_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_auth_header_format"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_auth_header_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_basic_auth_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_basic_auth_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_bearer_auth_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_bearer_auth_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_multiple_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_multiple_auth_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthHeaderVerification.verify_no_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_no_auth_headers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthTestHelpers"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthTestHelpers.assert_auth_applied"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.assert_auth_applied()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthTestHelpers.assert_no_auth_applied"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.assert_no_auth_applied()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.AuthTestHelpers.create_test_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.create_test_auth_headers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseAuthStrategyTest"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseAuthStrategyTest.assertAuthHeaderCorrect"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.assertAuthHeaderCorrect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseAuthStrategyTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.setUpClass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseAuthStrategyTest.strategy"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.strategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.assertProviderLoads"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.assertProviderLoads()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.config_content"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.config_file"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.config_suffix"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.env_vars"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.env_vars()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.get_provider_instance"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.get_provider_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.provider_class"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.provider_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.BaseConfigProviderTest.required_env_vars"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.required_env_vars</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.MockConfigManager"><code class="docutils literal notranslate"><span class="pre">MockConfigManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.MockConfigManager.__init__"><code class="docutils literal notranslate"><span class="pre">MockConfigManager.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.MockConfigProvider"><code class="docutils literal notranslate"><span class="pre">MockConfigProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.MockConfigProvider.load"><code class="docutils literal notranslate"><span class="pre">MockConfigProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.assert_auth_header_correct"><code class="docutils literal notranslate"><span class="pre">assert_auth_header_correct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.assert_client_config_valid"><code class="docutils literal notranslate"><span class="pre">assert_client_config_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.assert_provider_loads"><code class="docutils literal notranslate"><span class="pre">assert_provider_loads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.check_auth_strategy_interface"><code class="docutils literal notranslate"><span class="pre">check_auth_strategy_interface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.create_auth_credentials"><code class="docutils literal notranslate"><span class="pre">create_auth_credentials()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.create_invalid_client_config"><code class="docutils literal notranslate"><span class="pre">create_invalid_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.create_mock_client_config"><code class="docutils literal notranslate"><span class="pre">create_mock_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.create_provider_dict"><code class="docutils literal notranslate"><span class="pre">create_provider_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.create_valid_client_config"><code class="docutils literal notranslate"><span class="pre">create_valid_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.temp_config_file"><code class="docutils literal notranslate"><span class="pre">temp_config_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/testing.html#apiconfig.testing.temp_env_vars"><code class="docutils literal notranslate"><span class="pre">temp_env_vars()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/utils.html">apiconfig.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/types.html">apiconfig.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonPrimitive"><code class="docutils literal notranslate"><span class="pre">JsonPrimitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonValue"><code class="docutils literal notranslate"><span class="pre">JsonValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonObject"><code class="docutils literal notranslate"><span class="pre">JsonObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonList"><code class="docutils literal notranslate"><span class="pre">JsonList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonEncoder"><code class="docutils literal notranslate"><span class="pre">JsonEncoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonDecoder"><code class="docutils literal notranslate"><span class="pre">JsonDecoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonSerializerCallable"><code class="docutils literal notranslate"><span class="pre">JsonSerializerCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.JsonDeserializerCallable"><code class="docutils literal notranslate"><span class="pre">JsonDeserializerCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HeadersType"><code class="docutils literal notranslate"><span class="pre">HeadersType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.QueryParamType"><code class="docutils literal notranslate"><span class="pre">QueryParamType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.QueryParamValueType"><code class="docutils literal notranslate"><span class="pre">QueryParamValueType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.ResponseBodyType"><code class="docutils literal notranslate"><span class="pre">ResponseBodyType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpRequestProtocol"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpRequestProtocol.method"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpRequestProtocol.url"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpRequestProtocol.headers"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.headers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol.status_code"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.status_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol.headers"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol.text"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol.request"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.request</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpResponseProtocol.reason"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.reason</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod"><code class="docutils literal notranslate"><span class="pre">HttpMethod</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.GET"><code class="docutils literal notranslate"><span class="pre">HttpMethod.GET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.POST"><code class="docutils literal notranslate"><span class="pre">HttpMethod.POST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.PUT"><code class="docutils literal notranslate"><span class="pre">HttpMethod.PUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.DELETE"><code class="docutils literal notranslate"><span class="pre">HttpMethod.DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.PATCH"><code class="docutils literal notranslate"><span class="pre">HttpMethod.PATCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.HEAD"><code class="docutils literal notranslate"><span class="pre">HttpMethod.HEAD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpMethod.OPTIONS"><code class="docutils literal notranslate"><span class="pre">HttpMethod.OPTIONS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.ConfigDict"><code class="docutils literal notranslate"><span class="pre">ConfigDict</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.ConfigProviderCallable"><code class="docutils literal notranslate"><span class="pre">ConfigProviderCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.AuthCredentials"><code class="docutils literal notranslate"><span class="pre">AuthCredentials</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.TokenStorageStrategy"><code class="docutils literal notranslate"><span class="pre">TokenStorageStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.TokenRefreshCallable"><code class="docutils literal notranslate"><span class="pre">TokenRefreshCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData.access_token"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData.refresh_token"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData.expires_in"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData.token_type"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RefreshedTokenData.scope"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id0"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id1"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id2"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id3"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id4"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.TokenRefreshResult"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.TokenRefreshResult.token_data"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.TokenRefreshResult.config_updates"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id5"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id6"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.HttpRequestCallable"><code class="docutils literal notranslate"><span class="pre">HttpRequestCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.AuthRefreshCallback"><code class="docutils literal notranslate"><span class="pre">AuthRefreshCallback</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.CustomAuthPrepareCallable"><code class="docutils literal notranslate"><span class="pre">CustomAuthPrepareCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.CustomLogFormatter"><code class="docutils literal notranslate"><span class="pre">CustomLogFormatter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.CustomLogHandler"><code class="docutils literal notranslate"><span class="pre">CustomLogHandler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.CustomRedactionRule"><code class="docutils literal notranslate"><span class="pre">CustomRedactionRule</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.RequestHookCallable"><code class="docutils literal notranslate"><span class="pre">RequestHookCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#apiconfig.types.ResponseHookCallable"><code class="docutils literal notranslate"><span class="pre">ResponseHookCallable</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/types.html#auth-refresh-types">Auth Refresh Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#id7"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id8"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id9"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id10"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id11"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id12"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id13"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id14"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id15"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id16"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id17"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#id18"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id19"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id20"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id21"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id22"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/types.html#type-aliases">Type Aliases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id23"><code class="docutils literal notranslate"><span class="pre">HttpRequestCallable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id24"><code class="docutils literal notranslate"><span class="pre">AuthRefreshCallback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/types.html#id25"><code class="docutils literal notranslate"><span class="pre">ResponseBodyType</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">apiconfig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">apiconfig.testing.unit.mocks.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for apiconfig.testing.unit.mocks.config</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># File: apiconfig/testing/unit/mocks/config.py</span>
+<span class="sd">&quot;&quot;&quot;Mock implementations for configuration components.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">apiconfig.config.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apiconfig.config.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+
+<span class="c1"># NOTE: No ConfigProvider base class found in current implementation.</span>
+<span class="c1"># Providers seem to use duck typing (requiring a load() method).</span>
+
+
+<div class="viewcode-block" id="MockConfigProvider">
+<a class="viewcode-back" href="../../../../../api/testing.html#apiconfig.testing.MockConfigProvider">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockConfigProvider</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mock ConfigProvider (duck-typed) designed for testing purposes.</span>
+
+<span class="sd">    Mimics the structure of existing providers like EnvProvider, which do not</span>
+<span class="sd">    inherit from a formal base class but provide a `load()` method.</span>
+
+<span class="sd">    This provider bypasses actual configuration sources (like files or environment</span>
+<span class="sd">    variables) and instead returns a predefined dictionary provided during</span>
+<span class="sd">    initialization. This allows tests to inject specific configuration scenarios</span>
+<span class="sd">    easily.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_data : Dict[str, Any]</span>
+<span class="sd">        The dictionary that the `load` method should return.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_data</span> <span class="o">=</span> <span class="n">config_data</span>
+
+<div class="viewcode-block" id="MockConfigProvider.load">
+<a class="viewcode-back" href="../../../../../api/testing.html#apiconfig.testing.MockConfigProvider.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the predefined configuration dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            The dictionary passed to the constructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_data</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="create_mock_client_config">
+<a class="viewcode-back" href="../../../../../api/testing.html#apiconfig.testing.create_mock_client_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_mock_client_config</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mock.example.com&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;v1&quot;</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create ClientConfig instances with sensible defaults.</span>
+
+<span class="sd">    This simplifies the creation of ClientConfig objects needed for tests,</span>
+<span class="sd">    allowing specific attributes to be overridden via keyword arguments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hostname : str, optional</span>
+<span class="sd">        The mock hostname. Defaults to &quot;mock.example.com&quot;.</span>
+<span class="sd">    version : Optional[str], optional</span>
+<span class="sd">        The mock API version. Defaults to &quot;v1&quot;.</span>
+<span class="sd">    timeout : int, optional</span>
+<span class="sd">        The mock timeout. Defaults to 30.</span>
+<span class="sd">    retries : int, optional</span>
+<span class="sd">        The mock max retries. Defaults to 3.</span>
+<span class="sd">    **kwargs : Any</span>
+<span class="sd">        Additional keyword arguments to pass to the ClientConfig constructor,</span>
+<span class="sd">        allowing overrides of defaults or setting other attributes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ClientConfig</span>
+<span class="sd">        A ClientConfig instance populated with the provided or default values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">hostname</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="n">timeout</span><span class="p">,</span>
+        <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="n">retries</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ClientConfig</span><span class="p">(</span><span class="o">**</span><span class="n">config_data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MockConfigManager">
+<a class="viewcode-back" href="../../../../../api/testing.html#apiconfig.testing.MockConfigManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockConfigManager</span><span class="p">(</span><span class="n">ConfigManager</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mock ConfigManager for testing configuration loading logic.</span>
+
+<span class="sd">    This mock allows tests to either:</span>
+<span class="sd">    1. Predefine a specific `ClientConfig` instance that `load_config()` will return.</span>
+<span class="sd">    2. Use `unittest.mock.MagicMock` to spy on calls to `load_config()` and</span>
+<span class="sd">       assert how it was called, while still returning a default mock config.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mock_config : Optional[ClientConfig], optional</span>
+<span class="sd">        An optional `ClientConfig` instance to be returned by</span>
+<span class="sd">        `load_config()`. If None, `load_config()` will return a</span>
+<span class="sd">        default config created by `create_mock_client_config()`.</span>
+<span class="sd">    providers : Optional[list[Any]], optional</span>
+<span class="sd">        An optional list of `ConfigProvider` instances. If None,</span>
+<span class="sd">        a list containing a single `MagicMock` provider is used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">load_config</span><span class="p">:</span> <span class="n">MagicMock</span>  <span class="c1"># Allow spying on this method</span>
+
+<div class="viewcode-block" id="MockConfigManager.__init__">
+<a class="viewcode-back" href="../../../../../api/testing.html#apiconfig.testing.MockConfigManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">mock_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">providers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Use Any since no base class</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the MockConfigManager.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mock_config : Optional[ClientConfig], optional</span>
+<span class="sd">            An optional `ClientConfig` instance to be returned by</span>
+<span class="sd">            `load_config()`. If None, `load_config()` will return a</span>
+<span class="sd">            default config created by `create_mock_client_config()`.</span>
+<span class="sd">        providers : Optional[list[Any]], optional</span>
+<span class="sd">            An optional list of `ConfigProvider` instances. If None,</span>
+<span class="sd">            a list containing a single `MagicMock` provider is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize with MagicMock providers if none are given</span>
+        <span class="c1"># Use a generic MagicMock since there&#39;s no specific provider base class</span>
+        <span class="k">if</span> <span class="n">providers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Create a mock object that has a load method for duck typing</span>
+            <span class="n">mock_provider</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">mock_provider</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">providers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_provider</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">providers</span><span class="o">=</span><span class="n">providers</span><span class="p">)</span>
+
+        <span class="c1"># Allow predefining the config to be returned by load_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mock_config</span> <span class="o">=</span> <span class="n">mock_config</span>
+        <span class="c1"># Use MagicMock for load_config to allow spying/assertions</span>
+        <span class="c1"># Don&#39;t use spec to allow arbitrary arguments for testing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">mock_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_config</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If no specific mock config, return a default one</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">create_mock_client_config</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Leikaab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

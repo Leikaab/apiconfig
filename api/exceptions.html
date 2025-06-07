@@ -1,0 +1,945 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apiconfig.exceptions &mdash; apiconfig 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=23fbc494" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="apiconfig.testing" href="testing.html" />
+    <link rel="prev" title="apiconfig.config" href="config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            apiconfig
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-with-poetry">Installing with Poetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#verifying-installation">Verifying Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#authentication">Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#api-key-authentication">API Key Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#basic-authentication">Basic Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#bearer-token-authentication">Bearer Token Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#custom-authentication">Custom Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#loading-configuration">Loading Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#from-environment-variables">From Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started.html#from-a-file">From a File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#using-with-http-clients">Using with HTTP Clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#configuration-management">Configuration Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#merging-configurations">Merging Configurations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#configuration-providers">Configuration Providers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide.html#environment-variables-provider">Environment Variables Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide.html#file-provider">File Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide.html#memory-provider">Memory Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#authentication-strategies">Authentication Strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#api-key-authentication">API Key Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#basic-authentication">Basic Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#bearer-authentication">Bearer Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#custom-authentication">Custom Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#token-management">Token Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#refresh-tokens">Refresh Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide.html#token-storage">Token Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../auth_refresh_guide.html">Authentication Refresh Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../auth_refresh_guide.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auth_refresh_guide.html#basic-refresh-pattern">Basic Refresh Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auth_refresh_guide.html#integration-with-http-clients">Integration with HTTP Clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auth_refresh_guide.html#custom-auth-strategy-with-refresh">Custom Auth Strategy with Refresh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auth_refresh_guide.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../crudclient_integration.html">CrudClient Integration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../crudclient_integration.html#basic-integration">Basic Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crudclient_integration.html#advanced-integration-with-custom-configuration">Advanced Integration with Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crudclient_integration.html#tripletex-example">Tripletex Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Real-World Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#jsonplaceholder-api">JSONPlaceholder API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#fiken-api-oauth2">Fiken API (OAuth2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#tripletex-api-api-key-token">Tripletex API (API Key + Token)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#oneflow-api-api-key">OneFlow API (API Key)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#creating-a-reusable-api-client">Creating a Reusable API Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#setting-up-the-development-environment">Setting Up the Development Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#clone-the-repository">Clone the Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#using-dev-containers-recommended">Using Dev Containers (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#manual-setup">Manual Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#coverage">Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-style-and-quality">Code Style and Quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#branching-strategy">Branching Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#commit-message-guidelines">Commit Message Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#building-the-documentation">Building the Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-process">Release Process</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="auth.html">apiconfig.auth</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy"><code class="docutils literal notranslate"><span class="pre">AuthStrategy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.__init__"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.can_refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.get_refresh_callback"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.get_refresh_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.is_expired"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.AuthStrategy.refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.refresh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth"><code class="docutils literal notranslate"><span class="pre">BasicAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth.__init__"><code class="docutils literal notranslate"><span class="pre">BasicAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">BasicAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">BasicAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth.username"><code class="docutils literal notranslate"><span class="pre">BasicAuth.username</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BasicAuth.password"><code class="docutils literal notranslate"><span class="pre">BasicAuth.password</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth"><code class="docutils literal notranslate"><span class="pre">BearerAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.__init__"><code class="docutils literal notranslate"><span class="pre">BearerAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.can_refresh"><code class="docutils literal notranslate"><span class="pre">BearerAuth.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.is_expired"><code class="docutils literal notranslate"><span class="pre">BearerAuth.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">BearerAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">BearerAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.refresh"><code class="docutils literal notranslate"><span class="pre">BearerAuth.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.BearerAuth.access_token"><code class="docutils literal notranslate"><span class="pre">BearerAuth.access_token</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth.api_key"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.api_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth.header_name"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.header_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.ApiKeyAuth.param_name"><code class="docutils literal notranslate"><span class="pre">ApiKeyAuth.param_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth"><code class="docutils literal notranslate"><span class="pre">CustomAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.__init__"><code class="docutils literal notranslate"><span class="pre">CustomAuth.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.can_refresh"><code class="docutils literal notranslate"><span class="pre">CustomAuth.can_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.create_api_key_custom"><code class="docutils literal notranslate"><span class="pre">CustomAuth.create_api_key_custom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.create_session_token_custom"><code class="docutils literal notranslate"><span class="pre">CustomAuth.create_session_token_custom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.is_expired"><code class="docutils literal notranslate"><span class="pre">CustomAuth.is_expired()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.prepare_request"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.prepare_request_headers"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.prepare_request_params"><code class="docutils literal notranslate"><span class="pre">CustomAuth.prepare_request_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html#apiconfig.auth.CustomAuth.refresh"><code class="docutils literal notranslate"><span class="pre">CustomAuth.refresh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html#auth-strategy-refresh-interface">Auth Strategy Refresh Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.base.AuthStrategy.can_refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.can_refresh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.base.AuthStrategy.refresh"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.refresh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.base.AuthStrategy.is_expired"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.is_expired()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#apiconfig.auth.base.AuthStrategy.get_refresh_callback"><code class="docutils literal notranslate"><span class="pre">AuthStrategy.get_refresh_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html#refresh-callback-integration">Refresh Callback Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="config.html">apiconfig.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig"><code class="docutils literal notranslate"><span class="pre">ClientConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.hostname"><code class="docutils literal notranslate"><span class="pre">ClientConfig.hostname</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.version"><code class="docutils literal notranslate"><span class="pre">ClientConfig.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.headers"><code class="docutils literal notranslate"><span class="pre">ClientConfig.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.timeout"><code class="docutils literal notranslate"><span class="pre">ClientConfig.timeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.retries"><code class="docutils literal notranslate"><span class="pre">ClientConfig.retries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.auth_strategy"><code class="docutils literal notranslate"><span class="pre">ClientConfig.auth_strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.log_request_body"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_request_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.log_response_body"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_response_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.__init__"><code class="docutils literal notranslate"><span class="pre">ClientConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id0"><code class="docutils literal notranslate"><span class="pre">ClientConfig.auth_strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.base_url"><code class="docutils literal notranslate"><span class="pre">ClientConfig.base_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id1"><code class="docutils literal notranslate"><span class="pre">ClientConfig.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id2"><code class="docutils literal notranslate"><span class="pre">ClientConfig.hostname</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id3"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_request_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id4"><code class="docutils literal notranslate"><span class="pre">ClientConfig.log_response_body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.merge"><code class="docutils literal notranslate"><span class="pre">ClientConfig.merge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ClientConfig.merge_configs"><code class="docutils literal notranslate"><span class="pre">ClientConfig.merge_configs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id5"><code class="docutils literal notranslate"><span class="pre">ClientConfig.retries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id6"><code class="docutils literal notranslate"><span class="pre">ClientConfig.timeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#id7"><code class="docutils literal notranslate"><span class="pre">ClientConfig.version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="config.html#apiconfig.config.ConfigManager"><code class="docutils literal notranslate"><span class="pre">ConfigManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ConfigManager.__init__"><code class="docutils literal notranslate"><span class="pre">ConfigManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.ConfigManager.load_config"><code class="docutils literal notranslate"><span class="pre">ConfigManager.load_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="config.html#apiconfig.config.EnvProvider"><code class="docutils literal notranslate"><span class="pre">EnvProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.EnvProvider.__init__"><code class="docutils literal notranslate"><span class="pre">EnvProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.EnvProvider.get"><code class="docutils literal notranslate"><span class="pre">EnvProvider.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.EnvProvider.load"><code class="docutils literal notranslate"><span class="pre">EnvProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="config.html#apiconfig.config.FileProvider"><code class="docutils literal notranslate"><span class="pre">FileProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.FileProvider.__init__"><code class="docutils literal notranslate"><span class="pre">FileProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.FileProvider.get"><code class="docutils literal notranslate"><span class="pre">FileProvider.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.FileProvider.load"><code class="docutils literal notranslate"><span class="pre">FileProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="config.html#apiconfig.config.MemoryProvider"><code class="docutils literal notranslate"><span class="pre">MemoryProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.MemoryProvider.__init__"><code class="docutils literal notranslate"><span class="pre">MemoryProvider.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.html#apiconfig.config.MemoryProvider.get_config"><code class="docutils literal notranslate"><span class="pre">MemoryProvider.get_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">apiconfig.exceptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.APIConfigError"><code class="docutils literal notranslate"><span class="pre">APIConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ConfigurationError"><code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.AuthenticationError"><code class="docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apiconfig.exceptions.AuthenticationError.__init__"><code class="docutils literal notranslate"><span class="pre">AuthenticationError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.InvalidCredentialsError"><code class="docutils literal notranslate"><span class="pre">InvalidCredentialsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ExpiredTokenError"><code class="docutils literal notranslate"><span class="pre">ExpiredTokenError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.MissingCredentialsError"><code class="docutils literal notranslate"><span class="pre">MissingCredentialsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.TokenRefreshError"><code class="docutils literal notranslate"><span class="pre">TokenRefreshError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.AuthStrategyError"><code class="docutils literal notranslate"><span class="pre">AuthStrategyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.InvalidConfigError"><code class="docutils literal notranslate"><span class="pre">InvalidConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.MissingConfigError"><code class="docutils literal notranslate"><span class="pre">MissingConfigError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ConfigLoadError"><code class="docutils literal notranslate"><span class="pre">ConfigLoadError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ConfigProviderError"><code class="docutils literal notranslate"><span class="pre">ConfigProviderError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.HTTPUtilsError"><code class="docutils literal notranslate"><span class="pre">HTTPUtilsError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.JSONDecodeError"><code class="docutils literal notranslate"><span class="pre">JSONDecodeError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apiconfig.exceptions.JSONDecodeError.__init__"><code class="docutils literal notranslate"><span class="pre">JSONDecodeError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.JSONEncodeError"><code class="docutils literal notranslate"><span class="pre">JSONEncodeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.PayloadTooLargeError"><code class="docutils literal notranslate"><span class="pre">PayloadTooLargeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientError"><code class="docutils literal notranslate"><span class="pre">ApiClientError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apiconfig.exceptions.ApiClientError.__init__"><code class="docutils literal notranslate"><span class="pre">ApiClientError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientBadRequestError"><code class="docutils literal notranslate"><span class="pre">ApiClientBadRequestError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientUnauthorizedError"><code class="docutils literal notranslate"><span class="pre">ApiClientUnauthorizedError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientForbiddenError"><code class="docutils literal notranslate"><span class="pre">ApiClientForbiddenError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientNotFoundError"><code class="docutils literal notranslate"><span class="pre">ApiClientNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientConflictError"><code class="docutils literal notranslate"><span class="pre">ApiClientConflictError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientUnprocessableEntityError"><code class="docutils literal notranslate"><span class="pre">ApiClientUnprocessableEntityError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientRateLimitError"><code class="docutils literal notranslate"><span class="pre">ApiClientRateLimitError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.ApiClientInternalServerError"><code class="docutils literal notranslate"><span class="pre">ApiClientInternalServerError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apiconfig.exceptions.create_api_client_error"><code class="docutils literal notranslate"><span class="pre">create_api_client_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">apiconfig.testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.AdvancedAuthVerification"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AdvancedAuthVerification.verify_jwt_structure"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_jwt_structure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AdvancedAuthVerification.verify_oauth2_token_format"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_oauth2_token_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AdvancedAuthVerification.verify_session_token_format"><code class="docutils literal notranslate"><span class="pre">AdvancedAuthVerification.verify_session_token_format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_api_key_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_api_key_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_auth_header_format"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_auth_header_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_basic_auth_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_basic_auth_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_bearer_auth_header"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_bearer_auth_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_multiple_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_multiple_auth_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthHeaderVerification.verify_no_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthHeaderVerification.verify_no_auth_headers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.AuthTestHelpers"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthTestHelpers.assert_auth_applied"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.assert_auth_applied()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthTestHelpers.assert_no_auth_applied"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.assert_no_auth_applied()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.AuthTestHelpers.create_test_auth_headers"><code class="docutils literal notranslate"><span class="pre">AuthTestHelpers.create_test_auth_headers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.BaseAuthStrategyTest"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseAuthStrategyTest.assertAuthHeaderCorrect"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.assertAuthHeaderCorrect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseAuthStrategyTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.setUpClass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseAuthStrategyTest.strategy"><code class="docutils literal notranslate"><span class="pre">BaseAuthStrategyTest.strategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.assertProviderLoads"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.assertProviderLoads()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.config_content"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.config_file"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.config_suffix"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.config_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.env_vars"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.env_vars()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.get_provider_instance"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.get_provider_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.provider_class"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.provider_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.BaseConfigProviderTest.required_env_vars"><code class="docutils literal notranslate"><span class="pre">BaseConfigProviderTest.required_env_vars</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.MockConfigManager"><code class="docutils literal notranslate"><span class="pre">MockConfigManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.MockConfigManager.__init__"><code class="docutils literal notranslate"><span class="pre">MockConfigManager.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.MockConfigProvider"><code class="docutils literal notranslate"><span class="pre">MockConfigProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="testing.html#apiconfig.testing.MockConfigProvider.load"><code class="docutils literal notranslate"><span class="pre">MockConfigProvider.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.assert_auth_header_correct"><code class="docutils literal notranslate"><span class="pre">assert_auth_header_correct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.assert_client_config_valid"><code class="docutils literal notranslate"><span class="pre">assert_client_config_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.assert_provider_loads"><code class="docutils literal notranslate"><span class="pre">assert_provider_loads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.check_auth_strategy_interface"><code class="docutils literal notranslate"><span class="pre">check_auth_strategy_interface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.create_auth_credentials"><code class="docutils literal notranslate"><span class="pre">create_auth_credentials()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.create_invalid_client_config"><code class="docutils literal notranslate"><span class="pre">create_invalid_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.create_mock_client_config"><code class="docutils literal notranslate"><span class="pre">create_mock_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.create_provider_dict"><code class="docutils literal notranslate"><span class="pre">create_provider_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.create_valid_client_config"><code class="docutils literal notranslate"><span class="pre">create_valid_client_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.temp_config_file"><code class="docutils literal notranslate"><span class="pre">temp_config_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#apiconfig.testing.temp_env_vars"><code class="docutils literal notranslate"><span class="pre">temp_env_vars()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">apiconfig.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">apiconfig.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonPrimitive"><code class="docutils literal notranslate"><span class="pre">JsonPrimitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonValue"><code class="docutils literal notranslate"><span class="pre">JsonValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonObject"><code class="docutils literal notranslate"><span class="pre">JsonObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonList"><code class="docutils literal notranslate"><span class="pre">JsonList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonEncoder"><code class="docutils literal notranslate"><span class="pre">JsonEncoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonDecoder"><code class="docutils literal notranslate"><span class="pre">JsonDecoder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonSerializerCallable"><code class="docutils literal notranslate"><span class="pre">JsonSerializerCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.JsonDeserializerCallable"><code class="docutils literal notranslate"><span class="pre">JsonDeserializerCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.HeadersType"><code class="docutils literal notranslate"><span class="pre">HeadersType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.QueryParamType"><code class="docutils literal notranslate"><span class="pre">QueryParamType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.QueryParamValueType"><code class="docutils literal notranslate"><span class="pre">QueryParamValueType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.ResponseBodyType"><code class="docutils literal notranslate"><span class="pre">ResponseBodyType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol.method"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol.url"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol.headers"><code class="docutils literal notranslate"><span class="pre">HttpRequestProtocol.headers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol.status_code"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.status_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol.headers"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.headers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol.text"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol.request"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.request</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol.reason"><code class="docutils literal notranslate"><span class="pre">HttpResponseProtocol.reason</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod"><code class="docutils literal notranslate"><span class="pre">HttpMethod</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.GET"><code class="docutils literal notranslate"><span class="pre">HttpMethod.GET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.POST"><code class="docutils literal notranslate"><span class="pre">HttpMethod.POST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.PUT"><code class="docutils literal notranslate"><span class="pre">HttpMethod.PUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.DELETE"><code class="docutils literal notranslate"><span class="pre">HttpMethod.DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.PATCH"><code class="docutils literal notranslate"><span class="pre">HttpMethod.PATCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.HEAD"><code class="docutils literal notranslate"><span class="pre">HttpMethod.HEAD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.HttpMethod.OPTIONS"><code class="docutils literal notranslate"><span class="pre">HttpMethod.OPTIONS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.ConfigDict"><code class="docutils literal notranslate"><span class="pre">ConfigDict</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.ConfigProviderCallable"><code class="docutils literal notranslate"><span class="pre">ConfigProviderCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.AuthCredentials"><code class="docutils literal notranslate"><span class="pre">AuthCredentials</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.TokenStorageStrategy"><code class="docutils literal notranslate"><span class="pre">TokenStorageStrategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.TokenRefreshCallable"><code class="docutils literal notranslate"><span class="pre">TokenRefreshCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData.access_token"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData.refresh_token"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData.expires_in"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData.token_type"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.RefreshedTokenData.scope"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id0"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id1"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id2"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id3"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id4"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.TokenRefreshResult"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.TokenRefreshResult.token_data"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#apiconfig.types.TokenRefreshResult.config_updates"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id5"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id6"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.HttpRequestCallable"><code class="docutils literal notranslate"><span class="pre">HttpRequestCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.AuthRefreshCallback"><code class="docutils literal notranslate"><span class="pre">AuthRefreshCallback</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.CustomAuthPrepareCallable"><code class="docutils literal notranslate"><span class="pre">CustomAuthPrepareCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.CustomLogFormatter"><code class="docutils literal notranslate"><span class="pre">CustomLogFormatter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.CustomLogHandler"><code class="docutils literal notranslate"><span class="pre">CustomLogHandler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.CustomRedactionRule"><code class="docutils literal notranslate"><span class="pre">CustomRedactionRule</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.RequestHookCallable"><code class="docutils literal notranslate"><span class="pre">RequestHookCallable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#apiconfig.types.ResponseHookCallable"><code class="docutils literal notranslate"><span class="pre">ResponseHookCallable</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#auth-refresh-types">Auth Refresh Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="types.html#id7"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id8"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id9"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id10"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id11"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id12"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id13"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id14"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.refresh_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id15"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.expires_in</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id16"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.token_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id17"><code class="docutils literal notranslate"><span class="pre">RefreshedTokenData.scope</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#id18"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id19"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id20"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id21"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.token_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id22"><code class="docutils literal notranslate"><span class="pre">TokenRefreshResult.config_updates</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="types.html#type-aliases">Type Aliases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id23"><code class="docutils literal notranslate"><span class="pre">HttpRequestCallable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id24"><code class="docutils literal notranslate"><span class="pre">AuthRefreshCallback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="types.html#id25"><code class="docutils literal notranslate"><span class="pre">ResponseBodyType</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">apiconfig</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">apiconfig.exceptions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/exceptions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="config.html" class="btn btn-neutral float-left" title="apiconfig.config" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="testing.html" class="btn btn-neutral float-right" title="apiconfig.testing" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-apiconfig.exceptions">
+<span id="apiconfig-exceptions"></span><h1>apiconfig.exceptions<a class="headerlink" href="#module-apiconfig.exceptions" title="Link to this heading"></a></h1>
+<p>Exceptions for the apiconfig library.</p>
+<p>This module re-exports all core exception classes from the apiconfig.exceptions
+submodules for convenient access. Import exceptions directly from this module
+rather than from individual submodules for better maintainability.</p>
+<p>The exceptions are organized into categories:
+- Base exceptions: Core exception hierarchy
+- Auth exceptions: Authentication and credential-related errors
+- Config exceptions: Configuration loading and validation errors
+- HTTP exceptions: HTTP request/response and JSON handling errors</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.APIConfigError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">APIConfigError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/base.html#APIConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.APIConfigError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base exception for all apiconfig errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ConfigurationError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConfigurationError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/base.html#ConfigurationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ConfigurationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.APIConfigError" title="apiconfig.exceptions.base.APIConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">APIConfigError</span></code></a></p>
+<p>Base exception for configuration-related errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.AuthenticationError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">AuthenticationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/base.html#AuthenticationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.AuthenticationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.APIConfigError" title="apiconfig.exceptions.base.APIConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">APIConfigError</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">HttpContextMixin</span></code></p>
+<p>Base exception for authentication-related errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the authentication failure</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+<li><p><strong>*args</strong> (<em>Any</em>) – Additional positional arguments for base exception</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional keyword arguments for base exception</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="apiconfig.exceptions.AuthenticationError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/base.html#AuthenticationError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.AuthenticationError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize authentication error with optional HTTP context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the authentication failure</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.InvalidCredentialsError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidCredentialsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">credentials</span> <span class="pre">provided'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/auth.html#InvalidCredentialsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.InvalidCredentialsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>Raised when provided credentials are invalid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the invalid credentials (default: “Invalid credentials provided”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ExpiredTokenError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ExpiredTokenError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Authentication</span> <span class="pre">token</span> <span class="pre">has</span> <span class="pre">expired'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/auth.html#ExpiredTokenError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ExpiredTokenError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>Raised when an authentication token has expired.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the token expiration (default: “Authentication token has expired”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.MissingCredentialsError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingCredentialsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Required</span> <span class="pre">credentials</span> <span class="pre">not</span> <span class="pre">provided'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/auth.html#MissingCredentialsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.MissingCredentialsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>Raised when required credentials are not provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the missing credentials (default: “Required credentials not provided”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.TokenRefreshError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">TokenRefreshError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Failed</span> <span class="pre">to</span> <span class="pre">refresh</span> <span class="pre">authentication</span> <span class="pre">token'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/auth.html#TokenRefreshError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.TokenRefreshError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>Raised when an attempt to refresh a token fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the token refresh failure (default: “Failed to refresh authentication token”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.AuthStrategyError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">AuthStrategyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Authentication</span> <span class="pre">strategy</span> <span class="pre">error'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/auth.html#AuthStrategyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.AuthStrategyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>Base exception for errors specific to an authentication strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the authentication strategy error (default: “Authentication strategy error”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object (optional)</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.InvalidConfigError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidConfigError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/config.html#InvalidConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.InvalidConfigError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ConfigurationError" title="apiconfig.exceptions.base.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised when configuration values are invalid.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.MissingConfigError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingConfigError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/config.html#MissingConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.MissingConfigError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ConfigurationError" title="apiconfig.exceptions.base.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised when required configuration values are missing.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ConfigLoadError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConfigLoadError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/config.html#ConfigLoadError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ConfigLoadError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ConfigurationError" title="apiconfig.exceptions.base.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised when configuration loading fails.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ConfigProviderError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConfigProviderError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/config.html#ConfigProviderError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ConfigProviderError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ConfigurationError" title="apiconfig.exceptions.base.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised for errors specific to a configuration provider.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.HTTPUtilsError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">HTTPUtilsError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#HTTPUtilsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.HTTPUtilsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.APIConfigError" title="apiconfig.exceptions.base.APIConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">APIConfigError</span></code></a></p>
+<p>Base exception for errors raised by HTTP utilities.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.JSONDecodeError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">JSONDecodeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#JSONDecodeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.JSONDecodeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.HTTPUtilsError" title="apiconfig.exceptions.http.HTTPUtilsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPUtilsError</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONDecodeError</span></code></p>
+<p>Raised when JSON decoding of an HTTP response body fails.</p>
+<p>Inherits from both HTTPUtilsError (for apiconfig exception hierarchy)
+and json.JSONDecodeError (for compatibility with native json exceptions).
+This allows catching either the specific apiconfig exception or the
+broader native json exception.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apiconfig.exceptions.JSONDecodeError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#JSONDecodeError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.JSONDecodeError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the JSONDecodeError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>doc</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The JSON document being parsed</p></li>
+<li><p><strong>pos</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The position in the document where parsing failed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.JSONEncodeError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">JSONEncodeError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#JSONEncodeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.JSONEncodeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.HTTPUtilsError" title="apiconfig.exceptions.http.HTTPUtilsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPUtilsError</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Raised when JSON encoding of data fails.</p>
+<p>Inherits from both HTTPUtilsError (for apiconfig exception hierarchy)
+and ValueError (following Python’s convention for encoding errors).
+Python’s json module doesn’t have a specific JSONEncodeError,
+so we inherit from ValueError which is what json.dumps() raises.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.PayloadTooLargeError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">PayloadTooLargeError</span></span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#PayloadTooLargeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.PayloadTooLargeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.HTTPUtilsError" title="apiconfig.exceptions.http.HTTPUtilsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPUtilsError</span></code></a></p>
+<p>Raised when a payload exceeds the maximum allowed size for processing.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.APIConfigError" title="apiconfig.exceptions.base.APIConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">APIConfigError</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">HttpContextMixin</span></code></p>
+<p>Base exception for errors during HTTP API client operations.</p>
+<p>This exception provides a foundation for handling HTTP-related errors
+with rich context information for debugging and error handling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the API client failure</p></li>
+<li><p><strong>status_code</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – HTTP status code associated with the error</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize API client error with HTTP context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the API client failure</p></li>
+<li><p><strong>status_code</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – HTTP status code associated with the error</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientBadRequestError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientBadRequestError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Bad</span> <span class="pre">Request'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientBadRequestError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientBadRequestError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 400 Bad Request from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the bad request (default: “Bad Request”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientUnauthorizedError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientUnauthorizedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Unauthorized'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientUnauthorizedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientUnauthorizedError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a>, <a class="reference internal" href="#apiconfig.exceptions.AuthenticationError" title="apiconfig.exceptions.base.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>HTTP 401 Unauthorized from an API client operation.</p>
+<p>Indicates an authentication failure during an HTTP call.
+This class uses multiple inheritance to be both an API client error
+and an authentication error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the unauthorized access (default: “Unauthorized”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientForbiddenError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientForbiddenError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Forbidden'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientForbiddenError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientForbiddenError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 403 Forbidden from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the forbidden access (default: “Forbidden”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientNotFoundError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Not</span> <span class="pre">Found'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 404 Not Found from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the not found resource (default: “Not Found”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientConflictError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientConflictError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conflict'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientConflictError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientConflictError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 409 Conflict from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the conflict (default: “Conflict”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientUnprocessableEntityError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientUnprocessableEntityError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Unprocessable</span> <span class="pre">Entity'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientUnprocessableEntityError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientUnprocessableEntityError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 422 Unprocessable Entity from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the unprocessable entity (default: “Unprocessable Entity”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientRateLimitError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientRateLimitError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Rate</span> <span class="pre">Limit</span> <span class="pre">Exceeded'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientRateLimitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientRateLimitError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 429 Too Many Requests from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the rate limit (default: “Rate Limit Exceeded”)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="apiconfig.exceptions.ApiClientInternalServerError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">ApiClientInternalServerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Internal</span> <span class="pre">Server</span> <span class="pre">Error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#ApiClientInternalServerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.ApiClientInternalServerError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.http.ApiClientError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiClientError</span></code></a></p>
+<p>HTTP 5xx Server Error from an API client operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Error message describing the server error (default: “Internal Server Error”)</p></li>
+<li><p><strong>status_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – HTTP status code (default: 500)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apiconfig.exceptions.create_api_client_error">
+<span class="sig-prename descclassname"><span class="pre">apiconfig.exceptions.</span></span><span class="sig-name descname"><span class="pre">create_api_client_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apiconfig/exceptions/http.html#create_api_client_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apiconfig.exceptions.create_api_client_error" title="Link to this definition"></a></dt>
+<dd><p>Create appropriate ApiClientError subclass based on HTTP status code.</p>
+<p>This utility function maps HTTP status codes to their corresponding
+exception classes, providing a convenient way to create the most
+specific exception type for a given status code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – HTTP status code</p></li>
+<li><p><strong>message</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – Custom error message (uses default if not provided)</p></li>
+<li><p><strong>request</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpRequestProtocol" title="apiconfig.types.HttpRequestProtocol"><em>HttpRequestProtocol</em></a><em>]</em>) – HTTP request object</p></li>
+<li><p><strong>response</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="types.html#apiconfig.types.HttpResponseProtocol" title="apiconfig.types.HttpResponseProtocol"><em>HttpResponseProtocol</em></a><em>]</em>) – HTTP response object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Appropriate exception subclass for the status code</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apiconfig.exceptions.ApiClientError" title="apiconfig.exceptions.ApiClientError">ApiClientError</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">error</span> <span class="o">=</span> <span class="n">create_api_client_error</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&quot;Resource not found&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">ApiClientNotFoundError</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">error</span> <span class="o">=</span> <span class="n">create_api_client_error</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">ApiClientInternalServerError</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config.html" class="btn btn-neutral float-left" title="apiconfig.config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="testing.html" class="btn btn-neutral float-right" title="apiconfig.testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Leikaab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

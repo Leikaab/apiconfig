@@ -260,7 +260,7 @@ dependencies before running the suite:
 
 ```bash
 python -m pip install -e .
-python -m pip install pytest pytest-httpserver pytest-xdist httpx
+python -m pip install pytest pytest-httpserver pytest-xdist pytest-asyncio httpx
 pytest --cov=apiconfig --cov-report=html
 ```
 

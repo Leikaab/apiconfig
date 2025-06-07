@@ -58,7 +58,7 @@ Load configuration from environment variables:
 File Provider
 ^^^^^^^^^^^
 
-Load configuration from JSON or YAML files:
+Load configuration from JSON files:
 
 .. code-block:: python
 
@@ -68,9 +68,6 @@ Load configuration from JSON or YAML files:
    json_provider = FileProvider(file_path="config.json")
    json_config = json_provider.load()
 
-   # YAML file
-   yaml_provider = FileProvider(file_path="config.yaml")
-   yaml_config = yaml_provider.load()
 
 Memory Provider
 ^^^^^^^^^^^^^

@@ -99,7 +99,7 @@ All contributions and interactions must align with the project's [Code of Conduc
 
 - **Black:** Code formatting
 - **isort:** Import sorting
-- **Flake8:** Linting (configured in `setup.cfg` or `pyproject.toml`)
+ - **Flake8:** Linting (configured in `.flake8`)
 - **autoflake:** Removes unused imports/variables
 - **Mypy:** Static type checking (configured in `mypy.ini` or `pyproject.toml`)
 

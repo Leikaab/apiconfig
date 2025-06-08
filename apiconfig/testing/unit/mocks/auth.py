@@ -257,6 +257,11 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         self._is_expired = False
         self._expiry_time: Optional[float] = None
 
+    @property
+    def refresh_attempts(self) -> int:
+        """Number of refresh attempts that have been made."""
+        return self._refresh_attempts
+
     def can_refresh(self) -> bool:
         """Check if this auth strategy supports refresh and is configured to do so.
 
@@ -461,7 +466,7 @@ class MockAuthErrorInjector:
         original_refresh = strategy.refresh
 
         def failing_refresh() -> Optional[TokenRefreshResult]:
-            if strategy._refresh_attempts >= failure_after_attempts:
+            if strategy.refresh_attempts >= failure_after_attempts:
                 if failure_type == "network":
                     raise ConnectionError("Mock network failure")
                 elif failure_type == "auth":
@@ -472,7 +477,8 @@ class MockAuthErrorInjector:
                     raise Exception(f"Mock {failure_type} failure")
             return original_refresh()
 
-        strategy.refresh = failing_refresh  # type: ignore[method-assign]
+        # Use setattr to avoid method assignment type warnings during static analysis
+        setattr(strategy, "refresh", failing_refresh)
         return strategy
 
     @staticmethod

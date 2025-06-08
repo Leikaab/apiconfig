@@ -155,7 +155,8 @@ class RedactingFormatter(logging.Formatter):
         orig_msg = getattr(record, "msg", None)
         msg = record.getMessage()
         content_type = getattr(record, "content_type", None)
-        redacted_msg: Any
+        # Start with the original message so every branch updates ``redacted_msg``
+        redacted_msg: Any = msg
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
         if isinstance(orig_msg, bytes):
@@ -175,8 +176,7 @@ class RedactingFormatter(logging.Formatter):
         # 5. If the message is a plain string, redact sensitive values in the string
         elif isinstance(msg, str):
             redacted_msg = self._redact_plain_string(msg)
-        # 6. Fallback: for unknown types, just use str()
-        # This branch is unreachable, so we remove it to satisfy mypy.
+        # 6. Fallback: keep ``redacted_msg`` as the original message
 
         # Ensure the final message is always a string for logging
         # If _redact_structured returned a dict/list, always serialize to JSON

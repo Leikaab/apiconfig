@@ -182,8 +182,8 @@ class BaseAuthStrategyTest(unittest.TestCase):
         """Ensure subclasses provide a strategy."""
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
-        if not hasattr(cls, "strategy") or not isinstance(cls.strategy, AuthStrategy):
-            raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy' " "of type AuthStrategy.")
+        if not hasattr(cls, "strategy"):
+            raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy'.")
         check_auth_strategy_interface(cls.strategy)
 
     def assertAuthHeaderCorrect(self, expected_header: str, expected_value: str) -> None:

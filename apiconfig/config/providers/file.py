@@ -119,7 +119,7 @@ class FileProvider:
         ConfigLoadError
             If there's an error loading the configuration file.
         """
-        config = self.load()
+        config: Dict[str, Any] = self.load()
 
         # Handle dot notation for nested keys
         parts = key.split(".")
@@ -129,7 +129,7 @@ class FileProvider:
         for part in parts:
             if not isinstance(value, dict) or part not in value:
                 return default
-            value = value[part]
+            value = cast(Dict[str, Any], value)[part]
 
         if expected_type is None or isinstance(value, expected_type):
             return value
@@ -142,7 +142,8 @@ class FileProvider:
             if expected_type is bool:
                 # Special handling for boolean values
                 try:
-                    val_lower = value.lower()
+                    lower: str = cast(str, value).lower()
+                    val_lower: str = lower
                     if val_lower in ("true", "1", "yes", "y", "on"):
                         return True
                     elif val_lower in ("false", "0", "no", "n", "off"):

@@ -5,7 +5,7 @@ adding only type safety and parameter normalization.
 """
 
 import urllib.parse
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
 from apiconfig.types import QueryParamType, _UrlencodeParamsType
 
@@ -124,13 +124,14 @@ def add_query_params(url: str, params: QueryParamType, replace: bool = False) ->
     # Add new parameters
     normalized_new_params = normalize_query_params(params_to_add)
 
+    final_params: _UrlencodeParamsType
     if replace:
         final_params = normalized_new_params
     else:
         # Start with existing params, then update with new ones
         # Cast to the correct type since existing_params is Dict[str, List[str]]
         # but final_params needs to be Dict[str, Union[str, List[str]]]
-        final_params = dict(existing_params)
+        final_params = cast(_UrlencodeParamsType, dict(existing_params))
         final_params.update(normalized_new_params)
 
         # Remove parameters that were set to None

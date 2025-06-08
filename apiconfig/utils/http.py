@@ -2,7 +2,7 @@
 """HTTP related utility functions."""
 
 import json
-from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union, cast
 
 if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
     from apiconfig.exceptions.http import (
@@ -231,9 +231,10 @@ def safe_json_decode(
             return None  # Return None for empty or whitespace-only content
 
         result = json.loads(stripped_content)
-        if isinstance(result, dict):
-            return result
-        raise JSONDecodeError("Decoded JSON is not an object (dict).")
+        if not isinstance(result, dict):
+            raise JSONDecodeError("Decoded JSON is not an object (dict).")
+        result = cast(Dict[str, Any], result)
+        return result
     except json.JSONDecodeError as e:
         raise JSONDecodeError(f"Failed to decode JSON: {e}") from e
     except UnicodeDecodeError as e:

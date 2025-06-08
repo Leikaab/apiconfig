@@ -8,9 +8,9 @@ from apiconfig.utils.redaction.headers import (
     DEFAULT_SENSITIVE_HEADER_PREFIXES,
     DEFAULT_SENSITIVE_HEADERS,
     REDACTED_VALUE,
-    _redact_cookie_header,
-    _redact_set_cookie_header,
+    redact_cookie_header,
     redact_headers,
+    redact_set_cookie_header,
 )
 
 # Test Cases for redact_headers
@@ -222,8 +222,8 @@ def test_redact_headers_immutable() -> None:
     ],
 )
 def test_redact_cookie_header(cookie_value: str, expected_result: str) -> None:
-    """Tests the _redact_cookie_header function with various inputs."""
-    result = _redact_cookie_header(cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    """Tests the redact_cookie_header function with various inputs."""
+    result = redact_cookie_header(cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
     assert result == expected_result
 
 
@@ -271,8 +271,8 @@ def test_redact_cookie_header(cookie_value: str, expected_result: str) -> None:
     ],
 )
 def test_redact_set_cookie_header(set_cookie_value: str, expected_result: str) -> None:
-    """Tests the _redact_set_cookie_header function with various inputs."""
-    result = _redact_set_cookie_header(set_cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
+    """Tests the redact_set_cookie_header function with various inputs."""
+    result = redact_set_cookie_header(set_cookie_value, DEFAULT_SENSITIVE_COOKIE_KEYS)
     assert result == expected_result
 
 
@@ -339,20 +339,20 @@ def test_redact_headers_with_custom_cookie_keys() -> None:
 
 
 def test_redact_cookie_header_with_custom_keys() -> None:
-    """Tests _redact_cookie_header with custom sensitive keys."""
+    """Tests redact_cookie_header with custom sensitive keys."""
     cookie_value = "custom=value; public=ok"
     custom_keys = {"custom"}
     expected_result = "custom=[REDACTED]; public=ok"
 
-    result = _redact_cookie_header(cookie_value, custom_keys)
+    result = redact_cookie_header(cookie_value, custom_keys)
     assert result == expected_result
 
 
 def test_redact_set_cookie_header_with_custom_keys() -> None:
-    """Tests _redact_set_cookie_header with custom sensitive keys."""
+    """Tests redact_set_cookie_header with custom sensitive keys."""
     set_cookie_value = "custom=value; Path=/"
     custom_keys = {"custom"}
     expected_result = "custom=[REDACTED]; Path=/"
 
-    result = _redact_set_cookie_header(set_cookie_value, custom_keys)
+    result = redact_set_cookie_header(set_cookie_value, custom_keys)
     assert result == expected_result

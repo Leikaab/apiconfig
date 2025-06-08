@@ -56,6 +56,7 @@ pytest_httpserver = "*"
 tox = "*"
 crudclient = "0.7.1"
 pytest-asyncio = "^1.0.0"
+pyright = "*"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0"

@@ -2036,6 +2036,27 @@ docs = ["furo (>=2024.8.6)", "sphinx-autodoc-typehints (>=3)"]
 testing = ["covdefaults (>=2.3)", "pytest (>=8.3.4)", "pytest-cov (>=6)", "pytest-mock (>=3.14)", "setuptools (>=75.8)"]
 
 [[package]]
+name = "pyright"
+version = "1.1.401"
+description = "Command line wrapper for pyright"
+optional = false
+python-versions = ">=3.7"
+groups = ["dev"]
+files = [
+    {file = "pyright-1.1.401-py3-none-any.whl", hash = "sha256:6fde30492ba5b0d7667c16ecaf6c699fab8d7a1263f6a18549e0b00bf7724c06"},
+    {file = "pyright-1.1.401.tar.gz", hash = "sha256:788a82b6611fa5e34a326a921d86d898768cddf59edde8e93e56087d277cc6f1"},
+]
+
+[package.dependencies]
+nodeenv = ">=1.6.0"
+typing-extensions = ">=4.1"
+
+[package.extras]
+all = ["nodejs-wheel-binaries", "twine (>=3.4.1)"]
+dev = ["twine (>=3.4.1)"]
+nodejs = ["nodejs-wheel-binaries"]
+
+[[package]]
 name = "pytest"
 version = "8.3.5"
 description = "pytest: simple powerful testing with Python"
@@ -3286,4 +3307,4 @@ platformdirs = ">=3.5.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "e804a36c58fc51d71c98d631e560727efd77801c3fc0f92ca995adf79f6143e3"
+content-hash = "26807b1057414435729e6be6cfd3f779f7b92a12108f8b8713f370065f9412a0"

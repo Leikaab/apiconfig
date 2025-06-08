@@ -531,11 +531,11 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
     custom_output = CustomOutput()
 
     # Override redact_body to return our custom output using monkeypatch
-    monkeypatch.setattr(
-        fmt,
-        "_redact_body",
-        lambda msg, **kwargs: custom_output if msg == custom_input else msg,
-    )
+
+    def _fake_redact_body(msg: Any, **kwargs: Any) -> Any:
+        return custom_output if msg == custom_input else msg
+
+    monkeypatch.setattr(fmt, "_redact_body", _fake_redact_body)
 
     try:
         # Call _redact_structured with our custom input

@@ -18,13 +18,13 @@ You can merge multiple configurations to combine settings from different sources
    # Base configuration with defaults
    base_config = ClientConfig(
        hostname="api.example.com",
-       timeout=30.0,
-       retries=3,
+       timeout=30,
+       retries=2,
    )
 
    # Override specific settings
    override_config = ClientConfig(
-       timeout=10.0,
+       timeout=10,
        headers={"X-Custom-Header": "value"},
    )
 

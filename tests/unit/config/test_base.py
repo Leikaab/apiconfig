@@ -353,7 +353,7 @@ class TestClientConfig:
             ClientConfig.merge_configs(config, "not a ClientConfig")  # type: ignore[type-var]
 
         with pytest.raises(AttributeError):
-            ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[arg-type]
+            ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[type-var]
 
     def test_deep_copy_on_merge(self) -> None:
         """Test that merge creates deep copies of mutable attributes."""

@@ -2,7 +2,7 @@
 # File: apiconfig/testing/unit/mocks/config.py
 """Mock implementations for configuration components."""
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 from unittest.mock import MagicMock
 
 from apiconfig.config.base import ClientConfig
@@ -92,9 +92,9 @@ class MockConfigManager(ConfigManager):
     A mock ConfigManager for testing configuration loading logic.
 
     This mock allows tests to either:
-    1. Predefine a specific `ClientConfig` instance that `load_config()` will return.
-    2. Use `unittest.mock.MagicMock` to spy on calls to `load_config()` and
-       assert how it was called, while still returning a default mock config.
+    1. Predefine a specific `ClientConfig` instance that ``load_config()`` will return.
+    2. Use :class:`unittest.mock.MagicMock` via ``load_config_mock`` to spy on calls
+       to ``load_config()`` while still returning a configurable mock result.
 
     Parameters
     ----------
@@ -107,7 +107,7 @@ class MockConfigManager(ConfigManager):
         a list containing a single `MagicMock` provider is used.
     """
 
-    load_config: MagicMock  # Allow spying on this method
+    load_config_mock: MagicMock  # Allow spying on load_config calls
 
     def __init__(
         self,
@@ -138,12 +138,13 @@ class MockConfigManager(ConfigManager):
 
         # Allow predefining the config to be returned by load_config
         self._mock_config = mock_config
-        # Use MagicMock for load_config to allow spying/assertions
-        # Don't use spec to allow arbitrary arguments for testing
-        self.load_config = MagicMock()
-
+        # Create MagicMock for the load_config method
         if mock_config:
-            self.load_config.return_value = mock_config
+            default_config = mock_config
         else:
-            # If no specific mock config, return a default one
-            self.load_config.return_value = create_mock_client_config()
+            default_config = create_mock_client_config()
+        self.load_config_mock = MagicMock(return_value=default_config)
+
+    def load_config(self, *args: Any, **kwargs: Any) -> ClientConfig:  # type: ignore[override]
+        """Return configuration using the underlying MagicMock."""
+        return cast(ClientConfig, self.load_config_mock(*args, **kwargs))

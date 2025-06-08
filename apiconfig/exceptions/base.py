@@ -1,6 +1,6 @@
 """Base exception classes for the apiconfig library."""
 
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
@@ -125,7 +125,7 @@ class AuthenticationError(APIConfigError, HttpContextMixin):
         """Return string representation with context if available."""
         base_message = super().__str__()
 
-        context_parts = []
+        context_parts: List[str] = []
 
         if self.method and self.url:
             context_parts.append(f"Request: {self.method} {self.url}")

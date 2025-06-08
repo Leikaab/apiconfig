@@ -77,14 +77,13 @@ def create_mock_client_config(
     ClientConfig
         A ClientConfig instance populated with the provided or default values.
     """
-    config_data = {
-        "hostname": hostname,
-        "version": version,
-        "timeout": timeout,
-        "retries": retries,
+    return ClientConfig(
+        hostname=hostname,
+        version=version,
+        timeout=timeout,
+        retries=retries,
         **kwargs,
-    }
-    return ClientConfig(**config_data)
+    )
 
 
 class MockConfigManager(ConfigManager):

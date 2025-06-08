@@ -90,7 +90,7 @@ poetry add apiconfig
 - **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
 - **Type Safety**: Strong type hints and type-checked public API.
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
-- **100% Test Coverage**: Fully tested with unit and integration tests.
+- **High Test Coverage**: Around 94% coverage with unit and integration tests.
 
 ---
 
@@ -171,8 +171,10 @@ from apiconfig import FileProvider, MemoryProvider
 file_provider = FileProvider(file_path="config.json")
 file_config = file_provider.load()
 
-memory_provider = MemoryProvider(data={"hostname": "api.example.com"})
-memory_config = memory_provider.load()
+# MemoryProvider accepts configuration via the ``config_data`` parameter and
+# exposes ``get_config`` instead of ``load``
+memory_provider = MemoryProvider(config_data={"hostname": "api.example.com"})
+memory_config = memory_provider.get_config()
 ```
 
 ### Merging Configurations
@@ -280,4 +282,4 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ## License
 
-LGPLv3+. See [LICENSE](LICENSE) for details.
+LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.

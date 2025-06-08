@@ -170,11 +170,11 @@ class RedactingFormatter(logging.Formatter):
         # 3. If the message is empty, redact as '[REDACTED]'
         elif self._is_empty(msg):
             redacted_msg = self._redact_empty(msg)
-        # 4. If the message is a string that is structured (JSON/form), redact and output JSON string
-        elif isinstance(msg, str) and self._is_structured(msg, content_type):
+        # 4. If the message is structured (JSON/form), redact and output JSON string
+        elif self._is_structured(msg, content_type):
             redacted_msg = self._redact_structured(msg, content_type)
-        # 5. If the message is a plain string, redact sensitive values in the string
-        elif isinstance(msg, str):
+        # 5. Otherwise treat it as a plain string and redact sensitive values
+        else:
             redacted_msg = self._redact_plain_string(msg)
         # 6. Fallback: keep ``redacted_msg`` as the original message
 

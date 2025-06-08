@@ -208,3 +208,19 @@ def _redact_set_cookie_header(set_cookie_value: str, sensitive_keys: Set[str]) -
         return f"{redacted_main_cookie}; {attributes}"
     else:
         return redacted_main_cookie
+
+
+# Public aliases for the helper functions
+redact_cookie_header = _redact_cookie_header
+redact_set_cookie_header = _redact_set_cookie_header
+
+
+__all__ = [
+    "DEFAULT_SENSITIVE_HEADERS",
+    "DEFAULT_SENSITIVE_HEADER_PREFIXES",
+    "DEFAULT_SENSITIVE_COOKIE_KEYS",
+    "REDACTED_VALUE",
+    "redact_headers",
+    "redact_cookie_header",
+    "redact_set_cookie_header",
+]

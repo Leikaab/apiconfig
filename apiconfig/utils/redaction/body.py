@@ -130,12 +130,20 @@ def redact_body(
 
     except (json.JSONDecodeError, TypeError, ValueError):
         # If parsing fails, return original string/bytes or placeholder
-        result: Union[str, bytes, Any] = body_str if body_str is not None else body
+        result: str | bytes | Any
+        if body_str is not None:
+            result = body_str
+        else:
+            result = cast(Any, body)
         return result
 
     # 4. If not JSON or form, or if parsing failed, return original/placeholder
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.
     # If it was originally a string/bytes but not JSON/Form, return original.
     # If it was already parsed but not dict/list, return original.
-    result_final: Union[str, bytes, Any] = body_str if body_str is not None else body
+    result_final: str | bytes | Any
+    if body_str is not None:
+        result_final = body_str
+    else:
+        result_final = cast(Any, body)
     return result_final

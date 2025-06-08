@@ -32,8 +32,8 @@ You can merge multiple configurations to combine settings from different sources
    merged_config = base_config.merge(override_config)
 
    print(merged_config.hostname)  # api.example.com (from base)
-   print(merged_config.timeout)   # 10.0 (from override)
-   print(merged_config.retries)   # 3 (from base)
+   print(merged_config.timeout)   # 10 (from override)
+   print(merged_config.retries)   # 2 (from base)
 
 Configuration Providers
 ~~~~~~~~~~~~~~~~~~~~~

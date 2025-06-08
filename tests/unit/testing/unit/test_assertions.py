@@ -167,9 +167,9 @@ def test_assert_auth_header_correct_wrong_type() -> None:
     """
     with pytest.raises(AttributeError):
         assertions.assert_auth_header_correct(
-            object(),
+            object(),  # type: ignore[arg-type]
             {"Authorization": "Bearer token123"},
-        )  # type: ignore[arg-type]
+        )
 
 
 def test_assert_auth_header_correct_wrong_headers() -> None:

@@ -17,7 +17,7 @@ These utilities are particularly useful for:
 import json
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pytest_httpserver import HTTPServer
+from pytest_httpserver import HTTPServer, RequestHandler
 from werkzeug.wrappers import Request, Response
 
 
@@ -106,8 +106,16 @@ def configure_mock_response(
     # Handle None case implicitly (empty body)
 
     # Pass 'ordered' for test compatibility; type: ignore needed for real HTTPServer
-    expectation = httpserver.expect_request(uri=path, method=method, ordered=ordered, **expect_kwargs)  # type: ignore[call-arg]
-    expectation.respond_with_response(Response(status=status_code, headers=response_headers), **response_kwargs)
+    expectation: RequestHandler = httpserver.expect_request(
+        uri=path,
+        method=method,
+        ordered=ordered,
+        **expect_kwargs,
+    )  # type: ignore[call-arg]
+    expectation.respond_with_response(
+        Response(status=status_code, headers=response_headers),
+        **response_kwargs,
+    )
 
 
 def assert_request_received(

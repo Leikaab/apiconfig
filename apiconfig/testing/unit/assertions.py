@@ -47,10 +47,9 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
 
 
 def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[str, str]) -> None:
-    """
-    Assert that the AuthStrategy produces the expected headers.
+    """Assert that the AuthStrategy produces the expected headers.
 
-    Calls the strategy's `prepare_request_headers()` method and compares
+    Calls the strategy's ``prepare_request_headers()`` method and compares
     the result to the expected dictionary.
 
     Parameters
@@ -63,10 +62,8 @@ def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[s
     Raises
     ------
     AssertionError
-        If the actual headers do not match the expected headers,
-        or if the strategy is not a valid AuthStrategy instance.
+        If the actual headers do not match the expected headers.
     """
-
     actual_header = strategy.prepare_request_headers()
     assert actual_header == expected_header, f"Auth header mismatch. Expected: {expected_header}, Got: {actual_header}"
 

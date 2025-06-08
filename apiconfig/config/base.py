@@ -120,8 +120,7 @@ class ClientConfig:
         timeout_value = timeout if timeout is not None else self.__class__.timeout
         # Validate timeout (must be non-negative number)
         if timeout_value is not None:
-            if not isinstance(timeout_value, (int, float)):
-                raise InvalidConfigError("Timeout must be a number (int or float).")
+            timeout_value = float(timeout_value)
             if timeout_value < 0:
                 raise InvalidConfigError("Timeout must be non-negative.")
         self.timeout = timeout_value
@@ -130,8 +129,7 @@ class ClientConfig:
         retries_value = retries if retries is not None else self.__class__.retries
         # Validate retries (must be non-negative number)
         if retries_value is not None:
-            if not isinstance(retries_value, (int, float)):
-                raise InvalidConfigError("Retries must be a number (int or float).")
+            retries_value = int(retries_value)
             if retries_value < 0:
                 raise InvalidConfigError("Retries must be non-negative.")
         self.retries = retries_value
@@ -224,15 +222,13 @@ class ClientConfig:
 
         # Validate timeout (must be non-negative number)
         if new_instance.timeout is not None:
-            if not isinstance(new_instance.timeout, (int, float)):
-                raise InvalidConfigError("Merged timeout must be a number (int or float).")
+            new_instance.timeout = float(new_instance.timeout)
             if new_instance.timeout < 0:
                 raise InvalidConfigError("Merged timeout must be non-negative.")
 
         # Validate retries (must be non-negative number)
         if new_instance.retries is not None:
-            if not isinstance(new_instance.retries, (int, float)):
-                raise InvalidConfigError("Merged retries must be a number (int or float).")
+            new_instance.retries = int(new_instance.retries)
             if new_instance.retries < 0:
                 raise InvalidConfigError("Merged retries must be non-negative.")
 

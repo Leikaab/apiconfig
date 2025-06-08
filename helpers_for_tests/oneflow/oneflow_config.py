@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from apiconfig.auth.strategies.api_key import ApiKeyAuth
 from apiconfig.config.base import ClientConfig
-from apiconfig.config.manager import ConfigManager
+from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.memory import MemoryProvider
 from apiconfig.exceptions.auth import MissingCredentialsError
@@ -31,7 +31,7 @@ def create_oneflow_config_manager() -> ConfigManager:
         "timeout": "10.0",
     }
 
-    providers = [
+    providers: list[ConfigProvider] = [
         EnvProvider(prefix="ONEFLOW_"),
         MemoryProvider(config_data=defaults),
     ]

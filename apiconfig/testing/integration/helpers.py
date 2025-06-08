@@ -10,7 +10,7 @@ from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
-from apiconfig.config.manager import ConfigManager
+from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.config.providers.memory import MemoryProvider
 from apiconfig.testing.integration.servers import configure_mock_response
 
@@ -107,11 +107,11 @@ def setup_multi_provider_manager(
     ConfigManager
         A configured ConfigManager instance.
     """
-    providers = []
+    providers: list[ConfigProvider] = []
     for name, data in config_sources:
         providers.append(MemoryProvider(config_data=data))
         # Store name as an attribute for testing
-        providers[-1].name = name  # type: ignore[attr-defined]
+        providers[-1].name = name  # type: ignore[union-attr]
     return ConfigManager(providers=providers)
 
 

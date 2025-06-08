@@ -1,11 +1,11 @@
 """Tests for the ConfigManager class."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 import pytest
 
-from apiconfig.config.manager import ConfigManager
+from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.exceptions.config import ConfigLoadError
 
 
@@ -120,7 +120,7 @@ class TestConfigManager:
     def test_load_config_provider_with_no_method(self) -> None:
         """Test loading config from a provider with neither load nor get_config."""
         provider = MockProviderWithNoMethod()
-        manager = ConfigManager(providers=[provider])
+        manager = ConfigManager(providers=[cast(ConfigProvider, provider)])
 
         with pytest.raises(ConfigLoadError, match="lacks a 'load' or 'get_config' method"):
             manager.load_config()
@@ -197,7 +197,7 @@ class TestConfigManager:
                 return "BadProvider"
 
         provider = BadProvider()
-        manager = ConfigManager(providers=[provider])
+        manager = ConfigManager(providers=[cast(ConfigProvider, provider)])
 
         # This should not raise an error, but should log a warning
         config = manager.load_config()

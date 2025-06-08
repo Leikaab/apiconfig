@@ -62,7 +62,7 @@ def test_parse_url(url_in: str, expected_scheme: str, expected_netloc: str, expe
 def test_parse_url_complete() -> None:
     """Test parse_url with all URL components."""
     url = "https://user:pass@example.com:8080/path/to/resource?a=1&b=2#section"
-    result = parse_url(url)
+    result: ParseResult = parse_url(url)
 
     assert result.scheme == "https"
     assert result.netloc == "user:pass@example.com:8080"
@@ -75,7 +75,7 @@ def test_parse_url_complete() -> None:
 def test_parse_url_edge_cases() -> None:
     """Test parse_url with edge cases."""
     # Empty string
-    result = parse_url("")
+    result: ParseResult = parse_url("")
     assert result.scheme == ""
     assert result.netloc == ""
     assert result.path == ""
@@ -105,7 +105,7 @@ def test_parse_url_edge_cases() -> None:
 def test_parse_url_custom_default_scheme() -> None:
     """Ensure parse_url uses the provided default scheme when missing."""
     # When the URL lacks a scheme, the provided default should be applied
-    result = parse_url("example.org/api", default_scheme="http")
+    result: ParseResult = parse_url("example.org/api", default_scheme="http")
     assert result.scheme == "http"
     assert result.netloc == "example.org"
 

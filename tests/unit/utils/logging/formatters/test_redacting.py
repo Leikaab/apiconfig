@@ -39,6 +39,16 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
     return make
 
 
+def _always_false(msg: Any) -> bool:
+    """Return ``False`` for any input."""
+    return False
+
+
+def _always_false_structured(msg: Any, content_type: Any) -> bool:
+    """Return ``False`` for any input and content type."""
+    return False
+
+
 def test_redacting_formatter_basic(
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
@@ -412,9 +422,9 @@ def test_redacting_formatter_unknown_type_fallback_direct(
     record = log_record_factory(msg=obj)
 
     # Patch all the condition methods to return False using monkeypatch
-    monkeypatch.setattr(fmt, "_is_binary", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_empty", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_structured", lambda msg, content_type: False)
+    monkeypatch.setattr(fmt, "_is_binary", _always_false)
+    monkeypatch.setattr(fmt, "_is_empty", _always_false)
+    monkeypatch.setattr(fmt, "_is_structured", _always_false_structured)
 
     try:
         # Call _redact_message directly
@@ -471,9 +481,9 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
     )
 
     # Override all the condition methods to ensure we hit the fallback branch
-    monkeypatch.setattr(fmt, "_is_binary", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_empty", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_structured", lambda msg, content_type: False)
+    monkeypatch.setattr(fmt, "_is_binary", _always_false)
+    monkeypatch.setattr(fmt, "_is_empty", _always_false)
+    monkeypatch.setattr(fmt, "_is_structured", _always_false_structured)
 
     # Call _redact_message directly
     fmt._redact_message(record)

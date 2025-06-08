@@ -1,5 +1,6 @@
 """Unit tests for HTTP exception protocol support."""
 
+from typing import Any, cast
 from unittest.mock import Mock
 
 import pytest
@@ -70,7 +71,8 @@ class TestProtocolCompliance:
         # Extra attributes are not extracted but object is accessible
         assert error.request is request
         # Access body through the original object, not the protocol
-        assert hasattr(error.request, "body") and error.request.body == '{"key": "value"}'
+        req_any = cast(Any, error.request)
+        assert hasattr(req_any, "body") and req_any.body == '{"key": "value"}'
 
     def test_duck_typing_without_protocol_decorator(self) -> None:
         """Test that duck typing works even without explicit Protocol implementation."""

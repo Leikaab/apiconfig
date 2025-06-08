@@ -1,6 +1,6 @@
 """Custom authentication strategy using user-provided callbacks."""
 
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Mapping, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
@@ -47,8 +47,8 @@ class CustomAuth(AuthStrategy):
 
     def __init__(
         self,
-        header_callback: Optional[Callable[[], Dict[str, str]]] = None,
-        param_callback: Optional[Callable[[], Dict[str, str]]] = None,
+        header_callback: Optional[Callable[..., Mapping[str, str]]] = None,
+        param_callback: Optional[Callable[..., Mapping[str, str]]] = None,
         refresh_func: Optional[Callable[[], Optional[TokenRefreshResult]]] = None,
         can_refresh_func: Optional[Callable[[], bool]] = None,
         is_expired_func: Optional[Callable[[], bool]] = None,
@@ -59,10 +59,12 @@ class CustomAuth(AuthStrategy):
 
         Parameters
         ----------
-        header_callback : Optional[Callable[[], Dict[str, str]]]
-            Function to generate authentication headers.
-        param_callback : Optional[Callable[[], Dict[str, str]]]
-            Function to generate authentication parameters.
+        header_callback : Optional[Callable[..., Mapping[str, str]]]
+            Function to generate authentication headers. The callback must
+            return a mapping of strings.
+        param_callback : Optional[Callable[..., Mapping[str, str]]]
+            Function to generate authentication parameters. The callback must
+            return a mapping of strings.
         refresh_func : Optional[Callable[[], Optional[TokenRefreshResult]]]
             Optional function to perform refresh operations.
         can_refresh_func : Optional[Callable[[], bool]]
@@ -146,7 +148,8 @@ class CustomAuth(AuthStrategy):
         Returns
         -------
         Dict[str, str]
-            A dictionary of headers.
+            A dictionary of headers generated from the callback. The callback
+            must return a mapping of strings.
 
         Raises
         ------
@@ -156,9 +159,7 @@ class CustomAuth(AuthStrategy):
         if self._header_callback:
             try:
                 result = self._header_callback()
-                if not isinstance(result, dict):
-                    raise AuthStrategyError("CustomAuth header callback must return a dictionary.")
-                return result
+                return dict(result)
             except Exception as e:
                 raise AuthStrategyError(f"CustomAuth header callback failed: {e}") from e
         return {}
@@ -207,7 +208,8 @@ class CustomAuth(AuthStrategy):
         Returns
         -------
         Optional[QueryParamType]
-            A dictionary of parameters.
+            A dictionary of parameters generated from the callback. The callback
+            must return a mapping of strings.
 
         Raises
         ------
@@ -217,9 +219,7 @@ class CustomAuth(AuthStrategy):
         if self._param_callback:
             try:
                 result = self._param_callback()
-                if not isinstance(result, dict):
-                    raise AuthStrategyError("CustomAuth parameter callback must return a dictionary.")
-                return result
+                return dict(result)
             except Exception as e:
                 raise AuthStrategyError(f"CustomAuth parameter callback failed: {e}") from e
         return {}

@@ -152,7 +152,7 @@ class TestCustomAuth:
 
         auth = CustomAuth(header_callback=invalid_header_callback)  # type: ignore[arg-type]
 
-        with pytest.raises(AuthStrategyError, match="must return a dictionary"):
+        with pytest.raises(AuthStrategyError, match="header callback failed"):
             auth.prepare_request_headers()
 
     def test_prepare_request_headers_with_raising_callback(self) -> None:
@@ -196,7 +196,7 @@ class TestCustomAuth:
 
         auth = CustomAuth(param_callback=invalid_param_callback)  # type: ignore[arg-type]
 
-        with pytest.raises(AuthStrategyError, match="must return a dictionary"):
+        with pytest.raises(AuthStrategyError, match="parameter callback failed"):
             auth.prepare_request_params()
 
     def test_prepare_request_params_with_raising_callback(self) -> None:

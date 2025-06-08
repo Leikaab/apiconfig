@@ -3,7 +3,7 @@
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, Iterable, List, Optional, Union, cast
 from urllib.parse import parse_qs, urlencode
 
 from .headers import REDACTED_VALUE
@@ -29,7 +29,7 @@ def _redact_recursive(
                 redacted_dict[key] = _redact_recursive(value, key_pattern, value_pattern)
         return redacted_dict
     elif isinstance(data, list):
-        typed_list: List[Any] = list(cast(List[Any], data))
+        typed_list: List[Any] = list(cast(Iterable[Any], data))
         return [_redact_recursive(item, key_pattern, value_pattern) for item in typed_list]
     elif isinstance(data, str) and value_pattern and value_pattern.search(data):
         return REDACTED_VALUE

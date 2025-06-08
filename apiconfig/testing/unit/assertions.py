@@ -33,11 +33,6 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
     AssertionError
         If the config is invalid.
     """
-    # Import locally to avoid potential circular dependency issues
-    from apiconfig.config.base import ClientConfig
-
-    if not isinstance(config, ClientConfig):
-        raise AssertionError(f"Object {config!r} is not an instance of ClientConfig.")
     if not config.hostname:
         raise AssertionError("ClientConfig hostname cannot be empty or None.")
     if config.timeout is not None and config.timeout < 0:
@@ -71,11 +66,6 @@ def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[s
         If the actual headers do not match the expected headers,
         or if the strategy is not a valid AuthStrategy instance.
     """
-    # Import locally if needed
-    from apiconfig.auth.base import AuthStrategy
-
-    if not isinstance(strategy, AuthStrategy):
-        raise AssertionError(f"Object {strategy!r} is not an instance of AuthStrategy.")
 
     actual_header = strategy.prepare_request_headers()
     assert actual_header == expected_header, f"Auth header mismatch. Expected: {expected_header}, Got: {actual_header}"

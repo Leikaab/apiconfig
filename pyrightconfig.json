@@ -78,17 +78,17 @@
     {
       "root": "apiconfig",
       "pythonVersion": "3.11",
-      "extraPaths": []
+      "extraPaths": ["./"]
     },
     {
       "root": "tests",
       "pythonVersion": "3.11",
-      "extraPaths": ["apiconfig", "helpers_for_tests"]
+      "extraPaths": ["apiconfig", "helpers_for_tests", "./"]
     },
     {
       "root": "helpers_for_tests",
       "pythonVersion": "3.11",
-      "extraPaths": ["apiconfig"]
+      "extraPaths": ["apiconfig", "./"]
     }
   ]
 }

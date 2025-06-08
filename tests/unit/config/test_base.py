@@ -90,15 +90,15 @@ class TestClientConfig:
         with pytest.raises(InvalidConfigError, match="Retries must be non-negative"):
             ClientConfig(retries=-1)
 
-    def test_init_validation_non_numeric_timeout(self) -> None:
-        """Test that ClientConfig raises InvalidConfigError for non-numeric timeout."""
-        with pytest.raises(InvalidConfigError, match="Timeout must be a number"):
-            ClientConfig(timeout="10")  # type: ignore[arg-type]
+    def test_init_accepts_string_timeout(self) -> None:
+        """Timeout provided as a string should be accepted and cast to float."""
+        config = ClientConfig(timeout="10")  # type: ignore[arg-type]
+        assert config.timeout == 10.0
 
-    def test_init_validation_non_numeric_retries(self) -> None:
-        """Test that ClientConfig raises InvalidConfigError for non-numeric retries."""
-        with pytest.raises(InvalidConfigError, match="Retries must be a number"):
-            ClientConfig(retries="3")  # type: ignore[arg-type]
+    def test_init_accepts_string_retries(self) -> None:
+        """Retries provided as a string should be accepted and cast to int."""
+        config = ClientConfig(retries="3")  # type: ignore[arg-type]
+        assert config.retries == 3
 
     def test_init_validation_version_leading_slash(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for version with leading slash."""
@@ -242,27 +242,27 @@ class TestClientConfig:
         with pytest.raises(InvalidConfigError, match="Merged timeout must be non-negative"):
             base_config.merge(other_config)
 
-    def test_merge_validation_non_numeric_timeout(self) -> None:
-        """Test that merged config validates timeout is numeric."""
+    def test_merge_accepts_string_timeout(self) -> None:
+        """Merging with timeout as string should cast to float."""
         base_config = ClientConfig()
         other_config = ClientConfig()
 
-        # Set non-numeric timeout
+        # Set timeout as string
         other_config.timeout = "20.0"  # type: ignore[assignment]
 
-        with pytest.raises(InvalidConfigError, match="Merged timeout must be a number"):
-            base_config.merge(other_config)
+        merged = base_config.merge(other_config)
+        assert merged.timeout == 20.0
 
-    def test_merge_validation_non_numeric_retries(self) -> None:
-        """Test that merged config validates retries is numeric."""
+    def test_merge_accepts_string_retries(self) -> None:
+        """Merging with retries as string should cast to int."""
         base_config = ClientConfig()
         other_config = ClientConfig()
 
-        # Set non-numeric retries
+        # Set retries as string
         other_config.retries = "5"  # type: ignore[assignment]
 
-        with pytest.raises(InvalidConfigError, match="Merged retries must be a number"):
-            base_config.merge(other_config)
+        merged = base_config.merge(other_config)
+        assert merged.retries == 5
 
     def test_merge_validation_version_with_slashes(self) -> None:
         """Test that merged config validates version has no leading/trailing slashes."""

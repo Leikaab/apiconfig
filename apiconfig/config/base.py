@@ -120,9 +120,10 @@ class ClientConfig:
         timeout_value = timeout if timeout is not None else self.__class__.timeout
         # Validate timeout (must be non-negative number)
         if timeout_value is not None:
-            timeout_value = float(timeout_value)
-            if timeout_value < 0:
+            timeout_float = float(timeout_value)
+            if timeout_float < 0:
                 raise InvalidConfigError("Timeout must be non-negative.")
+            timeout_value = int(timeout_float)
         self.timeout = timeout_value
 
         # Store retries value before validation
@@ -222,9 +223,10 @@ class ClientConfig:
 
         # Validate timeout (must be non-negative number)
         if new_instance.timeout is not None:
-            new_instance.timeout = float(new_instance.timeout)
-            if new_instance.timeout < 0:
+            timeout_float = float(new_instance.timeout)
+            if timeout_float < 0:
                 raise InvalidConfigError("Merged timeout must be non-negative.")
+            new_instance.timeout = int(timeout_float)
 
         # Validate retries (must be non-negative number)
         if new_instance.retries is not None:

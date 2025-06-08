@@ -33,7 +33,7 @@ class TestClientConfig:
         assert config.hostname == "api.example.com"
         assert config.version is None
         assert config.headers == {}
-        assert config.timeout == 10.0
+        assert config.timeout == 10
         assert config.retries == 2
         assert config.auth_strategy is None
         assert config.log_request_body is False
@@ -46,7 +46,7 @@ class TestClientConfig:
             hostname="api.example.com",
             version="v1",
             headers={"User-Agent": "Test"},
-            timeout=30.0,
+            timeout=30,
             retries=5,
             auth_strategy=cast("AuthStrategy", auth_strategy),
             log_request_body=True,
@@ -57,7 +57,7 @@ class TestClientConfig:
         assert config.hostname == "api.example.com"
         assert config.version == "v1"
         assert config.headers == {"User-Agent": "Test"}
-        assert config.timeout == 30.0
+        assert config.timeout == 30
         assert config.retries == 5
         assert config.auth_strategy is auth_strategy
         assert config.log_request_body is True
@@ -67,14 +67,14 @@ class TestClientConfig:
         """Test that ClientConfig initializes with some custom values."""
         config = ClientConfig(
             hostname="api.example.com",
-            timeout=30.0,
+            timeout=30,
         )
 
         # Check that specified values are custom and others are default
         assert config.hostname == "api.example.com"
         assert config.version is None
         assert config.headers == {}
-        assert config.timeout == 30.0
+        assert config.timeout == 30
         assert config.retries == 2  # Default
         assert config.auth_strategy is None
         assert config.log_request_body is False  # Default
@@ -83,7 +83,7 @@ class TestClientConfig:
     def test_init_validation_negative_timeout(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for negative timeout."""
         with pytest.raises(InvalidConfigError, match="Timeout must be non-negative"):
-            ClientConfig(timeout=-1.0)
+            ClientConfig(timeout=-1)
 
     def test_init_validation_negative_retries(self) -> None:
         """Test that ClientConfig raises InvalidConfigError for negative retries."""
@@ -91,9 +91,9 @@ class TestClientConfig:
             ClientConfig(retries=-1)
 
     def test_init_accepts_string_timeout(self) -> None:
-        """Timeout provided as a string should be accepted and cast to float."""
+        """Timeout provided as a string should be accepted and cast to int."""
         config = ClientConfig(timeout="10")  # type: ignore[arg-type]
-        assert config.timeout == 10.0
+        assert config.timeout == 10
 
     def test_init_accepts_string_retries(self) -> None:
         """Retries provided as a string should be accepted and cast to int."""
@@ -174,14 +174,14 @@ class TestClientConfig:
             hostname="api.example.com",
             version="v1",
             headers={"User-Agent": "Base"},
-            timeout=10.0,
+            timeout=10,
             retries=3,
         )
 
         other_config = ClientConfig(
             hostname="api2.example.com",
             headers={"Authorization": "Bearer token"},
-            timeout=20.0,
+            timeout=20,
         )
         other_config.retries = None
 
@@ -194,7 +194,7 @@ class TestClientConfig:
             "User-Agent": "Base",  # From base
             "Authorization": "Bearer token",  # From other
         }
-        assert merged.timeout == 20.0  # From other
+        assert merged.timeout == 20  # From other
         assert merged.retries == 3  # From base
 
     def test_merge_with_incompatible_type(self) -> None:
@@ -233,17 +233,17 @@ class TestClientConfig:
 
     def test_merge_validation(self) -> None:
         """Test that merged config is validated."""
-        base_config = ClientConfig(timeout=10.0)
+        base_config = ClientConfig(timeout=10)
         other_config = ClientConfig()
 
         # Modify other_config's timeout to be negative (invalid)
-        other_config.timeout = -1.0
+        other_config.timeout = -1
 
         with pytest.raises(InvalidConfigError, match="Merged timeout must be non-negative"):
             base_config.merge(other_config)
 
     def test_merge_accepts_string_timeout(self) -> None:
-        """Merging with timeout as string should cast to float."""
+        """Merging with timeout as string should cast to int."""
         base_config = ClientConfig()
         other_config = ClientConfig()
 
@@ -251,7 +251,7 @@ class TestClientConfig:
         other_config.timeout = "20.0"  # type: ignore[assignment]
 
         merged = base_config.merge(other_config)
-        assert merged.timeout == 20.0
+        assert merged.timeout == 20
 
     def test_merge_accepts_string_retries(self) -> None:
         """Merging with retries as string should cast to int."""
@@ -315,7 +315,7 @@ class TestClientConfig:
         other_config = ClientConfig(
             version="v1",
             headers={"Authorization": "Bearer token"},
-            timeout=20.0,
+            timeout=20,
         )
         other_config.retries = None
 
@@ -328,22 +328,22 @@ class TestClientConfig:
             "User-Agent": "Base",
             "Authorization": "Bearer token",
         }
-        assert merged.timeout == 20.0
+        assert merged.timeout == 20
         assert merged.retries == 5
 
         # Changing originals shouldn't affect merged result
         assert base_config.headers is not None
         base_config.headers["User-Agent"] = "Modified"
-        base_config.timeout = 30.0
+        base_config.timeout = 30
         assert other_config.headers is not None
         other_config.headers["Authorization"] = "Modified"
-        other_config.timeout = 5.0
+        other_config.timeout = 5
 
         assert merged.headers == {
             "User-Agent": "Base",
             "Authorization": "Bearer token",
         }
-        assert merged.timeout == 20.0
+        assert merged.timeout == 20
 
     def test_merge_configs_with_incompatible_types(self) -> None:
         """Test error handling when merge_configs receives invalid types."""
@@ -381,13 +381,13 @@ class TestClientConfig:
         class CustomConfig(ClientConfig):
             hostname = "custom.example.com"
             version = "v2"
-            timeout = 60.0
+            timeout = 60
 
         config = CustomConfig()
 
         assert config.hostname == "custom.example.com"
         assert config.version == "v2"
-        assert config.timeout == 60.0
+        assert config.timeout == 60
 
         # Override with instance values
         config2 = CustomConfig(hostname="override.example.com")
@@ -397,8 +397,8 @@ class TestClientConfig:
 
     def test_add_operator_merges_configs(self) -> None:
         """Using the "+" operator should merge configs like ``merge()``."""
-        base_config = ClientConfig(hostname="api.example.com", timeout=10.0)
-        other_config = ClientConfig(version="v1", timeout=20.0)
+        base_config = ClientConfig(hostname="api.example.com", timeout=10)
+        other_config = ClientConfig(version="v1", timeout=20)
 
         merged_via_method = base_config.merge(other_config)
 

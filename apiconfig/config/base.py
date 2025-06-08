@@ -119,21 +119,19 @@ class ClientConfig:
         # Store timeout value before validation
         timeout_value = timeout if timeout is not None else self.__class__.timeout
         # Validate timeout (must be non-negative number)
-        if timeout_value is not None:
-            if not isinstance(timeout_value, (int, float)):
-                raise InvalidConfigError("Timeout must be a number (int or float).")
-            if timeout_value < 0:
-                raise InvalidConfigError("Timeout must be non-negative.")
+        if not isinstance(timeout_value, (int, float)):
+            raise InvalidConfigError("Timeout must be a number (int or float).")
+        if timeout_value < 0:
+            raise InvalidConfigError("Timeout must be non-negative.")
         self.timeout = timeout_value
 
         # Store retries value before validation
         retries_value = retries if retries is not None else self.__class__.retries
         # Validate retries (must be non-negative number)
-        if retries_value is not None:
-            if not isinstance(retries_value, (int, float)):
-                raise InvalidConfigError("Retries must be a number (int or float).")
-            if retries_value < 0:
-                raise InvalidConfigError("Retries must be non-negative.")
+        if not isinstance(retries_value, (int, float)):
+            raise InvalidConfigError("Retries must be a number (int or float).")
+        if retries_value < 0:
+            raise InvalidConfigError("Retries must be non-negative.")
         self.retries = retries_value
 
         self.auth_strategy = auth_strategy or self.__class__.auth_strategy

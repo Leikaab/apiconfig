@@ -5,7 +5,7 @@
 import typing
 import uuid
 
-import httpx
+from httpx import Client, Response
 from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
@@ -24,7 +24,7 @@ def make_request_with_config(
     path: str,
     method: str = "GET",
     **kwargs: typing.Any,
-) -> httpx.Response:
+) -> Response:
     """Make an HTTP request using the provided config and auth strategy to a mock server.
 
     Handles applying authentication via the strategy's `prepare_request` method.
@@ -42,12 +42,12 @@ def make_request_with_config(
     method : str, optional
         The HTTP method.
     **kwargs : Any
-        Additional arguments passed to `httpx.Client.request`.
+        Additional arguments passed to `Client.request`.
 
     Returns
     -------
-    httpx.Response
-        The httpx.Response object.
+    Response
+        The httpx Response object.
     """
     base_url = mock_server_url.rstrip("/")
     url = f"{base_url}/{path.lstrip('/')}"
@@ -71,9 +71,9 @@ def make_request_with_config(
     # Ensure headers are always dicts (not mocks)
     safe_headers = dict(prepared_headers)
 
-    # Use httpx for the actual request
+    # Use httpx's Client for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver
-    with httpx.Client(
+    with Client(
         base_url=base_url,
         timeout=config.timeout,
         follow_redirects=True,  # Typically desired in tests

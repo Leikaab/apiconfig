@@ -6,7 +6,7 @@ exceptions where applicable.
 """
 
 import json
-from typing import Dict, Optional, Type, final
+from typing import Dict, List, Optional, Type, final
 
 from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
@@ -129,7 +129,7 @@ class ApiClientError(APIConfigError, HttpContextMixin):
         # Get the base message directly from Exception to avoid multiple inheritance issues
         base_message = Exception.__str__(self)
 
-        context_parts = []
+        context_parts: List[str] = []
         if self.status_code:
             context_parts.append(f"HTTP {self.status_code}")
 

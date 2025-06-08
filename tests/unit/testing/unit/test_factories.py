@@ -1,6 +1,6 @@
 """Unit tests for apiconfig.testing.unit.factories."""
 
-from typing import Any, Dict
+from typing import Any, Callable, Dict
 
 import pytest
 
@@ -118,15 +118,30 @@ def test_create_valid_client_config_log_flags_non_bool() -> None:
     assert config2.log_request_body is False
 
 
+def missing_hostname(d: Dict[str, Any]) -> bool:
+    """Return True if hostname is missing in the dictionary."""
+    return "hostname" not in d
+
+
+def invalid_timeout(d: Dict[str, Any]) -> bool:
+    """Return True if timeout is set to an invalid value."""
+    return d.get("timeout") == -10
+
+
+def unknown_reason(d: Dict[str, Any]) -> bool:
+    """Return True for unknown reason combination."""
+    return "hostname" in d and d.get("timeout") == 30
+
+
 @pytest.mark.parametrize(
     "reason,expected_mod",
     [
-        ("missing_hostname", lambda d: "hostname" not in d),
-        ("invalid_timeout", lambda d: d.get("timeout") == -10),
-        ("unknown_reason", lambda d: "hostname" in d and d.get("timeout") == 30),
+        ("missing_hostname", missing_hostname),
+        ("invalid_timeout", invalid_timeout),
+        ("unknown_reason", unknown_reason),
     ],
 )
-def test_create_invalid_client_config_reasons(reason: str, expected_mod: Any) -> None:
+def test_create_invalid_client_config_reasons(reason: str, expected_mod: Callable[[Dict[str, Any]], bool]) -> None:
     """
     Test create_invalid_client_config for different reasons.
     """

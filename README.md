@@ -280,4 +280,4 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ## License
 
-LGPLv3+. See [LICENSE](LICENSE) for details.
+LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.

@@ -2,14 +2,15 @@
 """HTTP related utility functions."""
 
 import json
-from typing import Any, Dict, Mapping, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union
 
-from apiconfig.exceptions.http import (
-    HTTPUtilsError,
-    JSONDecodeError,
-    JSONEncodeError,
-    PayloadTooLargeError,
-)
+if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
+    from apiconfig.exceptions.http import (
+        HTTPUtilsError,
+        JSONDecodeError,
+        JSONEncodeError,
+        PayloadTooLargeError,
+    )
 
 __all__ = [
     "HTTPUtilsError",
@@ -25,6 +26,29 @@ __all__ = [
     "safe_json_decode",
     "safe_json_encode",
 ]
+
+
+def __getattr__(name: str) -> Any:  # pragma: no cover - lazy attribute access
+    if name in {
+        "HTTPUtilsError",
+        "JSONDecodeError",
+        "JSONEncodeError",
+        "PayloadTooLargeError",
+    }:
+        from apiconfig.exceptions.http import (
+            HTTPUtilsError,
+            JSONDecodeError,
+            JSONEncodeError,
+            PayloadTooLargeError,
+        )
+
+        return {
+            "HTTPUtilsError": HTTPUtilsError,
+            "JSONDecodeError": JSONDecodeError,
+            "JSONEncodeError": JSONEncodeError,
+            "PayloadTooLargeError": PayloadTooLargeError,
+        }[name]
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
 def is_success(status_code: int) -> bool:
@@ -180,6 +204,13 @@ def safe_json_decode(
     HTTPUtilsError
         For other unexpected errors during processing.
     """
+    # Import exceptions lazily to avoid unnecessary runtime dependencies
+    from apiconfig.exceptions.http import (
+        HTTPUtilsError,
+        JSONDecodeError,
+        PayloadTooLargeError,
+    )
+
     try:
         if isinstance(response_text, bytes):
             # Check size before decoding bytes
@@ -252,6 +283,13 @@ def safe_json_encode(
     HTTPUtilsError
         For other unexpected errors during processing.
     """
+    # Import exceptions lazily to avoid unnecessary runtime dependencies
+    from apiconfig.exceptions.http import (
+        HTTPUtilsError,
+        JSONEncodeError,
+        PayloadTooLargeError,
+    )
+
     try:
         # Attempt to encode the data as JSON
         json_string = json.dumps(data, ensure_ascii=ensure_ascii, indent=indent)

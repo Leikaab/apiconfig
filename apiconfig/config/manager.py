@@ -88,15 +88,12 @@ class ConfigManager:
         logger.debug("Loading configuration from %d providers...", len(self._providers))
 
         for provider in self._providers:
-            provider_name = getattr(provider, "__class__", type(provider)).__name__
+            provider_name = provider.__class__.__name__
             try:
                 logger.debug("Loading configuration from provider: %s", provider_name)
-                # Assuming providers have a 'load' or 'get_config' method
-                # Let's standardize on 'load' for now.
-                # We might need a Protocol later.
-                if hasattr(provider, "load"):
-                    config_data = provider.load()
-                elif hasattr(provider, "get_config"):  # Fallback for potential variations
+                if isinstance(provider, _SupportsLoad):
+                    config_data: Mapping[str, Any] = provider.load()
+                elif isinstance(provider, _SupportsGetConfig):
                     config_data = provider.get_config()
                 else:
                     raise AttributeError(f"Provider {provider_name} lacks a 'load' or 'get_config' method.")

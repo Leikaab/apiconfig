@@ -84,8 +84,10 @@ Use in-memory configuration:
        "version": "v2",
        "timeout": 15.0,
    }
-   memory_provider = MemoryProvider(data=data)
-   config_dict = memory_provider.load()
+   # ``MemoryProvider`` stores data passed via ``config_data`` and returns it via
+   # ``get_config``
+   memory_provider = MemoryProvider(config_data=data)
+   config_dict = memory_provider.get_config()
 
 Authentication Strategies
 -----------------------

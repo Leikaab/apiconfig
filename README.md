@@ -171,8 +171,10 @@ from apiconfig import FileProvider, MemoryProvider
 file_provider = FileProvider(file_path="config.json")
 file_config = file_provider.load()
 
-memory_provider = MemoryProvider(data={"hostname": "api.example.com"})
-memory_config = memory_provider.load()
+# MemoryProvider accepts configuration via the ``config_data`` parameter and
+# exposes ``get_config`` instead of ``load``
+memory_provider = MemoryProvider(config_data={"hostname": "api.example.com"})
+memory_config = memory_provider.get_config()
 ```
 
 ### Merging Configurations

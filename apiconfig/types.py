@@ -55,7 +55,7 @@ QueryParamType: TypeAlias = Mapping[str, QueryParamValueType]
 """Type alias for URL query parameters."""
 
 # Internal type for urllib.parse.urlencode
-_UrlencodeParamsType: TypeAlias = Dict[str, Union[str, List[str]]]
+UrlencodeParamsType: TypeAlias = Dict[str, Union[str, List[str]]]
 """Internal type for urllib.parse.urlencode compatibility."""
 
 DataType: TypeAlias = Union[str, bytes, JsonObject, Mapping[str, Any]]
@@ -238,7 +238,7 @@ __all__ = [
     "HeadersType",
     "QueryParamType",
     "QueryParamValueType",
-    "_UrlencodeParamsType",
+    "UrlencodeParamsType",
     "DataType",
     "ResponseBodyType",
     "HttpRequestProtocol",

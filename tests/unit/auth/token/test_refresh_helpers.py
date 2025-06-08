@@ -2,10 +2,13 @@ from unittest.mock import MagicMock
 
 import pytest
 
+# isort: off
 from apiconfig.auth.token.refresh import (
-    _get_effective_settings,
-    _prepare_auth_and_payload,
+    _get_effective_settings,  # pyright: ignore[reportPrivateUsage]
+    _prepare_auth_and_payload,  # pyright: ignore[reportPrivateUsage]
 )
+
+# isort: on
 from apiconfig.config.base import ClientConfig
 
 

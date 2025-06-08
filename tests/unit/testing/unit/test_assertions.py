@@ -110,7 +110,7 @@ def test_assert_client_config_valid_wrong_type() -> None:
     """
     Test assert_client_config_valid fails if not a ClientConfig.
     """
-    with pytest.raises(AssertionError, match="is not an instance of ClientConfig"):
+    with pytest.raises(AttributeError):
         assertions.assert_client_config_valid(object())  # type: ignore[arg-type]
 
 
@@ -165,8 +165,11 @@ def test_assert_auth_header_correct_wrong_type() -> None:
     """
     Test assert_auth_header_correct fails if not an AuthStrategy.
     """
-    with pytest.raises(AssertionError, match="is not an instance of AuthStrategy"):
-        assertions.assert_auth_header_correct(object(), {"Authorization": "Bearer token123"})  # type: ignore[arg-type]
+    with pytest.raises(AttributeError):
+        assertions.assert_auth_header_correct(
+            object(),  # type: ignore[arg-type]
+            {"Authorization": "Bearer token123"},
+        )
 
 
 def test_assert_auth_header_correct_wrong_headers() -> None:

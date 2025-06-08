@@ -15,7 +15,7 @@ These utilities are particularly useful for:
 - Validating error handling in API client code
 """
 import json
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pytest_httpserver import HTTPServer
 from werkzeug.wrappers import Request, Response
@@ -150,7 +150,7 @@ def assert_request_received(
     AssertionError
         If the expected request(s) were not found in the server log.
     """
-    matching_requests = []
+    matching_requests: List[Tuple[Request, Response]] = []
     lower_expected_headers = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
     log = httpserver.log

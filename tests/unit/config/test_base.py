@@ -317,7 +317,7 @@ class TestClientConfig:
             headers={"Authorization": "Bearer token"},
             timeout=20.0,
         )
-        other_config.retries = None  # type: ignore[assignment]
+        other_config.retries = None
 
         merged = ClientConfig.merge_configs(base_config, other_config)
 

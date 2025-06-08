@@ -40,9 +40,9 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
         raise AssertionError(f"Object {config!r} is not an instance of ClientConfig.")
     if not config.hostname:
         raise AssertionError("ClientConfig hostname cannot be empty or None.")
-    if config.timeout < 0:
+    if config.timeout is not None and config.timeout < 0:
         raise AssertionError(f"ClientConfig timeout cannot be negative: {config.timeout}")
-    if config.retries < 0:
+    if config.retries is not None and config.retries < 0:
         raise AssertionError(f"ClientConfig retries cannot be negative: {config.retries}")
     # Implicitly check base_url construction works
     try:

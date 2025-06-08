@@ -3,7 +3,7 @@
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Sequence, Union, cast
+from typing import Any, Dict, List, Optional, Union, cast
 from urllib.parse import parse_qs, urlencode
 
 from .headers import REDACTED_VALUE
@@ -21,16 +21,15 @@ def _redact_recursive(
 ) -> Any:
     """Recursively redact sensitive data in dictionaries and lists."""
     if isinstance(data, dict):
-        typed_dict: Dict[str, Any] = cast(Dict[str, Any], data)
         redacted_dict: Dict[str, Any] = {}
-        for key, value in typed_dict.items():
+        for key, value in cast(Dict[str, Any], data).items():
             if key_pattern.search(key):
                 redacted_dict[key] = REDACTED_VALUE
             else:
                 redacted_dict[key] = _redact_recursive(value, key_pattern, value_pattern)
         return redacted_dict
     elif isinstance(data, list):
-        typed_list: List[Any] = list(cast(Sequence[Any], data))
+        typed_list: List[Any] = cast(List[Any], data)
         return [_redact_recursive(item, key_pattern, value_pattern) for item in typed_list]
     elif isinstance(data, str) and value_pattern and value_pattern.search(data):
         return REDACTED_VALUE
@@ -40,11 +39,11 @@ def _redact_recursive(
 
 
 def redact_body(
-    body: Union[str, bytes, Dict[str, Any], List[Any], Any],
+    body: Union[str, bytes, Any],
     content_type: Optional[str] = None,
     sensitive_keys_pattern: re.Pattern[str] = DEFAULT_SENSITIVE_KEYS_PATTERN,
     sensitive_value_pattern: Optional[re.Pattern[str]] = None,
-) -> Union[str, bytes, Dict[str, Any], List[Any], Any]:
+) -> Union[str, bytes, Any]:
     """Redact sensitive information from request or response bodies.
 
     Attempts to parse JSON or form-urlencoded bodies and recursively redacts
@@ -131,8 +130,8 @@ def redact_body(
 
     except (json.JSONDecodeError, TypeError, ValueError):
         # If parsing fails, return original string/bytes or placeholder
-        result: Union[str, bytes, Dict[str, Any], List[Any]] = cast(
-            Union[str, bytes, Dict[str, Any], List[Any]],
+        result: Union[str, bytes, Any] = cast(
+            Union[str, bytes, Any],
             body_str if body_str is not None else body,
         )
         return result
@@ -141,8 +140,8 @@ def redact_body(
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.
     # If it was originally a string/bytes but not JSON/Form, return original.
     # If it was already parsed but not dict/list, return original.
-    result_final: Union[str, bytes, Dict[str, Any], List[Any]] = cast(
-        Union[str, bytes, Dict[str, Any], List[Any]],
+    result_final: Union[str, bytes, Any] = cast(
+        Union[str, bytes, Any],
         body_str if body_str is not None else body,
     )
     return result_final

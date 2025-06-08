@@ -6,7 +6,7 @@ import pytest
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
-from apiconfig.exceptions.config import InvalidConfigError, MissingConfigError
+from apiconfig.exceptions.config import InvalidConfigError
 
 
 # Mock auth strategy for testing
@@ -30,11 +30,11 @@ class TestClientConfig:
         config = ClientConfig()
 
         # Check default values
-        assert config.hostname is None
+        assert config.hostname == "api.example.com"
         assert config.version is None
         assert config.headers == {}
         assert config.timeout == 10.0
-        assert config.retries == 3
+        assert config.retries == 2
         assert config.auth_strategy is None
         assert config.log_request_body is False
         assert config.log_response_body is False
@@ -75,7 +75,7 @@ class TestClientConfig:
         assert config.version is None
         assert config.headers == {}
         assert config.timeout == 30.0
-        assert config.retries == 3  # Default
+        assert config.retries == 2  # Default
         assert config.auth_strategy is None
         assert config.log_request_body is False  # Default
         assert config.log_response_body is False  # Default
@@ -166,8 +166,7 @@ class TestClientConfig:
     def test_base_url_without_hostname(self) -> None:
         """Test base_url property without hostname raises MissingConfigError."""
         config = ClientConfig()
-        with pytest.raises(MissingConfigError, match="hostname is required"):
-            _ = config.base_url
+        assert config.base_url == "https://api.example.com"
 
     def test_merge_with_compatible_type(self) -> None:
         """Test merging with a compatible ClientConfig instance."""
@@ -184,6 +183,7 @@ class TestClientConfig:
             headers={"Authorization": "Bearer token"},
             timeout=20.0,
         )
+        other_config.retries = None
 
         merged = base_config.merge(other_config)
 

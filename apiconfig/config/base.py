@@ -33,7 +33,7 @@ class ClientConfig:
     ----------
     hostname
         The base hostname of the API (e.g., "api.example.com").
-        If not provided, defaults to None.
+        Defaults to "api.example.com".
     version
         The API version string (e.g., "v1"). Appended to the hostname.
         Must not contain leading or trailing slashes. If not provided, defaults to None.
@@ -42,10 +42,10 @@ class ClientConfig:
         If not provided, defaults to an empty dictionary.
     timeout
         Default request timeout in seconds. Must be a non-negative number when provided.
-        Defaults to 10.0 seconds.
+        Defaults to 10 seconds.
     retries
         Default number of retries for failed requests. Must be a non-negative number when provided.
-        Defaults to 3 retries.
+        Defaults to 2 retries.
     auth_strategy
         An instance of AuthStrategy for handling authentication.
         If not provided, defaults to None.
@@ -57,11 +57,11 @@ class ClientConfig:
         Defaults to False.
     """
 
-    hostname: Optional[str] = None
+    hostname: Optional[str] = "api.example.com"
     version: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
-    timeout: Optional[float] = 10.0
-    retries: Optional[int] = 3
+    timeout: Optional[int] = 10
+    retries: Optional[int] = 2
     auth_strategy: Optional["AuthStrategy"] = None
     log_request_body: bool = False
     log_response_body: bool = False

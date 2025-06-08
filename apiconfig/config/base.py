@@ -41,10 +41,10 @@ class ClientConfig:
         Default headers to include in every request.
         If not provided, defaults to an empty dictionary.
     timeout
-        Default request timeout in seconds. Must be a non-negative number.
+        Default request timeout in seconds. Must be a non-negative number when provided.
         Defaults to 10.0 seconds.
     retries
-        Default number of retries for failed requests. Must be a non-negative number.
+        Default number of retries for failed requests. Must be a non-negative number when provided.
         Defaults to 3 retries.
     auth_strategy
         An instance of AuthStrategy for handling authentication.
@@ -60,8 +60,8 @@ class ClientConfig:
     hostname: Optional[str] = None
     version: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
-    timeout: float = 10.0
-    retries: int = 3
+    timeout: Optional[float] = 10.0
+    retries: Optional[int] = 3
     auth_strategy: Optional["AuthStrategy"] = None
     log_request_body: bool = False
     log_response_body: bool = False
@@ -88,9 +88,9 @@ class ClientConfig:
         headers
             Default headers for requests.
         timeout
-            Request timeout in seconds. Must be a non-negative number (int or float).
+            Request timeout in seconds. Must be a non-negative number (int or float) when provided.
         retries
-            Number of retries for failed requests. Must be a non-negative number (int or float).
+            Number of retries for failed requests. Must be a non-negative number (int or float) when provided.
         auth_strategy
             Authentication strategy instance.
         log_request_body
@@ -119,19 +119,21 @@ class ClientConfig:
         # Store timeout value before validation
         timeout_value = timeout if timeout is not None else self.__class__.timeout
         # Validate timeout (must be non-negative number)
-        if not isinstance(timeout_value, (int, float)):
-            raise InvalidConfigError("Timeout must be a number (int or float).")
-        if timeout_value < 0:
-            raise InvalidConfigError("Timeout must be non-negative.")
+        if timeout_value is not None:
+            if not isinstance(timeout_value, (int, float)):
+                raise InvalidConfigError("Timeout must be a number (int or float).")
+            if timeout_value < 0:
+                raise InvalidConfigError("Timeout must be non-negative.")
         self.timeout = timeout_value
 
         # Store retries value before validation
         retries_value = retries if retries is not None else self.__class__.retries
         # Validate retries (must be non-negative number)
-        if not isinstance(retries_value, (int, float)):
-            raise InvalidConfigError("Retries must be a number (int or float).")
-        if retries_value < 0:
-            raise InvalidConfigError("Retries must be non-negative.")
+        if retries_value is not None:
+            if not isinstance(retries_value, (int, float)):
+                raise InvalidConfigError("Retries must be a number (int or float).")
+            if retries_value < 0:
+                raise InvalidConfigError("Retries must be non-negative.")
         self.retries = retries_value
 
         self.auth_strategy = auth_strategy or self.__class__.auth_strategy

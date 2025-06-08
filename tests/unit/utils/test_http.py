@@ -263,12 +263,17 @@ def test_safe_json_encode_exceeds_size_limit() -> None:
         safe_json_encode(large_data, max_size_bytes=50)
 
 
+def identity(x: Any) -> Any:
+    """Return ``x`` unchanged."""
+    return x
+
+
 @pytest.mark.parametrize(
     "data, expected_exception, match",
     [
         (object(), JSONEncodeError, "Failed to encode data as JSON"),
         (set([1, 2, 3]), JSONEncodeError, "Failed to encode data as JSON"),
-        (lambda x: x, JSONEncodeError, "Failed to encode data as JSON"),
+        (identity, JSONEncodeError, "Failed to encode data as JSON"),
     ],
 )
 def test_safe_json_encode_non_serializable(data: Any, expected_exception: type[APIConfigError], match: str) -> None:

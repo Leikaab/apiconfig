@@ -35,7 +35,7 @@ class TestMakeRequestWithConfig:
         mock_client = MagicMock()
         mock_client.request.return_value = mock_response
 
-        with patch("httpx.Client") as mock_client_class:
+        with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
             # Set up the mock client to return our mock response
             mock_client_instance = mock_client_class.return_value
             mock_client_instance.__enter__.return_value = mock_client
@@ -92,7 +92,7 @@ class TestMakeRequestWithConfig:
         mock_client = MagicMock()
         mock_client.request.return_value = mock_response
 
-        with patch("httpx.Client") as mock_client_class:
+        with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
             # Set up the mock client to return our mock response
             mock_client_instance = mock_client_class.return_value
             mock_client_instance.__enter__.return_value = mock_client
@@ -171,7 +171,7 @@ class TestMakeRequestWithConfig:
         ]
 
         for mock_server_url, path, expected_url in test_cases:
-            with patch("httpx.Client") as mock_client_class:
+            with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
                 # Reset the mock for each iteration
                 mock_client.reset_mock()
 

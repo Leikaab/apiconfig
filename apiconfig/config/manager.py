@@ -1,12 +1,24 @@
 """Manages loading configuration from multiple providers."""
 
 import logging
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, Protocol, Sequence
 
 from apiconfig.exceptions.config import ConfigLoadError
 
-# Placeholder for a potential future ConfigProvider protocol or base class
-ConfigProvider = Any
+
+class _SupportsLoad(Protocol):
+    """Protocol for providers implementing ``load``."""
+
+    def load(self) -> Dict[str, Any]: ...
+
+
+class _SupportsGetConfig(Protocol):
+    """Protocol for providers implementing ``get_config``."""
+
+    def get_config(self) -> Dict[str, Any]: ...
+
+
+ConfigProvider = _SupportsLoad | _SupportsGetConfig
 
 logger: logging.Logger = logging.getLogger(__name__)
 

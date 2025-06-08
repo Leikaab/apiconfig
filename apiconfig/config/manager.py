@@ -1,21 +1,23 @@
 """Manages loading configuration from multiple providers."""
 
 import logging
-from typing import Any, Dict, Protocol, Sequence
+from typing import Any, Dict, Mapping, Protocol, Sequence, runtime_checkable
 
 from apiconfig.exceptions.config import ConfigLoadError
 
 
+@runtime_checkable
 class _SupportsLoad(Protocol):
     """Protocol for providers implementing ``load``."""
 
-    def load(self) -> Dict[str, Any]: ...
+    def load(self) -> Mapping[str, Any]: ...
 
 
+@runtime_checkable
 class _SupportsGetConfig(Protocol):
     """Protocol for providers implementing ``get_config``."""
 
-    def get_config(self) -> Dict[str, Any]: ...
+    def get_config(self) -> Mapping[str, Any]: ...
 
 
 ConfigProvider = _SupportsLoad | _SupportsGetConfig
@@ -53,7 +55,10 @@ class ConfigManager:
             with later providers overriding settings from earlier ones.
             Each provider must implement either a `load()` or `get_config()` method.
         """
-        self._providers: Sequence[ConfigProvider] = providers
+        # Store providers as ``Any`` internally to avoid overly strict typing
+        # that would leak into consumer code (e.g. tests accessing attributes
+        # specific to concrete providers).
+        self._providers: Sequence[Any] = list(providers)
 
     def load_config(self) -> Dict[str, Any]:
         """

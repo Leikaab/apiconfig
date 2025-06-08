@@ -120,9 +120,6 @@ class AuthHeaderVerification:
         if header_value is None:
             raise AuthenticationError("Bearer auth header cannot be None")
 
-        if not isinstance(header_value, str):
-            raise AuthenticationError("Bearer auth header must be a string")
-
         if not header_value.startswith("Bearer "):
             raise AuthenticationError("Bearer auth header must start with 'Bearer '")
 
@@ -297,7 +294,7 @@ class AuthHeaderVerification:
                 "X-Access-Token",
             ]
 
-        found_headers = []
+        found_headers: List[str] = []
         for header_name in auth_header_names:
             if header_name in headers:
                 found_headers.append(header_name)
@@ -343,7 +340,7 @@ class AdvancedAuthVerification:
             if len(parts) != 3:
                 raise AuthenticationError("JWT must have exactly 3 parts")
 
-            header_b64, payload_b64, signature_b64 = parts
+            header_b64, payload_b64, _ = parts
 
             # Decode header and payload
             header = json.loads(base64.b64decode(header_b64 + "==").decode("utf-8"))
@@ -532,7 +529,7 @@ class AuthTestHelpers:
         >>> headers["X-API-Key"]
         'mykey'
         """
-        headers = {}
+        headers: Dict[str, str] = {}
 
         if auth_type.lower() == "basic":
             username = kwargs.get("username", "testuser")

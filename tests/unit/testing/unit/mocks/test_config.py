@@ -137,8 +137,8 @@ class TestMockConfigManager:
         """Test initialization with mock_config=None (should set a default ClientConfig)."""
         manager = MockConfigManager()
 
-        # load_config should be a MagicMock
-        assert isinstance(manager.load_config, MagicMock)
+        # load_config_mock should be a MagicMock
+        assert isinstance(manager.load_config_mock, MagicMock)
 
         # The return value should be a default ClientConfig
         result = manager.load_config()
@@ -160,26 +160,26 @@ class TestMockConfigManager:
         manager = MockConfigManager(mock_config=mock_config)
 
         # load_config should return the provided mock_config
-        assert manager.load_config.return_value == mock_config
+        assert manager.load_config_mock.return_value == mock_config
         assert manager.load_config() == mock_config
 
     def test_load_config_is_magicmock(self) -> None:
         """Test that load_config is a MagicMock instance allowing spying."""
         manager = MockConfigManager()
 
-        assert isinstance(manager.load_config, MagicMock)
+        assert isinstance(manager.load_config_mock, MagicMock)
 
         # Call the method and verify it was called
         manager.load_config()
-        manager.load_config.assert_called_once()
+        manager.load_config_mock.assert_called_once()
 
         # Reset the mock to clear the call history
-        manager.load_config.reset_mock()
+        manager.load_config_mock.reset_mock()
 
         # Call with arguments and verify they were passed
         manager.load_config(arg1="test", arg2=123)
         # Use assert_called_once_with to ensure it was called exactly once with these args
-        manager.load_config.assert_called_once_with(arg1="test", arg2=123)
+        manager.load_config_mock.assert_called_once_with(arg1="test", arg2=123)
 
     def test_load_config_with_custom_return_value(self) -> None:
         """Test setting a custom return value for load_config."""
@@ -187,7 +187,7 @@ class TestMockConfigManager:
         custom_config = ClientConfig(hostname="custom.example.com")
 
         # Set a custom return value
-        manager.load_config.return_value = custom_config
+        manager.load_config_mock.return_value = custom_config
 
         # Verify the custom return value is used
         result = manager.load_config()

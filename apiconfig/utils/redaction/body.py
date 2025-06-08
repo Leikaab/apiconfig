@@ -3,7 +3,7 @@
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, Iterable, List, Optional, Union, cast
 from urllib.parse import parse_qs, urlencode
 
 from .headers import REDACTED_VALUE
@@ -29,13 +29,44 @@ def _redact_recursive(
                 redacted_dict[key] = _redact_recursive(value, key_pattern, value_pattern)
         return redacted_dict
     elif isinstance(data, list):
-        typed_list: List[Any] = list(data)
+        typed_list: List[Any] = list(cast(Iterable[Any], data))
         return [_redact_recursive(item, key_pattern, value_pattern) for item in typed_list]
     elif isinstance(data, str) and value_pattern and value_pattern.search(data):
         return REDACTED_VALUE
     else:
         # Not a dict, list, or sensitive string value
         return data
+
+
+def _redact_json_body(
+    parsed_body: Any,
+    body_str: Optional[str],
+    key_pattern: re.Pattern[str],
+    value_pattern: Optional[re.Pattern[str]] = None,
+) -> Union[str, Any]:
+    """Parse and redact JSON data."""
+    if parsed_body is None and body_str is not None:
+        parsed_body = json.loads(body_str)
+    redacted_data = _redact_recursive(parsed_body, key_pattern, value_pattern)
+    return json.dumps(redacted_data) if body_str is not None else redacted_data
+
+
+def _redact_form_body(
+    body_str: str,
+    key_pattern: re.Pattern[str],
+    value_pattern: Optional[re.Pattern[str]] = None,
+) -> str:
+    """Parse and redact form-encoded data."""
+    parsed_form: Dict[str, List[str]] = parse_qs(body_str, keep_blank_values=True)
+    redacted_form: Dict[str, List[str]] = {}
+    for key, values in parsed_form.items():
+        if key_pattern.search(key):
+            redacted_form[key] = [REDACTED_VALUE] * len(values)
+        elif value_pattern:
+            redacted_form[key] = [REDACTED_VALUE if value_pattern.search(v) else v for v in values]
+        else:
+            redacted_form[key] = values
+    return urlencode(redacted_form, doseq=True)
 
 
 def redact_body(
@@ -107,35 +138,27 @@ def redact_body(
     # 3. Parse and Redact
     try:
         if is_json:
-            if parsed_body is None and body_str is not None:
-                parsed_body = json.loads(body_str)
-            redacted_data = _redact_recursive(parsed_body, sensitive_keys_pattern, sensitive_value_pattern)
-            # Return in original format (parsed dict/list or JSON string)
-            return json.dumps(redacted_data) if body_str is not None else redacted_data
-        elif is_form and body_str is not None:
-            parsed_form: Dict[str, List[str]] = parse_qs(body_str, keep_blank_values=True)
-            redacted_form: Dict[str, List[str]] = {}
-            for key, values in parsed_form.items():
-                if sensitive_keys_pattern.search(key):
-                    redacted_form[key] = [REDACTED_VALUE] * len(values)
-                else:
-                    # Check individual values if a value pattern is provided
-                    if sensitive_value_pattern:
-                        redacted_values: List[str] = [REDACTED_VALUE if sensitive_value_pattern.search(v) else v for v in values]
-                        redacted_form[key] = redacted_values
-                    else:
-                        redacted_form[key] = values
-            # Return re-encoded form data
-            return urlencode(redacted_form, doseq=True)
+            return _redact_json_body(
+                parsed_body,
+                body_str,
+                sensitive_keys_pattern,
+                sensitive_value_pattern,
+            )
+        if is_form and body_str is not None:
+            return _redact_form_body(
+                body_str,
+                sensitive_keys_pattern,
+                sensitive_value_pattern,
+            )
 
     except (json.JSONDecodeError, TypeError, ValueError):
-        # If parsing fails, return original string/bytes or placeholder
-        result: Union[str, bytes, Any] = body_str if body_str is not None else body
+        result: str | bytes | Any
+        result = body_str if body_str is not None else cast(Any, body)
         return result
 
     # 4. If not JSON or form, or if parsing failed, return original/placeholder
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.
     # If it was originally a string/bytes but not JSON/Form, return original.
     # If it was already parsed but not dict/list, return original.
-    result_final: Union[str, bytes, Any] = body_str if body_str is not None else body
+    result_final: str | bytes | Any = body_str if body_str is not None else cast(Any, body)
     return result_final

@@ -29,7 +29,7 @@ assert config.hostname == "api.test"
 | Helper | Description |
 | ------ | ----------- |
 | `create_valid_client_config` | Returns a ready-to-use `ClientConfig` for tests. |
-| `MockConfigProvider` / `MockConfigManager` | Duck-typed providers and manager with `MagicMock` behaviour. |
+| `MockConfigProvider` / `MockConfigManager` | Duck-typed providers and manager with a `load_config_mock` `MagicMock`. |
 | `assert_client_config_valid` | Asserts that a config object has sensible values. |
 
 ### Design

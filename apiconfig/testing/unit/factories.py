@@ -20,7 +20,7 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     ClientConfig
         A valid ClientConfig instance.
     """
-    defaults = {
+    defaults: Dict[str, Any] = {
         "hostname": "https://api.example.com",
         "version": "v1",
         "timeout": 30,
@@ -52,6 +52,7 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     timeout: int = int(float(timeout_val))
     retries_val = cast(int | float | str, defaults.get("retries", 3))
     retries: int = int(retries_val)
+
     headers_val = defaults.get("headers")
     headers: Optional[Dict[str, str]] = cast(Dict[str, str], headers_val) if isinstance(headers_val, dict) else None
     auth_strategy_val = defaults.get("auth_strategy")

@@ -272,8 +272,6 @@ class ClientConfig:
         """Merge two ClientConfig instances.
 
         Static method wrapper around the instance merge() method.
-        This is a convenience method that validates both arguments are
-        ClientConfig instances before calling merge().
 
         Args
         ----
@@ -287,12 +285,5 @@ class ClientConfig:
         _TClientConfig
             A new ClientConfig instance representing the merged configuration.
 
-        Raises
-        ------
-        TypeError
-            If either argument is not an instance of ClientConfig.
         """
-        if not isinstance(base_config, ClientConfig) or not isinstance(other_config, ClientConfig):
-            raise TypeError("Both arguments must be instances of ClientConfig")
-
         return base_config.merge(other_config)

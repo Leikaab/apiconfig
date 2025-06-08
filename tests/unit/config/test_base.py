@@ -346,13 +346,13 @@ class TestClientConfig:
         assert merged.timeout == 20.0
 
     def test_merge_configs_with_incompatible_types(self) -> None:
-        """Test that merge_configs raises TypeError with incompatible types."""
+        """Test error handling when merge_configs receives invalid types."""
         config = ClientConfig()
 
-        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
+        with pytest.raises(TypeError, match="Cannot merge ClientConfig with object of type"):
             ClientConfig.merge_configs(config, "not a ClientConfig")  # type: ignore[type-var]
 
-        with pytest.raises(TypeError, match="Both arguments must be instances of ClientConfig"):
+        with pytest.raises(AttributeError):
             ClientConfig.merge_configs("not a ClientConfig", config)  # type: ignore[type-var]
 
     def test_deep_copy_on_merge(self) -> None:

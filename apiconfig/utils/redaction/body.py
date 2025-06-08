@@ -29,7 +29,7 @@ def _redact_recursive(
                 redacted_dict[key] = _redact_recursive(value, key_pattern, value_pattern)
         return redacted_dict
     elif isinstance(data, list):
-        typed_list: List[Any] = cast(List[Any], data)
+        typed_list: List[Any] = data
         return [_redact_recursive(item, key_pattern, value_pattern) for item in typed_list]
     elif isinstance(data, str) and value_pattern and value_pattern.search(data):
         return REDACTED_VALUE
@@ -130,18 +130,12 @@ def redact_body(
 
     except (json.JSONDecodeError, TypeError, ValueError):
         # If parsing fails, return original string/bytes or placeholder
-        result: Union[str, bytes, Any] = cast(
-            Union[str, bytes, Any],
-            body_str if body_str is not None else body,
-        )
+        result: Union[str, bytes, Any] = body_str if body_str is not None else body
         return result
 
     # 4. If not JSON or form, or if parsing failed, return original/placeholder
     # If it was originally bytes but couldn't be decoded, placeholder was returned earlier.
     # If it was originally a string/bytes but not JSON/Form, return original.
     # If it was already parsed but not dict/list, return original.
-    result_final: Union[str, bytes, Any] = cast(
-        Union[str, bytes, Any],
-        body_str if body_str is not None else body,
-    )
+    result_final: Union[str, bytes, Any] = body_str if body_str is not None else body
     return result_final

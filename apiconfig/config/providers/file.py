@@ -2,7 +2,7 @@
 
 import json
 import pathlib
-from typing import Any, Dict, Optional, Type, TypeVar, Union
+from typing import Any, Dict, Optional, Type, TypeVar, Union, cast
 
 from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
 
@@ -74,6 +74,7 @@ class FileProvider:
 
             if not isinstance(config_data, dict):
                 raise ConfigLoadError(f"Configuration file must contain a JSON object: {file_path_str}")
+            config_data = cast(dict[str, Any], config_data)
             return config_data
         except ConfigLoadError:
             # Re-raise our own errors unchanged
@@ -122,7 +123,7 @@ class FileProvider:
 
         # Handle dot notation for nested keys
         parts = key.split(".")
-        value = config
+        value: Any = config
 
         # Navigate through nested dictionaries
         for part in parts:
@@ -141,7 +142,7 @@ class FileProvider:
             if expected_type is bool:
                 # Special handling for boolean values
                 try:
-                    val_lower = value.lower()  # type: ignore[attr-defined]
+                    val_lower = value.lower()
                     if val_lower in ("true", "1", "yes", "y", "on"):
                         return True
                     elif val_lower in ("false", "0", "no", "n", "off"):

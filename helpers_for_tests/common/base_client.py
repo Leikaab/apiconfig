@@ -3,7 +3,7 @@
 import json
 from typing import Any, Dict, Optional, Union
 
-import httpx
+from httpx import Client, HTTPStatusError, RequestError, Response
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError
@@ -31,13 +31,9 @@ class BaseClient:
 
         Raises
         ------
-        TypeError
-            If client_config is not a ClientConfig instance.
         ValueError
             If auth_strategy is not configured.
         """
-        if not isinstance(client_config, ClientConfig):
-            raise TypeError("client_config must be an instance of ClientConfig.")
         if not client_config.auth_strategy:
             raise ValueError("ClientConfig.auth_strategy must be configured.")
         self.config = client_config
@@ -76,13 +72,13 @@ class BaseClient:
             headers.update(auth_headers)
         return headers
 
-    def _handle_response(self, response: httpx.Response, method: HttpMethod, url: str) -> Union[JsonObject, JsonList]:
+    def _handle_response(self, response: Response, method: HttpMethod, url: str) -> Union[JsonObject, JsonList]:
         """
         Handle HTTP response using apiconfig utilities.
 
         Args
         ----
-        response : httpx.Response
+        response : Response
             The httpx Response object.
         method : HttpMethod
             The HTTP method used.
@@ -172,12 +168,12 @@ class BaseClient:
         headers = self._prepare_headers()
 
         try:
-            with httpx.Client(
+            with Client(
                 timeout=self.config.timeout,
                 follow_redirects=True,
                 verify=True,
             ) as client:
-                response = client.request(
+                response: Response = client.request(
                     method=method.value,
                     url=url,
                     headers=headers,
@@ -186,9 +182,9 @@ class BaseClient:
                 )
                 return self._handle_response(response, method, url)
 
-        except httpx.RequestError as e:
+        except RequestError as e:
             raise HTTPUtilsError(f"Request failed for {method.value} {url}: {e}") from e
-        except httpx.HTTPStatusError as e:
+        except HTTPStatusError as e:
             raise HTTPUtilsError(f"HTTP error {e.response.status_code} for {method.value} {url}: {e.response.text}") from e
         except Exception as e:
             raise HTTPUtilsError(f"Unexpected error during request to {method.value} {url}: {e}") from e

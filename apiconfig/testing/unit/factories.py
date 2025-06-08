@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Factory functions for creating test data."""
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
@@ -49,11 +49,11 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     hostname: str = str(defaults.get("hostname", "https://api.example.com"))
     version: str = str(defaults.get("version", "v1"))
     timeout_val = defaults.get("timeout", 30.0)
-    timeout: float = float(timeout_val) if isinstance(timeout_val, (int, float, str)) else 30.0
+    timeout: float = float(timeout_val)
     retries_val = defaults.get("retries", 3)
-    retries: int = int(retries_val) if isinstance(retries_val, (int, float, str)) else 3
+    retries: int = int(retries_val)
     headers_val = defaults.get("headers")
-    headers: Optional[Dict[str, str]] = dict(headers_val) if isinstance(headers_val, dict) else None
+    headers: Optional[Dict[str, str]] = cast(Dict[str, str], headers_val) if isinstance(headers_val, dict) else None
     auth_strategy_val = defaults.get("auth_strategy")
     auth_strategy: Optional[AuthStrategy] = auth_strategy_val if isinstance(auth_strategy_val, AuthStrategy) or auth_strategy_val is None else None
     log_request_body_val = defaults.get("log_request_body")

@@ -129,18 +129,19 @@ class RedactingFormatter(logging.Formatter):
         return super().format(record)
 
     def _redact_headers(self, record: logging.LogRecord) -> None:
-        if hasattr(record, "headers") and isinstance(record.headers, Mapping):
+        headers: Mapping[str, str] | None = getattr(record, "headers", None)
+        if headers is not None:
             try:
-                redacted_headers = self._redact_headers_func(
-                    record.headers,
+                redacted = self._redact_headers_func(
+                    headers,
                     sensitive_keys=self.header_sensitive_keys,
                     sensitive_prefixes=self.header_sensitive_prefixes,
                     sensitive_name_pattern=self.header_sensitive_name_pattern,
                     sensitive_cookie_keys=self.header_sensitive_cookie_keys,
                 )
-                record.headers = redacted_headers
+                record.headers = redacted
             except Exception:
-                pass  # Fallback to original headers if redaction fails
+                pass
 
     def _redact_message(self, record: logging.LogRecord) -> None:
         """Redact the log message in-place on the record.

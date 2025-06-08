@@ -477,7 +477,8 @@ class MockAuthErrorInjector:
                     raise Exception(f"Mock {failure_type} failure")
             return original_refresh()
 
-        strategy.refresh = failing_refresh
+        # Use setattr to avoid method assignment type warnings during static analysis
+        setattr(strategy, "refresh", failing_refresh)
         return strategy
 
     @staticmethod

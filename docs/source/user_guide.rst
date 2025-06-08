@@ -18,13 +18,13 @@ You can merge multiple configurations to combine settings from different sources
    # Base configuration with defaults
    base_config = ClientConfig(
        hostname="api.example.com",
-       timeout=30.0,
-       retries=3,
+       timeout=30,
+       retries=2,
    )
 
    # Override specific settings
    override_config = ClientConfig(
-       timeout=10.0,
+       timeout=10,
        headers={"X-Custom-Header": "value"},
    )
 
@@ -32,8 +32,8 @@ You can merge multiple configurations to combine settings from different sources
    merged_config = base_config.merge(override_config)
 
    print(merged_config.hostname)  # api.example.com (from base)
-   print(merged_config.timeout)   # 10.0 (from override)
-   print(merged_config.retries)   # 3 (from base)
+   print(merged_config.timeout)   # 10 (from override)
+   print(merged_config.retries)   # 2 (from base)
 
 Configuration Providers
 ~~~~~~~~~~~~~~~~~~~~~

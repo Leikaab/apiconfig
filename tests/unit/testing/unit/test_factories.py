@@ -37,7 +37,7 @@ def test_create_valid_client_config_defaults() -> None:
     assert isinstance(config, ClientConfig)
     assert config.hostname == "https://api.example.com"
     assert config.version == "v1"
-    assert config.timeout == 30.0
+    assert config.timeout == 30
     assert config.retries == 3
     assert config.headers == {}
     assert config.auth_strategy is None
@@ -49,9 +49,9 @@ def test_create_valid_client_config_defaults() -> None:
     [
         ("hostname", "https://override.com", "https://override.com"),
         ("version", "v2", "v2"),
-        ("timeout", 45, 45.0),
-        ("timeout", 12.5, 12.5),
-        ("timeout", "99", 99.0),
+        ("timeout", 45, 45),
+        ("timeout", 12.5, 12),
+        ("timeout", "99", 99),
         ("retries", 7, 7),
         ("retries", 2.0, 2),
         ("retries", "5", 5),

@@ -52,7 +52,7 @@ Quick Example
        hostname="api.example.com",
        version="v1",
        auth_strategy=auth,
-       timeout=10.0,
+       timeout=10,
    )
 
    # Use with any HTTP client

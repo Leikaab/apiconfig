@@ -23,7 +23,7 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     defaults: Dict[str, Any] = {
         "hostname": "https://api.example.com",
         "version": "v1",
-        "timeout": 30.0,
+        "timeout": 30,
         "retries": 3,
         # "headers": {},  # Optionally add headers if needed
         # "auth_strategy": None,  # Optionally add auth_strategy if needed
@@ -48,8 +48,11 @@ def create_valid_client_config(**overrides: Any) -> ClientConfig:
     # Explicitly pass each argument to ClientConfig with correct type
     hostname: str = str(defaults.get("hostname", "https://api.example.com"))
     version: str = str(defaults.get("version", "v1"))
-    timeout: float = float(defaults.get("timeout", 30.0))
-    retries: int = int(defaults.get("retries", 3))
+    timeout_val = cast(float | int | str, defaults.get("timeout", 30))
+    timeout: int = int(float(timeout_val))
+    retries_val = cast(int | float | str, defaults.get("retries", 3))
+    retries: int = int(retries_val)
+
     headers_val = defaults.get("headers")
     headers: Optional[Dict[str, str]] = cast(Dict[str, str], headers_val) if isinstance(headers_val, dict) else None
     auth_strategy_val = defaults.get("auth_strategy")

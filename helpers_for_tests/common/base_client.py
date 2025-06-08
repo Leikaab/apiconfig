@@ -1,9 +1,17 @@
 """Common base client for API interactions using apiconfig patterns."""
 
 import json
-from typing import Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
-from httpx import Client, HTTPStatusError, RequestError, Response
+if TYPE_CHECKING:
+    from httpx import Client, HTTPStatusError, RequestError, Response
+else:
+    import httpx
+
+    Client = httpx.Client
+    HTTPStatusError = httpx.HTTPStatusError
+    RequestError = httpx.RequestError
+    Response = httpx.Response
 
 from apiconfig.config.base import ClientConfig
 from apiconfig.exceptions.http import HTTPUtilsError, JSONDecodeError

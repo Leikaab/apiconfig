@@ -111,7 +111,7 @@ def configure_mock_response(
         method=method,
         ordered=ordered,
         **expect_kwargs,
-    )  # type: ignore[call-arg]
+    )
     expectation.respond_with_response(
         Response(status=status_code, headers=response_headers),
         **response_kwargs,

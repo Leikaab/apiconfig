@@ -5,7 +5,11 @@ from typing import Any, Callable
 
 import pytest
 
-from apiconfig.utils.logging.formatters import RedactingFormatter
+from apiconfig.utils.logging.formatters import (
+    RedactingFormatter,
+    redact_message_helper,
+    redact_structured_helper,
+)
 
 
 @pytest.fixture
@@ -300,7 +304,7 @@ def test_redacting_formatter_redact_structured_dict_from_string(
     monkeypatch.setattr(fmt, "_redact_body", mock_redact_body)
 
     # Test with a JSON string that should be parsed and redacted
-    result = fmt._redact_structured('{"token": "secret"}', "application/json")
+    result = redact_structured_helper(fmt, '{"token": "secret"}', "application/json")
 
     # Verify json.dumps was called
     import json
@@ -329,7 +333,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
 
     try:
         # Call _redact_structured with a string that will be processed as JSON
-        result = fmt._redact_structured(json_string, "application/json")
+        result = redact_structured_helper(fmt, json_string, "application/json")
 
         # Verify json.dumps was called
         import json
@@ -361,7 +365,7 @@ def test_redacting_formatter_redact_structured_other_type_direct(
 
     try:
         # Call _redact_structured with a string
-        result = fmt._redact_structured(test_input, "text/plain")
+        result = redact_structured_helper(fmt, test_input, "text/plain")
 
         # Verify str() was called on the returned value
         assert result == "42"
@@ -392,7 +396,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
         record = log_record_factory(msg={"sensitive": "secret", "normal": "value"})
 
         # Call _redact_message directly
-        fmt._redact_message(record)
+        redact_message_helper(fmt, record)
 
         # Verify the message was converted to a JSON string
         assert isinstance(record.msg, str)
@@ -428,7 +432,7 @@ def test_redacting_formatter_unknown_type_fallback_direct(
 
     try:
         # Call _redact_message directly
-        fmt._redact_message(record)
+        redact_message_helper(fmt, record)
 
         # Verify str() was called on the object
         assert record.msg == "custom object"
@@ -452,7 +456,7 @@ def test_redacting_formatter_redact_structured_string_exception_fallback(
 
     # Test with a string input
     test_string = "test string"
-    result = fmt._redact_structured(test_string, "text/plain")
+    result = redact_structured_helper(fmt, test_string, "text/plain")
 
     # Verify the original string is returned
     assert result == test_string
@@ -486,7 +490,7 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.setattr(fmt, "_is_structured", _always_false_structured)
 
     # Call _redact_message directly
-    fmt._redact_message(record)
+    redact_message_helper(fmt, record)
 
     # Verify str() was called on the object
     assert record.msg == "custom object str representation"
@@ -511,7 +515,7 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
 
     try:
         # Call _redact_structured with our string input and form content type
-        result = fmt._redact_structured(string_input, "application/x-www-form-urlencoded")
+        result = redact_structured_helper(fmt, string_input, "application/x-www-form-urlencoded")
 
         # Verify json.dumps was called
         import json
@@ -549,7 +553,7 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
 
     try:
         # Call _redact_structured with our custom input
-        result = fmt._redact_structured(custom_input, None)
+        result = redact_structured_helper(fmt, custom_input, None)
 
         # Verify str() was called
         assert result == "custom output str representation"

@@ -105,13 +105,13 @@ def configure_mock_response(
         response_kwargs["response_data"] = response_data
     # Handle None case implicitly (empty body)
 
-    # Pass 'ordered' for test compatibility; type: ignore needed for real HTTPServer
+    # Pass 'ordered' for test compatibility
     expectation: RequestHandler = httpserver.expect_request(
         uri=path,
         method=method,
         ordered=ordered,
         **expect_kwargs,
-    )  # type: ignore[call-arg]
+    )
     expectation.respond_with_response(
         Response(status=status_code, headers=response_headers),
         **response_kwargs,

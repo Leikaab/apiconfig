@@ -231,6 +231,7 @@ class TestPhase2CrossComponentIntegration:
         token_data = response.json()
 
         # Create mock auth with the received token
+        assert "access_token" in token_data
         mock_auth = MockBearerAuthWithRefresh(initial_token=token_data["access_token"])
         headers: Dict[str, str] = {}
         mock_auth.apply_auth(headers)

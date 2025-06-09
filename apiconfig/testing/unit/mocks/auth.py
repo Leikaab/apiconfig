@@ -216,6 +216,12 @@ class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
 class MockRefreshableAuthStrategy(MockAuthStrategy):
     """Mock auth strategy with refresh capabilities for testing."""
 
+    _refresh_lock: Optional[threading.Lock]
+    _concurrent_refreshes: int
+    _max_concurrent_refreshes: int
+    _callback_calls: int
+    _callback_errors: List[Exception]
+
     def __init__(
         self,
         initial_token: str = "mock_token",
@@ -256,6 +262,11 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         self._refresh_attempts = 0
         self._is_expired = False
         self._expiry_time: Optional[float] = None
+        self._refresh_lock = None
+        self._concurrent_refreshes = 0
+        self._max_concurrent_refreshes = 0
+        self._callback_calls = 0
+        self._callback_errors = []
 
     @property
     def refresh_attempts(self) -> int:
@@ -552,26 +563,26 @@ class AuthTestScenarioBuilder:
         strategy = MockBearerAuthWithRefresh(max_refresh_attempts=num_concurrent_refreshes + 5)
 
         # Add thread safety tracking
-        strategy._refresh_lock = threading.Lock()  # type: ignore[attr-defined]
-        strategy._concurrent_refreshes = 0  # type: ignore[attr-defined]
-        strategy._max_concurrent_refreshes = 0  # type: ignore[attr-defined]
+        strategy._refresh_lock = threading.Lock()
+        strategy._concurrent_refreshes = 0
+        strategy._max_concurrent_refreshes = 0
 
         original_refresh = strategy.refresh
 
         def thread_safe_refresh() -> Optional[TokenRefreshResult]:
-            with strategy._refresh_lock:  # type: ignore[attr-defined]
-                strategy._concurrent_refreshes += 1  # type: ignore[attr-defined]
-                strategy._max_concurrent_refreshes = max(  # type: ignore[attr-defined]
-                    strategy._max_concurrent_refreshes,  # type: ignore[attr-defined]
-                    strategy._concurrent_refreshes,  # type: ignore[attr-defined]
+            with strategy._refresh_lock:
+                strategy._concurrent_refreshes += 1
+                strategy._max_concurrent_refreshes = max(
+                    strategy._max_concurrent_refreshes,
+                    strategy._concurrent_refreshes,
                 )
 
             try:
                 result = original_refresh()
                 return result
             finally:
-                with strategy._refresh_lock:  # type: ignore[attr-defined]
-                    strategy._concurrent_refreshes -= 1  # type: ignore[attr-defined]
+                with strategy._refresh_lock:
+                    strategy._concurrent_refreshes -= 1
 
         strategy.refresh = thread_safe_refresh  # type: ignore[method-assign]
         return strategy
@@ -588,8 +599,8 @@ class AuthTestScenarioBuilder:
         strategy = MockRefreshableAuthStrategy()
 
         # Track callback usage
-        strategy._callback_calls = 0  # type: ignore[attr-defined]
-        strategy._callback_errors = []  # type: ignore[attr-defined]
+        strategy._callback_calls = 0
+        strategy._callback_errors = []
 
         original_get_refresh_callback = strategy.get_refresh_callback
 
@@ -599,11 +610,11 @@ class AuthTestScenarioBuilder:
                 return None
 
             def tracked_callback() -> None:
-                strategy._callback_calls += 1  # type: ignore[attr-defined]
+                strategy._callback_calls += 1
                 try:
                     return callback()
                 except Exception as e:
-                    strategy._callback_errors.append(e)  # type: ignore[attr-defined]
+                    strategy._callback_errors.append(e)
                     raise
 
             return tracked_callback

@@ -188,7 +188,8 @@ class BaseClient:
                     json=json_data if json_data is not None else None,
                     **kwargs,
                 )
-                return self._handle_response(response, method, url)
+                result: Union[JsonObject, JsonList] = self._handle_response(response, method, url)
+                return result
 
         except RequestError as e:
             raise HTTPUtilsError(f"Request failed for {method.value} {url}: {e}") from e

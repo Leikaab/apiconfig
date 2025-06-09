@@ -99,10 +99,10 @@ class TestMockRefreshableAuthStrategy:
         assert result is not None
         assert result["token_data"] is not None
         token_data = result["token_data"]
-        assert token_data["access_token"] == "initial_refreshed_1"
-        assert token_data["refresh_token"] == "refresh_token_new"
-        assert token_data["expires_in"] == 3600
-        assert token_data["token_type"] == "Bearer"
+        assert token_data.get("access_token") == "initial_refreshed_1"
+        assert token_data.get("refresh_token") == "refresh_token_new"
+        assert token_data.get("expires_in") == 3600
+        assert token_data.get("token_type") == "Bearer"
         assert result["config_updates"] is None
         assert strategy.current_token == "initial_refreshed_1"
         assert strategy._refresh_attempts == 1

@@ -3,6 +3,7 @@ from typing import Any, List, Mapping, Pattern, Tuple
 from werkzeug.wrappers import Request, Response
 
 class RequestHandler:
+
     def respond_with_json(
         self,
         response_json: Any,
@@ -10,6 +11,7 @@ class RequestHandler:
         headers: Mapping[str, str] | None = None,
         content_type: str = "application/json",
     ) -> None: ...
+
     def respond_with_response(self, response: Response, **kwargs: Any) -> None: ...
 
 class HTTPServer:
@@ -23,3 +25,4 @@ class HTTPServer:
         **kwargs: Any,
     ) -> RequestHandler: ...
     def url_for(self, suffix: str) -> str: ...
+

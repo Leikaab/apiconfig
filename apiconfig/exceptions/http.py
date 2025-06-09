@@ -6,7 +6,7 @@ exceptions where applicable.
 """
 
 import json
-from typing import Dict, List, Optional, Type, final
+from typing import Any, Dict, List, Optional, Type, cast, final
 
 from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
@@ -401,9 +401,12 @@ def create_api_client_error(
         if message is not None:
             return error_class(message, request=request, response=response)
         else:
-            # All subclasses have default message values, so we can call without message
-            # mypy doesn't understand this, so we use type: ignore
-            return error_class(request=request, response=response)  # type: ignore[call-arg]
+            # All subclasses define a default message, allowing instantiation
+            # without explicitly providing one.
+            return cast(
+                ApiClientError,
+                cast(Any, error_class)(request=request, response=response),
+            )
     elif 500 <= status_code < 600:
         if message:
             return ApiClientInternalServerError(message, status_code=status_code, request=request, response=response)

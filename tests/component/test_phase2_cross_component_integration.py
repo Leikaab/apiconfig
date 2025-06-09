@@ -201,7 +201,7 @@ class TestPhase2CrossComponentIntegration:
         callback()
 
         # Verify callback was tracked
-        assert crudclient_strategy._callback_calls == 1  # type: ignore[attr-defined]
+        assert crudclient_strategy._callback_calls == 1
 
         # Verify new token
         headers: Dict[str, str] = {}
@@ -231,6 +231,7 @@ class TestPhase2CrossComponentIntegration:
         token_data = response.json()
 
         # Create mock auth with the received token
+        assert "access_token" in token_data
         mock_auth = MockBearerAuthWithRefresh(initial_token=token_data["access_token"])
         headers: Dict[str, str] = {}
         mock_auth.apply_auth(headers)

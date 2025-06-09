@@ -94,7 +94,7 @@ def create_oneflow_client_config() -> ClientConfig:
         pytest.skip(f"Invalid timeout value in ONEFLOW_timeout: {e}")
 
     # Handle user email header if provided
-    headers = {}
+    headers: dict[str, str] = {}
     user_email = config.get("USER_EMAIL")
     if user_email:
         headers["x-oneflow-user-email"] = user_email

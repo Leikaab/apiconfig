@@ -7,7 +7,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import (
@@ -132,13 +132,12 @@ class TripletexSessionAuth(AuthStrategy):
                             f"Unexpected 'value' format in token response: {token_value_data}. " f"Full response: {response_data}"
                         )
 
-                    token_value_any = token_value_data.get("token")
-                    if not isinstance(token_value_any, str) or not token_value_any:  # Ensure it's a non-empty string
+                    token_value_any: Any = token_value_data.get("token")
+                    if not isinstance(token_value_any, str) or not token_value_any:
                         raise AuthStrategyError(
                             "Session token not found, not a string, or empty in Tripletex response. "
                             f"'value.token' was: {token_value_any!r}. Full response: {response_data}"
                         )
-                    # At this point, token_value_any is confirmed to be a non-empty string
                     token_value: str = token_value_any
 
                     # Set token expiration time (2 days from now)

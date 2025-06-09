@@ -109,9 +109,9 @@ def setup_multi_provider_manager(
     """
     providers: list[ConfigProvider] = []
     for name, data in config_sources:
-        providers.append(MemoryProvider(config_data=data))
-        # Store name as an attribute for testing
-        providers[-1].name = name  # type: ignore[union-attr]
+        provider = MemoryProvider(config_data=data)
+        setattr(provider, "name", name)
+        providers.append(provider)
     return ConfigManager(providers=providers)
 
 

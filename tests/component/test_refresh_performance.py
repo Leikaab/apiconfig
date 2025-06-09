@@ -79,7 +79,7 @@ class TestRefreshPerformance:
         assert result is not None
         token_data = result["token_data"]
         assert token_data is not None
-        assert token_data["access_token"] == "new_token_1"
+        assert token_data.get("access_token") == "new_token_1"
 
     def test_multiple_refresh_operations(self) -> None:
         """Test performance of multiple refresh operations."""

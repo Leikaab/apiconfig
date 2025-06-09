@@ -65,7 +65,7 @@ myst_enable_extensions = [
 myst_heading_anchors = 3  # Auto-generate heading anchors up to level 3
 
 templates_path = ["_templates"]
-exclude_patterns = []
+exclude_patterns: list[str] = []
 
 
 # -- Options for HTML output -------------------------------------------------

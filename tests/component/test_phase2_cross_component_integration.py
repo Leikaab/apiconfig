@@ -201,7 +201,7 @@ class TestPhase2CrossComponentIntegration:
         callback()
 
         # Verify callback was tracked
-        assert crudclient_strategy._callback_calls == 1  # type: ignore[attr-defined]
+        assert crudclient_strategy._callback_calls == 1
 
         # Verify new token
         headers: Dict[str, str] = {}

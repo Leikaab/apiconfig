@@ -516,7 +516,7 @@ class MockAuthErrorInjector:
                 raise TokenRefreshError("Mock intermittent failure")
             return original_refresh()
 
-        strategy.refresh = intermittent_refresh  # type: ignore[method-assign]
+        setattr(strategy, "refresh", intermittent_refresh)
         return strategy
 
 
@@ -570,7 +570,9 @@ class AuthTestScenarioBuilder:
         original_refresh = strategy.refresh
 
         def thread_safe_refresh() -> Optional[TokenRefreshResult]:
-            with strategy._refresh_lock:
+            lock = strategy._refresh_lock
+            assert lock is not None
+            with lock:
                 strategy._concurrent_refreshes += 1
                 strategy._max_concurrent_refreshes = max(
                     strategy._max_concurrent_refreshes,
@@ -581,10 +583,11 @@ class AuthTestScenarioBuilder:
                 result = original_refresh()
                 return result
             finally:
-                with strategy._refresh_lock:
+                assert lock is not None
+                with lock:
                     strategy._concurrent_refreshes -= 1
 
-        strategy.refresh = thread_safe_refresh  # type: ignore[method-assign]
+        setattr(strategy, "refresh", thread_safe_refresh)
         return strategy
 
     @staticmethod
@@ -619,7 +622,7 @@ class AuthTestScenarioBuilder:
 
             return tracked_callback
 
-        strategy.get_refresh_callback = tracked_get_refresh_callback  # type: ignore[method-assign]
+        setattr(strategy, "get_refresh_callback", tracked_get_refresh_callback)
         return strategy
 
 

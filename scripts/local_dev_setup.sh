@@ -23,21 +23,16 @@ fi
 # Configure Poetry like in devcontainer
 poetry config virtualenvs.in-project true
 poetry config installer.parallel true
+poetry config virtualenvs.create true --local
 
-# Install dependencies with dev extras
+# Install dependencies with dev extras (matching devcontainer Dockerfile)
 echo "📦 Installing dependencies..."
 poetry install --with dev --no-interaction --no-ansi
 
-# Install pre-commit hooks
+# Install pre-commit hooks (matching devcontainer postCreateCommand)
 echo "🔗 Installing pre-commit hooks..."
 poetry run pre-commit install -t pre-commit
 poetry run pre-commit install -t pre-push
-
-# Authenticate GitHub CLI if available and token provided
-if command -v gh >/dev/null 2>&1 && [ -n "${GITHUB_TOKEN:-}" ]; then
-    echo "$GITHUB_TOKEN" | gh auth login --with-token
-    gh auth status || true
-fi
 
 # Install act for running GitHub Actions locally if not present
 if ! command -v act >/dev/null 2>&1; then
@@ -47,7 +42,7 @@ if ! command -v act >/dev/null 2>&1; then
     echo "-P ubuntu-latest=catthehacker/ubuntu:full-latest" > "$HOME/.config/act/actrc"
 fi
 
-# Ensure .env is loaded for new shells
+# Ensure .env is loaded for new shells (matching devcontainer postCreateCommand)
 ENV_MARKER="# Load workspace .env"
 if ! grep -qF "$ENV_MARKER" "$HOME/.bashrc" 2>/dev/null; then
     cat <<'BASH' >> "$HOME/.bashrc"

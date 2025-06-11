@@ -73,6 +73,11 @@ class InMemoryTokenStorage(TokenStorage):
         """Initialize the in-memory storage dictionary."""
         self._storage: Dict[str, TokenData] = {}
 
+    @property
+    def storage(self) -> Dict[str, TokenData]:
+        """Return the internal storage dictionary."""
+        return self._storage
+
     def store_token(self, key: str, token_data: TokenData) -> None:
         """
         Store token data in the internal dictionary.

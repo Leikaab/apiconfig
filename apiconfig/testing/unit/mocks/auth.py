@@ -4,7 +4,7 @@
 import random
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.auth.strategies.api_key import ApiKeyAuth
@@ -12,7 +12,12 @@ from apiconfig.auth.strategies.basic import BasicAuth
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import TokenRefreshError
-from apiconfig.types import AuthRefreshCallback, TokenRefreshResult
+from apiconfig.types import (
+    AuthRefreshCallback,
+    QueryParamType,
+    QueryParamValueType,
+    TokenRefreshResult,
+)
 
 
 class MockAuthStrategy(AuthStrategy):
@@ -24,14 +29,14 @@ class MockAuthStrategy(AuthStrategy):
     """
 
     override_headers: Dict[str, str]
-    override_params: Dict[str, Any]
+    override_params: Dict[str, QueryParamValueType]
     raise_exception: Optional[Exception]
 
     def __init__(
         self,
         *,
         override_headers: Optional[Dict[str, str]] = None,
-        override_params: Optional[Dict[str, Any]] = None,
+        override_params: Optional[Mapping[str, QueryParamValueType]] = None,
         raise_exception: Optional[Exception] = None,
     ) -> None:
         """Initialize the MockAuthStrategy.
@@ -45,15 +50,15 @@ class MockAuthStrategy(AuthStrategy):
         raise_exception
             Optional exception instance to raise when prepare_request is called.
         """
-        self.override_headers = override_headers if override_headers is not None else {}
-        self.override_params = override_params if override_params is not None else {}
+        self.override_headers = dict(override_headers) if override_headers is not None else {}
+        self.override_params = dict(override_params) if override_params is not None else {}
         self.raise_exception = raise_exception
 
     def prepare_request(
         self,
         headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, str], Dict[str, Any]]:
+        params: Optional[QueryParamType] = None,
+    ) -> Tuple[Dict[str, str], QueryParamType]:
         """Prepare request headers and parameters, applying mock configurations.
 
         If `raise_exception` was provided during initialization, it will be raised.
@@ -69,7 +74,7 @@ class MockAuthStrategy(AuthStrategy):
 
         Returns
         -------
-        Tuple[Dict[str, str], Dict[str, Any]]
+        Tuple[Dict[str, str], QueryParamType]
             A tuple containing the prepared headers and parameters dictionaries.
 
         Raises
@@ -80,10 +85,10 @@ class MockAuthStrategy(AuthStrategy):
         if self.raise_exception:
             raise self.raise_exception
 
-        final_headers = headers.copy() if headers else {}
+        final_headers = dict(headers) if headers else {}
         final_headers.update(self.override_headers)
 
-        final_params = params.copy() if params else {}
+        final_params: Dict[str, QueryParamValueType] = dict(params) if params else {}
         final_params.update(self.override_params)
 
         return final_headers, final_params
@@ -93,9 +98,9 @@ class MockAuthStrategy(AuthStrategy):
         current_headers = headers if headers is not None else {}
         return current_headers
 
-    def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def prepare_request_params(self, params: Optional[QueryParamType] = None) -> QueryParamType:
         """Provide a dummy implementation required by AuthStrategy ABC."""
-        current_params = params if params is not None else {}
+        current_params: Dict[str, QueryParamValueType] = dict(params) if params is not None else {}
         return current_params
 
 

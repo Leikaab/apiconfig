@@ -274,29 +274,41 @@ class RedactingFormatter(logging.Formatter):
         return msg
 
 
-def redact_structured_helper(formatter: "RedactingFormatter", msg: Any, content_type: Any) -> str:
+def redact_structured_helper(formatter: RedactingFormatter, msg: Any, content_type: Any) -> str:
     """Public helper to call ``RedactingFormatter._redact_structured`` for tests."""
-    return formatter._redact_structured(msg, content_type)
+    return formatter._redact_structured(msg, content_type)  # pyright: ignore[reportPrivateUsage]
 
 
-def redact_message_helper(formatter: "RedactingFormatter", record: logging.LogRecord) -> None:
+def redact_message_helper(formatter: RedactingFormatter, record: logging.LogRecord) -> None:
     """Public helper to call ``RedactingFormatter._redact_message`` for tests."""
-    formatter._redact_message(record)
+    formatter._redact_message(record)  # pyright: ignore[reportPrivateUsage]
 
 
 def format_exception_text_helper(
-    formatter: "DetailedFormatter",
+    formatter: DetailedFormatter,
+
     formatted: str,
     record: logging.LogRecord,
 ) -> str:
     """Public helper to call ``DetailedFormatter._format_exception_text`` for tests."""
-    return formatter._format_exception_text(formatted, record)
+    return formatter._format_exception_text(formatted, record)  # pyright: ignore[reportPrivateUsage]
 
 
 def format_stack_info_helper(
-    formatter: "DetailedFormatter",
+    formatter: DetailedFormatter,
+
     formatted: str,
     record: logging.LogRecord,
 ) -> str:
     """Public helper to call ``DetailedFormatter._format_stack_info`` for tests."""
-    return formatter._format_stack_info(formatted, record)
+    return formatter._format_stack_info(formatted, record)  # pyright: ignore[reportPrivateUsage]
+
+
+__all__: list[str] = [
+    "RedactingFormatter",
+    "redact_structured_helper",
+    "redact_message_helper",
+    "format_exception_text_helper",
+    "format_stack_info_helper",
+]
+

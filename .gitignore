@@ -357,8 +357,4 @@ models/
 .act/
 act_logs/
 changes.diff
-
-# act (GitHub Actions runner) temporary files
-.act/
-act_logs/
-changes.diff
+bin/

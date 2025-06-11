@@ -44,25 +44,25 @@ def test_create_valid_client_config_defaults() -> None:
     assert config.log_request_body is False
 
 
-@pytest.mark.parametrize(
-    "key,value,expected",
-    [
-        ("hostname", "https://override.com", "https://override.com"),
-        ("version", "v2", "v2"),
-        ("timeout", 45, 45),
-        ("timeout", 12.5, 12),
-        ("timeout", "99", 99),
-        ("retries", 7, 7),
-        ("retries", 2.0, 2),
-        ("retries", "5", 5),
-        ("headers", {"X-Test": "1"}, {"X-Test": "1"}),
-        ("auth_strategy", DummyAuthStrategy(), DummyAuthStrategy),
-        ("log_request_body", True, True),
-        ("log_request_body", False, False),
-        ("log_response_body", True, True),
-        ("log_response_body", False, False),
-    ],
-)
+VALID_CLIENT_CONFIG_OVERRIDES: list[tuple[str, Any, Any]] = [
+    ("hostname", "https://override.com", "https://override.com"),
+    ("version", "v2", "v2"),
+    ("timeout", 45, 45),
+    ("timeout", 12.5, 12),
+    ("timeout", "99", 99),
+    ("retries", 7, 7),
+    ("retries", 2.0, 2),
+    ("retries", "5", 5),
+    ("headers", {"X-Test": "1"}, {"X-Test": "1"}),
+    ("auth_strategy", DummyAuthStrategy(), DummyAuthStrategy),
+    ("log_request_body", True, True),
+    ("log_request_body", False, False),
+    ("log_response_body", True, True),
+    ("log_response_body", False, False),
+]
+
+
+@pytest.mark.parametrize("key,value,expected", VALID_CLIENT_CONFIG_OVERRIDES)
 def test_create_valid_client_config_overrides(key: str, value: Any, expected: Any) -> None:
     """
     Test create_valid_client_config with various valid overrides.
@@ -133,14 +133,14 @@ def unknown_reason(d: Dict[str, Any]) -> bool:
     return "hostname" in d and d.get("timeout") == 30
 
 
-@pytest.mark.parametrize(
-    "reason,expected_mod",
-    [
-        ("missing_hostname", missing_hostname),
-        ("invalid_timeout", invalid_timeout),
-        ("unknown_reason", unknown_reason),
-    ],
-)
+INVALID_CLIENT_CONFIG_REASONS: list[tuple[str, Callable[[Dict[str, Any]], bool]]] = [
+    ("missing_hostname", missing_hostname),
+    ("invalid_timeout", invalid_timeout),
+    ("unknown_reason", unknown_reason),
+]
+
+
+@pytest.mark.parametrize("reason,expected_mod", INVALID_CLIENT_CONFIG_REASONS)
 def test_create_invalid_client_config_reasons(reason: str, expected_mod: Callable[[Dict[str, Any]], bool]) -> None:
     """
     Test create_invalid_client_config for different reasons.
@@ -160,16 +160,16 @@ def test_create_invalid_client_config_overrides_applied() -> None:
     assert "hostname" not in data
 
 
-@pytest.mark.parametrize(
-    "auth_type,expected",
-    [
-        ("basic", {"username": "testuser", "password": "testpassword"}),
-        ("bearer", {"token": "testbearertoken"}),
-        ("api_key", {"api_key": "testapikey", "header_name": "X-API-Key"}),
-        ("unknown", {}),
-        ("", {}),
-    ],
-)
+AUTH_CREDENTIALS_DATA: list[tuple[str, Dict[str, Any]]] = [
+    ("basic", {"username": "testuser", "password": "testpassword"}),
+    ("bearer", {"token": "testbearertoken"}),
+    ("api_key", {"api_key": "testapikey", "header_name": "X-API-Key"}),
+    ("unknown", {}),
+    ("", {}),
+]
+
+
+@pytest.mark.parametrize("auth_type,expected", AUTH_CREDENTIALS_DATA)
 def test_create_auth_credentials(auth_type: str, expected: Dict[str, Any]) -> None:
     """
     Test create_auth_credentials for all defined and undefined types.
@@ -178,16 +178,16 @@ def test_create_auth_credentials(auth_type: str, expected: Dict[str, Any]) -> No
     assert creds == expected
 
 
-@pytest.mark.parametrize(
-    "source,expected_keys",
-    [
-        ("env", {"APICONFIG_HOSTNAME", "APICONFIG_TIMEOUT"}),
-        ("file", {"hostname", "max_retries", "auth"}),
-        ("memory", {"hostname", "api_version", "user_agent"}),
-        ("unknown", set()),
-        ("", set()),
-    ],
-)
+PROVIDER_DICT_DATA: list[tuple[str, set[str]]] = [
+    ("env", {"APICONFIG_HOSTNAME", "APICONFIG_TIMEOUT"}),
+    ("file", {"hostname", "max_retries", "auth"}),
+    ("memory", {"hostname", "api_version", "user_agent"}),
+    ("unknown", set()),
+    ("", set()),
+]
+
+
+@pytest.mark.parametrize("source,expected_keys", PROVIDER_DICT_DATA)
 def test_create_provider_dict(source: str, expected_keys: set[str]) -> None:
     """
     Test create_provider_dict for all defined and undefined sources.

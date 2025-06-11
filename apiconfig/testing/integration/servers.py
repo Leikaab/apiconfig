@@ -18,7 +18,7 @@ import json
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pytest_httpserver import HTTPServer, RequestHandler
-from werkzeug.wrappers import Request, Response
+from werkzeug.wrappers import Response
 
 
 def configure_mock_response(
@@ -165,12 +165,12 @@ def assert_request_received(
     AssertionError
         If the expected request(s) were not found in the server log.
     """
-    matching_requests: List[Tuple[Request, Response]] = []
+    matching_requests: List[Tuple[Any, Response]] = []
     lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
-    log: list[tuple[Request, Response]] = httpserver.log
+    log = httpserver.log
     for entry in log:
-        request: Request = entry[0]  # entry is a tuple (request, response)
+        request = entry[0]  # entry is a tuple (request, response)
         if request.path == path and request.method == method:
             match = True
             # Check headers

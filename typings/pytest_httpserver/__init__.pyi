@@ -1,4 +1,4 @@
-from typing import Any, Iterable, List, Mapping, Pattern, Protocol, Tuple
+from typing import Any, Iterable, List, Mapping, Protocol, Tuple
 
 from werkzeug.wrappers import Response
 
@@ -11,6 +11,9 @@ class _ArgsMapping(Protocol):
 class Request(Protocol):
     headers: _HeaderMapping
     args: _ArgsMapping
+    path: str
+    method: str
+    def get_data(self, *, as_text: bool = ...) -> str: ...
 
 class RequestHandler:
     def respond_with_json(self, obj: Any, *, status: int = ..., headers: Mapping[str, str] | None = ...) -> None: ...

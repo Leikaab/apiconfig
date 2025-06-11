@@ -274,12 +274,12 @@ class RedactingFormatter(logging.Formatter):
 
 def redact_structured_helper(formatter: RedactingFormatter, msg: Any, content_type: Any) -> str:
     """Public helper to call ``RedactingFormatter._redact_structured`` for tests."""
-    return formatter._redact_structured(msg, content_type)
+    return formatter._redact_structured(msg, content_type)  # pyright: ignore[reportPrivateUsage]
 
 
 def redact_message_helper(formatter: RedactingFormatter, record: logging.LogRecord) -> None:
     """Public helper to call ``RedactingFormatter._redact_message`` for tests."""
-    formatter._redact_message(record)
+    formatter._redact_message(record)  # pyright: ignore[reportPrivateUsage]
 
 
 __all__: list[str] = [

@@ -30,12 +30,12 @@ class TestMockRefreshableAuthStrategy:
         assert strategy.initial_token == "mock_token"
         assert strategy.current_token == "mock_token"
         assert strategy.refresh_token == "mock_refresh"
-        assert strategy._can_refresh is True
-        assert strategy._refresh_success is True
-        assert strategy._refresh_delay == 0.0
-        assert strategy._max_refresh_attempts == 3
-        assert strategy._refresh_attempts == 0
-        assert strategy._is_expired is False
+        assert strategy._can_refresh is True  # pyright: ignore[reportPrivateUsage]
+        assert strategy._refresh_success is True  # pyright: ignore[reportPrivateUsage]
+        assert strategy._refresh_delay == 0.0  # pyright: ignore[reportPrivateUsage]
+        assert strategy._max_refresh_attempts == 3  # pyright: ignore[reportPrivateUsage]
+        assert strategy._refresh_attempts == 0  # pyright: ignore[reportPrivateUsage]
+        assert strategy._is_expired is False  # pyright: ignore[reportPrivateUsage]
 
     def test_init_custom_values(self) -> None:
         """Test initialization with custom values."""
@@ -51,10 +51,10 @@ class TestMockRefreshableAuthStrategy:
         assert strategy.initial_token == "custom_token"
         assert strategy.current_token == "custom_token"
         assert strategy.refresh_token == "custom_refresh"
-        assert strategy._can_refresh is False
-        assert strategy._refresh_success is False
-        assert strategy._refresh_delay == 1.0
-        assert strategy._max_refresh_attempts == 5
+        assert strategy._can_refresh is False  # pyright: ignore[reportPrivateUsage]
+        assert strategy._refresh_success is False  # pyright: ignore[reportPrivateUsage]
+        assert strategy._refresh_delay == 1.0  # pyright: ignore[reportPrivateUsage]
+        assert strategy._max_refresh_attempts == 5  # pyright: ignore[reportPrivateUsage]
 
     def test_can_refresh_true_when_enabled_and_under_limit(self) -> None:
         """Test can_refresh returns True when enabled and under attempt limit."""
@@ -69,7 +69,7 @@ class TestMockRefreshableAuthStrategy:
     def test_can_refresh_false_when_over_limit(self) -> None:
         """Test can_refresh returns False when over attempt limit."""
         strategy = MockRefreshableAuthStrategy(max_refresh_attempts=1)
-        strategy._refresh_attempts = 1
+        strategy._refresh_attempts = 1  # pyright: ignore[reportPrivateUsage]
         assert strategy.can_refresh() is False
 
     def test_is_expired_default_false(self) -> None:
@@ -105,7 +105,7 @@ class TestMockRefreshableAuthStrategy:
         assert token_data.get("token_type") == "Bearer"
         assert result["config_updates"] is None
         assert strategy.current_token == "initial_refreshed_1"
-        assert strategy._refresh_attempts == 1
+        assert strategy._refresh_attempts == 1  # pyright: ignore[reportPrivateUsage]
         assert strategy.is_expired() is False
 
     def test_refresh_with_delay(self) -> None:
@@ -139,7 +139,7 @@ class TestMockRefreshableAuthStrategy:
         result1 = strategy.refresh()
         result2 = strategy.refresh()
 
-        assert strategy._refresh_attempts == 2
+        assert strategy._refresh_attempts == 2  # pyright: ignore[reportPrivateUsage]
         assert result1 is not None
         assert result1["token_data"] is not None
         assert result1["token_data"]["access_token"] == "mock_token_refreshed_1"
@@ -174,7 +174,7 @@ class TestMockRefreshableAuthStrategy:
         callback()
 
         assert strategy.current_token != initial_token
-        assert strategy._refresh_attempts == 1
+        assert strategy._refresh_attempts == 1  # pyright: ignore[reportPrivateUsage]
 
     def test_refresh_callback_raises_on_none_result(self) -> None:
         """Test refresh callback raises error when refresh returns None."""
@@ -380,11 +380,11 @@ class TestAuthTestScenarioBuilder:
         strategy = AuthTestScenarioBuilder.create_concurrent_refresh_scenario()
 
         # Check that thread safety attributes are added
-        assert hasattr(strategy, "_refresh_lock")
-        assert hasattr(strategy, "_concurrent_refreshes")
-        assert hasattr(strategy, "_max_concurrent_refreshes")
-        assert getattr(strategy, "_concurrent_refreshes", None) == 0
-        assert getattr(strategy, "_max_concurrent_refreshes", None) == 0
+        assert hasattr(strategy, "_refresh_lock")  # pyright: ignore[reportPrivateUsage]
+        assert hasattr(strategy, "_concurrent_refreshes")  # pyright: ignore[reportPrivateUsage]
+        assert hasattr(strategy, "_max_concurrent_refreshes")  # pyright: ignore[reportPrivateUsage]
+        assert getattr(strategy, "_concurrent_refreshes", None) == 0  # pyright: ignore[reportPrivateUsage]
+        assert getattr(strategy, "_max_concurrent_refreshes", None) == 0  # pyright: ignore[reportPrivateUsage]
 
     def test_concurrent_refresh_tracking(self) -> None:
         """Test concurrent refresh tracking functionality."""
@@ -436,7 +436,7 @@ class TestAuthTestScenarioBuilder:
         strategy = AuthTestScenarioBuilder.create_crudclient_integration_scenario()
 
         # Make refresh fail
-        strategy._refresh_success = False
+        strategy._refresh_success = False  # pyright: ignore[reportPrivateUsage]
 
         callback = strategy.get_refresh_callback()
         assert callback is not None
@@ -771,7 +771,7 @@ class TestCrudclientIntegrationErrorHandling:
         strategy = AuthTestScenarioBuilder.create_crudclient_integration_scenario()
 
         # Make the original get_refresh_callback return None
-        strategy._can_refresh = False
+        strategy._can_refresh = False  # pyright: ignore[reportPrivateUsage]
 
         callback = strategy.get_refresh_callback()
         assert callback is None

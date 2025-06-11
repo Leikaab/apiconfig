@@ -16,8 +16,8 @@ class TestBearerAuth:
         """Test initialization with a valid token only."""
         auth = BearerAuth(access_token="valid_token")
         assert auth.access_token == "valid_token"
-        assert auth._expires_at is None
-        assert auth._http_request_callable is None
+        assert auth._expires_at is None  # pyright: ignore[reportPrivateUsage]
+        assert auth._http_request_callable is None  # pyright: ignore[reportPrivateUsage]
 
     def test_init_with_all_parameters(self) -> None:
         """Test initialization with all parameters."""
@@ -27,8 +27,8 @@ class TestBearerAuth:
         auth = BearerAuth(access_token="valid_token", expires_at=expires_at, http_request_callable=http_callable)
 
         assert auth.access_token == "valid_token"
-        assert auth._expires_at == expires_at
-        assert auth._http_request_callable == http_callable
+        assert auth._expires_at == expires_at  # pyright: ignore[reportPrivateUsage]
+        assert auth._http_request_callable == http_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_init_rejects_empty_token(self) -> None:
         """Test that BearerAuth rejects empty tokens."""

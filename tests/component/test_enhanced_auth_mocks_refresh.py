@@ -226,7 +226,7 @@ class TestEnhancedAuthMocksRefresh:
         # Check results
         assert len(results) == 3
         assert len(errors) == 0
-        assert strategy._max_concurrent_refreshes >= 1
+        assert strategy._max_concurrent_refreshes >= 1  # pyright: ignore[reportPrivateUsage]
 
     def test_auth_test_scenario_builder_crudclient_integration(self) -> None:
         """Test AuthTestScenarioBuilder crudclient integration scenario."""
@@ -245,8 +245,8 @@ class TestEnhancedAuthMocksRefresh:
         callback()
 
         # Check tracking
-        assert strategy._callback_calls == 2
-        assert len(strategy._callback_errors) == 0
+        assert strategy._callback_calls == 2  # pyright: ignore[reportPrivateUsage]
+        assert len(strategy._callback_errors) == 0  # pyright: ignore[reportPrivateUsage]
 
     def test_mock_http_request_callable(self) -> None:
         """Test MockHttpRequestCallable functionality."""

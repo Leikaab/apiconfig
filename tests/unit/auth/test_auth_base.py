@@ -151,8 +151,10 @@ class TestAuthStrategy:
 
         assert result is not None
         assert "token_data" in result
-        assert result["token_data"]["access_token"] == "new-token"  # type: ignore
-        assert result["token_data"]["expires_in"] == 3600  # type: ignore
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "new-token"
+        assert token_data.get("expires_in") == 3600
 
     def test_refreshable_strategy_refresh_raises_when_cannot_refresh(self) -> None:
         """Test that RefreshableAuthStrategy.refresh raises NotImplementedError when cannot refresh."""

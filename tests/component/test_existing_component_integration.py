@@ -54,7 +54,7 @@ class TestExistingComponentIntegration:
 
         # Simulate saving updated token data back to storage
         assert result is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         updated_token_data = {
             "access_token": token_data.get("access_token"),
@@ -135,7 +135,7 @@ class TestExistingComponentIntegration:
         # Test refresh and storage update
         result = auth.refresh()
         assert result is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         assert token_data.get("access_token") == "refreshed_api_key"
 

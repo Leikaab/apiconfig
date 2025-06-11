@@ -97,13 +97,13 @@ class TestMockRefreshableAuthStrategy:
         result = strategy.refresh()
 
         assert result is not None
-        assert result["token_data"] is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
+        assert token_data is not None
         assert token_data.get("access_token") == "initial_refreshed_1"
         assert token_data.get("refresh_token") == "refresh_token_new"
         assert token_data.get("expires_in") == 3600
         assert token_data.get("token_type") == "Bearer"
-        assert result["config_updates"] is None
+        assert result.get("config_updates") is None
         assert strategy.current_token == "initial_refreshed_1"
         assert strategy._refresh_attempts == 1
         assert strategy.is_expired() is False
@@ -141,11 +141,13 @@ class TestMockRefreshableAuthStrategy:
 
         assert strategy._refresh_attempts == 2
         assert result1 is not None
-        assert result1["token_data"] is not None
-        assert result1["token_data"]["access_token"] == "mock_token_refreshed_1"
+        token_data1 = result1.get("token_data")
+        assert token_data1 is not None
+        assert token_data1.get("access_token") == "mock_token_refreshed_1"
         assert result2 is not None
-        assert result2["token_data"] is not None
-        assert result2["token_data"]["access_token"] == "mock_token_refreshed_2"
+        token_data2 = result2.get("token_data")
+        assert token_data2 is not None
+        assert token_data2.get("access_token") == "mock_token_refreshed_2"
 
     def test_get_refresh_callback_when_can_refresh(self) -> None:
         """Test get_refresh_callback returns callback when refresh is possible."""

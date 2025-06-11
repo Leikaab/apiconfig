@@ -189,7 +189,7 @@ class TestRaceConditionPrevention:
             )
 
             # Take measurements at specific intervals
-            measurements = []
+            measurements: list[tuple[float, bool]] = []
             start_time = time.time()
 
             # Measure every 10ms for 100ms

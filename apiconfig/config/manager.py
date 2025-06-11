@@ -1,26 +1,37 @@
 """Manages loading configuration from multiple providers."""
 
 import logging
-from typing import Any, Dict, Mapping, Protocol, Sequence, runtime_checkable
+from typing import (
+    Any,
+    Dict,
+    Mapping,
+    Protocol,
+    Sequence,
+    TypeAlias,
+    TypeVar,
+    runtime_checkable,
+)
 
 from apiconfig.exceptions.config import ConfigLoadError
 
+_TConfig = TypeVar("_TConfig", bound=Mapping[str, Any], covariant=True)
+
 
 @runtime_checkable
-class _SupportsLoad(Protocol):
+class _SupportsLoad(Protocol[_TConfig]):
     """Protocol for providers implementing ``load``."""
 
-    def load(self) -> Mapping[str, Any]: ...
+    def load(self) -> _TConfig: ...
 
 
 @runtime_checkable
-class _SupportsGetConfig(Protocol):
+class _SupportsGetConfig(Protocol[_TConfig]):
     """Protocol for providers implementing ``get_config``."""
 
-    def get_config(self) -> Mapping[str, Any]: ...
+    def get_config(self) -> _TConfig: ...
 
 
-ConfigProvider = _SupportsLoad | _SupportsGetConfig
+ConfigProvider: TypeAlias = _SupportsLoad[Mapping[str, Any]] | _SupportsGetConfig[Mapping[str, Any]]
 
 logger: logging.Logger = logging.getLogger(__name__)
 

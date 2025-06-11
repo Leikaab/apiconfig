@@ -1,7 +1,7 @@
 """Common base client for API interactions using apiconfig patterns."""
 
 import json
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, Optional, cast
 
 if TYPE_CHECKING:
     from httpx import Client, HTTPStatusError, RequestError, Response
@@ -80,7 +80,7 @@ class BaseClient:
             headers.update(auth_headers)
         return headers
 
-    def _handle_response(self, response: Response, method: HttpMethod, url: str) -> Union[JsonObject, JsonList]:
+    def _handle_response(self, response: Response, method: HttpMethod, url: str) -> JsonObject | JsonList:
         """
         Handle HTTP response using apiconfig utilities.
 
@@ -95,7 +95,7 @@ class BaseClient:
 
         Returns
         -------
-        Union[JsonObject, JsonList]
+        JsonObject | JsonList
             Parsed JSON response data as either an object or list.
 
         Raises
@@ -115,9 +115,12 @@ class BaseClient:
             return cast(JsonObject, {})
 
         try:
-            # Parse JSON directly to handle both objects and arrays
-            result = json.loads(response.text)
-            return result if isinstance(result, (dict, list)) else cast(JsonObject, {})  # Explicitly cast to expected types
+            raw = json.loads(response.text)
+            if isinstance(raw, dict):
+                return cast(JsonObject, raw)
+            if isinstance(raw, list):
+                return cast(JsonList, raw)
+            return cast(JsonObject, {})
         except json.JSONDecodeError as e:
             raise JSONDecodeError(
                 f"Failed to decode JSON response from {method.value} {url}. "
@@ -138,7 +141,7 @@ class BaseClient:
         params: Optional[QueryParamType] = None,
         json_data: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
-    ) -> Union[JsonObject, JsonList]:
+    ) -> JsonObject | JsonList:
         """
         Make an authenticated request to the API using httpx.
 
@@ -157,7 +160,7 @@ class BaseClient:
 
         Returns
         -------
-        Union[JsonObject, JsonList]
+        JsonObject | JsonList
             The JSON response as either an object or list.
 
         Raises
@@ -188,7 +191,7 @@ class BaseClient:
                     json=json_data if json_data is not None else None,
                     **kwargs,
                 )
-                result: Union[JsonObject, JsonList] = self._handle_response(response, method, url)
+                result = self._handle_response(response, method, url)
                 return result
 
         except RequestError as e:

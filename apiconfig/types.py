@@ -112,6 +112,16 @@ AuthCredentials: TypeAlias = Any
 TokenStorageStrategy: TypeAlias = Any
 """Placeholder type alias for token storage strategy implementations."""
 
+# Data structure for persisted authentication tokens
+TokenData: TypeAlias = Dict[str, Any]
+"""Dictionary structure for stored authentication tokens.
+
+This alias represents the data saved by :class:`apiconfig.auth.token.storage.TokenStorage`
+implementations. Typical keys include ``access_token`` and ``refresh_token``,
+along with optional metadata such as ``expires_at``. Implementations may store
+additional fields as required by their authentication workflows.
+"""
+
 TokenRefreshCallable: TypeAlias = Callable[..., Any]
 """Placeholder type alias for token refresh logic callables."""
 
@@ -248,6 +258,7 @@ __all__ = [
     "ConfigProviderCallable",
     "AuthCredentials",
     "TokenStorageStrategy",
+    "TokenData",
     "TokenRefreshCallable",
     "RefreshedTokenData",
     "TokenRefreshResult",

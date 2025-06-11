@@ -126,18 +126,20 @@ class TripletexSessionAuth(AuthStrategy):
                             f"Failed to decode JSON response from token endpoint: {e}. " f"Response body: {response_body_str}"
                         ) from e
 
-                    token_value_data = response_data.get("value")
-                    if not isinstance(token_value_data, dict):
+                    token_value_data_untyped = response_data.get("value")
+                    if not isinstance(token_value_data_untyped, dict):
                         raise AuthStrategyError(
-                            f"Unexpected 'value' format in token response: {token_value_data}. " f"Full response: {response_data}"
+                            f"Unexpected 'value' format in token response: {token_value_data_untyped}. " f"Full response: {response_data}"
                         )
 
-                    token_value_any: Any = token_value_data.get("token")
-                    if not isinstance(token_value_any, str) or not token_value_any:
+                    token_value_data: dict[str, Any] = token_value_data_untyped
+                    token_value_any_untyped = token_value_data.get("token")
+                    if not isinstance(token_value_any_untyped, str) or not token_value_any_untyped:
                         raise AuthStrategyError(
                             "Session token not found, not a string, or empty in Tripletex response. "
-                            f"'value.token' was: {token_value_any!r}. Full response: {response_data}"
+                            f"'value.token' was: {token_value_any_untyped!r}. Full response: {response_data}"
                         )
+                    token_value_any: str = token_value_any_untyped
                     token_value: str = token_value_any
 
                     # Set token expiration time (2 days from now)

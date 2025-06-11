@@ -7,7 +7,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Any, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import (
@@ -132,14 +132,18 @@ class TripletexSessionAuth(AuthStrategy):
                             f"Unexpected 'value' format in token response: {token_value_data_untyped}. " f"Full response: {response_data}"
                         )
 
-                    token_value_data: dict[str, Any] = token_value_data_untyped
-                    token_value_any_untyped = token_value_data.get("token")
+                    if "token" not in token_value_data_untyped:
+                        raise AuthStrategyError(f"'token' missing from Tripletex response value: {token_value_data_untyped}.")
+
+                    token_value_any_untyped = token_value_data_untyped["token"]
                     if not isinstance(token_value_any_untyped, str) or not token_value_any_untyped:
                         raise AuthStrategyError(
                             "Session token not found, not a string, or empty in Tripletex response. "
                             f"'value.token' was: {token_value_any_untyped!r}. Full response: {response_data}"
                         )
-                    token_value_any: str = token_value_any_untyped
+
+                    token_value_data: Dict[str, str] = {"token": token_value_any_untyped}
+                    token_value_any: str = token_value_data["token"]
                     token_value: str = token_value_any
 
                     # Set token expiration time (2 days from now)

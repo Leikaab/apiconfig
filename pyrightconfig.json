@@ -16,6 +16,9 @@
     "dist",
     "*.egg-info"
   ],
+  "ignore": [
+    ".venv"
+  ],
   "typeCheckingMode": "strict",
   "pythonVersion": "3.11",
   "venvPath": ".",

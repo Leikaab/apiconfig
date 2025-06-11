@@ -33,7 +33,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called correctly
-        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=False)
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET")
 
         # Check that respond_with_response was called correctly
         mock_expectation.respond_with_response.assert_called_once()
@@ -140,7 +140,6 @@ class TestConfigureMockResponse:
         mock_httpserver.expect_request.assert_called_once_with(
             uri="/test",
             method="GET",
-            ordered=False,
             headers={"Authorization": "Bearer token"},
         )
 
@@ -161,7 +160,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the query string
-        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=False, query_string="page=1&limit=10")
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", query_string="page=1&limit=10")
 
     def test_configure_mock_response_with_match_json(self) -> None:
         """Test configure_mock_response with match_json."""
@@ -180,7 +179,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the json
-        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", ordered=False, json={"name": "test"})
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", json={"name": "test"})
 
     def test_configure_mock_response_with_match_data(self) -> None:
         """Test configure_mock_response with match_data."""
@@ -199,7 +198,7 @@ class TestConfigureMockResponse:
         )
 
         # Check that expect_request was called with the data
-        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", ordered=False, data="name=test")
+        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="POST", data="name=test")
 
     def test_configure_mock_response_with_ordered(self) -> None:
         """Test configure_mock_response with ordered=True."""
@@ -217,8 +216,8 @@ class TestConfigureMockResponse:
             ordered=True,
         )
 
-        # Check that expect_request was called with ordered=True
-        mock_httpserver.expect_request.assert_called_once_with(uri="/test", method="GET", ordered=True)
+        # Check that expect_ordered_request was called with the correct args
+        mock_httpserver.expect_ordered_request.assert_called_once_with(uri="/test", method="GET")
 
 
 class TestAssertRequestReceived:

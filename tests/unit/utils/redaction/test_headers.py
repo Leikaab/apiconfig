@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Set, Tuple
+from typing import Dict, Optional, Pattern, Set, Tuple
 
 import pytest
 
@@ -16,125 +16,136 @@ from apiconfig.utils.redaction.headers import (
 # Test Cases for redact_headers
 
 
+argvalues: list[
+    tuple[
+        dict[str, str] | None,
+        dict[str, str],
+        set[str],
+        tuple[str, ...],
+        Optional[Pattern[str]],
+    ]
+] = [
+    # --- Default Behavior ---
+    (
+        {"Authorization": "Bearer 123", "Content-Type": "application/json"},
+        {"Authorization": REDACTED_VALUE, "Content-Type": "application/json"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    (
+        {"Cookie": "session=abc", "Accept": "text/html"},
+        {"Cookie": "session=[REDACTED]", "Accept": "text/html"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    (
+        {"X-API-Key": "secretkey", "User-Agent": "MyApp"},
+        {"X-API-Key": REDACTED_VALUE, "User-Agent": "MyApp"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    (
+        {"Normal-Header": "value1", "Another-Header": "value2"},
+        {"Normal-Header": "value1", "Another-Header": "value2"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    ({}, {}, DEFAULT_SENSITIVE_HEADERS, DEFAULT_SENSITIVE_HEADER_PREFIXES, None),
+    (None, {}, DEFAULT_SENSITIVE_HEADERS, DEFAULT_SENSITIVE_HEADER_PREFIXES, None),
+    # --- Custom Keys/Prefixes ---
+    (
+        {"My-Secret": "123", "Public-Info": "abc"},
+        {"My-Secret": REDACTED_VALUE, "Public-Info": "abc"},
+        {"my-secret"},
+        (),
+        None,
+    ),
+    (
+        {"Custom-Auth": "xyz", "Data": "123"},
+        {"Custom-Auth": REDACTED_VALUE, "Data": "123"},
+        set(),
+        ("custom-",),
+        None,
+    ),
+    # --- Case Insensitivity ---
+    (
+        {"authorization": "Bearer 123", "content-type": "application/json"},
+        {"authorization": REDACTED_VALUE, "content-type": "application/json"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    (
+        {"x-api-key": "secretkey", "user-agent": "MyApp"},
+        {"x-api-key": REDACTED_VALUE, "user-agent": "MyApp"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        None,
+    ),
+    # --- New: Sensitive Name Pattern ---
+    (
+        {"Authorization": "Bearer 123", "X-Request-ID": "uuid-1"},
+        {"Authorization": REDACTED_VALUE, "X-Request-ID": "uuid-1"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Session-ID", re.IGNORECASE),  # No match
+    ),
+    (
+        {"Session-ID": "abc-123", "Content-Type": "application/json"},
+        {"Session-ID": REDACTED_VALUE, "Content-Type": "application/json"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Session-ID", re.IGNORECASE),  # Match
+    ),
+    (
+        {"session-id": "xyz-456", "Accept": "*/*"},
+        {"session-id": REDACTED_VALUE, "Accept": "*/*"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Session-ID", re.IGNORECASE),  # Match (case-insensitive)
+    ),
+    (
+        {"Authorization": "token", "My-Custom-Secret-Data": "value"},
+        {"Authorization": REDACTED_VALUE, "My-Custom-Secret-Data": REDACTED_VALUE},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Secret", re.IGNORECASE),  # Match pattern
+    ),
+    (
+        {"Authorization": "token", "My-Custom-Data": "value"},
+        {"Authorization": REDACTED_VALUE, "My-Custom-Data": "value"},
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Secret", re.IGNORECASE),  # No pattern match
+    ),
+    # --- Combination ---
+    (
+        {
+            "Authorization": "token",  # Default key
+            "X-API-Key": "key",  # Default prefix
+            "User-Secret-Token": "abc",  # Pattern match
+            "Public-Data": "123",  # No match
+        },
+        {
+            "Authorization": REDACTED_VALUE,
+            "X-API-Key": REDACTED_VALUE,
+            "User-Secret-Token": REDACTED_VALUE,
+            "Public-Data": "123",
+        },
+        DEFAULT_SENSITIVE_HEADERS,
+        DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        re.compile(r"Secret", re.IGNORECASE),
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "input_headers, expected_headers, sensitive_keys, sensitive_prefixes, sensitive_name_pattern",
-    [
-        # --- Default Behavior ---
-        (
-            {"Authorization": "Bearer 123", "Content-Type": "application/json"},
-            {"Authorization": REDACTED_VALUE, "Content-Type": "application/json"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        (
-            {"Cookie": "session=abc", "Accept": "text/html"},
-            {"Cookie": "session=[REDACTED]", "Accept": "text/html"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        (
-            {"X-API-Key": "secretkey", "User-Agent": "MyApp"},
-            {"X-API-Key": REDACTED_VALUE, "User-Agent": "MyApp"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        (
-            {"Normal-Header": "value1", "Another-Header": "value2"},
-            {"Normal-Header": "value1", "Another-Header": "value2"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        ({}, {}, DEFAULT_SENSITIVE_HEADERS, DEFAULT_SENSITIVE_HEADER_PREFIXES, None),
-        (None, {}, DEFAULT_SENSITIVE_HEADERS, DEFAULT_SENSITIVE_HEADER_PREFIXES, None),
-        # --- Custom Keys/Prefixes ---
-        (
-            {"My-Secret": "123", "Public-Info": "abc"},
-            {"My-Secret": REDACTED_VALUE, "Public-Info": "abc"},
-            {"my-secret"},
-            (),
-            None,
-        ),
-        (
-            {"Custom-Auth": "xyz", "Data": "123"},
-            {"Custom-Auth": REDACTED_VALUE, "Data": "123"},
-            set(),
-            ("custom-",),
-            None,
-        ),
-        # --- Case Insensitivity ---
-        (
-            {"authorization": "Bearer 123", "content-type": "application/json"},
-            {"authorization": REDACTED_VALUE, "content-type": "application/json"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        (
-            {"x-api-key": "secretkey", "user-agent": "MyApp"},
-            {"x-api-key": REDACTED_VALUE, "user-agent": "MyApp"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            None,
-        ),
-        # --- New: Sensitive Name Pattern ---
-        (
-            {"Authorization": "Bearer 123", "X-Request-ID": "uuid-1"},
-            {"Authorization": REDACTED_VALUE, "X-Request-ID": "uuid-1"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Session-ID", re.IGNORECASE),  # No match
-        ),
-        (
-            {"Session-ID": "abc-123", "Content-Type": "application/json"},
-            {"Session-ID": REDACTED_VALUE, "Content-Type": "application/json"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Session-ID", re.IGNORECASE),  # Match
-        ),
-        (
-            {"session-id": "xyz-456", "Accept": "*/*"},
-            {"session-id": REDACTED_VALUE, "Accept": "*/*"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Session-ID", re.IGNORECASE),  # Match (case-insensitive)
-        ),
-        (
-            {"Authorization": "token", "My-Custom-Secret-Data": "value"},
-            {"Authorization": REDACTED_VALUE, "My-Custom-Secret-Data": REDACTED_VALUE},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Secret", re.IGNORECASE),  # Match pattern
-        ),
-        (
-            {"Authorization": "token", "My-Custom-Data": "value"},
-            {"Authorization": REDACTED_VALUE, "My-Custom-Data": "value"},
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Secret", re.IGNORECASE),  # No pattern match
-        ),
-        # --- Combination ---
-        (
-            {
-                "Authorization": "token",  # Default key
-                "X-API-Key": "key",  # Default prefix
-                "User-Secret-Token": "abc",  # Pattern match
-                "Public-Data": "123",  # No match
-            },
-            {
-                "Authorization": REDACTED_VALUE,
-                "X-API-Key": REDACTED_VALUE,
-                "User-Secret-Token": REDACTED_VALUE,
-                "Public-Data": "123",
-            },
-            DEFAULT_SENSITIVE_HEADERS,
-            DEFAULT_SENSITIVE_HEADER_PREFIXES,
-            re.compile(r"Secret", re.IGNORECASE),
-        ),
-    ],
+    argvalues,
 )
 def test_redact_headers(
     input_headers: Dict[str, str],

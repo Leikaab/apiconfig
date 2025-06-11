@@ -1,6 +1,16 @@
-from typing import Any, List, Mapping, Pattern, Tuple
+from typing import Any, Iterable, List, Mapping, Pattern, Tuple, Protocol
 
-from werkzeug.wrappers import Request, Response
+from werkzeug.wrappers import Response
+
+class _HeaderMapping(Protocol):
+    def items(self) -> Iterable[tuple[str, str]]: ...
+
+class _ArgsMapping(Protocol):
+    def items(self) -> Iterable[tuple[str, str]]: ...
+
+class Request(Protocol):
+    headers: _HeaderMapping
+    args: _ArgsMapping
 
 class RequestHandler:
     def respond_with_json(self, obj: Any, *, status: int = ..., headers: Mapping[str, str] | None = ...) -> None: ...

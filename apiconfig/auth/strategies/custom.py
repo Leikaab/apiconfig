@@ -4,7 +4,12 @@ from typing import Callable, Dict, Mapping, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
-from apiconfig.types import HttpRequestCallable, QueryParamType, TokenRefreshResult
+from apiconfig.types import (
+    HttpRequestCallable,
+    QueryParamType,
+    QueryParamValueType,
+    TokenRefreshResult,
+)
 
 
 class CustomAuth(AuthStrategy):
@@ -167,8 +172,8 @@ class CustomAuth(AuthStrategy):
     def prepare_request(
         self,
         headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, str]] = None,
-    ) -> tuple[Dict[str, str], Dict[str, str]]:
+        params: Optional[QueryParamType] = None,
+    ) -> tuple[Dict[str, str], QueryParamType]:
         """
         Prepare authentication headers and parameters for an HTTP request.
 
@@ -176,28 +181,25 @@ class CustomAuth(AuthStrategy):
         ----------
         headers : Optional[Dict[str, str]]
             Optional initial headers dictionary to update.
-        params : Optional[Dict[str, str]]
+        params : Optional[QueryParamType]
             Optional initial parameters dictionary to update.
 
         Returns
         -------
-        tuple[Dict[str, str], Dict[str, str]]
+        tuple[Dict[str, str], QueryParamType]
             A tuple of (headers, params) dictionaries with authentication data.
         """
         # Initialize headers and params if not provided
-        headers = headers.copy() if headers else {}
-        params = params.copy() if params else {}
+        headers = dict(headers) if headers else {}
+        merged_params: Dict[str, QueryParamValueType] = dict(params) if params else {}
 
         # Update with authentication headers and params
         headers.update(self.prepare_request_headers())
         auth_params = self.prepare_request_params()
         if auth_params:
-            # Convert QueryParamType to Dict[str, str] for compatibility
-            for key, value in auth_params.items():
-                if value is not None:
-                    params[key] = str(value)
+            merged_params.update(auth_params)
 
-        return headers, params
+        return headers, merged_params
 
     def prepare_request_params(self) -> Optional[QueryParamType]:
         """

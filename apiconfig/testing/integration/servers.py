@@ -166,7 +166,13 @@ def assert_request_received(
         If the expected request(s) were not found in the server log.
     """
     matching_requests: List[Tuple[Request, Response]] = []
-    lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
+    lower_expected_headers: dict[str, str] | None = None
+    if expected_headers:
+        lower_expected_headers = {}
+        for key, value in expected_headers.items():
+            key_str: str = key
+            value_str: str = value
+            lower_expected_headers[key_str.lower()] = value_str
 
     log: list[tuple[Request, Response]] = httpserver.log
     for entry in log:

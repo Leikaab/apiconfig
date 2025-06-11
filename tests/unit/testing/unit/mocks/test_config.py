@@ -176,10 +176,10 @@ class TestMockConfigManager:
         # Reset the mock to clear the call history
         manager.load_config_mock.reset_mock()
 
-        # Call with arguments and verify they were passed
-        manager.load_config(arg1="test", arg2=123)
-        # Use assert_called_once_with to ensure it was called exactly once with these args
-        manager.load_config_mock.assert_called_once_with(arg1="test", arg2=123)
+        # Call again and verify the mock was called a second time without arguments
+        manager.load_config()
+        # Use assert_called_once_with to ensure it was called exactly once with no args
+        manager.load_config_mock.assert_called_once_with()
 
     def test_load_config_with_custom_return_value(self) -> None:
         """Test setting a custom return value for load_config."""

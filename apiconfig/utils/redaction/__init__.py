@@ -11,7 +11,7 @@ from .headers import (
     redact_headers,
 )
 
-__all__ = [
+__all__: list[str] = [
     "DEFAULT_SENSITIVE_HEADERS",
     "DEFAULT_SENSITIVE_HEADER_PREFIXES",
     "REDACTED_VALUE",

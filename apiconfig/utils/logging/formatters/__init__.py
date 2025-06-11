@@ -16,7 +16,7 @@ from .redacting import (
     redact_structured_helper,
 )
 
-__all__: tuple[str, ...] = (
+__all__: list[str] = [
     "DetailedFormatter",
     "RedactingFormatter",
     "redact_body",
@@ -26,4 +26,4 @@ __all__: tuple[str, ...] = (
     "DEFAULT_SENSITIVE_HEADER_PREFIXES",
     "redact_message_helper",
     "redact_structured_helper",
-)
+]

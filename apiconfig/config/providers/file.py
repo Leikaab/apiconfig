@@ -83,7 +83,7 @@ class FileProvider:
             # Catch-all for any other unexpected errors
             raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    def get(self, key: str, default: T | None = None, expected_type: Optional[Type[T]] = None) -> T | None:
         """
         Get a configuration value from the loaded configuration.
 
@@ -102,14 +102,14 @@ class FileProvider:
         ----------
         key : str
             The configuration key to get. Can use dot notation for nested keys (e.g., "api.hostname").
-        default : Any, optional
+        default : T | None, optional
             The default value to return if the key is not found.
         expected_type : Optional[Type[T]], optional
             The expected type of the value. If provided, the value will be coerced to this type.
 
         Returns
         -------
-        Any
+        T | None
             The configuration value (coerced to expected_type if specified), or the default if the key is not found.
 
         Raises
@@ -132,12 +132,12 @@ class FileProvider:
             value = cast(Dict[str, Any], value)[part]
 
         if expected_type is None or isinstance(value, expected_type):
-            return value
+            return cast(T, value)
 
         try:
             # Handle other types through standard conversion
             if expected_type is object or not callable(expected_type):
-                return value
+                return cast(T, value)
                 # mypy: unreachable
             if expected_type is bool:
                 # Special handling for boolean values
@@ -145,13 +145,13 @@ class FileProvider:
                     lower: str = cast(str, value).lower()
                     val_lower: str = lower
                     if val_lower in ("true", "1", "yes", "y", "on"):
-                        return True
+                        return cast(T, True)
                     elif val_lower in ("false", "0", "no", "n", "off"):
-                        return False
+                        return cast(T, False)
                     else:
                         raise ValueError(f"Cannot convert '{value}' to bool")
                 except AttributeError:
-                    return bool(value)
+                    return cast(T, bool(value))
             return cast(T, expected_type(value))  # type: ignore[call-arg,redundant-cast]
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}") from e

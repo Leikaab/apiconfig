@@ -8,7 +8,10 @@ from typing import List, Tuple
 
 import pytest
 
-from apiconfig.testing.unit.mocks.auth import AuthTestScenarioBuilder
+from apiconfig.testing.unit.mocks.auth import (
+    AuthTestScenarioBuilder,
+    MockBearerAuthWithRefresh,
+)
 
 
 class TestTokenExpiryReliability:
@@ -32,7 +35,7 @@ class TestTokenExpiryReliability:
                 sum(range(1000))
 
         # Start multiple CPU-burning threads to simulate high load
-        burn_threads = []
+        burn_threads: list[threading.Thread] = []
         for _ in range(10):  # 10 threads to really stress the system
             thread = threading.Thread(target=cpu_burner, daemon=True)
             thread.start()
@@ -166,7 +169,7 @@ class TestRaceConditionPrevention:
         initial_thread_count = threading.active_count()
 
         # Create multiple expiry scenarios
-        strategies = []
+        strategies: list[MockBearerAuthWithRefresh] = []
         for i in range(10):
             strategy = AuthTestScenarioBuilder.create_token_expiry_scenario(initial_token=f"thread_test_{i}", expires_after_seconds=0.1 * (i + 1))
             strategies.append(strategy)

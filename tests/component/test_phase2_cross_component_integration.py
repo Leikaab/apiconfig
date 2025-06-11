@@ -173,7 +173,7 @@ class TestPhase2CrossComponentIntegration:
                 verification_errors.append(e)
 
         # Start multiple verification threads
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=verify_worker)
             threads.append(thread)

@@ -213,7 +213,7 @@ class TestEnhancedAuthMocksRefresh:
                 errors.append(e)
 
         # Start multiple threads
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=refresh_worker)
             threads.append(thread)

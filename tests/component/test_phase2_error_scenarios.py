@@ -19,6 +19,7 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
+from apiconfig.types import TokenRefreshResult
 
 
 class TestPhase2ErrorScenarios:
@@ -334,8 +335,8 @@ class TestPhase2ErrorScenarios:
         # Create a strategy that fails after first attempt
         concurrent_fail_strategy = MockAuthErrorInjector.create_failing_refresh_strategy(failure_type="auth", failure_after_attempts=1)
 
-        errors = []
-        successes = []
+        errors: list[Exception] = []
+        successes: list[TokenRefreshResult | None] = []
 
         def concurrent_refresh() -> None:
             try:
@@ -345,7 +346,7 @@ class TestPhase2ErrorScenarios:
                 errors.append(e)
 
         # Start multiple threads
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=concurrent_refresh)
             threads.append(thread)

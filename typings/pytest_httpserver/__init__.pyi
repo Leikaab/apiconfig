@@ -1,4 +1,4 @@
-from typing import Any, Iterable, List, Mapping, Pattern, Tuple, Protocol
+from typing import Any, Iterable, List, Mapping, Pattern, Protocol, Tuple
 
 from werkzeug.wrappers import Response
 

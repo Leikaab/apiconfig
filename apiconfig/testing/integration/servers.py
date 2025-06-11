@@ -106,7 +106,7 @@ def configure_mock_response(
     # Handle None case implicitly (empty body)
 
     # Pass 'ordered' for test compatibility
-    expectation: RequestHandler = httpserver.expect_request(  # type: ignore[call-arg]
+    expectation: RequestHandler = httpserver.expect_request(
         uri=path,
         method=method,
         ordered=ordered,

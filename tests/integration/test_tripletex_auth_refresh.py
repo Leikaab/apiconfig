@@ -11,7 +11,7 @@ import threading
 from datetime import datetime, timedelta, timezone
 
 import pytest
-from pytest import LogCaptureFixture
+from _pytest.logging import LogCaptureFixture
 
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
     pytest.skip(

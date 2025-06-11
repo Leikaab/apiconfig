@@ -3,8 +3,7 @@
 
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Tuple
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 
 import pytest
 
@@ -63,9 +62,9 @@ class TestTokenExpiryReliability:
         # Create a token that expires in 0.1 seconds
         strategy = AuthTestScenarioBuilder.create_token_expiry_scenario(initial_token="concurrent_test_token", expires_after_seconds=0.1)
 
-        results: List[Tuple[float, bool]] = []
+        results: list[tuple[float, bool]] = []
 
-        def check_expiry() -> Tuple[float, bool]:
+        def check_expiry() -> tuple[float, bool]:
             """Check expiry status and return timestamp and result."""
             timestamp = time.time()
             is_expired = strategy.is_expired()
@@ -74,7 +73,7 @@ class TestTokenExpiryReliability:
         # Use ThreadPoolExecutor to check expiry from multiple threads
         with ThreadPoolExecutor(max_workers=20) as executor:
             # Submit checks over a time period that spans the expiry
-            futures = []
+            futures: list[Future[tuple[float, bool]]] = []
             start_time = time.time()
 
             # Submit checks for 0.2 seconds (before and after expiry)

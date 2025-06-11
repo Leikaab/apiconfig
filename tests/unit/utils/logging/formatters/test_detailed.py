@@ -5,7 +5,10 @@ from typing import Any, Callable
 
 import pytest
 
-from apiconfig.utils.logging.formatters import DetailedFormatter
+from apiconfig.utils.logging.formatters import (
+    DetailedFormatter,
+    format_exception_text_helper,
+)
 
 
 class TypedLogRecord(logging.LogRecord):
@@ -231,7 +234,7 @@ def test_detailed_formatter_exc_info_sets_exc_text_branch(
 def test_detailed_formatter_format_exception_text_direct(
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
-    """Test that directly calls _format_exception_text to ensure line 72 is covered."""
+    """Test _format_exception_text via its public helper."""
     fmt = DetailedFormatter()
     try:
         raise ValueError("direct test")
@@ -243,9 +246,9 @@ def test_detailed_formatter_format_exception_text_direct(
         if hasattr(record, "exc_text"):
             delattr(record, "exc_text")
 
-        # Call _format_exception_text directly
+        # Call the helper that invokes _format_exception_text
         formatted = ""
-        formatted = fmt._format_exception_text(formatted, record)
+        formatted = format_exception_text_helper(fmt, formatted, record)
 
         # Verify exc_text was set by the method
         assert hasattr(record, "exc_text")

@@ -21,6 +21,8 @@ from apiconfig.utils.redaction.headers import (
     redact_headers,
 )
 
+from .detailed import DetailedFormatter
+
 
 class RedactingFormatter(logging.Formatter):
     """Automatically redact sensitive information from log messages and HTTP headers.
@@ -280,3 +282,21 @@ def redact_structured_helper(formatter: "RedactingFormatter", msg: Any, content_
 def redact_message_helper(formatter: "RedactingFormatter", record: logging.LogRecord) -> None:
     """Public helper to call ``RedactingFormatter._redact_message`` for tests."""
     formatter._redact_message(record)
+
+
+def format_exception_text_helper(
+    formatter: "DetailedFormatter",
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_exception_text`` for tests."""
+    return formatter._format_exception_text(formatted, record)
+
+
+def format_stack_info_helper(
+    formatter: "DetailedFormatter",
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_stack_info`` for tests."""
+    return formatter._format_stack_info(formatted, record)

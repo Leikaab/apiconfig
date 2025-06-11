@@ -35,9 +35,9 @@ def test_type_checking_imports() -> None:
 class MockClientConfigValid(ClientConfig):
     """A valid mock ClientConfig."""
 
-    hostname: str = "api.example.com"
-    timeout: int = 10
-    retries: int = 2
+    hostname: str | None = "api.example.com"
+    timeout: int | None = 10
+    retries: int | None = 2
 
     @property
     def base_url(self) -> str:

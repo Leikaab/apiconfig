@@ -129,8 +129,8 @@ def assert_request_received(
     httpserver: HTTPServer,
     path: str,
     method: str = "GET",
-    expected_headers: Optional[Dict[str, str]] = None,
-    expected_query: Optional[Dict[str, str]] = None,
+    expected_headers: dict[str, str] | None = None,
+    expected_query: dict[str, str] | None = None,
     expected_json: Optional[Any] = None,
     expected_data: Optional[str] = None,
     count: Optional[int] = 1,
@@ -147,10 +147,10 @@ def assert_request_received(
         The expected URL path.
     method : str, default "GET"
         The expected HTTP method.
-    expected_headers : Optional[Dict[str, str]], default None
+    expected_headers : dict[str, str] | None, default None
         A dictionary of headers expected in the request. Checks for
         presence and exact value match. Case-insensitive header keys.
-    expected_query : Optional[Dict[str, str]], default None
+    expected_query : dict[str, str] | None, default None
         A dictionary of query parameters expected. Checks for presence
         and exact value match.
     expected_json : Optional[Any], default None
@@ -166,7 +166,7 @@ def assert_request_received(
         If the expected request(s) were not found in the server log.
     """
     matching_requests: List[Tuple[Request, Response]] = []
-    lower_expected_headers = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
+    lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
     log = httpserver.log
     for entry in log:
@@ -175,7 +175,7 @@ def assert_request_received(
             match = True
             # Check headers
             if lower_expected_headers:
-                request_headers_lower = {k.lower(): v for k, v in request.headers.items()}
+                request_headers_lower: dict[str, str] = {k.lower(): v for k, v in request.headers.items()}
                 if not all(item in request_headers_lower.items() for item in lower_expected_headers.items()):
                     match = False
             # Check query parameters

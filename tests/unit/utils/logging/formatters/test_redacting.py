@@ -286,8 +286,8 @@ def test_redacting_formatter_fallback_branch_strmsg(
 def test_redacting_formatter_is_structured_dict_list() -> None:
     """Test that _is_structured correctly identifies dict and list as structured data."""
     fmt = RedactingFormatter()
-    assert fmt._is_structured({"foo": "bar"}, None) is True
-    assert fmt._is_structured([1, 2, 3], None) is True
+    assert fmt._is_structured({"foo": "bar"}, None) is True  # pyright: ignore[reportPrivateUsage]
+    assert fmt._is_structured([1, 2, 3], None) is True  # pyright: ignore[reportPrivateUsage]
 
 
 def test_redacting_formatter_redact_structured_dict_from_string(

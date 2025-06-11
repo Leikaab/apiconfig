@@ -115,13 +115,13 @@ class TestMockConfigManager:
     """Tests for the MockConfigManager class."""
 
     def test_init_default_providers(self) -> None:
-        """Test initialization with providers=None (should default to a MagicMock provider)."""
+        """Test initialization with providers=None creates a working manager."""
         manager = MockConfigManager()
-        # Should have one provider that's a MagicMock
-        assert len(manager._providers) == 1
-        assert isinstance(manager._providers[0], MagicMock)
-        # The mock provider should have a load method that returns an empty dict
-        assert manager._providers[0].load.return_value == {}
+
+        # ``load_config`` should be a MagicMock returning a default ``ClientConfig``
+        assert isinstance(manager.load_config_mock, MagicMock)
+        result = manager.load_config()
+        assert isinstance(result, ClientConfig)
 
     def test_init_with_explicit_providers(self) -> None:
         """Test initialization with explicit providers."""
@@ -131,7 +131,9 @@ class TestMockConfigManager:
 
         manager = MockConfigManager(providers=providers)
 
-        assert manager._providers == providers
+        # ``load_config`` should still function and return a ``ClientConfig``
+        result = manager.load_config()
+        assert isinstance(result, ClientConfig)
 
     def test_init_default_mock_config(self) -> None:
         """Test initialization with mock_config=None (should set a default ClientConfig)."""

@@ -106,10 +106,10 @@ def configure_mock_response(
     # Handle None case implicitly (empty body)
 
     # Pass 'ordered' for test compatibility
-    expectation: RequestHandler = httpserver.expect_request(
+    expectation: RequestHandler = httpserver.expect_request(  # type: ignore[call-arg]
         uri=path,
         method=method,
-        ordered=ordered,
+        ordered=ordered,  # pyright: ignore[reportUnknownArgumentType]
         **expect_kwargs,
     )
     expectation.respond_with_response(

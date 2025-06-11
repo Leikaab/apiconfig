@@ -4,7 +4,6 @@ import logging
 from typing import (
     Any,
     Dict,
-    Generic,
     Mapping,
     Protocol,
     Sequence,
@@ -32,12 +31,12 @@ class _SupportsGetConfig(Protocol[_TConfig]):
     def get_config(self) -> _TConfig: ...
 
 
-ConfigProvider: TypeAlias = _SupportsLoad[_TConfig] | _SupportsGetConfig[_TConfig]
+ConfigProvider: TypeAlias = _SupportsLoad[Mapping[str, Any]] | _SupportsGetConfig[Mapping[str, Any]]
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class ConfigManager(Generic[_TConfig]):
+class ConfigManager:
     """
     Manages loading configuration from multiple providers.
 
@@ -56,7 +55,7 @@ class ConfigManager(Generic[_TConfig]):
     returns a dictionary of configuration values.
     """
 
-    def __init__(self, providers: Sequence[ConfigProvider[_TConfig]]) -> None:
+    def __init__(self, providers: Sequence[ConfigProvider]) -> None:
         """
         Initialize the ConfigManager with a sequence of configuration providers.
 

@@ -2,7 +2,7 @@
 
 import json
 import pathlib
-from typing import Any, Dict, Optional, Type, TypeVar, Union, cast
+from typing import Any, Dict, Optional, Type, TypeVar, Union, cast, overload
 
 from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
 
@@ -83,7 +83,19 @@ class FileProvider:
             # Catch-all for any other unexpected errors
             raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
-    def get(self, key: str, default: T | None = None, expected_type: Optional[Type[T]] = None) -> T | None:
+    @overload
+    def get(self, key: str) -> Any | None: ...
+
+    @overload
+    def get(self, key: str, *, expected_type: Type[T]) -> T | None: ...
+
+    @overload
+    def get(self, key: str, default: T) -> T: ...
+
+    @overload
+    def get(self, key: str, default: T, *, expected_type: Type[T]) -> T: ...
+
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> T | None:
         """
         Get a configuration value from the loaded configuration.
 
@@ -102,7 +114,7 @@ class FileProvider:
         ----------
         key : str
             The configuration key to get. Can use dot notation for nested keys (e.g., "api.hostname").
-        default : T | None, optional
+        default : Any, optional
             The default value to return if the key is not found.
         expected_type : Optional[Type[T]], optional
             The expected type of the value. If provided, the value will be coerced to this type.
@@ -128,7 +140,7 @@ class FileProvider:
         # Navigate through nested dictionaries
         for part in parts:
             if not isinstance(value, dict) or part not in value:
-                return default
+                return cast(T, default)
             value = cast(Dict[str, Any], value)[part]
 
         if expected_type is None or isinstance(value, expected_type):

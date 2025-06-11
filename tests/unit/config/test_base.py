@@ -3,6 +3,7 @@
 from typing import cast
 
 import pytest
+from _pytest.recwarn import deprecated_call
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
@@ -402,7 +403,7 @@ class TestClientConfig:
 
         merged_via_method = base_config.merge(other_config)
 
-        with pytest.deprecated_call():
+        with deprecated_call():
             merged_via_add = base_config + other_config
 
         assert merged_via_add.hostname == merged_via_method.hostname
@@ -412,6 +413,6 @@ class TestClientConfig:
     def test_add_operator_type_error(self) -> None:
         """Adding a non-``ClientConfig`` should raise ``TypeError``."""
         config = ClientConfig()
-        with pytest.deprecated_call():
+        with deprecated_call():
             with pytest.raises(TypeError):
                 _ = config + "not a ClientConfig"  # type: ignore[type-var]

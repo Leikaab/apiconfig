@@ -2,7 +2,7 @@
 
 import json
 import pathlib
-from typing import Any, Dict, Optional, Type, TypeVar, Union, cast
+from typing import Any, Dict, Optional, Type, TypeVar, Union, cast, overload
 
 from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
 
@@ -83,7 +83,19 @@ class FileProvider:
             # Catch-all for any other unexpected errors
             raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    @overload
+    def get(self, key: str) -> Any | None: ...
+
+    @overload
+    def get(self, key: str, *, expected_type: Type[T]) -> T | None: ...
+
+    @overload
+    def get(self, key: str, default: T) -> T: ...
+
+    @overload
+    def get(self, key: str, default: T, *, expected_type: Type[T]) -> T: ...
+
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> T | None:
         """
         Get a configuration value from the loaded configuration.
 
@@ -109,7 +121,7 @@ class FileProvider:
 
         Returns
         -------
-        Any
+        T | None
             The configuration value (coerced to expected_type if specified), or the default if the key is not found.
 
         Raises
@@ -128,16 +140,16 @@ class FileProvider:
         # Navigate through nested dictionaries
         for part in parts:
             if not isinstance(value, dict) or part not in value:
-                return default
+                return cast(T, default)
             value = cast(Dict[str, Any], value)[part]
 
         if expected_type is None or isinstance(value, expected_type):
-            return value
+            return cast(T, value)
 
         try:
             # Handle other types through standard conversion
             if expected_type is object or not callable(expected_type):
-                return value
+                return cast(T, value)
                 # mypy: unreachable
             if expected_type is bool:
                 # Special handling for boolean values
@@ -145,13 +157,13 @@ class FileProvider:
                     lower: str = cast(str, value).lower()
                     val_lower: str = lower
                     if val_lower in ("true", "1", "yes", "y", "on"):
-                        return True
+                        return cast(T, True)
                     elif val_lower in ("false", "0", "no", "n", "off"):
-                        return False
+                        return cast(T, False)
                     else:
                         raise ValueError(f"Cannot convert '{value}' to bool")
                 except AttributeError:
-                    return bool(value)
+                    return cast(T, bool(value))
             return cast(T, expected_type(value))  # type: ignore[call-arg,redundant-cast]
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}") from e

@@ -9,7 +9,6 @@ from typing import (
     Sequence,
     TypeAlias,
     TypeVar,
-    cast,
     runtime_checkable,
 )
 
@@ -67,10 +66,9 @@ class ConfigManager:
             with later providers overriding settings from earlier ones.
             Each provider must implement either a `load()` or `get_config()` method.
         """
-        # Store providers as ``Any`` internally to avoid overly strict typing
-        # that would leak into consumer code (e.g. tests accessing attributes
-        # specific to concrete providers).
-        self._providers: Sequence[Any] = list(providers)
+        # Store providers with their ``ConfigProvider`` type to keep strong
+        # typing without leaking concrete provider details to consumers.
+        self._providers: Sequence[ConfigProvider] = list(providers)
 
     def load_config(self) -> Dict[str, Any]:
         """
@@ -106,7 +104,7 @@ class ConfigManager:
                 config_data: Mapping[str, Any] | None = None
                 if isinstance(provider, _SupportsLoad):
                     config_data = provider.load()
-                elif isinstance(provider, _SupportsGetConfig):
+                elif isinstance(provider, _SupportsGetConfig):  # pyright: ignore[reportUnnecessaryIsInstance]
                     config_data = provider.get_config()
                 else:
                     raise AttributeError(f"Provider {provider_name} lacks a 'load' or 'get_config' method.")
@@ -119,7 +117,7 @@ class ConfigManager:
                             config_data,
                         )
                     else:
-                        merged_config.update(cast(Dict[str, Any], config_data))
+                        merged_config.update(config_data)
                         logger.debug("Merged config from %s", provider_name)
                 else:
                     logger.debug("Provider %s returned no data.", provider_name)

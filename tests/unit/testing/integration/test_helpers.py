@@ -1,5 +1,6 @@
 """Tests for the integration testing helpers."""
 
+from typing import Any, Sequence, cast
 from unittest.mock import MagicMock, patch
 
 import httpx
@@ -220,11 +221,13 @@ class TestSetupMultiProviderManager:
         # Check that the manager has two providers
         assert len(manager._providers) == 2
 
+        providers = cast(Sequence[Any], manager._providers)
+
         # Check that the providers are MemoryProviders with the correct data and names
-        assert manager._providers[0]._config == {"api": {"hostname": "example1.com"}}
-        assert manager._providers[0].name == "source1"
-        assert manager._providers[1]._config == {"api": {"version": "v1"}}
-        assert manager._providers[1].name == "source2"
+        assert providers[0]._config == {"api": {"hostname": "example1.com"}}
+        assert providers[0].name == "source1"
+        assert providers[1]._config == {"api": {"version": "v1"}}
+        assert providers[1].name == "source2"
 
     def test_setup_multi_provider_manager_empty_sources(self) -> None:
         """Test setup_multi_provider_manager with empty sources."""

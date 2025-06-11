@@ -102,6 +102,16 @@ All contributions and interactions must align with the project's [Code of Conduc
  - **Flake8:** Linting (configured in `.flake8`)
 - **autoflake:** Removes unused imports/variables
 - **Mypy:** Static type checking (configured in `mypy.ini` or `pyproject.toml`)
+- **Pyright:** Optional static type checker. Run after installing development
+  dependencies and activating the virtualenv:
+
+  ```bash
+  poetry install --with dev
+  poetry shell
+  pyright
+  ```
+
+  This ensures packages like `httpx`, `pytest`, and their stubs are available.
 
 All are run automatically via pre-commit hooks.
 

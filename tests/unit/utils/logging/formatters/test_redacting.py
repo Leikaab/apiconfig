@@ -507,11 +507,8 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
     redacted_dict = {"form_data": "[REDACTED]"}
 
     # Override redact_body to return our dict using monkeypatch
-    monkeypatch.setattr(
-        fmt,
-        "_redact_body",
-        lambda msg, **kwargs: redacted_dict if msg == string_input else msg,
-    )
+    redact_body_override: Callable[..., dict[str, str]] = lambda msg, **kwargs: redacted_dict if msg == string_input else msg
+    monkeypatch.setattr(fmt, "_redact_body", redact_body_override)
 
     try:
         # Call _redact_structured with our string input and form content type

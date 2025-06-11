@@ -286,7 +286,6 @@ def redact_message_helper(formatter: RedactingFormatter, record: logging.LogReco
 
 def format_exception_text_helper(
     formatter: DetailedFormatter,
-
     formatted: str,
     record: logging.LogRecord,
 ) -> str:
@@ -296,7 +295,6 @@ def format_exception_text_helper(
 
 def format_stack_info_helper(
     formatter: DetailedFormatter,
-
     formatted: str,
     record: logging.LogRecord,
 ) -> str:
@@ -311,4 +309,3 @@ __all__: list[str] = [
     "format_exception_text_helper",
     "format_stack_info_helper",
 ]
-

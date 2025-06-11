@@ -12,6 +12,8 @@ from apiconfig.utils.redaction.headers import (
 from .detailed import DetailedFormatter
 from .redacting import (
     RedactingFormatter,
+    format_exception_text_helper,
+    format_stack_info_helper,
     redact_message_helper,
     redact_structured_helper,
 )
@@ -26,4 +28,6 @@ __all__: list[str] = [
     "DEFAULT_SENSITIVE_HEADER_PREFIXES",
     "redact_message_helper",
     "redact_structured_helper",
+    "format_exception_text_helper",
+    "format_stack_info_helper",
 ]

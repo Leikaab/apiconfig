@@ -25,17 +25,17 @@ class TestInMemoryTokenStorage:
     def test_init(self) -> None:
         """Test that InMemoryTokenStorage initializes with an empty storage dict."""
         storage = InMemoryTokenStorage()
-        assert storage._storage == {}
+        assert storage.storage == {}
 
     def test_store_token(self) -> None:
         """Test storing a token."""
         storage = InMemoryTokenStorage()
         storage.store_token("test_key", {"access_token": "test_token"})
-        assert storage._storage["test_key"] == {"access_token": "test_token"}
+        assert storage.storage["test_key"] == {"access_token": "test_token"}
 
         # Test overwriting an existing token
         storage.store_token("test_key", {"access_token": "new_token"})
-        assert storage._storage["test_key"] == {"access_token": "new_token"}
+        assert storage.storage["test_key"] == {"access_token": "new_token"}
 
     def test_retrieve_token(self) -> None:
         """Test retrieving a token."""
@@ -57,9 +57,9 @@ class TestInMemoryTokenStorage:
 
         # Test deleting an existing token
         storage.store_token("test_key", {"access_token": "test_token"})
-        assert "test_key" in storage._storage
+        assert "test_key" in storage.storage
         storage.delete_token("test_key")
-        assert "test_key" not in storage._storage
+        assert "test_key" not in storage.storage
 
     def test_store_and_retrieve_complex_token_data(self) -> None:
         """Test storing and retrieving complex token data (dict)."""

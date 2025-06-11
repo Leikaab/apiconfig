@@ -152,6 +152,6 @@ class FileProvider:
                         raise ValueError(f"Cannot convert '{value}' to bool")
                 except AttributeError:
                     return bool(value)
-            return expected_type(value)  # type: ignore[call-arg]
+            return cast(T, expected_type(value))  # type: ignore[call-arg,redundant-cast]
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}") from e

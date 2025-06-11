@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import pytest
 
@@ -507,7 +507,9 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
     redacted_dict = {"form_data": "[REDACTED]"}
 
     # Override redact_body to return our dict using monkeypatch
-    redact_body_override: Callable[..., dict[str, str]] = lambda msg, **kwargs: redacted_dict if msg == string_input else msg
+    def redact_body_override(msg: str, **kwargs: Any) -> dict[str, str]:
+        return redacted_dict if msg == string_input else cast(dict[str, str], msg)
+
     monkeypatch.setattr(fmt, "_redact_body", redact_body_override)
 
     try:

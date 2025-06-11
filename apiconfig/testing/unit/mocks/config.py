@@ -6,7 +6,6 @@ from typing import Any, Dict, Optional, cast
 from unittest.mock import MagicMock
 
 from apiconfig.config.base import ClientConfig
-from apiconfig.config.manager import ConfigManager
 
 # NOTE: No ConfigProvider base class found in current implementation.
 # Providers seem to use duck typing (requiring a load() method).
@@ -86,7 +85,7 @@ def create_mock_client_config(
     )
 
 
-class MockConfigManager(ConfigManager):
+class MockConfigManager:
     """
     A mock ConfigManager for testing configuration loading logic.
 
@@ -133,7 +132,7 @@ class MockConfigManager(ConfigManager):
             mock_provider = MagicMock()
             mock_provider.load.return_value = {}
             providers = [mock_provider]
-        super().__init__(providers=providers)
+        self._providers: list[Any] = list(providers)
 
         # Allow predefining the config to be returned by load_config
         self._mock_config = mock_config
@@ -144,6 +143,6 @@ class MockConfigManager(ConfigManager):
             default_config = create_mock_client_config()
         self.load_config_mock = MagicMock(return_value=default_config)
 
-    def load_config(self, *args: Any, **kwargs: Any) -> ClientConfig:  # type: ignore[override]
+    def load_config(self) -> ClientConfig:
         """Return configuration using the underlying MagicMock."""
-        return cast(ClientConfig, self.load_config_mock(*args, **kwargs))
+        return cast(ClientConfig, self.load_config_mock())

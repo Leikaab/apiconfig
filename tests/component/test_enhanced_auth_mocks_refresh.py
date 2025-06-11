@@ -16,6 +16,7 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
+from apiconfig.types import TokenRefreshResult
 
 
 class TestEnhancedAuthMocksRefresh:
@@ -200,13 +201,14 @@ class TestEnhancedAuthMocksRefresh:
         assert hasattr(strategy, "_max_concurrent_refreshes")
 
         # Test concurrent refresh operations
-        results = []
-        errors = []
+        results: list[TokenRefreshResult] = []
+        errors: list[Exception] = []
 
         def refresh_worker() -> None:
             try:
                 result = strategy.refresh()
-                results.append(result)
+                if result is not None:
+                    results.append(result)
             except Exception as e:
                 errors.append(e)
 

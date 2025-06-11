@@ -293,7 +293,7 @@ class TestPhase2CrossComponentIntegration:
     def test_performance_cross_component(self) -> None:
         """Test performance of cross-component operations."""
         # Create multiple mock strategies
-        strategies = []
+        strategies: List[MockBearerAuthWithRefresh] = []
         for i in range(10):
             strategy = MockBearerAuthWithRefresh(initial_token=f"perf_token_{i}", refresh_delay=0.0)  # No artificial delay
             strategies.append(strategy)

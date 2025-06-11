@@ -61,13 +61,13 @@ class TestAuthStrategy:
     def test_init_without_http_request_callable(self) -> None:
         """Test initialization without http_request_callable."""
         strategy = ConcreteAuthStrategy()
-        assert strategy._http_request_callable is None
+        assert strategy._http_request_callable is None  # pyright: ignore[reportPrivateUsage]
 
     def test_init_with_http_request_callable(self) -> None:
         """Test initialization with http_request_callable."""
         mock_callable = Mock()
         strategy = ConcreteAuthStrategy(http_request_callable=mock_callable)
-        assert strategy._http_request_callable is mock_callable
+        assert strategy._http_request_callable is mock_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_can_refresh_default_implementation(self) -> None:
         """Test that can_refresh returns False by default."""

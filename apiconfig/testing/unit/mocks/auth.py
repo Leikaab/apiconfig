@@ -548,7 +548,7 @@ class AuthTestScenarioBuilder:
 
         # Set expiry time based on current time + expiry duration
         # This avoids race conditions with background threads
-        strategy._expiry_time = time.time() + expires_after_seconds
+        strategy._expiry_time = time.time() + expires_after_seconds  # pyright: ignore[reportPrivateUsage]
         return strategy
 
     @staticmethod
@@ -568,20 +568,20 @@ class AuthTestScenarioBuilder:
         strategy = MockBearerAuthWithRefresh(max_refresh_attempts=num_concurrent_refreshes + 5)
 
         # Add thread safety tracking
-        strategy._refresh_lock = threading.Lock()
-        strategy._concurrent_refreshes = 0
-        strategy._max_concurrent_refreshes = 0
+        strategy._refresh_lock = threading.Lock()  # pyright: ignore[reportPrivateUsage]
+        strategy._concurrent_refreshes = 0  # pyright: ignore[reportPrivateUsage]
+        strategy._max_concurrent_refreshes = 0  # pyright: ignore[reportPrivateUsage]
 
         original_refresh = strategy.refresh
 
         def thread_safe_refresh() -> Optional[TokenRefreshResult]:
-            lock = strategy._refresh_lock
+            lock = strategy._refresh_lock  # pyright: ignore[reportPrivateUsage]
             assert lock is not None
             with lock:
-                strategy._concurrent_refreshes += 1
+                strategy._concurrent_refreshes += 1  # pyright: ignore[reportPrivateUsage]
                 strategy._max_concurrent_refreshes = max(
-                    strategy._max_concurrent_refreshes,
-                    strategy._concurrent_refreshes,
+                    strategy._max_concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
+                    strategy._concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
                 )
 
             try:
@@ -590,7 +590,7 @@ class AuthTestScenarioBuilder:
             finally:
                 assert lock is not None
                 with lock:
-                    strategy._concurrent_refreshes -= 1
+                    strategy._concurrent_refreshes -= 1  # pyright: ignore[reportPrivateUsage]
 
         setattr(strategy, "refresh", thread_safe_refresh)
         return strategy
@@ -607,8 +607,8 @@ class AuthTestScenarioBuilder:
         strategy = MockRefreshableAuthStrategy()
 
         # Track callback usage
-        strategy._callback_calls = 0
-        strategy._callback_errors = []
+        strategy._callback_calls = 0  # pyright: ignore[reportPrivateUsage]
+        strategy._callback_errors = []  # pyright: ignore[reportPrivateUsage]
 
         original_get_refresh_callback = strategy.get_refresh_callback
 
@@ -618,11 +618,11 @@ class AuthTestScenarioBuilder:
                 return None
 
             def tracked_callback() -> None:
-                strategy._callback_calls += 1
+                strategy._callback_calls += 1  # pyright: ignore[reportPrivateUsage]
                 try:
                     return callback()
                 except Exception as e:
-                    strategy._callback_errors.append(e)
+                    strategy._callback_errors.append(e)  # pyright: ignore[reportPrivateUsage]
                     raise
 
             return tracked_callback

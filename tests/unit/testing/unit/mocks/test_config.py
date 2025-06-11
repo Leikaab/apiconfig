@@ -17,7 +17,7 @@ class TestMockConfigProvider:
         """Test that MockConfigProvider initializes correctly."""
         config_data = {"hostname": "test.example.com", "timeout": 30}
         provider = MockConfigProvider(config_data=config_data)
-        assert provider._config_data == config_data
+        assert provider._config_data == config_data  # pyright: ignore[reportPrivateUsage]
 
     def test_load(self) -> None:
         """Test that load() returns the config data provided during initialization."""

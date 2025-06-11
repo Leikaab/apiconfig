@@ -46,7 +46,7 @@ class TestCustomAuth:
         assert auth.refresh_func is refresh_func
         assert auth.can_refresh_func is can_refresh_func
         assert auth.is_expired_func is is_expired_func
-        assert auth._http_request_callable is http_request_callable
+        assert auth._http_request_callable is http_request_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_can_refresh_with_can_refresh_func(self) -> None:
         """Test can_refresh when can_refresh_func is provided."""
@@ -310,7 +310,7 @@ class TestCustomAuthFactoryMethods:
         http_callable = Mock()
         auth = CustomAuth.create_api_key_custom(api_key="test-key", http_request_callable=http_callable)
 
-        assert auth._http_request_callable is http_callable
+        assert auth._http_request_callable is http_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_create_session_token_custom(self) -> None:
         """Test create_session_token_custom factory method."""
@@ -377,7 +377,7 @@ class TestCustomAuthFactoryMethods:
             session_token="initial-token", session_refresh_func=mock_refresh_func, http_request_callable=http_callable
         )
 
-        assert auth._http_request_callable is http_callable
+        assert auth._http_request_callable is http_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_factory_methods_return_correct_type(self) -> None:
         """Test that factory methods return CustomAuth instances."""

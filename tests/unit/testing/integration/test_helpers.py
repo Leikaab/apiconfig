@@ -284,11 +284,13 @@ class TestSimulateTokenEndpoint:
         # Check that the access token is the custom token
         assert access_token == "custom_token"
 
-        # Check that expect_request was called twice (once for error, once for success)
-        assert mock_httpserver.expect_request.call_count == 2
+        # Check that expect_request (error) and expect_ordered_request (success) were called
+        mock_httpserver.expect_request.assert_called_once_with(uri="/custom/token", method="POST")
+        mock_httpserver.expect_ordered_request.assert_called_once_with(
+            uri="/custom/token",
+            method="POST",
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data="grant_type=client_credentials",
+        )
 
-        # Check that the first call was for the error response
-        mock_httpserver.expect_request.assert_any_call(uri="/custom/token", method="POST")
-
-        # We can't easily check the second call with configure_mock_response without mocking it,
-        # but we can verify that the function completed successfully
+        # We verify that the function completed successfully

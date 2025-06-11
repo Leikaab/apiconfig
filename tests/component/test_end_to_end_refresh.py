@@ -71,7 +71,7 @@ class TestEndToEndRefresh:
         assert "token_data" in result
         assert "config_updates" in result
 
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         assert token_data.get("access_token") == "new_access_token"
         assert token_data.get("refresh_token") == "new_refresh_token"

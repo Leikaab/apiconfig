@@ -103,12 +103,12 @@ class TestTripletexAuthRefresh:
             assert "token_data" in result
             assert "config_updates" in result
 
-            token_data = result["token_data"]
+            token_data = result.get("token_data")
             assert token_data is not None
             assert "access_token" in token_data
             assert "expires_in" in token_data
             assert "token_type" in token_data
-            assert token_data["token_type"] == "session"
+            assert token_data.get("token_type") == "session"
 
     def test_concurrent_refresh_thread_safety(self, tripletex_client: TripletexClient) -> None:
         """Test that concurrent refresh operations are thread-safe."""

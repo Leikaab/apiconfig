@@ -36,10 +36,10 @@ class TestEnhancedAuthMocksRefresh:
         result = mock_auth.refresh()
         assert result is not None
         assert "token_data" in result
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         assert "access_token" in token_data
-        assert token_data["access_token"] == "initial_token_refreshed_1"
+        assert token_data.get("access_token") == "initial_token_refreshed_1"
         assert mock_auth.current_token == "initial_token_refreshed_1"
 
     def test_mock_refreshable_auth_strategy_refresh_failure(self) -> None:

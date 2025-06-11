@@ -335,10 +335,11 @@ class TestCustomAuthFactoryMethods:
         # Test refresh functionality
         result = auth.refresh()
         assert result is not None
-        assert result["token_data"] is not None
-        assert result["token_data"]["access_token"] == "refreshed-token-1"
-        assert result["token_data"]["token_type"] == "session"
-        assert result["config_updates"] is None
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "refreshed-token-1"
+        assert token_data.get("token_type") == "session"
+        assert result.get("config_updates") is None
 
         # Test that headers are updated after refresh
         headers = auth.prepare_request_headers()
@@ -445,8 +446,9 @@ class TestCustomAuthRefreshIntegration:
         # Refresh the token
         result = auth.refresh()
         assert result is not None
-        assert result["token_data"] is not None
-        assert result["token_data"]["access_token"] == "refreshed-token"
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "refreshed-token"
 
         # Token should no longer be expired and headers should be updated
         assert not auth.is_expired()

@@ -286,8 +286,8 @@ def test_redacting_formatter_fallback_branch_strmsg(
 def test_redacting_formatter_is_structured_dict_list() -> None:
     """Test that _is_structured correctly identifies dict and list as structured data."""
     fmt = RedactingFormatter()
-    assert fmt._is_structured({"foo": "bar"}, None) is True
-    assert fmt._is_structured([1, 2, 3], None) is True
+    assert fmt._is_structured({"foo": "bar"}, None) is True  # pyright: ignore[reportPrivateUsage]
+    assert fmt._is_structured([1, 2, 3], None) is True  # pyright: ignore[reportPrivateUsage]
 
 
 def test_redacting_formatter_redact_structured_dict_from_string(
@@ -507,11 +507,8 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
     redacted_dict = {"form_data": "[REDACTED]"}
 
     # Override redact_body to return our dict using monkeypatch
-    monkeypatch.setattr(
-        fmt,
-        "_redact_body",
-        lambda msg, **kwargs: redacted_dict if msg == string_input else msg,
-    )
+    redact_body_override: Callable[..., dict[str, str]] = lambda msg, **kwargs: redacted_dict if msg == string_input else msg
+    monkeypatch.setattr(fmt, "_redact_body", redact_body_override)
 
     try:
         # Call _redact_structured with our string input and form content type

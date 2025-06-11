@@ -9,6 +9,7 @@ from typing import (
     Sequence,
     TypeAlias,
     TypeVar,
+    cast,
     runtime_checkable,
 )
 
@@ -102,8 +103,9 @@ class ConfigManager:
             provider_name = provider.__class__.__name__
             try:
                 logger.debug("Loading configuration from provider: %s", provider_name)
+                config_data: Mapping[str, Any] | None = None
                 if isinstance(provider, _SupportsLoad):
-                    config_data: Mapping[str, Any] = provider.load()
+                    config_data = provider.load()
                 elif isinstance(provider, _SupportsGetConfig):
                     config_data = provider.get_config()
                 else:
@@ -117,7 +119,7 @@ class ConfigManager:
                             config_data,
                         )
                     else:
-                        merged_config.update(config_data)
+                        merged_config.update(cast(Dict[str, Any], config_data))
                         logger.debug("Merged config from %s", provider_name)
                 else:
                     logger.debug("Provider %s returned no data.", provider_name)

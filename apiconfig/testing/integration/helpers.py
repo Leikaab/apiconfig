@@ -5,7 +5,8 @@
 import typing
 import uuid
 
-from httpx import Client, Response
+import httpx
+from httpx import Client
 from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
@@ -24,7 +25,7 @@ def make_request_with_config(
     path: str,
     method: str = "GET",
     **kwargs: typing.Any,
-) -> Response:
+) -> httpx.Response:
     """Make an HTTP request using the provided config and auth strategy to a mock server.
 
     Handles applying authentication via the strategy's `prepare_request` method.
@@ -46,7 +47,7 @@ def make_request_with_config(
 
     Returns
     -------
-    Response
+    httpx.Response
         The httpx Response object.
     """
     base_url = mock_server_url.rstrip("/")

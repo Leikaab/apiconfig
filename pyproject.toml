@@ -58,6 +58,7 @@ crudclient = "0.7.1"
 pytest-asyncio = "^1.0.0"
 pyright = "*"
 types-werkzeug = "^1.0.9"
+types-httpx = "*"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0"

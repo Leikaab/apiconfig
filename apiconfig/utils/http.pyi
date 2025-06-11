@@ -1,11 +1,9 @@
 from typing import Any, Dict, Mapping, Optional, Union
 
-from apiconfig.exceptions.http import (
-    HTTPUtilsError as HTTPUtilsError,
-    JSONDecodeError as JSONDecodeError,
-    JSONEncodeError as JSONEncodeError,
-    PayloadTooLargeError as PayloadTooLargeError,
-)
+from apiconfig.exceptions.http import HTTPUtilsError as HTTPUtilsError
+from apiconfig.exceptions.http import JSONDecodeError as JSONDecodeError
+from apiconfig.exceptions.http import JSONEncodeError as JSONEncodeError
+from apiconfig.exceptions.http import PayloadTooLargeError as PayloadTooLargeError
 
 __all__: list[str]
 

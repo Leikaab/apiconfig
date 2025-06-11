@@ -1,7 +1,7 @@
 """Provides a configuration provider that loads values from environment variables."""
 
 import os
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar, cast
 
 from apiconfig.exceptions.config import ConfigValueError, InvalidConfigError
 
@@ -129,7 +129,7 @@ class EnvProvider:
         value = os.environ.get(env_key)
 
         if value is None:
-            return default
+            return cast(T, default)
 
         if expected_type is None:
             return value
@@ -144,13 +144,13 @@ class EnvProvider:
                 try:
                     val_lower = value.lower()
                     if val_lower in ("true", "1", "yes", "y", "on"):
-                        return True
+                        return cast(T, True)
                     elif val_lower in ("false", "0", "no", "n", "off"):
-                        return False
+                        return cast(T, False)
                     else:
                         raise ValueError(f"Cannot convert '{value}' to bool")
                 except AttributeError:
-                    return bool(value)
-            return expected_type(value)  # type: ignore[call-arg]
+                    return cast(T, bool(value))
+            return cast(T, expected_type(value))  # type: ignore[call-arg, redundant-cast]
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert environment variable {env_key}='{value}' to {expected_type.__name__}: {str(e)}") from e

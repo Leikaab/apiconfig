@@ -21,6 +21,8 @@ from apiconfig.utils.redaction.headers import (
     redact_headers,
 )
 
+from .detailed import DetailedFormatter
+
 
 class RedactingFormatter(logging.Formatter):
     """Automatically redact sensitive information from log messages and HTTP headers.
@@ -282,8 +284,28 @@ def redact_message_helper(formatter: RedactingFormatter, record: logging.LogReco
     formatter._redact_message(record)  # pyright: ignore[reportPrivateUsage]
 
 
+def format_exception_text_helper(
+    formatter: DetailedFormatter,
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_exception_text`` for tests."""
+    return formatter._format_exception_text(formatted, record)  # pyright: ignore[reportPrivateUsage]
+
+
+def format_stack_info_helper(
+    formatter: DetailedFormatter,
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_stack_info`` for tests."""
+    return formatter._format_stack_info(formatted, record)  # pyright: ignore[reportPrivateUsage]
+
+
 __all__: list[str] = [
     "RedactingFormatter",
     "redact_structured_helper",
     "redact_message_helper",
+    "format_exception_text_helper",
+    "format_stack_info_helper",
 ]

@@ -193,7 +193,7 @@ class TestRaceConditionPrevention:
             start_time = time.time()
 
             # Measure every 10ms for 100ms
-            for i in range(10):
+            for _ in range(10):
                 is_expired = strategy.is_expired()
                 elapsed = time.time() - start_time
                 measurements.append((elapsed, is_expired))

@@ -1,7 +1,7 @@
 """Common base client for API interactions using apiconfig patterns."""
 
 import json
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union, cast
 
 if TYPE_CHECKING:
     from httpx import Client, HTTPStatusError, RequestError, Response
@@ -112,12 +112,12 @@ class BaseClient:
             raise HTTPUtilsError(error_message)
 
         if not response.text.strip():
-            return {}
+            return cast(JsonObject, {})
 
         try:
             # Parse JSON directly to handle both objects and arrays
             result = json.loads(response.text)
-            return result if isinstance(result, (dict, list)) else {}  # Explicitly cast to expected types
+            return result if isinstance(result, (dict, list)) else cast(JsonObject, {})  # Explicitly cast to expected types
         except json.JSONDecodeError as e:
             raise JSONDecodeError(
                 f"Failed to decode JSON response from {method.value} {url}. "

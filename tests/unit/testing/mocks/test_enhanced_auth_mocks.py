@@ -3,7 +3,7 @@
 
 import threading
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from unittest.mock import patch
 
 import pytest
@@ -18,6 +18,7 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
+from apiconfig.types import TokenRefreshResult
 
 
 class TestMockRefreshableAuthStrategy:
@@ -178,10 +179,12 @@ class TestMockRefreshableAuthStrategy:
 
     def test_refresh_callback_raises_on_none_result(self) -> None:
         """Test refresh callback raises error when refresh returns None."""
-        strategy = MockRefreshableAuthStrategy()
 
-        # Mock refresh to return None
-        strategy.refresh = lambda: None  # type: ignore[method-assign]
+        class RefreshReturnsNone(MockRefreshableAuthStrategy):
+            def refresh(self) -> Optional[TokenRefreshResult]:
+                return None
+
+        strategy = RefreshReturnsNone()
 
         callback = strategy.get_refresh_callback()
 

@@ -263,6 +263,20 @@ apiconfig is fully tested with `pytest` and `coverage.py`. To run tests and chec
 pytest --cov=apiconfig --cov-report=html
 ```
 
+### Static Type Checking
+
+apiconfig uses [Pyright](https://github.com/microsoft/pyright) for optional static
+type checking. Before running Pyright, ensure development dependencies are
+installed and the virtual environment is active:
+
+```bash
+poetry install --with dev
+poetry shell
+pyright
+```
+
+This guarantees libraries like `httpx`, `pytest`, and their stubs are available.
+
 ---
 
 ## CI/CD

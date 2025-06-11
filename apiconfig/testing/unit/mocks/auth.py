@@ -392,6 +392,25 @@ class MockBearerAuthWithRefresh(MockRefreshableAuthStrategy):
         """
         super().__init__(**kwargs)
 
+    @property
+    def concurrent_refreshes(self) -> int:
+        """Current number of concurrent refresh operations."""
+        return getattr(self, "_concurrent_refreshes", 0)
+
+    @property
+    def max_concurrent_refreshes(self) -> int:
+        """Maximum number of concurrent refresh operations observed."""
+        return getattr(self, "_max_concurrent_refreshes", 0)
+
+    def reset_refresh_counters(self) -> None:
+        """Reset counters tracking refresh attempts and concurrency."""
+        if hasattr(self, "_refresh_attempts"):
+            self._refresh_attempts = 0
+        if hasattr(self, "_concurrent_refreshes"):
+            self._concurrent_refreshes = 0
+        if hasattr(self, "_max_concurrent_refreshes"):
+            self._max_concurrent_refreshes = 0
+
     def apply_auth(self, headers: Dict[str, str]) -> None:
         """Apply Bearer authentication to headers.
 
@@ -579,7 +598,7 @@ class AuthTestScenarioBuilder:
             assert lock is not None
             with lock:
                 strategy._concurrent_refreshes += 1  # pyright: ignore[reportPrivateUsage]
-                strategy._max_concurrent_refreshes = max(
+                strategy._max_concurrent_refreshes = max(  # pyright: ignore[reportPrivateUsage]
                     strategy._max_concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
                     strategy._concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
                 )

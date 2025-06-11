@@ -386,10 +386,8 @@ class TestAuthTestScenarioBuilder:
 
         # Check that thread safety attributes are added
         assert hasattr(strategy, "_refresh_lock")  # pyright: ignore[reportPrivateUsage]
-        assert hasattr(strategy, "_concurrent_refreshes")  # pyright: ignore[reportPrivateUsage]
-        assert hasattr(strategy, "_max_concurrent_refreshes")  # pyright: ignore[reportPrivateUsage]
-        assert getattr(strategy, "_concurrent_refreshes", None) == 0  # pyright: ignore[reportPrivateUsage]
-        assert getattr(strategy, "_max_concurrent_refreshes", None) == 0  # pyright: ignore[reportPrivateUsage]
+        assert strategy.concurrent_refreshes == 0
+        assert strategy.max_concurrent_refreshes == 0
 
     def test_concurrent_refresh_tracking(self) -> None:
         """Test concurrent refresh tracking functionality."""
@@ -410,8 +408,8 @@ class TestAuthTestScenarioBuilder:
             thread.join()
 
         # Check that concurrent refreshes were tracked
-        assert getattr(strategy, "_concurrent_refreshes", None) == 0  # Should be back to 0
-        assert getattr(strategy, "_max_concurrent_refreshes", 0) >= 1  # At least 1 concurrent
+        assert strategy.concurrent_refreshes == 0
+        assert strategy.max_concurrent_refreshes >= 1
 
     def test_create_crudclient_integration_scenario(self) -> None:
         """Test creating crudclient integration scenario."""
@@ -651,7 +649,7 @@ class TestIntegrationScenarios:
         assert len(results) == 5
 
         # Check that concurrent tracking worked
-        assert getattr(strategy, "_max_concurrent_refreshes", 0) >= 1
+        assert strategy.max_concurrent_refreshes >= 1
 
 
 class TestMockAuthStrategyExceptionHandling:

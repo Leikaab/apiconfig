@@ -168,7 +168,7 @@ def assert_request_received(
     matching_requests: List[Tuple[Request, Response]] = []
     lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
-    log = httpserver.log
+    log: list[tuple[Request, Response]] = httpserver.log
     for entry in log:
         request: Request = entry[0]  # entry is a tuple (request, response)
         if request.path == path and request.method == method:

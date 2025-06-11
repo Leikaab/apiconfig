@@ -30,12 +30,12 @@ class TestInMemoryTokenStorage:
     def test_store_token(self) -> None:
         """Test storing a token."""
         storage = InMemoryTokenStorage()
-        storage.store_token("test_key", "test_token")
-        assert storage._storage["test_key"] == "test_token"
+        storage.store_token("test_key", {"access_token": "test_token"})
+        assert storage._storage["test_key"] == {"access_token": "test_token"}
 
         # Test overwriting an existing token
-        storage.store_token("test_key", "new_token")
-        assert storage._storage["test_key"] == "new_token"
+        storage.store_token("test_key", {"access_token": "new_token"})
+        assert storage._storage["test_key"] == {"access_token": "new_token"}
 
     def test_retrieve_token(self) -> None:
         """Test retrieving a token."""
@@ -45,8 +45,8 @@ class TestInMemoryTokenStorage:
         assert storage.retrieve_token("non_existent") is None
 
         # Test retrieving an existing token
-        storage.store_token("test_key", "test_token")
-        assert storage.retrieve_token("test_key") == "test_token"
+        storage.store_token("test_key", {"access_token": "test_token"})
+        assert storage.retrieve_token("test_key") == {"access_token": "test_token"}
 
     def test_delete_token(self) -> None:
         """Test deleting a token."""
@@ -56,7 +56,7 @@ class TestInMemoryTokenStorage:
         storage.delete_token("non_existent")
 
         # Test deleting an existing token
-        storage.store_token("test_key", "test_token")
+        storage.store_token("test_key", {"access_token": "test_token"})
         assert "test_key" in storage._storage
         storage.delete_token("test_key")
         assert "test_key" not in storage._storage

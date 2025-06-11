@@ -197,8 +197,6 @@ class TestEnhancedAuthMocksRefresh:
 
         # Test that strategy has thread safety attributes
         assert hasattr(strategy, "_refresh_lock")
-        assert hasattr(strategy, "_concurrent_refreshes")
-        assert hasattr(strategy, "_max_concurrent_refreshes")
 
         # Test concurrent refresh operations
         results: list[TokenRefreshResult] = []
@@ -226,7 +224,7 @@ class TestEnhancedAuthMocksRefresh:
         # Check results
         assert len(results) == 3
         assert len(errors) == 0
-        assert strategy._max_concurrent_refreshes >= 1  # pyright: ignore[reportPrivateUsage]
+        assert strategy.max_concurrent_refreshes >= 1
 
     def test_auth_test_scenario_builder_crudclient_integration(self) -> None:
         """Test AuthTestScenarioBuilder crudclient integration scenario."""

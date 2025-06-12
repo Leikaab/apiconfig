@@ -325,7 +325,8 @@ Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at v
 
 ### Maintenance Notes
 
-Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
+The project aims for quarterly releases with bug fixes and minor improvements.
+Issues and pull requests are reviewed at least once a month.
 
 ### Changelog
 
@@ -333,4 +334,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
 
 ### Future Considerations
 
-Planned improvements include enhanced documentation, additional auth strategies, and expanded test coverage.
+- Expanded authentication integrations (e.g., OAuth2)
+- Additional configuration providers
+- Improved typed interfaces
+- More real-world examples

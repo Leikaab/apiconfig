@@ -83,7 +83,7 @@ class TestRefreshOAuth2Token:
 
         # Verify the request was made with the correct timeout
         mock_http_client.post.assert_called_once()
-        args, kwargs = mock_http_client.post.call_args
+        _, kwargs = mock_http_client.post.call_args
         assert kwargs["timeout"] == 5.0  # Custom timeout from client_config
 
     def test_refresh_oauth2_token_with_explicit_params(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
@@ -102,7 +102,7 @@ class TestRefreshOAuth2Token:
 
         # Verify the request was made with the correct timeout
         mock_http_client.post.assert_called_once()
-        args, kwargs = mock_http_client.post.call_args
+        _, kwargs = mock_http_client.post.call_args
         assert kwargs["timeout"] == 3.0  # Explicit timeout
 
     def test_refresh_oauth2_token_with_auth_credentials(self, mock_http_client: MagicMock, mock_response: MagicMock) -> None:
@@ -124,7 +124,7 @@ class TestRefreshOAuth2Token:
 
         # Verify the request was made with Basic Auth
         mock_http_client.post.assert_called_once()
-        args, kwargs = mock_http_client.post.call_args
+        _, kwargs = mock_http_client.post.call_args
         assert "auth" in kwargs
         assert kwargs["auth"] == "basic_auth"
         mock_http_client.BasicAuth.assert_called_once_with(username="test_client_id", password="test_client_secret")
@@ -144,7 +144,7 @@ class TestRefreshOAuth2Token:
 
         # Verify the request was made with the extra parameters
         mock_http_client.post.assert_called_once()
-        args, kwargs = mock_http_client.post.call_args
+        _, kwargs = mock_http_client.post.call_args
         assert kwargs["data"]["scope"] == "read write"
         assert kwargs["data"]["audience"] == "api://default"
 

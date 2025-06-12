@@ -5,6 +5,20 @@ Python's built in `logging.Formatter` to provide rich log output and automatic
 redaction of sensitive data. They are designed to be drop-in replacements for
 standard formatters so applications can adopt them without major changes.
 
+## Module Description
+
+The formatters in this package provide consistent log output for all modules
+that rely on **apiconfig**. They enrich records with structured information
+such as timestamps, log level and source location so issues can be diagnosed
+quickly when running in different environments.
+
+Each formatter keeps the concerns of formatting and redaction separate. They
+delegate sensitive-data handling to the utilities in
+`apiconfig.utils.redaction` and remain drop-in replacements for the standard
+`logging.Formatter` class. This modular design allows applications to mix and
+match formatters and redaction strategies without rewriting their logging
+setup.
+
 ## Contents
 - `detailed.py` – `DetailedFormatter` adds timestamps, level names, logger names
   and file/line information with smart handling of multiline messages and stack
@@ -65,3 +79,8 @@ pytest tests/unit/utils/logging/formatters -q
 
 ## Status
 Stable – widely used by other modules for consistent logging behaviour.
+
+## Navigation
+
+**Parent Package:** [apiconfig.utils.logging](../README.md)
+

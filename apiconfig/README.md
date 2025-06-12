@@ -1,8 +1,28 @@
 # apiconfig
 
-Python library for building API clients with flexible configuration and pluggable
-authentication. This package exposes the public API used by applications while
-internal subpackages provide the implementation details.
+## Module Description
+**apiconfig** centralises configuration and authentication logic for Python API
+clients. The library provides a small, stable surface area that applications can
+depend on while hiding complex implementation details behind well defined
+interfaces.
+
+The project exists so that the many in-house tools and microservices speak to
+vendor APIs in a consistent way. Each service can focus on business logic while
+`apiconfig` handles configuration merging, secure credential storage and token
+refresh flows.
+
+At the top level this package ties together the submodules that actually
+implement the work. `auth` offers pluggable authentication strategies, `config`
+manages settings providers and loading order, `exceptions` defines a structured
+error hierarchy and `utils` contains logging helpers and other small utilities.
+
+## Navigation
+- [auth](./auth/README.md) – authentication framework and strategies
+- [config](./config/README.md) – configuration providers and management
+- [exceptions](./exceptions/README.md) – structured error hierarchy
+- [testing](./testing/README.md) – helpers and fixtures for tests
+- [utils](./utils/README.md) – logging and miscellaneous utilities
+- [types](./types/README.md) – shared type definitions
 
 ## Contents
 - `auth/` – authentication framework and built‑in strategies.
@@ -54,4 +74,15 @@ pytest -q
 ```
 
 ## Status
-Stable – actively maintained with high test coverage.
+**Stability:** Stable
+**API Version:** 0.0.0
+**Deprecations:** None
+
+### Maintenance Notes
+- Library is used in production and receives regular updates.
+
+### Changelog
+- 0.0.0 – Initial public release.
+
+### Future Considerations
+- Expand documentation for custom provider integrations.

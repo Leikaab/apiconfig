@@ -1,72 +1,72 @@
 # apiconfig.auth.strategies
 
-``apiconfig.auth.strategies`` contains the built‑in authentication
-strategies used by **apiconfig**.  Each strategy implements the
-`AuthStrategy` interface and can be plugged into a `ClientConfig` to
-attach credentials to outgoing HTTP requests.
+`apiconfig.auth.strategies` contains the built-in authentication strategies bundled with **apiconfig**. Every strategy implements the `AuthStrategy` interface and can be injected into a `ClientConfig` to attach credentials to outgoing HTTP requests.
 
-## Innhold
+This package hides authentication details behind a common interface so client code stays the same regardless of how credentials are provided. The design follows the Strategy pattern, allowing you to swap or extend authentication mechanisms without modifying other parts of the client.
 
-- `api_key.py` – API‑nøkkel autentisering via header eller query‑parameter.
-- `basic.py` – HTTP Basic autentisering.
-- `bearer.py` – Bearer token med valgfri utløpstid og refresh‑støtte.
-- `custom.py` – Brukerdefinerte strategier med egne callbacks.
-- `__init__.py` – re‑eksporterer alle strategiene for enkel import.
+## Navigation
+**Parent Module:** [apiconfig.auth](../README.md)
 
-## Eksempel på bruk
+- [`api_key.py`](./api_key.py) – API key authentication via header or query parameter.
+- [`basic.py`](./basic.py) – HTTP Basic authentication.
+- [`bearer.py`](./bearer.py) – Bearer token authentication with optional expiry and refresh support.
+- [`custom.py`](./custom.py) – User-defined strategies with callbacks.
+- [`__init__.py`](./__init__.py) – Re-exports all strategies for convenience.
 
+## Contents
+- `api_key.py` – API key authentication via header or query parameter.
+- `basic.py` – HTTP Basic authentication.
+- `bearer.py` – Bearer token with optional expiry and refresh support.
+- `custom.py` – User-defined strategies with callbacks.
+- `__init__.py` – re-exports all strategies for easy import.
+
+## Usage example
 ```python
 from datetime import datetime, timedelta, timezone
 from apiconfig import ClientConfig
 from apiconfig.auth.strategies import ApiKeyAuth, BasicAuth, BearerAuth, CustomAuth
 
-# API‑nøkkel i header
-header_auth = ApiKeyAuth(api_key="secret", header_name="X-API-Key")
+# API key in a header
+auth_header = ApiKeyAuth(api_key="secret", header_name="X-API-Key")
 
-# Enkel Basic Auth
+# Basic Auth
 basic_auth = BasicAuth(username="user", password="pass")
 
-# Bearer token med utløpstid
+# Bearer token with expiry
 bearer_auth = BearerAuth(
     access_token="token",
     expires_at=datetime.now(timezone.utc) + timedelta(hours=1),
 )
 
-# Custom med callback
+# Custom strategy using a callback
 custom_auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
 
-config = ClientConfig(hostname="api.example.com", auth_strategy=header_auth)
+config = ClientConfig(hostname="api.example.com", auth_strategy=auth_header)
 ```
 
-## Nøkkelklasser
-
-| Klasse | Beskrivelse |
+## Key classes
+| Class | Description |
 | ------ | ----------- |
-| `ApiKeyAuth` | Sender API‑nøkkel enten i en header eller som query‑parameter. |
-| `BasicAuth` | Legger til `Authorization: Basic ...` header basert på brukernavn og passord. |
-| `BearerAuth` | Bruker bearer token og kan oppdateres hvis `expires_at` er satt og refresh‑funksjon er tilgjengelig. |
-| `CustomAuth` | Tillater helt egne callbacks for både headers, parameters og refresh‑logikk. |
+| `ApiKeyAuth` | Sends an API key in a header or as a query parameter. |
+| `BasicAuth` | Adds an `Authorization: Basic` header using a username and password. |
+| `BearerAuth` | Uses a bearer token and can refresh it when `expires_at` is set and a refresh function is available. |
+| `CustomAuth` | Allows custom callbacks for headers, parameters and refresh logic. |
 
-### Designmønster
+### Design pattern
+The strategies implement the **Strategy pattern**: each one conforms to `AuthStrategy` so they can be swapped without changing client code.
 
-Strategiene følger **Strategy‑mønsteret**: alle implementerer
-`AuthStrategy` og kan byttes ut uten at resten av klientkoden endres.
-
-## Sekvensdiagram
-
+## Sequence diagram
 ```mermaid
 sequenceDiagram
     participant Client
     participant Strategy as AuthStrategy
     Client->>Strategy: prepare_request_headers()
     Strategy-->>Client: headers
-    Client->>Server: HTTP request med auth headers
+    Client->>Server: HTTP request with auth headers
 ```
 
-## Testinstruksjoner
-
-Installer avhengigheter og kjør enhetene for denne modulen:
-
+## Test instructions
+Install dependencies and run the unit tests for this module:
 ```bash
 python -m pip install -e .
 python -m pip install pytest
@@ -74,6 +74,4 @@ pytest tests/unit/auth/strategies -q
 ```
 
 ## Status
-
-Stabil – strategiene brukes av andre deler av **apiconfig** og har
-egen testdekning.
+Stable – the strategies are used by other parts of **apiconfig** and have dedicated test coverage.

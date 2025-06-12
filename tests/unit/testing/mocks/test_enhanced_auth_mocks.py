@@ -3,7 +3,7 @@
 
 import threading
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 from unittest.mock import patch
 
 import pytest
@@ -385,7 +385,7 @@ class TestAuthTestScenarioBuilder:
         strategy = AuthTestScenarioBuilder.create_concurrent_refresh_scenario()
 
         # Check that thread safety attributes are added
-        assert hasattr(strategy, "_refresh_lock")  # pyright: ignore[reportPrivateUsage]
+        assert hasattr(strategy, "_refresh_lock")
         assert strategy.concurrent_refreshes == 0
         assert strategy.max_concurrent_refreshes == 0
 
@@ -622,8 +622,8 @@ class TestIntegrationScenarios:
         strategy = AuthTestScenarioBuilder.create_concurrent_refresh_scenario()
         callback = strategy.get_refresh_callback()
 
-        results: List[str] = []
-        errors: List[Exception] = []
+        results: list[str] = []
+        errors: list[Exception] = []
 
         def worker() -> None:
             try:

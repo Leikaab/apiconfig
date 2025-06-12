@@ -67,8 +67,8 @@ class TestRefreshErrorHandling:
 
         auth = TestBearerAuth(access_token="initial", http_request_callable=mock_http)
 
-        results = []
-        errors = []
+        results: list[TokenRefreshResult] = []
+        errors: list[Exception] = []
 
         def refresh_worker() -> None:
             try:

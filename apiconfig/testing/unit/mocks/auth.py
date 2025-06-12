@@ -271,7 +271,7 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         self._concurrent_refreshes = 0
         self._max_concurrent_refreshes = 0
         self._callback_calls = 0
-        self._callback_errors = []
+        self._callback_errors: list[Exception] = []
 
     @property
     def refresh_attempts(self) -> int:

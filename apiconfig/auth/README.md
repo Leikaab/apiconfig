@@ -86,3 +86,7 @@ Stable – used by the configuration system and tested via the unit suite.
 - [apiconfig](../README.md) – project overview and main documentation.
 - [strategies](./strategies/README.md) – built-in authentication strategies.
 - [token](./token/README.md) – utilities for managing OAuth2 tokens.
+
+## See Also
+- [apiconfig.config](../config/README.md) – configuration system used with auth strategies
+- [apiconfig.exceptions.auth](../exceptions/auth/README.md) – exceptions raised during authentication

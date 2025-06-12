@@ -102,7 +102,7 @@ class TestFileProvider:
 
         # Check that the provider is a FileProvider with the correct file path
         assert isinstance(provider, FileProvider)
-        assert provider._file_path == config_file
+        assert provider._file_path == config_file  # pyright: ignore[reportPrivateUsage]
 
 
 class TestEnvProvider:
@@ -145,7 +145,7 @@ class TestConfigManager:
 
         # Check that the manager is a ConfigManager with the correct providers
         assert isinstance(manager, ConfigManager)
-        assert manager._providers == [mock_file_provider, mock_env_provider]
+        assert manager._providers == [mock_file_provider, mock_env_provider]  # pyright: ignore[reportPrivateUsage]
 
 
 class TestCustomAuthStrategyFactory:

@@ -1,6 +1,6 @@
 """Unit tests for the AuthStrategy base class."""
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, cast
 from unittest.mock import Mock
 
 import pytest
@@ -117,7 +117,7 @@ class TestAuthStrategy:
 
         # Replace the refresh method with our mock
         original_refresh = strategy.refresh
-        strategy.refresh = refresh_mock  # type: ignore
+        cast(Any, strategy).refresh = refresh_mock
 
         callback = strategy.get_refresh_callback()
         assert callback is not None
@@ -129,7 +129,7 @@ class TestAuthStrategy:
         refresh_mock.assert_called_once()
 
         # Restore original method
-        strategy.refresh = original_refresh  # type: ignore
+        cast(Any, strategy).refresh = original_refresh
 
     def test_refreshable_strategy_can_refresh_with_http_callable(self) -> None:
         """Test that RefreshableAuthStrategy can refresh when http_request_callable is provided."""

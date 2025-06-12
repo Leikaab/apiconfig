@@ -29,11 +29,11 @@ class TestEnvProvider:
     def test_init(self) -> None:
         """Test that EnvProvider initializes correctly with custom prefix."""
         provider = EnvProvider(prefix="TEST_")
-        assert provider._prefix == "TEST_"
+        assert provider._prefix == "TEST_"  # pyright: ignore[reportPrivateUsage]
 
         # Test default prefix
         default_provider = EnvProvider()
-        assert default_provider._prefix == "APICONFIG_"
+        assert default_provider._prefix == "APICONFIG_"  # pyright: ignore[reportPrivateUsage]
 
     def test_load_empty(self) -> None:
         """Test loading when no matching environment variables exist."""
@@ -83,12 +83,12 @@ class TestEnvProvider:
 
         def patched_load(self: EnvProvider) -> Dict[str, Any]:
             config: Dict[str, Any] = {}
-            prefix_len = len(self._prefix)
+            prefix_len = len(self._prefix)  # pyright: ignore[reportPrivateUsage]
 
             for key, value in os.environ.items():
-                if key.startswith(self._prefix):
+                if key.startswith(self._prefix):  # pyright: ignore[reportPrivateUsage]
                     config_key = key[prefix_len:]
-                    if self._is_digit(value):
+                    if self._is_digit(value):  # pyright: ignore[reportPrivateUsage]
                         try:
                             config[config_key] = int(value)
                         except ValueError:

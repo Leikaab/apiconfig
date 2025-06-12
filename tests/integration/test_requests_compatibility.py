@@ -175,4 +175,5 @@ class TestRequestsEdgeCases:
 
         # Can access history through original response
         assert exc.response is not None and hasattr(exc.response, "history")
+        assert exc.response.history is not None
         assert len(exc.response.history) == 2

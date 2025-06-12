@@ -50,7 +50,7 @@ The library uses Protocol types to define the expected interface:
 
 .. code-block:: python
 
-    from typing import Protocol, Optional, Any, runtime_checkable
+    from typing import Protocol, Optional, Any, Sequence, runtime_checkable
 
     @runtime_checkable
     class HttpRequestProtocol(Protocol):
@@ -67,6 +67,7 @@ The library uses Protocol types to define the expected interface:
         text: str
         request: Optional[Any]
         reason: Optional[str]
+        history: Sequence["HttpResponseProtocol"] | None
 
 Any object that has these attributes will work seamlessly with apiconfig exceptions.
 

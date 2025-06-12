@@ -77,13 +77,19 @@ class HttpRequestProtocol(Protocol):
 
 @runtime_checkable
 class HttpResponseProtocol(Protocol):
-    """Protocol matching common HTTP response objects (requests.Response, httpx.Response, etc.)."""
+    """Protocol matching common HTTP response objects.
+
+    This includes responses from libraries like :mod:`requests` and
+    :mod:`httpx`. Redirect chains are captured via the optional
+    :attr:`history` attribute when available.
+    """
 
     status_code: int
     headers: Any
     text: str  # For body preview
     request: Optional[Any]  # Most responses have .request
     reason: Optional[str]
+    history: Sequence["HttpResponseProtocol"] | None
 
 
 class HttpMethod(Enum):

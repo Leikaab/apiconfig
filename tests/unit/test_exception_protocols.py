@@ -1,6 +1,6 @@
 """Unit tests for HTTP exception protocol support."""
 
-from typing import Any, cast
+from typing import Any, Sequence, cast
 from unittest.mock import Mock
 
 import pytest
@@ -10,7 +10,7 @@ from apiconfig.exceptions.http import (
     ApiClientError,
     create_api_client_error,
 )
-from apiconfig.types import HttpRequestProtocol
+from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
 
 
 class TestProtocolCompliance:
@@ -42,6 +42,7 @@ class TestProtocolCompliance:
                 self.text = "Not found"
                 self.request = None
                 self.reason: str | None = "Not Found"
+                self.history: Sequence[HttpResponseProtocol] | None = None
 
         response = MinimalResponse()
         # Skip runtime type check that causes mypy issues

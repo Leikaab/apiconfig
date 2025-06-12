@@ -127,7 +127,7 @@ class TestOneFlowIntegration:
             # Dict response with data key
             if "data" in contracts:
                 assert isinstance(contracts["data"], list)
-        elif isinstance(contracts, list):
+        elif isinstance(contracts, list):  # pyright: ignore[reportUnnecessaryIsInstance]
             # Direct list response
             assert len(contracts) >= 0  # May be empty
 
@@ -169,7 +169,7 @@ class TestOneFlowIntegration:
         """
         # Test with invalid endpoint to trigger error handling
         with pytest.raises(HTTPUtilsError) as exc_info:
-            oneflow_client._request(HttpMethod.GET, "/nonexistent")
+            oneflow_client._request(HttpMethod.GET, "/nonexistent")  # pyright: ignore[reportPrivateUsage]
 
         # Verify we get proper apiconfig HTTP exceptions
         error_message = str(exc_info.value)

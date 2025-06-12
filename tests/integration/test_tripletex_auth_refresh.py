@@ -63,9 +63,9 @@ class TestTripletexAuthRefresh:
         assert not auth_strategy.is_expired()
         assert auth_strategy._session_token is not None  # pyright: ignore[reportPrivateUsage]
         # Token should be refreshed (new token)
-        assert auth_strategy._session_token != old_token or auth_strategy._token_expires_at > datetime.now(
+        assert auth_strategy._session_token != old_token or auth_strategy._token_expires_at > datetime.now(  # pyright: ignore[reportPrivateUsage]
             timezone.utc
-        )  # pyright: ignore[reportPrivateUsage]
+        )
 
     def test_refresh_callback_integration(self, tripletex_client: TripletexClient) -> None:
         """Test integration with crudclient-style refresh callback."""

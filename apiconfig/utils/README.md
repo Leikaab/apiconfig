@@ -4,6 +4,15 @@ Miscellaneous utilities shipped with **apiconfig**. They cover HTTP helpers,
 URL construction, redaction of sensitive data and logging setup. Each subpackage
 can be used independently by API clients.
 
+## Navigation
+
+**Parent Module:** [apiconfig](../README.md)
+
+**Submodules:**
+- [logging](./logging/README.md) - configure redacted log output
+- [redaction](./redaction/README.md) - scrub secrets from requests and logs
+- [url](./url.py) - build and normalise URLs safely
+
 ## Contents
 - `http.py` – simple helpers for working with HTTP status codes and JSON payloads.
 - `url.py` – safe wrappers around `urllib.parse` for building URLs.

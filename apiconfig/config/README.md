@@ -57,3 +57,7 @@ pytest tests/unit/config -q
 
 ## Status
 Stable – used by API clients and covered by unit tests.
+
+## Navigation
+- [apiconfig](../README.md)
+- [providers](./providers/README.md)

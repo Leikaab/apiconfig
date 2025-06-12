@@ -80,6 +80,10 @@ python -m pip install pytest
 pytest tests/unit/exceptions -q
 ```
 
+## See Also
+- [auth](../auth/README.md) – strategies that raise authentication errors
+- [config](../config/README.md) – configuration providers that emit errors
+
 ## Status
 Stable – exceptions are widely used across the library and covered by unit
 tests.

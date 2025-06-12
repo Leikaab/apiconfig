@@ -3,6 +3,12 @@
 Configuration providers for **apiconfig**. These helpers supply configuration values from
 different sources so they can be combined by `ConfigManager`.
 
+## Navigation
+
+**Parent Module:** [apiconfig.config](../README.md)
+
+**Submodules:** None
+
 ## Contents
 - `env.py` – load configuration from environment variables with optional type inference.
 - `file.py` – read configuration from JSON files.

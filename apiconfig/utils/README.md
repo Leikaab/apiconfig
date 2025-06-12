@@ -80,3 +80,7 @@ Stable – used throughout the project.
 
 ### Future Considerations
 - Add async-friendly helpers and improve formatter integration.
+
+## See Also
+- [logging](./logging/README.md) – log utilities using redaction
+- [redaction](./redaction/README.md) – helpers for scrubbing secrets

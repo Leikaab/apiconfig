@@ -10,7 +10,7 @@ contracts when exchanging data. This reduces duplication and helps type
 checkers catch integration errors early.
 
 ## Navigation
-- [Project README](../README.md)
+**Parent Module:** [apiconfig](../README.md)
 
 ## Contents
 - `types.py`

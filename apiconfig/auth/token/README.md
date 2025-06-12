@@ -100,3 +100,8 @@ pytest tests/unit/auth/token -q
 - Support for additional storage backends, such as Redis or SQL databases.
 - CLI utilities to manage tokens outside of application code.
 - Enhanced logging and error reporting during token refresh.
+
+## See Also
+
+- [apiconfig.exceptions.auth](../../exceptions/auth/README.md) – errors raised during token refresh
+- [apiconfig.utils.logging](../../utils/logging/README.md) – logging helpers for refresh operations

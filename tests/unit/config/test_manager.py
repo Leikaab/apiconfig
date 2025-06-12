@@ -65,7 +65,7 @@ class TestConfigManager:
         """Test that ConfigManager initializes correctly."""
         providers = [MockProvider(), MockProvider()]
         manager = ConfigManager(providers=providers)
-        assert manager._providers == providers
+        assert manager.providers == providers
 
     def test_load_config_empty_providers(self) -> None:
         """Test loading config with no providers."""

@@ -57,3 +57,8 @@ pytest tests/unit/auth -q
 
 ## Status
 Stable – used by the configuration system and tested via the unit suite.
+
+## Navigation
+- [apiconfig](../README.md) – project overview and main documentation.
+- [strategies](./strategies/README.md) – built-in authentication strategies.
+- [token](./token/README.md) – utilities for managing OAuth2 tokens.

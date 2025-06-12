@@ -50,9 +50,8 @@ flowchart TB
 ## Tests
 Install dependencies and run the unit tests for the configuration package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/config -q
+poetry install --with dev
+poetry run pytest tests/unit/config -q
 ```
 
 ## Status

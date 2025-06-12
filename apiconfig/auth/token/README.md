@@ -1,23 +1,29 @@
 # apiconfig.auth.token
 
-Utilities for managing OAuth2 tokens in **apiconfig**. This module handles token refresh logic and defines a simple token storage interface.
+Helpers for OAuth2 token refresh and storage in **apiconfig**. The module handles refresh logic and exposes a minimal storage interface.
 
-## Innhold
+## Navigation
 
-- `refresh.py` – funksjoner for å oppdatere OAuth2-access tokens.
-- `storage.py` – `TokenStorage`-grensesnitt og `InMemoryTokenStorage`-implementasjon.
-- `__init__.py` – eksporterer `refresh_oauth2_token` og lagringsklasser.
+**Parent Module:** [apiconfig.auth](../README.md)
 
-## Eksempel på bruk
+**Subpackages:** None
+
+## Contents
+
+- `refresh.py` – functions to retrieve new OAuth2 access tokens.
+- `storage.py` – `TokenStorage` interface and `InMemoryTokenStorage` implementation.
+- `__init__.py` – exports `refresh_oauth2_token` and storage classes.
+
+## Usage Example
 
 ```python
 from apiconfig.auth.token import refresh_oauth2_token, InMemoryTokenStorage
 import httpx
 
-# HTTP-klienten brukes av refresh-funksjonen
+# HTTP client used by the refresh function
 client = httpx.Client(timeout=5.0)
 
-# Hent nytt tilgangstoken med et refresh token
+# Fetch a new access token using a refresh token
 new_tokens = refresh_oauth2_token(
     refresh_token="abc123",
     token_url="https://auth.example.com/token",
@@ -30,37 +36,37 @@ storage = InMemoryTokenStorage()
 storage.store_token("default", new_tokens)
 ```
 
-## Nøkkelklasser og funksjoner
+## Key Classes and Functions
 
-| Navn | Beskrivelse |
+| Name | Description |
 | ---- | ----------- |
-| `TokenStorage` | Abstrakt baseklasse som definerer `store_token`, `retrieve_token` og `delete_token`. |
-| `InMemoryTokenStorage` | Enkel implementasjon som lagrer tokens i en intern ordbok. Egnet for testing. |
-| `refresh_oauth2_token` | Utfører selve token-refresh-operasjonen. Håndterer timeout, HTTP-feil, JSON-dekoding og retry-logikk. |
+| `TokenStorage` | Abstract base class defining `store_token`, `retrieve_token` and `delete_token`. |
+| `InMemoryTokenStorage` | Simple implementation storing tokens in an internal dictionary, useful for testing. |
+| `refresh_oauth2_token` | Performs the token refresh operation, handling timeout, HTTP errors, JSON decoding and retry logic. |
 
-### Designmønster
+### Design Pattern
 
-`TokenStorage` følger strategimønsteret: ulike lagringsmetoder kan implementeres og benyttes om hverandre.
+`TokenStorage` follows the **Strategy** pattern so different storage mechanisms can be used interchangeably.
 
-## Sekvensdiagram
+## Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant Client
     participant HTTP
     Client->>HTTP: POST /token (refresh_token)
-    alt suksess
+    alt success
         HTTP-->>Client: access_token
         Client->>Storage: store_token()
-    else feil
-        HTTP-->>Client: feilkode / melding
+    else failure
+        HTTP-->>Client: error code / message
         Client->>Client: raise TokenRefreshError
     end
 ```
 
-## Testinstruksjoner
+## Testing Instructions
 
-Installer pakkene og kjør unit-testene for denne modulen:
+Install the packages and run the unit tests for this module:
 
 ```bash
 python -m pip install -e .
@@ -70,4 +76,4 @@ pytest tests/unit/auth/token -q
 
 ## Status
 
-Modulen anses som **stabil** og brukes av andre deler av biblioteket.
+The module is considered **stable** and is used by other parts of the library.

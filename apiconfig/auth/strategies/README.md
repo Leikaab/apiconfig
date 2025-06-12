@@ -84,3 +84,7 @@ Stable – the strategies are used by other parts of **apiconfig** and have dedi
 
 ### Future Considerations
 - Support for additional token exchange mechanisms is planned.
+
+## See Also
+- [apiconfig.auth.token](../token/README.md) – token refresh utilities
+- [apiconfig.exceptions.auth](../../exceptions/auth/README.md) – related authentication errors

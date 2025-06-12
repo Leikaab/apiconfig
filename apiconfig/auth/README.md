@@ -2,13 +2,26 @@
 
 Authentication framework for **apiconfig**.  This package defines the common `AuthStrategy` base class and bundles the built in authentication strategies and token utilities.
 
+## Module Description
+
+The authentication package provides a unified interface for attaching credentials to outbound HTTP requests.  It implements several out-of-the-box strategies, including basic authentication, bearer tokens with optional refresh logic and simple API key handling.
+
+The framework exists so that client code does not need to understand the nuances of different authentication schemes.  By abstracting the preparation of headers and query parameters behind the `AuthStrategy` interface, it becomes trivial to swap between strategies or add custom ones without rewriting consumers.
+
+Within **apiconfig** this module underpins the `ClientConfig` class and every request that passes through the library.  The design follows the Strategy pattern, making it straightforward to extend or modify authentication behaviour while keeping configuration consistent across clients.
+
+## Navigation
+- [apiconfig](../README.md) – project overview and main documentation.
+- [strategies](./strategies/README.md) – built-in authentication strategies.
+- [token](./token/README.md) – utilities for managing OAuth2 tokens.
+
 ## Contents
 - `base.py` – abstract `AuthStrategy` with refresh support.
 - `strategies/` – collection of ready to use strategies such as `BasicAuth`, `BearerAuth` and `ApiKeyAuth`.
 - `token/` – helpers for OAuth2 token refresh and storage.
 - `__init__.py` – re-exports the most used classes for convenience.
 
-## Usage example
+## Usage Examples
 ```python
 from datetime import datetime, timedelta, timezone
 from apiconfig.auth import AuthStrategy
@@ -24,6 +37,12 @@ auth = BearerAuth(
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 headers = auth.prepare_request_headers()
 ```
+
+## Status
+**Stability:** Stable
+**API Version:** 1.0
+**Deprecations:** None
+
 
 ## Key classes
 | Name | Description |
@@ -69,11 +88,3 @@ poetry run pytest tests/unit/auth -q
 
 ### Optional Dependencies
 - `httpx` – recommended HTTP client for token refresh callbacks and testing.
-
-## Status
-Stable – used by the configuration system and tested via the unit suite.
-
-## Navigation
-- [apiconfig](../README.md) – project overview and main documentation.
-- [strategies](./strategies/README.md) – built-in authentication strategies.
-- [token](./token/README.md) – utilities for managing OAuth2 tokens.

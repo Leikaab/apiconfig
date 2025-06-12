@@ -66,6 +66,15 @@ sequenceDiagram
 
 ## Testing Instructions
 
+### Test Structure
+- `tests/unit/auth/token`
+
+### Test Dependencies
+- `pytest`
+- `httpx`
+
+### Running Tests
+
 Install the packages and run the unit tests for this module:
 
 ```bash

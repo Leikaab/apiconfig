@@ -26,9 +26,18 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Testing and Coverage](#testing-and-coverage)
 - [CI/CD](#cicd)
 - [Further Documentation](#further-documentation)
+- [Navigation](#navigation)
 - [License](#license)
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://leikaab.github.io/apiconfig/)
+
+## Navigation
+
+- [auth](apiconfig/auth/README.md)
+- [config](apiconfig/config/README.md)
+- [exceptions](apiconfig/exceptions/README.md)
+- [testing](apiconfig/testing/README.md)
+- [utils](apiconfig/utils/README.md)
 
 ---
 
@@ -294,6 +303,34 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ---
 
+## See Also
+
+- [Internal Documentation Guide](docs/internal_documentation_guide.md)
+
+---
+
 ## License
 
 LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
+
+## Status
+
+### Stability
+
+Stable - the project is actively used in production environments.
+
+### API Version
+
+Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at version 0.x.
+
+### Maintenance Notes
+
+Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
+
+### Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
+
+### Future Considerations
+
+Planned improvements include enhanced documentation, additional auth strategies, and expanded test coverage.

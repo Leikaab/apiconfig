@@ -47,6 +47,20 @@ flowchart TD
     URL --> HTTP
 ```
 
+## Dependencies
+
+### External Dependencies
+- `typing` – runtime type hints and conditional imports
+- `urllib.parse` – safe URL parsing and construction
+- `logging` – configure loggers and handlers
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – shared helpers for scrubbing secrets
+- `apiconfig.types` – common type aliases used in URL helpers
+
+### Optional Dependencies
+- `httpx` – used in certain helpers for async HTTP utilities
+
 ## Tests
 Run the unit tests for utility modules:
 ```bash

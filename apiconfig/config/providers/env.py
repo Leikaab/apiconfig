@@ -36,7 +36,12 @@ class EnvProvider:
         """
         self._prefix = prefix
 
-    def _is_digit(self, value: str) -> bool:
+    @property
+    def prefix(self) -> str:
+        """Return the environment variable prefix."""
+        return self._prefix
+
+    def is_digit(self, value: str) -> bool:
         """Check if a string contains only digits.
 
         Parameters
@@ -78,7 +83,7 @@ class EnvProvider:
             if key.startswith(self._prefix):
                 config_key = key[prefix_len:]  # Keep original case after removing prefix
                 # Basic type inference (can be expanded later)
-                if self._is_digit(value):
+                if self.is_digit(value):
                     try:
                         config[config_key] = int(value)
                     except ValueError:

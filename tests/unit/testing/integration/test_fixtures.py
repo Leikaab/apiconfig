@@ -145,7 +145,7 @@ class TestConfigManager:
 
         # Check that the manager is a ConfigManager with the correct providers
         assert isinstance(manager, ConfigManager)
-        assert manager._providers == [mock_file_provider, mock_env_provider]
+        assert manager.providers == [mock_file_provider, mock_env_provider]
 
 
 class TestCustomAuthStrategyFactory:

@@ -70,6 +70,11 @@ class ConfigManager:
         # typing without leaking concrete provider details to consumers.
         self._providers: Sequence[ConfigProvider] = list(providers)
 
+    @property
+    def providers(self) -> Sequence[ConfigProvider]:
+        """Return the configured providers."""
+        return self._providers
+
     def load_config(self) -> Dict[str, Any]:
         """
         Load configuration by iterating through all registered providers.

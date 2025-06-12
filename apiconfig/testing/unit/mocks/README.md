@@ -63,3 +63,12 @@ pytest tests/unit/testing/unit/mocks -q
 
 ## Status
 Internal – provided solely for unit testing purposes but kept stable.
+
+### Maintenance Notes
+- Maintained alongside the unit tests; expect changes when mocks require new features.
+
+### Changelog
+- Mock updates are documented in the main changelog.
+
+### Future Considerations
+- Additional mocks may be added as the test suite expands.

@@ -89,6 +89,12 @@ pytest tests/unit/auth/token -q
 **API Version:** 0.3.1
 **Deprecations:** None
 
+### Maintenance Notes
+- Actively maintained with bug fixes and periodic compatibility updates.
+
+### Changelog
+- Token management changes are recorded in the main changelog.
+
 ### Future Considerations
 
 - Support for additional storage backends, such as Redis or SQL databases.

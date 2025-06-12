@@ -71,3 +71,12 @@ pytest tests/unit/utils -q
 
 ## Status
 Stable – used throughout the project.
+
+### Maintenance Notes
+- Stable utilities with occasional updates for new helper functions.
+
+### Changelog
+- See project changelog for utility updates and bug fixes.
+
+### Future Considerations
+- Add async-friendly helpers and improve formatter integration.

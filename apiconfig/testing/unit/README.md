@@ -69,6 +69,9 @@ These helpers evolve in tandem with the unit tests. New utilities are added when
 test coverage requires them while keeping backwards compatibility whenever
 possible.
 
+### Changelog
+- Test helper updates are captured in the main changelog.
+
 ### Future Considerations
 - Extend mocks for additional authentication strategies
 - Add async-aware helpers to cover upcoming async clients

@@ -32,3 +32,9 @@ New type aliases are added only when multiple modules need the same
 structure. Every addition is documented in the changelog and covered by unit
 tests. Deprecated aliases are marked and removed during the next major
 release cycle.
+
+### Changelog
+- Type alias changes are tracked in the project changelog.
+
+### Future Considerations
+- Additional generic types may be introduced as new modules appear.

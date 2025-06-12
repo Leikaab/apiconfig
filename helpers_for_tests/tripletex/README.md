@@ -40,3 +40,12 @@ TRIPLETEX_TEST_timeout=30.0
 
 ## Status
 Internal – for example tests only.
+
+### Maintenance Notes
+- This helper module is stable enough for the project tests but may change without notice.
+
+### Changelog
+- No dedicated changelog. Refer to the main repository history for updates.
+
+### Future Considerations
+- No major updates planned beyond keeping tests functional.

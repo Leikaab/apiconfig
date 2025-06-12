@@ -321,7 +321,7 @@ LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
 ### Maintenance Notes
 
-Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
+The library is currently **stable** and actively maintained. Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
 
 ### Changelog
 
@@ -329,4 +329,4 @@ See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
 
 ### Future Considerations
 
-Planned improvements include enhanced documentation, additional auth strategies, and expanded test coverage.
+Planned improvements include enhanced documentation, additional auth strategies, expanded test coverage, and formatter enhancements for more consistent styling.

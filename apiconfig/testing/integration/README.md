@@ -80,6 +80,9 @@ pytest tests/integration -q
 **API Version:** 0.3.1
 **Deprecations:** None
 
+### Maintenance Notes
+- APIs are experimental and may break between minor releases.
+
 ### Changelog
 - Added `assert_request_received` to validate HTTP requests made to the mock server.
 - Enhanced type hints and explicit return types across helper functions.

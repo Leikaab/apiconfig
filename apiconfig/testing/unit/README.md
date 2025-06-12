@@ -52,4 +52,16 @@ pytest tests/unit/testing/unit -q
 ```
 
 ## Status
-Internal – provided for the project's own unit tests.
+
+- **Stability:** Internal
+- **API Version:** v0.3.1
+- **Deprecations:** None
+
+### Maintenance Notes
+These helpers evolve in tandem with the unit tests. New utilities are added when
+test coverage requires them while keeping backwards compatibility whenever
+possible.
+
+### Future Considerations
+- Extend mocks for additional authentication strategies
+- Add async-aware helpers to cover upcoming async clients

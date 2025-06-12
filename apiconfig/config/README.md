@@ -55,7 +55,10 @@ poetry run pytest tests/unit/config -q
 ```
 
 ## Status
-Stable – used by API clients and covered by unit tests.
+
+**Stability:** Stable – used by API clients and covered by unit tests.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ## Navigation
 - [apiconfig](../README.md)

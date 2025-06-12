@@ -81,6 +81,8 @@ pytest tests/unit/exceptions -q
 ```
 
 ## Status
-Stable – exceptions are widely used across the library and covered by unit
-tests.
+
+**Stability:** Stable – exceptions are widely used across the library and covered by unit tests.
+**API Version:** 0.3.1
+**Deprecations:** None
 

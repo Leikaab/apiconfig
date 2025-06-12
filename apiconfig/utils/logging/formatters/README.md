@@ -78,7 +78,10 @@ pytest tests/unit/utils/logging/formatters -q
 ```
 
 ## Status
-Stable – widely used by other modules for consistent logging behaviour.
+
+**Stability:** Stable – widely used by other modules for consistent logging behaviour.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ## Navigation
 

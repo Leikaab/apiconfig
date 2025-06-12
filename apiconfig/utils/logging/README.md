@@ -75,7 +75,10 @@ pytest tests/unit/utils/logging -q
 ```
 
 ## Status
-Stable – provides common logging setup for the library.
+
+**Stability:** Stable – provides common logging setup for the library.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ## Navigation
 

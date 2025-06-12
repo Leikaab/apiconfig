@@ -71,7 +71,10 @@ poetry run pytest tests/unit/auth -q
 - `httpx` – recommended HTTP client for token refresh callbacks and testing.
 
 ## Status
-Stable – used by the configuration system and tested via the unit suite.
+
+**Stability:** Stable – used by the configuration system and tested via the unit suite.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ## Navigation
 - [apiconfig](../README.md) – project overview and main documentation.

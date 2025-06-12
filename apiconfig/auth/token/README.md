@@ -85,7 +85,9 @@ pytest tests/unit/auth/token -q
 
 ## Status
 
-The module is considered **stable** and is used by other parts of the library.
+**Stability:** Stable – used by other parts of the library.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Future Considerations
 

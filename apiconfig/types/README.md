@@ -25,7 +25,10 @@ payload: JsonObject = {"ping": "pong"}
 ```
 
 ## Status
-Stable – used throughout the library for type checking.
+
+**Stability:** Stable – used throughout the library for type checking.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 New type aliases are added only when multiple modules need the same

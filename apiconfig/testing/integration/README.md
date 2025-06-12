@@ -75,7 +75,10 @@ pytest tests/integration -q
 ```
 
 ## Status
-Experimental – helpers may change as integration needs evolve.
+
+**Stability:** Experimental – helpers may change as integration needs evolve.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Changelog
 - Added `assert_request_received` to validate HTTP requests made to the mock server.

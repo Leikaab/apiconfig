@@ -35,4 +35,7 @@ FIKEN_timeout=10.0
 ```
 
 ## Status
-Internal – for example tests only.
+
+**Stability:** Internal – for example tests only.
+**API Version:** 0.3.1
+**Deprecations:** None

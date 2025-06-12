@@ -56,4 +56,7 @@ pytest tests/unit/helpers/common -q
 ```
 
 ## Status
-Internal – intended only for the helper clients used in tests.
+
+**Stability:** Internal – intended only for the helper clients used in tests.
+**API Version:** 0.3.1
+**Deprecations:** None

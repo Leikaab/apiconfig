@@ -52,4 +52,7 @@ pytest -q
 ```
 
 ## Status
-Internal – APIs may evolve alongside the test suite.
+
+**Stability:** Internal – APIs may evolve alongside the test suite.
+**API Version:** 0.3.1
+**Deprecations:** None

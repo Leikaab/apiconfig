@@ -62,4 +62,7 @@ pytest tests/unit/testing/unit/mocks -q
 ```
 
 ## Status
-Internal – provided solely for unit testing purposes but kept stable.
+
+**Stability:** Internal – provided solely for unit testing purposes but kept stable.
+**API Version:** 0.3.1
+**Deprecations:** None

@@ -59,4 +59,7 @@ pytest tests/unit/config/providers -q
 ```
 
 ## Status
-Stable – used internally by other modules in the package.
+
+**Stability:** Stable – used internally by other modules in the package.
+**API Version:** 0.3.1
+**Deprecations:** None

@@ -70,4 +70,7 @@ pytest tests/unit/utils -q
 ```
 
 ## Status
-Stable – used throughout the project.
+
+**Stability:** Stable – used throughout the project.
+**API Version:** 0.3.1
+**Deprecations:** None

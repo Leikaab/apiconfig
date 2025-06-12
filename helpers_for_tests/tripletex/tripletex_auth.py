@@ -94,6 +94,24 @@ class TripletexSessionAuth(AuthStrategy):
         self._session_token: Optional[str] = None
         self._token_expires_at: Optional[datetime] = None
 
+    @property
+    def session_token(self) -> Optional[str]:
+        """Return the currently cached session token."""
+        return self._session_token
+
+    @session_token.setter
+    def session_token(self, value: Optional[str]) -> None:
+        self._session_token = value
+
+    @property
+    def token_expires_at(self) -> Optional[datetime]:
+        """Return the expiration datetime of the current session token."""
+        return self._token_expires_at
+
+    @token_expires_at.setter
+    def token_expires_at(self, value: Optional[datetime]) -> None:
+        self._token_expires_at = value
+
     def _get_session_token_url(self) -> str:
         """Construct the URL for fetching the session token."""
         path_prefix = ""

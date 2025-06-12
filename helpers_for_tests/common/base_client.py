@@ -201,6 +201,23 @@ class BaseClient:
         except Exception as e:
             raise HTTPUtilsError(f"Unexpected error during request to {method.value} {url}: {e}") from e
 
+    def request(
+        self,
+        method: HttpMethod,
+        endpoint: str,
+        params: Optional[QueryParamType] = None,
+        json_data: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> JsonObject | JsonList:
+        """Public wrapper for :py:meth:`_request`."""
+        return self._request(
+            method=method,
+            endpoint=endpoint,
+            params=params,
+            json_data=json_data,
+            **kwargs,
+        )
+
     def __repr__(self) -> str:
         """Return string representation of the client."""
         return (

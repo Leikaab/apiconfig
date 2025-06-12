@@ -1,12 +1,12 @@
 # apiconfig.testing.integration
 
+Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
+
 ## Navigation
 
 **Parent:** [../README.md](../README.md)
 
 Submodules: none.
-
-Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
 
 ## Contents
 - `fixtures.py` – pytest fixtures that provide temporary config files, HTTP server addresses and ready-made `ConfigManager` instances.

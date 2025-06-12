@@ -80,7 +80,8 @@ class TestProtocolCompliance:
         # Simple object that happens to have the right attributes
         request = type("Request", (), {"method": "PUT", "url": "https://api.example.com/resource/123", "headers": {}})()
 
-        error = ApiClientError("Update failed", request=request)
+        request_obj: HttpRequestProtocol = cast(HttpRequestProtocol, request)
+        error = ApiClientError("Update failed", request=request_obj)
         assert error.method == "PUT"
         assert error.url == "https://api.example.com/resource/123"
 

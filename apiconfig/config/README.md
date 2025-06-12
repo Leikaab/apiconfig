@@ -61,3 +61,7 @@ Stable – used by API clients and covered by unit tests.
 ## Navigation
 - [apiconfig](../README.md)
 - [providers](./providers/README.md)
+
+## See Also
+- [auth](../auth/README.md) - describes available authentication strategies used by `ClientConfig`.
+- [exceptions](../exceptions/README.md) - lists configuration-related errors raised when loading settings.

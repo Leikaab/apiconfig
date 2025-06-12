@@ -29,11 +29,11 @@ class TestEnvProvider:
     def test_init(self) -> None:
         """Test that EnvProvider initializes correctly with custom prefix."""
         provider = EnvProvider(prefix="TEST_")
-        assert provider._prefix == "TEST_"
+        assert provider.prefix == "TEST_"
 
         # Test default prefix
         default_provider = EnvProvider()
-        assert default_provider._prefix == "APICONFIG_"
+        assert default_provider.prefix == "APICONFIG_"
 
     def test_load_empty(self) -> None:
         """Test loading when no matching environment variables exist."""
@@ -62,14 +62,14 @@ class TestEnvProvider:
     def test_load_invalid_int(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test loading with an invalid integer value."""
         # Instead of trying to mock str.isdigit (which is immutable),
-        # we'll mock the EnvProvider._is_digit method
+        # we'll mock the EnvProvider.is_digit method
 
         # First, add a helper method to the EnvProvider class
-        def _is_digit(self: EnvProvider, value: str) -> bool:
+        def is_digit(self: EnvProvider, value: str) -> bool:
             return value.isdigit()
 
         # Add the method to the class
-        monkeypatch.setattr(EnvProvider, "_is_digit", _is_digit)
+        monkeypatch.setattr(EnvProvider, "is_digit", is_digit)
 
         # Now mock our new method
         def mock_is_digit(self: EnvProvider, value: str) -> bool:
@@ -77,18 +77,18 @@ class TestEnvProvider:
                 return True
             return value.isdigit()
 
-        monkeypatch.setattr(EnvProvider, "_is_digit", mock_is_digit)
+        monkeypatch.setattr(EnvProvider, "is_digit", mock_is_digit)
 
-        # Also need to patch the load method to use our new _is_digit method
+        # Also need to patch the load method to use our new is_digit method
 
         def patched_load(self: EnvProvider) -> Dict[str, Any]:
             config: Dict[str, Any] = {}
-            prefix_len = len(self._prefix)
+            prefix_len = len(self.prefix)
 
             for key, value in os.environ.items():
-                if key.startswith(self._prefix):
+                if key.startswith(self.prefix):
                     config_key = key[prefix_len:]
-                    if self._is_digit(value):
+                    if self.is_digit(value):
                         try:
                             config[config_key] = int(value)
                         except ValueError:

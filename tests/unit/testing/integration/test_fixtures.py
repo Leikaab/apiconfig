@@ -126,9 +126,8 @@ class TestEnvProvider:
         assert os.environ.get("APICONFIG_AUTH_TYPE") == "env_bearer"
         assert os.environ.get("APICONFIG_AUTH_TOKEN") == "env_token_123"
 
-        # Check that the provider has the correct prefix
         # Check that the provider has the expected prefix
-        assert hasattr(provider, "_prefix")
+        assert provider.prefix == "APICONFIG"
 
 
 class TestConfigManager:

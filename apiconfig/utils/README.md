@@ -1,8 +1,16 @@
 # apiconfig.utils
 
-Miscellaneous utilities shipped with **apiconfig**. They cover HTTP helpers,
-URL construction, redaction of sensitive data and logging setup. Each subpackage
-can be used independently by API clients.
+## Module Description
+
+The utilities package houses small, focused helpers that other
+**apiconfig** modules depend on. It includes HTTP status helpers,
+URL construction functions, logging configuration and tools for
+redacting sensitive information.
+
+These utilities simplify writing API clients by handling common tasks
+like normalising URLs or removing secrets from logs. Each subpackage
+is lightweight and can be used independently of the rest of
+**apiconfig**.
 
 ## Navigation
 

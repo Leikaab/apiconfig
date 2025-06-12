@@ -92,3 +92,7 @@ Stable – provides common logging setup for the library.
 
 **Submodules:**
 - [formatters](./formatters/README.md) - Custom log formatters
+
+## See Also
+- [apiconfig.utils.redaction](../redaction/README.md) – used by log formatters
+- [apiconfig.utils](../README.md) – overview of related utilities

@@ -84,6 +84,7 @@ class HttpResponseProtocol(Protocol):
     text: str  # For body preview
     request: Optional[Any]  # Most responses have .request
     reason: Optional[str]
+    history: Optional[List[Any]]  # For redirect history (requests, httpx)
 
 
 class HttpMethod(Enum):

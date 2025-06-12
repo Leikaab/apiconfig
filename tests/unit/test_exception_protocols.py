@@ -42,6 +42,7 @@ class TestProtocolCompliance:
                 self.text = "Not found"
                 self.request = None
                 self.reason: str | None = "Not Found"
+                self.history: list[Any] | None = None
 
         response = MinimalResponse()
         # Skip runtime type check that causes mypy issues

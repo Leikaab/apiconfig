@@ -102,7 +102,7 @@ class TestFileProvider:
 
         # Check that the provider is a FileProvider with the correct file path
         assert isinstance(provider, FileProvider)
-        assert provider._file_path == config_file
+        assert provider.file_path == config_file
 
 
 class TestEnvProvider:

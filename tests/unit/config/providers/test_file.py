@@ -21,13 +21,13 @@ class TestFileProvider:
         """Test that FileProvider initializes correctly with string or Path."""
         # Test with string path
         provider1 = FileProvider(file_path="/path/to/config.json")
-        assert isinstance(provider1._file_path, pathlib.Path)
-        assert os.path.normpath(str(provider1._file_path)) == os.path.normpath("/path/to/config.json")
+        assert isinstance(provider1.file_path, pathlib.Path)
+        assert os.path.normpath(str(provider1.file_path)) == os.path.normpath("/path/to/config.json")
 
         # Test with Path object
         path_obj = Path("/path/to/config.json")
         provider2 = FileProvider(file_path=path_obj)
-        assert os.path.normpath(str(provider2._file_path)) == os.path.normpath(str(path_obj))
+        assert os.path.normpath(str(provider2.file_path)) == os.path.normpath(str(path_obj))
 
     @pytest.mark.skipif(sys.platform.startswith("win"), reason="Known Windows compatibility issue")
     def test_load_valid_json(self) -> None:

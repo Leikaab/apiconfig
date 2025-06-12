@@ -34,6 +34,11 @@ class FileProvider:
         """
         self._file_path = pathlib.Path(file_path)
 
+    @property
+    def file_path(self) -> pathlib.Path:
+        """Return the path to the configuration file."""
+        return self._file_path
+
     def load(self) -> Dict[str, Any]:
         """
         Load configuration data from the specified file.

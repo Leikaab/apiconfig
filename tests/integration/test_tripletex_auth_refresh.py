@@ -13,6 +13,8 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from _pytest.logging import LogCaptureFixture
 
+from apiconfig.types import TokenRefreshResult
+
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
     pytest.skip(
         "Integration tests disabled (PYTEST_SKIP_INTEGRATION=true)",
@@ -119,8 +121,8 @@ class TestTripletexAuthRefresh:
         countries = tripletex_client.list_countries()
         assert isinstance(countries, dict)
 
-        results = []
-        errors = []
+        results: list[TokenRefreshResult | None] = []
+        errors: list[Exception] = []
 
         def refresh_worker() -> None:
             try:
@@ -130,7 +132,7 @@ class TestTripletexAuthRefresh:
                 errors.append(e)
 
         # Start multiple refresh operations concurrently
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=refresh_worker)
             threads.append(thread)

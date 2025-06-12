@@ -1,7 +1,13 @@
 # apiconfig.types
 
-Shared type aliases and protocols for **apiconfig**. They keep the public API
-small and make static analysis consistent across modules.
+## Module Description
+
+Shared type aliases and protocols for **apiconfig** keep the public API small
+and make static analysis consistent across modules.
+
+Centralizing these definitions ensures every component relies on the same
+contracts when exchanging data. This reduces duplication and helps type
+checkers catch integration errors early.
 
 ## Navigation
 - [Project README](../README.md)
@@ -20,3 +26,9 @@ payload: JsonObject = {"ping": "pong"}
 
 ## Status
 Stable – used throughout the library for type checking.
+
+### Maintenance Notes
+New type aliases are added only when multiple modules need the same
+structure. Every addition is documented in the changelog and covered by unit
+tests. Deprecated aliases are marked and removed during the next major
+release cycle.

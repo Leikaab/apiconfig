@@ -60,9 +60,9 @@ pytest tests/unit/testing/unit -q
 
 ## Status
 
-- **Stability:** Internal
-- **API Version:** v0.3.1
-- **Deprecations:** None
+**Stability:** Internal
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 These helpers evolve in tandem with the unit tests. New utilities are added when

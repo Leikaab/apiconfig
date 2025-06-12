@@ -55,6 +55,22 @@ python -m pip install pytest pytest-xdist
 pytest tests/unit/auth -q
 ```
 
+## Dependencies
+
+### Standard Library
+- `abc` – defines the abstract base class for auth strategies.
+- `base64` – encodes Basic authentication credentials.
+- `datetime` – handles token expiry timestamps.
+- `json`, `logging`, and `time` – used in token refresh helpers.
+- `typing` – provides type hints throughout the package.
+
+### Internal Dependencies
+- `apiconfig.exceptions.auth` – custom exceptions for authentication errors.
+- `apiconfig.types` – shared type definitions used in strategy interfaces.
+
+### Optional Dependencies
+- `httpx` – recommended HTTP client for token refresh callbacks and testing.
+
 ## Status
 Stable – used by the configuration system and tested via the unit suite.
 

@@ -219,9 +219,9 @@ class TestSetupMultiProviderManager:
         assert isinstance(manager, ConfigManager)
 
         # Check that the manager has two providers
-        assert len(manager._providers) == 2
+        assert len(manager.providers) == 2
 
-        providers = cast(Sequence[Any], manager._providers)
+        providers = cast(Sequence[Any], manager.providers)
 
         # Check that the providers are MemoryProviders with the correct data and names
         assert providers[0]._config == {"api": {"hostname": "example1.com"}}
@@ -236,7 +236,7 @@ class TestSetupMultiProviderManager:
 
         # Check that the result is a ConfigManager with no providers
         assert isinstance(manager, ConfigManager)
-        assert len(manager._providers) == 0
+        assert len(manager.providers) == 0
 
 
 class TestSimulateTokenEndpoint:

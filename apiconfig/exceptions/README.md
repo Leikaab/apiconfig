@@ -6,6 +6,14 @@ modules are grouped by domain: authentication, configuration and HTTP utilities.
 Importing from `apiconfig.exceptions` gives quick access to the most commonly
 used classes without reaching into each submodule.
 
+## Navigation
+- [Back to parent module](../README.md)
+- **Modules**
+  - `base.py` – Core base classes and mixins.
+  - `auth.py` – Authentication-related errors.
+  - `config.py` – Configuration loading and validation errors.
+  - `http.py` – HTTP and API client errors.
+
 ## Contents
 - `base.py` – core base classes and mixins.
 - `auth.py` – authentication related errors, including token refresh failures.

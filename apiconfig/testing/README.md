@@ -4,6 +4,14 @@ Testing utilities bundled with **apiconfig**. This package organises helpers for
 both unit and integration tests so developers can verify clients without writing
 boilerplate code.
 
+## Navigation
+
+**Parent:** [apiconfig](../README.md)
+
+**Submodules:**
+- [unit](./unit/README.md) – unit-test helpers.
+- [integration](./integration/README.md) – integration-test helpers.
+
 ## Contents
 - `unit/` – assertions, factories and mocks for isolated unit tests.
 - `integration/` – fixtures and HTTP server helpers for end‑to‑end scenarios.

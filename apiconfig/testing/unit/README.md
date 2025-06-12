@@ -4,6 +4,13 @@ Helpers for writing unit tests against **apiconfig**. The package provides
 assertions, factory functions and mock objects so tests remain concise and free
 of external dependencies.
 
+## Navigation
+
+- **Parent:** [../README.md](../README.md)
+- **Submodules:**
+  - [mocks/README.md](mocks/README.md) – mock implementations for authentication
+    strategies and config providers.
+
 ## Contents
 - `assertions.py` – convenience assertions such as `assert_client_config_valid`.
 - `factories.py` – factory helpers for creating valid or invalid `ClientConfig` instances.

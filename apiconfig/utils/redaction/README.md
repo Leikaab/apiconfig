@@ -2,6 +2,12 @@
 
 Utilities for scrubbing sensitive information from HTTP requests, responses and logs. The package centralises common redaction logic so that clients and logging helpers can easily avoid leaking secrets.
 
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+There are no submodules.
+
 ## Contents
 - `body.py` – functions to redact JSON and form-encoded bodies.
 - `headers.py` – utilities to remove secrets from HTTP headers and cookies.

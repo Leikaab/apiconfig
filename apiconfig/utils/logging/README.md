@@ -21,6 +21,30 @@ logger = logging.getLogger("apiconfig")
 logger.info("configured")
 ```
 
+### Advanced Usage
+Use the building blocks directly when you need full control over handlers and
+formatters.
+
+```python
+import logging
+from apiconfig.utils.logging.formatters import RedactingFormatter
+from apiconfig.utils.logging.handlers import ConsoleHandler
+from apiconfig.utils.logging.filters import ContextFilter, set_log_context
+
+handler = ConsoleHandler()
+handler.setFormatter(
+    RedactingFormatter("%(asctime)s - %(levelname)s - %(message)s")
+)
+handler.addFilter(ContextFilter())
+
+logger = logging.getLogger("custom")
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
+set_log_context("request_id", "42")
+logger.info({"token": "secret", "payload": "ok"})
+```
+
 ## Key classes and functions
 | Name | Description |
 | ---- | ----------- |

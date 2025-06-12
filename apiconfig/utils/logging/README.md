@@ -52,3 +52,10 @@ pytest tests/unit/utils/logging -q
 
 ## Status
 Stable – provides common logging setup for the library.
+
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+**Submodules:**
+- [formatters](./formatters/README.md) - Custom log formatters

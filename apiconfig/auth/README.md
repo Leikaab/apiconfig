@@ -50,9 +50,8 @@ sequenceDiagram
 ## Tests
 Install dependencies and run the unit tests for the authentication package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/auth -q
+poetry install --with dev
+poetry run pytest tests/unit/auth -q
 ```
 
 ## Dependencies

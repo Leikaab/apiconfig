@@ -76,3 +76,12 @@ pytest tests/integration -q
 
 ## Status
 Experimental – helpers may change as integration needs evolve.
+
+### Changelog
+- Added `assert_request_received` to validate HTTP requests made to the mock server.
+- Enhanced type hints and explicit return types across helper functions.
+- Expanded documentation with a navigation section and additional usage notes.
+
+### Future Considerations
+- Provide asynchronous variants of the helpers for `httpx.AsyncClient`.
+- Offer higher-level fixtures for more complex authentication flows.

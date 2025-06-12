@@ -53,3 +53,12 @@ pytest -q
 
 ## Status
 Internal – APIs may evolve alongside the test suite.
+
+### Maintenance Notes
+- Test utilities are maintained with the suite and may change frequently.
+
+### Changelog
+- No separate changelog; refer to repository history for changes.
+
+### Future Considerations
+- Additional helpers will be introduced as new features require.

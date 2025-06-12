@@ -80,6 +80,15 @@ pytest tests/unit/utils/logging/formatters -q
 ## Status
 Stable – widely used by other modules for consistent logging behaviour.
 
+### Maintenance Notes
+- Considered stable; only critical bug fixes are expected.
+
+### Changelog
+- Changes are tracked in the project changelog.
+
+### Future Considerations
+- Additional formatter presets are planned for upcoming releases.
+
 ## Navigation
 
 **Parent Package:** [apiconfig.utils.logging](../README.md)

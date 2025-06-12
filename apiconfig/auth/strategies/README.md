@@ -75,3 +75,12 @@ pytest tests/unit/auth/strategies -q
 
 ## Status
 Stable – the strategies are used by other parts of **apiconfig** and have dedicated test coverage.
+
+### Maintenance Notes
+- Strategies are stable with occasional improvements for new authentication flows.
+
+### Changelog
+- Updates are logged in the project changelog.
+
+### Future Considerations
+- Support for additional token exchange mechanisms is planned.

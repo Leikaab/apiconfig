@@ -57,6 +57,15 @@ poetry run pytest tests/unit/config -q
 ## Status
 Stable – used by API clients and covered by unit tests.
 
+### Maintenance Notes
+- Considered stable with occasional updates for new configuration sources.
+
+### Changelog
+- See the project changelog for release notes affecting configuration behavior.
+
+### Future Considerations
+- Potential support for dynamic configuration providers.
+
 ## Navigation
 - [apiconfig](../README.md)
 - [providers](./providers/README.md)

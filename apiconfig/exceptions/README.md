@@ -84,3 +84,12 @@ pytest tests/unit/exceptions -q
 Stable – exceptions are widely used across the library and covered by unit
 tests.
 
+### Maintenance Notes
+- Exception hierarchy is stable; new exceptions added as needed.
+
+### Changelog
+- Major changes are noted in the project changelog.
+
+### Future Considerations
+- Possible expansion for async error handling.
+

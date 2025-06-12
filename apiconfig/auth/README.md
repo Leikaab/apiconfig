@@ -73,6 +73,15 @@ poetry run pytest tests/unit/auth -q
 ## Status
 Stable – used by the configuration system and tested via the unit suite.
 
+### Maintenance Notes
+- Authentication layer is stable and updated as new schemes are supported.
+
+### Changelog
+- Significant auth changes are captured in the project changelog.
+
+### Future Considerations
+- Upcoming work includes improved OAuth2 token refresh handling.
+
 ## Navigation
 - [apiconfig](../README.md) – project overview and main documentation.
 - [strategies](./strategies/README.md) – built-in authentication strategies.

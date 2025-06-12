@@ -57,6 +57,9 @@ Stable – used internally for logging and HTTP utilities.
 The module is considered stable and receives updates only for critical bug fixes
 or security patches. No major changes are currently planned.
 
+### Changelog
+- Redaction utilities follow the main project changelog.
+
 ### Future Considerations
 Possible enhancements include more granular redaction options and performance
 optimisations for handling very large payloads.

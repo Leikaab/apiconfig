@@ -37,3 +37,12 @@ ONEFLOW_timeout=10.0
 
 ## Status
 Internal – for example tests only.
+
+### Maintenance Notes
+- Provided for integration tests and may change without notice.
+
+### Changelog
+- No dedicated changelog. Refer to repository history.
+
+### Future Considerations
+- Update along with underlying Oneflow API changes.

@@ -36,3 +36,12 @@ FIKEN_timeout=10.0
 
 ## Status
 Internal – for example tests only.
+
+### Maintenance Notes
+- Used solely for testing; interfaces may change.
+
+### Changelog
+- No dedicated changelog. See project history for updates.
+
+### Future Considerations
+- Adjust as the Fiken API evolves.

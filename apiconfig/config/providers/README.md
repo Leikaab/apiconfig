@@ -1,7 +1,17 @@
 # apiconfig.config.providers
 
-Configuration providers for **apiconfig**. These helpers supply configuration values from
-different sources so they can be combined by `ConfigManager`.
+## Module Description
+Configuration providers for **apiconfig** supply configuration values from different
+sources so they can be combined by `ConfigManager`.
+
+These classes exist to decouple configuration retrieval from application code. Each
+provider focuses on a single source&mdash;environment variables, JSON files or an
+in-memory dictionary&mdash;and exposes a simple `load()` method returning a
+dictionary.
+
+`ConfigManager` merges provider outputs in order, enabling layering of defaults and
+overrides. This strategy-like design keeps the module extensible while presenting a
+consistent interface to API clients.
 
 ## Navigation
 
@@ -59,4 +69,7 @@ pytest tests/unit/config/providers -q
 ```
 
 ## Status
-Stable – used internally by other modules in the package.
+**Stability:** Stable – used internally by other modules in the package.
+**API Version:** 0.0.0
+**Deprecations:** None
+

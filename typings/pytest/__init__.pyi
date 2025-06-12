@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Type, Pattern, overload
 from types import TracebackType
+from typing import Pattern, Type, overload
+
 from _pytest.fixtures import fixture
 from _pytest.mark import MARK_GEN as mark
 from _pytest.monkeypatch import MonkeyPatch

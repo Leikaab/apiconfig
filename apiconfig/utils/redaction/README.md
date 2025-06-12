@@ -51,7 +51,10 @@ pytest --cov=apiconfig --cov-report=html
 ```
 
 ## Status
-Stable – used internally for logging and HTTP utilities.
+
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 The module is considered stable and receives updates only for critical bug fixes

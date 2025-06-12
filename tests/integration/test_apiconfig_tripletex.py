@@ -180,7 +180,7 @@ class TestTripletexIntegration:
         """
         # Test with invalid endpoint to trigger error handling
         with pytest.raises(HTTPUtilsError) as exc_info:
-            tripletex_client._request(HttpMethod.GET, "/nonexistent")
+            tripletex_client.request(HttpMethod.GET, "/nonexistent")
 
         # Verify we get proper apiconfig HTTP exceptions
         error_message = str(exc_info.value)

@@ -74,6 +74,7 @@ class TestInMemoryTokenStorage:
         storage.store_token("complex", token_data)
         retrieved = storage.retrieve_token("complex")
 
+        assert retrieved is not None
         assert retrieved == token_data
         assert retrieved["access_token"] == "abc123"
         assert retrieved["refresh_token"] == "xyz789"

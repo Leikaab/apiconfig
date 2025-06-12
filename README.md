@@ -315,21 +315,17 @@ LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
 ## Status
 
-### Stability
-
-Stable - the project is actively used in production environments.
-
-### API Version
-
-Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at version 0.x.
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 
 Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
 
 ### Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
+- 0.3.1 – Documentation updates and configuration improvements.
+- 0.3.0 – First public release.
 
 ### Future Considerations
 

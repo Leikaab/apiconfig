@@ -4,6 +4,28 @@ Logging helpers used across **apiconfig**. This package bundles custom
 formatters, context filters and convenience functions for setting up redacted
 logging output.
 
+## Module Description
+
+`apiconfig.utils.logging` centralises the library's logging utilities. It
+collects handlers, formatters and context filters that work together to produce
+structured log messages while scrubbing sensitive information.
+
+The module exists so applications using **apiconfig** do not need to reinvent
+logging setup for each service. By providing a ready-made configuration function
+and building blocks like `RedactingFormatter`, it ensures consistent output and
+safe handling of secrets across the ecosystem.
+
+These helpers integrate tightly with the rest of the project. Authentication and
+configuration components rely on them for debug output, and the design keeps
+each piece modular so consumers can mix and match filters or handlers as needed.
+
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+**Submodules:**
+- [formatters](./formatters/README.md) - Custom log formatters
+
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.
@@ -75,11 +97,17 @@ pytest tests/unit/utils/logging -q
 ```
 
 ## Status
-Stable – provides common logging setup for the library.
 
-## Navigation
+**Stability:** Stable
+**API Version:** Follows Semantic Versioning starting at version 0.x
+**Deprecations:** None
 
-**Parent Module:** [apiconfig.utils](../README.md)
+### Maintenance Notes
+- Logging helpers are maintained alongside the core library. Minor improvements
+  and bug fixes are accepted on a best-effort basis.
 
-**Submodules:**
-- [formatters](./formatters/README.md) - Custom log formatters
+### Changelog
+- See [CHANGELOG.md](../../../CHANGELOG.md) for the release history.
+
+### Future Considerations
+- Potential enhancements include new handler types and richer context management.

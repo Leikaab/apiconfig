@@ -1,5 +1,7 @@
 # apiconfig
 
+Simplifies configuration and authentication for Python API clients.
+
 ## Module Description
 **apiconfig** centralises configuration and authentication logic for Python API
 clients. The library provides a small, stable surface area that applications can

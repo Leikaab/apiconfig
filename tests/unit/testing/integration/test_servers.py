@@ -67,7 +67,7 @@ class TestConfigureMockResponse:
 
         # Check that respond_with_response was called with response_data
         mock_expectation.respond_with_response.assert_called_once()
-        args, kwargs = mock_expectation.respond_with_response.call_args
+        _, kwargs = mock_expectation.respond_with_response.call_args
 
         assert "response_data" in kwargs
         assert kwargs["response_data"] == "Hello, world!"
@@ -90,7 +90,7 @@ class TestConfigureMockResponse:
 
         # Check that respond_with_response was called without response_data or response_json
         mock_expectation.respond_with_response.assert_called_once()
-        args, kwargs = mock_expectation.respond_with_response.call_args
+        _, kwargs = mock_expectation.respond_with_response.call_args
 
         assert "response_data" not in kwargs
         assert "response_json" not in kwargs
@@ -114,9 +114,10 @@ class TestConfigureMockResponse:
 
         # Check that respond_with_response was called with the custom headers
         mock_expectation.respond_with_response.assert_called_once()
-        args, kwargs = mock_expectation.respond_with_response.call_args
+        _, kwargs = mock_expectation.respond_with_response.call_args
+        assert isinstance(kwargs, dict)
 
-        response_obj = args[0]
+        response_obj = mock_expectation.respond_with_response.call_args.args[0]
         assert response_obj.headers["X-Custom-Header"] == "test_value"
         assert response_obj.headers["Content-Type"] == "application/json"
 

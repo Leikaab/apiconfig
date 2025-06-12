@@ -1,5 +1,11 @@
 # apiconfig.testing.integration
 
+## Navigation
+
+**Parent:** [../README.md](../README.md)
+
+Submodules: none.
+
 Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
 
 ## Contents

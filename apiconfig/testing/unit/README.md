@@ -58,6 +58,9 @@ python -m pip install pytest pytest-xdist
 pytest tests/unit/testing/unit -q
 ```
 
+## See Also
+- [integration](../integration/README.md) – end-to-end helpers.
+
 ## Status
 
 **Stability:** Internal

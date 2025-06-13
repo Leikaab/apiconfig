@@ -86,9 +86,8 @@ sequenceDiagram
 Install the packages and run the unit tests for this module:
 
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/auth/token -q
+poetry install --with dev
+poetry run pytest tests/unit/auth/token -q
 ```
 
 ## Status

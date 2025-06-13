@@ -58,6 +58,14 @@ python -m pip install pytest
 pytest tests/unit/config/providers -q
 ```
 
+## Dependencies
+This package uses a mix of Python's standard library and internal modules:
+
+- `json` – file parsing for `FileProvider`.
+- `os` – environment access for `EnvProvider`.
+- `ConfigManager` – orchestrates provider loading.
+- `apiconfig.exceptions` – base exceptions for error handling.
+
 ## Status
 Stable – used internally by other modules in the package.
 

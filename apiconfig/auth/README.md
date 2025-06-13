@@ -27,10 +27,11 @@ without modifying consumers of `ClientConfig`.
 - `token/` – helpers for OAuth2 token refresh and storage.
 - `__init__.py` – re-exports the most used classes for convenience.
 
-## Usage example
+## Usage Examples
+
+### Basic
 ```python
 from datetime import datetime, timedelta, timezone
-from apiconfig.auth import AuthStrategy
 from apiconfig.auth.strategies import BearerAuth
 from apiconfig.config import ClientConfig
 
@@ -42,6 +43,17 @@ auth = BearerAuth(
 
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 headers = auth.prepare_request_headers()
+```
+
+### Advanced
+```python
+from apiconfig.auth.strategies import CustomAuth
+from apiconfig.config import ClientConfig
+
+# Custom strategy using callbacks
+auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
+
+config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 ```
 
 ## Key classes

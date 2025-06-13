@@ -78,6 +78,15 @@ python -m pip install pytest pytest-httpserver
 pytest tests/integration -q
 ```
 
+## Dependencies
+
+### Standard Library
+- `typing` – provides type hints for the integration helpers.
+- `http` – for HTTP status utilities in the examples.
+
+### Internal Modules
+- `apiconfig.utils.http` – URL and request helpers reused in tests.
+
 ## Status
 
 **Stability:** Experimental

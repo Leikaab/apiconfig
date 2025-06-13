@@ -75,6 +75,15 @@ python -m pip install pytest pytest-httpserver pytest-xdist
 pytest -q
 ```
 
+## Dependencies
+
+### Standard Library
+- `typing` – used for type hints across the project.
+- `http` – provides HTTP status utilities for the examples.
+
+### Internal Modules
+- `apiconfig.utils.http` – shared helpers for constructing URLs and requests.
+
 ## Status
 
 **Stability:** Stable

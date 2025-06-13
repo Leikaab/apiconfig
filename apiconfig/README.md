@@ -34,7 +34,9 @@ error hierarchy and `utils` contains logging helpers and other small utilities.
 - `utils/` – assorted utilities such as logging setup and URL helpers.
 - `__init__.py` – re‑exports common classes and determines the package version.
 
-## Quick example
+## Usage Examples
+
+### Basic Usage
 ```python
 from apiconfig import ClientConfig, ApiKeyAuth
 
@@ -42,6 +44,24 @@ config = ClientConfig(
     hostname="api.example.com",
     auth_strategy=ApiKeyAuth(api_key="key", header_name="X-API-Key"),
 )
+print(config.base_url)
+```
+
+### Advanced Usage
+```python
+from apiconfig.auth import AuthStrategy
+from apiconfig import ClientConfig
+
+
+class CustomAuth(AuthStrategy):
+    def prepare_request_headers(self) -> dict[str, str]:
+        return {"X-Custom-Auth": "secret"}
+
+    def prepare_request_params(self) -> dict[str, str]:
+        return {}
+
+
+config = ClientConfig(hostname="api.example.com", auth_strategy=CustomAuth())
 print(config.base_url)
 ```
 
@@ -54,7 +74,7 @@ print(config.base_url)
 | `EnvProvider` / `FileProvider` / `MemoryProvider` | Sources for configuration data. |
 | `APIConfigError` and subclasses | Domain specific exceptions for reporting failures. |
 
-### Design
+## Architecture
 `apiconfig` is organised into small focused modules. Authentication strategies
 implement the **Strategy** pattern while configuration providers can be combined
 in any order via `ConfigManager`.
@@ -74,6 +94,18 @@ python -m pip install -e .
 python -m pip install pytest pytest-httpserver pytest-xdist
 pytest -q
 ```
+
+## Dependencies
+
+### External Dependencies
+- Python 3.11 or later
+
+### Internal Dependencies
+- `apiconfig.auth` – authentication strategies
+- `apiconfig.config` – configuration management
+- `apiconfig.exceptions` – error hierarchy
+- `apiconfig.utils` – utility helpers
+
 
 ## Status
 

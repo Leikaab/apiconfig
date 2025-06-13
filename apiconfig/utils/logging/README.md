@@ -98,11 +98,10 @@ flowchart TD
 ```
 
 ## Tests
-Run the logging-related unit tests:
+Run the logging-related unit tests using Poetry:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/utils/logging -q
+poetry install --with dev
+poetry run pytest tests/unit/utils/logging -q
 ```
 
 

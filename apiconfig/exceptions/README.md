@@ -92,9 +92,8 @@ graph TD
 ## Testing
 Install dependencies and run the unit tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/exceptions -q
+poetry install --with dev
+poetry run pytest tests/unit/exceptions -q
 ```
 
 ## Dependencies

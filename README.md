@@ -26,6 +26,7 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Logging](#logging)
 - [Error Handling](#error-handling)
 - [Testing and Coverage](#testing-and-coverage)
+- [Running tests](#running-tests)
 - [CI/CD](#cicd)
 - [Further Documentation](#further-documentation)
 - [See Also](#see-also)
@@ -132,7 +133,19 @@ graph TD
 
 ## Dependencies
 
-This project relies on [pytest](https://docs.pytest.org/) and [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for testing. Core functionality is built on internal modules such as `apiconfig.config`.
+### External
+
+- [pytest](https://docs.pytest.org/) – test runner
+- [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) – HTTP server for integration tests
+
+### Internal
+
+- Modules like `apiconfig.config`, `apiconfig.auth`, and `apiconfig.utils`
+
+### Optional
+
+- [coverage.py](https://coverage.readthedocs.io/) for measuring test coverage
+- [Pyright](https://github.com/microsoft/pyright) for optional static type checking
 
 ## Usage
 
@@ -319,6 +332,26 @@ This guarantees libraries like `httpx`, `pytest`, and their stubs are available.
 
 ---
 
+## Running tests
+
+Use `pytest` to execute the full test suite:
+
+```bash
+poetry run pytest
+```
+
+### Test Structure
+
+- `tests/unit` – unit tests
+- `tests/integration` – integration tests against real APIs
+
+### Test Dependencies
+
+- Install dev dependencies with `poetry install --with dev`
+- Environment variables for integration tests are loaded automatically
+
+---
+
 ## CI/CD
 
 Continuous integration and deployment are managed with GitHub Actions. All pushes and pull requests are tested, and releases are published to PyPI after passing tests.
@@ -348,8 +381,7 @@ LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
 ## Dependencies
 
-The project relies on `pytest` and `pytest_httpserver` for its test suite. Install development
-dependencies with:
+Install development dependencies with:
 
 ```bash
 poetry install --with dev

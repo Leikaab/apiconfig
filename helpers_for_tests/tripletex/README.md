@@ -41,6 +41,10 @@ TRIPLETEX_TEST_timeout=30.0
 ## Status
 Internal – for example tests only.
 
+**Stability:** Stable for internal testing
+**API Version:** v2
+**Deprecations:** None
+
 ### Maintenance Notes
 - This helper module is stable enough for the project tests but may change without notice.
 
@@ -49,3 +53,12 @@ Internal – for example tests only.
 
 ### Future Considerations
 - No major updates planned beyond keeping tests functional.
+
+## Tests
+```bash
+poetry install --with dev
+poetry run pytest tests/integration/test_apiconfig_tripletex.py tests/integration/test_tripletex_auth_refresh.py
+```
+
+## Navigation
+- [helpers_for_tests](../README.md)

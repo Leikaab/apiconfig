@@ -57,7 +57,8 @@ flowchart TD
 ## Testing
 Run unit tests with coverage:
 ```bash
-pytest --cov=apiconfig --cov-report=html
+poetry install --with dev
+poetry run pytest --cov=apiconfig --cov-report=html
 ```
 
 ## Dependencies

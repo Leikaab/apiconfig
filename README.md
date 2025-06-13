@@ -103,6 +103,10 @@ poetry add apiconfig
 
 ---
 
+## Dependencies
+
+This project relies on [pytest](https://docs.pytest.org/) and [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for testing. Core functionality is built on internal modules such as `apiconfig.config`.
+
 ## Usage
 
 ### Basic Configuration

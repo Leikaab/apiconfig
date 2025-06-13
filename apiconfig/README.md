@@ -34,7 +34,7 @@ error hierarchy and `utils` contains logging helpers and other small utilities.
 - `utils/` – assorted utilities such as logging setup and URL helpers.
 - `__init__.py` – re‑exports common classes and determines the package version.
 
-## Quick example
+## Usage Examples
 ```python
 from apiconfig import ClientConfig, ApiKeyAuth
 
@@ -68,11 +68,10 @@ flowchart TD
 ```
 
 ## Testing
-Install dependencies and run the full test suite:
+Install dependencies and run the full test suite with Poetry:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-httpserver pytest-xdist
-pytest -q
+poetry install --with dev
+poetry run pytest -q
 ```
 
 ## Dependencies

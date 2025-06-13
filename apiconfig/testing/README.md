@@ -64,12 +64,23 @@ assert_request_received(httpserver, path="/ping")
 
 ### Diagram
 ```mermaid
-flowchart TD
-    subgraph Testing
-        U[unit] -- mocks --> T[tests]
-        I[integration] -- fixtures --> T
-    end
+    flowchart TD
+        subgraph Testing
+            U[unit] -- mocks --> T[tests]
+            I[integration] -- fixtures --> T
+        end
 ```
+
+## Dependencies
+
+### External Dependencies
+- `pytest`, `pytest_httpserver`, and `pytest-xdist` for running the test suite.
+
+### Internal Dependencies
+- `apiconfig.testing.unit` and `apiconfig.testing.integration` utilities.
+
+### Optional Dependencies
+None
 
 ## Running tests
 Install dependencies and run all project tests:
@@ -79,14 +90,6 @@ python -m pip install pytest pytest-httpserver pytest-xdist
 pytest -q
 ```
 
-## Dependencies
-
-Testing relies on `pytest` and `pytest_httpserver`. Install them via the project
-development dependencies:
-
-```bash
-poetry install --with dev
-```
 
 ## Status
 Internal – APIs may evolve alongside the test suite.

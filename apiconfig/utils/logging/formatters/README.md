@@ -74,6 +74,17 @@ sequenceDiagram
     Formatter-->>Logger: formatted string
 ```
 
+## Dependencies
+
+### External Dependencies
+- `logging` – built-in logging package for creating formatters.
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – redaction utilities used by `RedactingFormatter`.
+
+### Optional Dependencies
+None
+
 ## Tests
 Install dependencies and run the formatter tests:
 ```bash

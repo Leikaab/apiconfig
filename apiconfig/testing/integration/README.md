@@ -14,10 +14,6 @@ Submodules: none.
 - `servers.py` – utilities to configure and verify responses of `pytest_httpserver`.
 - `__init__.py` – exports the public helpers mentioned above.
 
-## Dependencies
-- `pytest` – required to run the integration tests.
-- Internal mocks from [`apiconfig.testing.unit.mocks`](../unit/mocks/README.md) – used in various examples.
-
 ## Usage
 ```python
 from apiconfig.testing.integration import (
@@ -80,12 +76,16 @@ pytest tests/integration -q
 
 ## Dependencies
 
-### Standard Library
-- `typing` – provides type hints for the integration helpers.
-- `http` – for HTTP status utilities in the examples.
+### External Dependencies
+- `pytest` – required to run the integration tests.
+- `typing` and `http` – standard library modules used in examples.
 
-### Internal Modules
+### Internal Dependencies
 - `apiconfig.utils.http` – URL and request helpers reused in tests.
+- Internal mocks from [`apiconfig.testing.unit.mocks`](../unit/mocks/README.md) – used in various examples.
+
+### Optional Dependencies
+None
 
 ## Status
 

@@ -2,6 +2,20 @@
 
 Authentication framework for **apiconfig**.  This package defines the common `AuthStrategy` base class and bundles the built in authentication strategies and token utilities.
 
+## Module Description
+
+`AuthStrategy` defines the interface used by all authentication implementations.
+The package includes ready-made strategies such as `BasicAuth`, `BearerAuth`,
+and `ApiKeyAuth` so clients can authenticate without custom code.
+
+Centralizing authentication ensures headers and query parameters are prepared
+consistently across APIs. Each `ClientConfig` instance holds a strategy, keeping
+request logic independent of specific credentials or token refresh flows.
+
+This design follows the Strategy pattern and encourages extensibility.
+Applications can swap built-in strategies or provide custom implementations
+without modifying consumers of `ClientConfig`.
+
 ## Contents
 - `base.py` – abstract `AuthStrategy` with refresh support.
 - `strategies/` – collection of ready to use strategies such as `BasicAuth`, `BearerAuth` and `ApiKeyAuth`.

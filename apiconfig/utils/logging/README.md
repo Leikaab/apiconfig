@@ -106,7 +106,9 @@ poetry run pytest tests/unit/utils/logging -q
 
 
 ## Status
-Stable – provides common logging setup for the library.
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Logging utilities are stable; maintenance focuses on bug fixes and minor improvements.

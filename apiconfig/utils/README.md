@@ -90,6 +90,10 @@ pytest tests/unit/utils -q
 ## Status
 Stable – used throughout the project.
 
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
+
 ### Maintenance Notes
 - Stable utilities with occasional updates for new helper functions.
 

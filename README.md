@@ -132,7 +132,19 @@ graph TD
 
 ## Dependencies
 
-This project relies on [pytest](https://docs.pytest.org/) and [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for testing. Core functionality is built on internal modules such as `apiconfig.config`.
+### External
+- [pytest](https://docs.pytest.org/) and
+  [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for the
+  test suite.
+
+### Internal
+- Core modules such as `apiconfig.config`.
+
+### Optional
+Install development requirements with:
+```bash
+poetry install --with dev
+```
 
 ## Usage
 
@@ -346,14 +358,6 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
-## Dependencies
-
-The project relies on `pytest` and `pytest_httpserver` for its test suite. Install development
-dependencies with:
-
-```bash
-poetry install --with dev
-```
 
 ## Status
 

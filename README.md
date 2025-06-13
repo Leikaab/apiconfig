@@ -134,6 +134,9 @@ graph TD
 
 This project relies on [pytest](https://docs.pytest.org/) and [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for testing. Core functionality is built on internal modules such as `apiconfig.config`.
 
+### Optional Dependencies
+None
+
 ## Usage
 
 ### Basic Configuration
@@ -317,6 +320,12 @@ pyright
 
 This guarantees libraries like `httpx`, `pytest`, and their stubs are available.
 
+### Test Structure
+Unit tests are organized by feature under `tests/unit`. The exception hierarchy is covered in `tests/unit/exceptions`.
+
+### Test Dependencies
+Tests rely only on `pytest` and the `apiconfig` package; no external services are required.
+
 ---
 
 ## CI/CD
@@ -354,6 +363,9 @@ dependencies with:
 ```bash
 poetry install --with dev
 ```
+
+### Optional Dependencies
+None
 
 ## Status
 

@@ -32,7 +32,17 @@ configuration values from one or more providers.
 - `providers/` – built‑in configuration providers such as `EnvProvider` and `FileProvider`.
 - `__init__.py` – re‑exports the main classes for convenience.
 
-## Example usage
+## Usage Examples
+
+### Basic
+```python
+from apiconfig.config import ClientConfig
+
+config = ClientConfig(hostname="api.example.com", version="v1")
+print(config.base_url)
+```
+
+### Advanced
 ```python
 from apiconfig.config import ClientConfig, ConfigManager
 from apiconfig.config.providers import EnvProvider, FileProvider
@@ -75,6 +85,15 @@ Install dependencies and run the unit tests for the configuration package:
 poetry install --with dev
 poetry run pytest tests/unit/config -q
 ```
+
+## Dependencies
+Standard library modules:
+- `os`
+- `json`
+
+Internal modules:
+- `apiconfig.exceptions`
+- `apiconfig.auth`
 
 ## Status
 Stable – used by API clients and covered by unit tests.

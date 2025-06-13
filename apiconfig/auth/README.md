@@ -78,17 +78,10 @@ sequenceDiagram
     Client->>Server: HTTP request with headers
 ```
 
-## Tests
-Install dependencies and run the unit tests for the authentication package:
-```bash
-poetry install --with dev
-poetry run pytest tests/unit/auth -q
-```
-
 ## Dependencies
 
-### Standard Library
-- `abc` – defines the abstract base class for auth strategies.
+### External Dependencies
+- `abc` – abstract base classes for auth strategies.
 - `base64` – encodes Basic authentication credentials.
 - `datetime` – handles token expiry timestamps.
 - `json`, `logging`, and `time` – used in token refresh helpers.
@@ -100,6 +93,13 @@ poetry run pytest tests/unit/auth -q
 
 ### Optional Dependencies
 - `httpx` – recommended HTTP client for token refresh callbacks and testing.
+
+## Tests
+Install dependencies and run the unit tests for the authentication package:
+```bash
+poetry install --with dev
+poetry run pytest tests/unit/auth -q
+```
 
 ## Status
 Stable – used by the configuration system and tested via the unit suite.

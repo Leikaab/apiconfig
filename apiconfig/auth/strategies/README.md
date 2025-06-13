@@ -2,6 +2,9 @@
 
 `apiconfig.auth.strategies` contains the built-in authentication strategies bundled with **apiconfig**. Every strategy implements the `AuthStrategy` interface and can be injected into a `ClientConfig` to attach credentials to outgoing HTTP requests.
 
+## Module Description
+The built-in authentication strategies provide common schemes like API keys, HTTP Basic, and bearer tokens. Each conforms to the `AuthStrategy` interface so they can be used interchangeably when configuring a `ClientConfig`. Clients can extend these defaults by subclassing `AuthStrategy` or leveraging `CustomAuth` callbacks for bespoke logic.
+
 This package hides authentication details behind a common interface so client code stays the same regardless of how credentials are provided. The design follows the Strategy pattern, allowing you to swap or extend authentication mechanisms without modifying other parts of the client.
 
 ## Navigation

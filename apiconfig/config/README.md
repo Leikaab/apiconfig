@@ -1,5 +1,23 @@
 # apiconfig.config
 
+## Module Description
+
+`ClientConfig` encapsulates options for API clients, including hostname, API
+version, headers, timeouts, and authentication settings. A `ConfigManager`
+collects these values by loading configuration dictionaries from one or more
+providers and returning a unified mapping ready for consumption.
+
+Configuration providers supply configuration from sources like environment
+variables or JSON files. Providers are processed in the order given, and each
+dictionary merges into the next so later providers override earlier ones. This
+strategy supports flexible layering, letting environment-specific data trump
+defaults while still keeping predictable precedence.
+
+The configuration module works alongside packages such as `auth` and
+`exceptions`. Providers deliver raw dictionaries, the manager merges them, and
+`ClientConfig` validates and exposes the final settings that the rest of the
+library relies on.
+
 Core configuration system for **apiconfig**.  This module exposes the `ClientConfig`
 class used by API clients and the `ConfigManager` which coordinates loading of
 configuration values from one or more providers.

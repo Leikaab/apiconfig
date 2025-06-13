@@ -102,7 +102,10 @@ poetry run pytest tests/unit/auth -q
 ```
 
 ## Status
-Stable – used by the configuration system and tested via the unit suite.
+
+**Stability:** Stable – used by the configuration system and tested via the unit suite.
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Authentication layer is stable and updated as new schemes are supported.

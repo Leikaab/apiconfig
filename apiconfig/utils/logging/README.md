@@ -4,6 +4,16 @@ Logging helpers used across **apiconfig**. This package bundles custom
 formatters, context filters and convenience functions for setting up redacted
 logging output.
 
+## Module Description
+
+The logging utilities build on the redaction helpers to provide safe and
+context-rich output. Custom formatters such as `RedactingFormatter` apply the
+redaction functions to scrub sensitive values before emitting a log message.
+Handlers like `ConsoleHandler` make these formatters easy to wire up while
+staying compatible with the standard `logging` handlers. Thread-local context
+filters add request or user metadata to log records so that each entry carries
+useful debugging information.
+
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.

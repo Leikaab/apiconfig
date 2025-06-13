@@ -1,6 +1,12 @@
 # apiconfig.testing.integration
 
-Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
+## Module Description
+
+Utilities for end-to-end tests of **apiconfig** based clients. The package
+provides helpers for spinning up mock HTTP servers and convenient pytest
+fixtures so integrations can be validated without hitting real services. These
+helpers are separate from the unit test helpers because they rely on external
+tools and focus on full request flows instead of isolated functions.
 
 ## Navigation
 
@@ -69,9 +75,8 @@ sequenceDiagram
 ## Testing
 Install dependencies and run the integration tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-httpserver
-pytest tests/integration -q
+poetry install --with dev
+poetry run pytest tests/integration -q
 ```
 
 ## Dependencies

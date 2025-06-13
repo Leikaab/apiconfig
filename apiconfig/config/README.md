@@ -22,13 +22,27 @@ Core configuration system for **apiconfig**.  This module exposes the `ClientCon
 class used by API clients and the `ConfigManager` which coordinates loading of
 configuration values from one or more providers.
 
+## Navigation
+- [apiconfig](../README.md)
+- [providers](./providers/README.md)
+
 ## Contents
 - `base.py` – `ClientConfig` with helpers for merging settings and constructing `base_url`.
 - `manager.py` – `ConfigManager` that merges dictionaries from multiple providers.
 - `providers/` – built‑in configuration providers such as `EnvProvider` and `FileProvider`.
 - `__init__.py` – re‑exports the main classes for convenience.
 
-## Example usage
+## Usage Examples
+
+### Basic
+```python
+from apiconfig.config import ClientConfig
+
+config = ClientConfig(hostname="api.example.com", version="v1")
+print(config.base_url)
+```
+
+### Advanced
 ```python
 from apiconfig.config import ClientConfig, ConfigManager
 from apiconfig.config.providers import EnvProvider, FileProvider
@@ -72,6 +86,15 @@ poetry install --with dev
 poetry run pytest tests/unit/config -q
 ```
 
+## Dependencies
+Standard library modules:
+- `os`
+- `json`
+
+Internal modules:
+- `apiconfig.exceptions`
+- `apiconfig.auth`
+
 ## Status
 Stable – used by API clients and covered by unit tests.
 
@@ -83,10 +106,6 @@ Stable – used by API clients and covered by unit tests.
 
 ### Future Considerations
 - Potential support for dynamic configuration providers.
-
-## Navigation
-- [apiconfig](../README.md)
-- [providers](./providers/README.md)
 
 ## See Also
 - [auth](../auth/README.md) - describes available authentication strategies used by `ClientConfig`.

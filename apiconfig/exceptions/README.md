@@ -97,6 +97,15 @@ python -m pip install pytest
 pytest tests/unit/exceptions -q
 ```
 
+## Dependencies
+
+### Standard Library
+- `typing` – used for type annotations in the exceptions.
+- `http` – provides HTTP status codes for certain errors.
+
+### Internal Modules
+- `apiconfig.utils.http` – helpers used when raising client errors.
+
 ## See Also
 - [auth](../auth/README.md) – strategies that raise authentication errors
 - [config](../config/README.md) – configuration providers that emit errors

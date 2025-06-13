@@ -60,6 +60,15 @@ Run unit tests with coverage:
 pytest --cov=apiconfig --cov-report=html
 ```
 
+## Dependencies
+
+### Standard Library
+- `typing` – common type hints for function signatures.
+- `http` – HTTP utilities referenced in examples.
+
+### Internal Modules
+- `apiconfig.utils.http` – helpers used to build request representations.
+
 ## Status
 
 **Stability:** Stable

@@ -85,9 +85,8 @@ None
 ## Running tests
 Install dependencies and run all project tests:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-httpserver pytest-xdist
-pytest -q
+poetry install --with dev
+poetry run pytest -q
 ```
 
 

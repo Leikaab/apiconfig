@@ -78,6 +78,14 @@ flowchart TD
     Formatter -->|redact| Redaction
 ```
 
+## Dependencies
+
+### Standard Library
+- `logging` – built on Python's logging framework for handlers and configuration.
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – utilities for scrubbing sensitive data from log messages.
+
 ## Tests
 Run the logging-related unit tests:
 ```bash

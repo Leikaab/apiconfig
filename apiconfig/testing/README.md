@@ -4,6 +4,24 @@ Testing utilities bundled with **apiconfig**. This package organises helpers for
 both unit and integration tests so developers can verify clients without writing
 boilerplate code.
 
+## Module Description
+
+The `apiconfig.testing` package offers a curated collection of utilities used to
+validate API client behaviour across the project. It aims to remove repetitive
+setup from test suites by supplying ready-made fixtures, mocks, and assertion
+helpers so contributors can focus on the logic under test.
+
+Helpers are organised into two main groups. The `unit` subpackage provides
+lightweight factories and assertion tools for isolated unit tests, while the
+`integration` subpackage includes fixtures for spawning mock HTTP servers and
+other components needed to verify real request flows. This separation keeps
+unit tests fast and integration tests realistic without mixing concerns.
+
+Bundling these helpers directly with the repository ensures they evolve in lock
+step with the codebase. Developers do not need to pull in external libraries or
+maintain separate tooling when the API clients change, keeping the project
+simple to contribute to and easier to maintain.
+
 ## Navigation
 
 **Parent:** [apiconfig](../README.md)

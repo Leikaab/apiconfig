@@ -1,12 +1,17 @@
 # helpers_for_tests.common
 
+## Module Description
+
 Shared helpers used by the example integration clients. This package exposes a simple `BaseClient` class that builds on top of **apiconfig**'s configuration and authentication system.
+
+## Navigation
+- [helpers_for_tests](../README.md) – overview of test helper clients.
 
 ## Contents
 - `base_client.py` – generic HTTP client with error handling and JSON parsing.
 - `__init__.py` – package marker.
 
-## Usage example
+## Usage Examples
 ```python
 from typing import Dict, Optional
 
@@ -29,12 +34,12 @@ result = client._request(HttpMethod.GET, "/ping")
 print(result)
 ```
 
-## Key classes
+## Key Components
 | Name | Description |
 | ---- | ----------- |
 | `BaseClient` | Base class that prepares URLs and headers and parses JSON responses. |
 
-### Design
+## Architecture
 `BaseClient` follows a light template approach where `_request` delegates authentication details to the configured `AuthStrategy`.
 
 ```mermaid
@@ -48,15 +53,29 @@ sequenceDiagram
     Client->>Client: _handle_response()
 ```
 
-## Tests
+## Testing
 ```bash
 python -m pip install -e .
 python -m pip install pytest
 pytest tests/unit/helpers/common -q
 ```
 
+## Dependencies
+### External Dependencies
+- `httpx` – HTTP client used for requests.
+
+### Internal Dependencies
+- `apiconfig.config`
+- `apiconfig.exceptions.http`
+- `apiconfig.types`
+- `apiconfig.utils.http`
+- `apiconfig.utils.url`
+
 ## Status
-Internal – intended only for the helper clients used in tests.
+
+- **Stability:** Internal – intended only for the helper clients used in tests.
+- **API Version:** 0.3.2
+- **Deprecations:** None
 
 ### Maintenance Notes
 - APIs may change to support evolving test requirements.

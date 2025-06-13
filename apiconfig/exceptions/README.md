@@ -113,6 +113,10 @@ poetry run pytest tests/unit/exceptions -q
 Stable – exceptions are widely used across the library and covered by unit
 tests.
 
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
+
 ### Maintenance Notes
 - Exception hierarchy is stable; new exceptions added as needed.
 

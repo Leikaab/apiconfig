@@ -54,11 +54,11 @@ class TestExistingComponentIntegration:
 
         # Simulate saving updated token data back to storage
         assert result is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         updated_token_data = {
-            "access_token": token_data["access_token"],
-            "refresh_token": token_data["refresh_token"],
+            "access_token": token_data.get("access_token"),
+            "refresh_token": token_data.get("refresh_token"),
             "expires_at": "2024-12-31T23:59:59Z",  # Would be calculated from expires_in
         }
         storage.store_token("test_key", updated_token_data)
@@ -135,9 +135,9 @@ class TestExistingComponentIntegration:
         # Test refresh and storage update
         result = auth.refresh()
         assert result is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
-        assert token_data["access_token"] == "refreshed_api_key"
+        assert token_data.get("access_token") == "refreshed_api_key"
 
         # Verify storage was updated
         updated_data = storage.retrieve_token("custom_key")

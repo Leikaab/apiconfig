@@ -1,6 +1,22 @@
 # apiconfig.utils.redaction
 
-Utilities for scrubbing sensitive information from HTTP requests, responses and logs. The package centralises common redaction logic so that clients and logging helpers can easily avoid leaking secrets.
+## Module Description
+
+Redaction utilities exist to ensure that tokens, credentials and other personal
+information never appear in logs or request dumps. They provide a centralised
+set of helpers for sanitising HTTP bodies and headers, preventing accidental
+data leaks. Modules such as `apiconfig.utils.logging` rely on these helpers to
+prepare safe output for log handlers and monitoring services.
+
+Utilities for scrubbing sensitive information from HTTP requests, responses and
+logs. The package centralises common redaction logic so that clients and logging
+helpers can easily avoid leaking secrets.
+
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+There are no submodules.
 
 ## Contents
 - `body.py` – functions to redact JSON and form-encoded bodies.
@@ -45,4 +61,18 @@ pytest --cov=apiconfig --cov-report=html
 ```
 
 ## Status
-Stable – used internally for logging and HTTP utilities.
+
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
+
+### Maintenance Notes
+The module is considered stable and receives updates only for critical bug fixes
+or security patches. No major changes are currently planned.
+
+### Changelog
+- Redaction utilities follow the main project changelog.
+
+### Future Considerations
+Possible enhancements include more granular redaction options and performance
+optimisations for handling very large payloads.

@@ -1,0 +1,26 @@
+from typing import Any, Dict, Mapping, Optional, Union
+
+from apiconfig.exceptions.http import HTTPUtilsError as HTTPUtilsError
+from apiconfig.exceptions.http import JSONDecodeError as JSONDecodeError
+from apiconfig.exceptions.http import JSONEncodeError as JSONEncodeError
+from apiconfig.exceptions.http import PayloadTooLargeError as PayloadTooLargeError
+
+__all__: list[str]
+
+def is_success(status_code: int) -> bool: ...
+def is_redirect(status_code: int) -> bool: ...
+def is_client_error(status_code: int) -> bool: ...
+def is_server_error(status_code: int) -> bool: ...
+def normalize_header_name(name: str) -> str: ...
+def get_header_value(headers: Mapping[str, str], name: str, default: Optional[str] = ...) -> Optional[str]: ...
+def safe_json_decode(
+    response_text: Union[str, bytes],
+    encoding: Optional[str] = ...,
+    max_size_bytes: int = ...,  # Default to 1MB
+) -> Optional[Dict[str, Any]]: ...
+def safe_json_encode(
+    data: Any,
+    ensure_ascii: bool = ...,
+    indent: Optional[int] = ...,
+    max_size_bytes: int = ...,  # Default to 1MB
+) -> str: ...

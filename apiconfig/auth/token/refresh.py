@@ -12,7 +12,7 @@ import time
 
 # Import httpx only for type annotations, not for actual use
 # This allows for proper type checking without runtime dependency
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, cast
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, TypedDict, cast
 
 if TYPE_CHECKING:
     pass
@@ -29,7 +29,17 @@ from ...exceptions.auth import (
 logger = logging.getLogger(__name__)
 
 
-def _extract_json_from_response(response: Any) -> Dict[str, Any]:
+class OAuthTokenData(TypedDict, total=False):
+    """Structured OAuth token response data."""
+
+    access_token: str
+    refresh_token: Optional[str]
+    expires_in: Optional[int]
+    token_type: Optional[str]
+    scope: Optional[str]
+
+
+def _extract_json_from_response(response: Any) -> OAuthTokenData:
     """
     Extract JSON data from an HTTP response.
 
@@ -40,7 +50,7 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
 
     Returns
     -------
-    Dict[str, Any]
+    OAuthTokenData
         The parsed JSON data.
 
     Raises
@@ -51,7 +61,7 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
     # Try to use the client's json method first
     if hasattr(response, "json"):
         try:
-            return cast(Dict[str, Any], response.json())
+            return cast(OAuthTokenData, response.json())
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
@@ -64,14 +74,14 @@ def _extract_json_from_response(response: Any) -> Dict[str, Any]:
     # Fall back to manual JSON parsing
     if hasattr(response, "text"):
         try:
-            return cast(Dict[str, Any], json.loads(response.text))
+            return cast(OAuthTokenData, json.loads(response.text))
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
 
     if hasattr(response, "content"):
         try:
-            return cast(Dict[str, Any], json.loads(response.content.decode("utf-8")))
+            return cast(OAuthTokenData, json.loads(response.content.decode("utf-8")))
         except json.JSONDecodeError as e:
             logger.error(f"Failed to decode JSON response: {e}")
             raise TokenRefreshJsonError(f"Failed to decode token response: {e}") from e
@@ -147,7 +157,7 @@ def _make_token_refresh_request(
     auth: Optional[Any] = None,
     timeout: float = 10.0,
     http_client: Optional[Any] = None,
-) -> Dict[str, Any]:
+) -> OAuthTokenData:
     """
     Make the actual HTTP request to refresh the token.
 
@@ -166,7 +176,7 @@ def _make_token_refresh_request(
 
     Returns
     -------
-    Dict[str, Any]
+    OAuthTokenData
         The parsed JSON response.
 
     Raises
@@ -342,7 +352,7 @@ def _execute_with_retry(
     timeout: float,
     max_retries: int,
     http_client: Optional[Any],
-) -> Dict[str, Any]:
+) -> OAuthTokenData:
     """
     Execute token refresh request with retry logic.
 
@@ -363,7 +373,7 @@ def _execute_with_retry(
 
     Returns
     -------
-    Dict[str, Any]
+    OAuthTokenData
         The token data from a successful response.
 
     Raises
@@ -428,7 +438,7 @@ def refresh_oauth2_token(
     max_retries: Optional[int] = None,
     client_config: Optional[ClientConfig] = None,
     http_client: Optional[Any] = None,
-) -> Dict[str, Any]:
+) -> OAuthTokenData:
     """
     Refresh an OAuth2 access token using a refresh token.
 
@@ -461,7 +471,7 @@ def refresh_oauth2_token(
 
     Returns
     -------
-    Dict[str, Any]
+    OAuthTokenData
         A dictionary containing the token data from the successful response, typically including
         'access_token', 'expires_in', 'token_type', and potentially a new 'refresh_token'.
 

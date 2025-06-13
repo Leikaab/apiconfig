@@ -7,7 +7,7 @@ import pytest
 from dotenv import load_dotenv
 
 from apiconfig.config.base import ClientConfig
-from apiconfig.config.manager import ConfigManager
+from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.config.providers.env import EnvProvider
 from apiconfig.config.providers.memory import MemoryProvider
 from helpers_for_tests.tripletex.tripletex_auth import TripletexSessionAuth
@@ -34,7 +34,7 @@ def create_tripletex_config_manager() -> ConfigManager:
     }
 
     # Create providers - environment variables first, then defaults
-    providers = [
+    providers: list[ConfigProvider] = [
         EnvProvider(prefix="TRIPLETEX_TEST_"),
         MemoryProvider(config_data=defaults),
     ]

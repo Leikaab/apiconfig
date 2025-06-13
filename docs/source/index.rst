@@ -34,7 +34,7 @@ Key Features
 - **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
 - **Type Safety**: Strong type hints and type-checked public API.
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
-- **100% Test Coverage**: Fully tested with unit and integration tests.
+- **High Test Coverage**: Around 94% coverage with unit and integration tests.
 
 Quick Example
 -----------
@@ -52,7 +52,7 @@ Quick Example
        hostname="api.example.com",
        version="v1",
        auth_strategy=auth,
-       timeout=10.0,
+       timeout=10,
    )
 
    # Use with any HTTP client

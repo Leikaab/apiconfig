@@ -99,7 +99,7 @@ class TestFikenIntegration:
     def test_error_handling_with_http_utilities(self, fiken_client: FikenClient) -> None:
         """Test that API errors are handled appropriately using HTTP utilities."""
         with pytest.raises(HTTPUtilsError) as exc_info:
-            fiken_client._request(HttpMethod.GET, "/nonexistent")
+            fiken_client.request(HttpMethod.GET, "/nonexistent")
 
         error_message = str(exc_info.value)
         assert "HTTP request" in error_message or "failed" in error_message.lower()

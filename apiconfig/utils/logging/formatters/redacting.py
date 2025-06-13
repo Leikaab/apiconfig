@@ -21,6 +21,8 @@ from apiconfig.utils.redaction.headers import (
     redact_headers,
 )
 
+from .detailed import DetailedFormatter
+
 
 class RedactingFormatter(logging.Formatter):
     """Automatically redact sensitive information from log messages and HTTP headers.
@@ -129,18 +131,19 @@ class RedactingFormatter(logging.Formatter):
         return super().format(record)
 
     def _redact_headers(self, record: logging.LogRecord) -> None:
-        if hasattr(record, "headers") and isinstance(record.headers, Mapping):
+        headers: Mapping[str, str] | None = getattr(record, "headers", None)
+        if headers is not None:
             try:
-                redacted_headers = self._redact_headers_func(
-                    record.headers,
+                redacted = self._redact_headers_func(
+                    headers,
                     sensitive_keys=self.header_sensitive_keys,
                     sensitive_prefixes=self.header_sensitive_prefixes,
                     sensitive_name_pattern=self.header_sensitive_name_pattern,
                     sensitive_cookie_keys=self.header_sensitive_cookie_keys,
                 )
-                record.headers = redacted_headers
+                record.headers = redacted
             except Exception:
-                pass  # Fallback to original headers if redaction fails
+                pass
 
     def _redact_message(self, record: logging.LogRecord) -> None:
         """Redact the log message in-place on the record.
@@ -154,7 +157,8 @@ class RedactingFormatter(logging.Formatter):
         orig_msg = getattr(record, "msg", None)
         msg = record.getMessage()
         content_type = getattr(record, "content_type", None)
-        redacted_msg: Any
+        # Start with the original message so every branch updates ``redacted_msg``
+        redacted_msg: Any = msg
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
         if isinstance(orig_msg, bytes):
@@ -168,14 +172,13 @@ class RedactingFormatter(logging.Formatter):
         # 3. If the message is empty, redact as '[REDACTED]'
         elif self._is_empty(msg):
             redacted_msg = self._redact_empty(msg)
-        # 4. If the message is a string that is structured (JSON/form), redact and output JSON string
-        elif isinstance(msg, str) and self._is_structured(msg, content_type):
+        # 4. If the message is structured (JSON/form), redact and output JSON string
+        elif self._is_structured(msg, content_type):
             redacted_msg = self._redact_structured(msg, content_type)
-        # 5. If the message is a plain string, redact sensitive values in the string
-        elif isinstance(msg, str):
+        # 5. Otherwise treat it as a plain string and redact sensitive values
+        else:
             redacted_msg = self._redact_plain_string(msg)
-        # 6. Fallback: for unknown types, just use str()
-        # This branch is unreachable, so we remove it to satisfy mypy.
+        # 6. Fallback: keep ``redacted_msg`` as the original message
 
         # Ensure the final message is always a string for logging
         # If _redact_structured returned a dict/list, always serialize to JSON
@@ -269,3 +272,40 @@ class RedactingFormatter(logging.Formatter):
             if "[REDACTED]" in redacted:
                 return redacted
         return msg
+
+
+def redact_structured_helper(formatter: RedactingFormatter, msg: Any, content_type: Any) -> str:
+    """Public helper to call ``RedactingFormatter._redact_structured`` for tests."""
+    return formatter._redact_structured(msg, content_type)  # pyright: ignore[reportPrivateUsage]
+
+
+def redact_message_helper(formatter: RedactingFormatter, record: logging.LogRecord) -> None:
+    """Public helper to call ``RedactingFormatter._redact_message`` for tests."""
+    formatter._redact_message(record)  # pyright: ignore[reportPrivateUsage]
+
+
+def format_exception_text_helper(
+    formatter: DetailedFormatter,
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_exception_text`` for tests."""
+    return formatter._format_exception_text(formatted, record)  # pyright: ignore[reportPrivateUsage]
+
+
+def format_stack_info_helper(
+    formatter: DetailedFormatter,
+    formatted: str,
+    record: logging.LogRecord,
+) -> str:
+    """Public helper to call ``DetailedFormatter._format_stack_info`` for tests."""
+    return formatter._format_stack_info(formatted, record)  # pyright: ignore[reportPrivateUsage]
+
+
+__all__: list[str] = [
+    "RedactingFormatter",
+    "redact_structured_helper",
+    "redact_message_helper",
+    "format_exception_text_helper",
+    "format_stack_info_helper",
+]

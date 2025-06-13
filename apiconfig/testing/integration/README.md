@@ -2,6 +2,12 @@
 
 Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
 
+## Navigation
+
+**Parent:** [../README.md](../README.md)
+
+Submodules: none.
+
 ## Contents
 - `fixtures.py` – pytest fixtures that provide temporary config files, HTTP server addresses and ready-made `ConfigManager` instances.
 - `helpers.py` – helper functions such as `make_request_with_config` and `simulate_token_endpoint` for interacting with the mock server.
@@ -69,4 +75,19 @@ pytest tests/integration -q
 ```
 
 ## Status
-Experimental – helpers may change as integration needs evolve.
+
+**Stability:** Experimental
+**API Version:** 0.3.1
+**Deprecations:** None
+
+### Maintenance Notes
+- APIs are experimental and may break between minor releases.
+
+### Changelog
+- Added `assert_request_received` to validate HTTP requests made to the mock server.
+- Enhanced type hints and explicit return types across helper functions.
+- Expanded documentation with a navigation section and additional usage notes.
+
+### Future Considerations
+- Provide asynchronous variants of the helpers for `httpx.AsyncClient`.
+- Offer higher-level fixtures for more complex authentication flows.

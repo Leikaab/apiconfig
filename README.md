@@ -26,9 +26,18 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Testing and Coverage](#testing-and-coverage)
 - [CI/CD](#cicd)
 - [Further Documentation](#further-documentation)
+- [Navigation](#navigation)
 - [License](#license)
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://leikaab.github.io/apiconfig/)
+
+## Navigation
+
+- [auth](apiconfig/auth/README.md)
+- [config](apiconfig/config/README.md)
+- [exceptions](apiconfig/exceptions/README.md)
+- [testing](apiconfig/testing/README.md)
+- [utils](apiconfig/utils/README.md)
 
 ---
 
@@ -90,7 +99,7 @@ poetry add apiconfig
 - **Robust Error Handling**: Clear, structured exception hierarchy for all config and auth errors.
 - **Type Safety**: Strong type hints and type-checked public API.
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
-- **100% Test Coverage**: Fully tested with unit and integration tests.
+- **High Test Coverage**: Around 94% coverage with unit and integration tests.
 
 ---
 
@@ -171,8 +180,10 @@ from apiconfig import FileProvider, MemoryProvider
 file_provider = FileProvider(file_path="config.json")
 file_config = file_provider.load()
 
-memory_provider = MemoryProvider(data={"hostname": "api.example.com"})
-memory_config = memory_provider.load()
+# MemoryProvider accepts configuration via the ``config_data`` parameter and
+# exposes ``get_config`` instead of ``load``
+memory_provider = MemoryProvider(config_data={"hostname": "api.example.com"})
+memory_config = memory_provider.get_config()
 ```
 
 ### Merging Configurations
@@ -261,6 +272,20 @@ apiconfig is fully tested with `pytest` and `coverage.py`. To run tests and chec
 pytest --cov=apiconfig --cov-report=html
 ```
 
+### Static Type Checking
+
+apiconfig uses [Pyright](https://github.com/microsoft/pyright) for optional static
+type checking. Before running Pyright, ensure development dependencies are
+installed and the virtual environment is active:
+
+```bash
+poetry install --with dev
+poetry shell
+pyright
+```
+
+This guarantees libraries like `httpx`, `pytest`, and their stubs are available.
+
 ---
 
 ## CI/CD
@@ -278,6 +303,30 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ---
 
+## See Also
+
+- [Internal Documentation Guide](docs/internal_documentation_guide.md)
+
+---
+
 ## License
 
-LGPLv3+. See [LICENSE](LICENSE) for details.
+LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
+
+## Status
+
+**Stability:** Stable - the project is actively used in production environments.
+**API Version:** Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at version 0.x.
+**Deprecations:** None
+
+### Maintenance Notes
+
+The library is currently **stable** and actively maintained. Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
+
+### Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
+
+### Future Considerations
+
+Planned improvements include enhanced documentation, additional auth strategies, expanded test coverage, and formatter enhancements for more consistent styling.

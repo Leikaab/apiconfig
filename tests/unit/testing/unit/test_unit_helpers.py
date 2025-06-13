@@ -235,7 +235,7 @@ def test_base_auth_strategy_test_setUpClass_wrong_type() -> None:
     class SubTest(helpers.BaseAuthStrategyTest):
         strategy = object()  # type: ignore
 
-    with pytest.raises(NotImplementedError, match="must define a class attribute 'strategy'"):
+    with pytest.raises(AssertionError, match="prepare_request"):
         SubTest.setUpClass()
 
 

@@ -1,7 +1,7 @@
 """Provides a configuration provider that loads values from environment variables."""
 
 import os
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, TypeVar, cast
 
 from apiconfig.exceptions.config import ConfigValueError, InvalidConfigError
 
@@ -36,7 +36,12 @@ class EnvProvider:
         """
         self._prefix = prefix
 
-    def _is_digit(self, value: str) -> bool:
+    @property
+    def prefix(self) -> str:
+        """Return the environment variable prefix."""
+        return self._prefix
+
+    def is_digit(self, value: str) -> bool:
         """Check if a string contains only digits.
 
         Parameters
@@ -78,7 +83,7 @@ class EnvProvider:
             if key.startswith(self._prefix):
                 config_key = key[prefix_len:]  # Keep original case after removing prefix
                 # Basic type inference (can be expanded later)
-                if self._is_digit(value):
+                if self.is_digit(value):
                     try:
                         config[config_key] = int(value)
                     except ValueError:
@@ -95,21 +100,21 @@ class EnvProvider:
                         config[config_key] = value
         return config
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    def get(self, key: str, default: T | None = None, expected_type: type[T] | None = None) -> T | None:
         """Get a configuration value from environment variables.
 
         Parameters
         ----------
         key : str
             The configuration key to get (without the prefix).
-        default : Any, optional
+        default : T | None, optional
             The default value to return if the key is not found.
-        expected_type : Optional[Type[T]], optional
+        expected_type : type[T] | None, optional
             The expected type of the value. If provided, the value will be coerced to this type.
 
         Returns
         -------
-        Any
+        T | None
             The configuration value, or the default if not found.
             If expected_type is provided, the value will be coerced to that type.
 
@@ -132,25 +137,19 @@ class EnvProvider:
             return default
 
         if expected_type is None:
-            return value
+            return cast(T, value)
 
         try:
-            # Handle other types through standard conversion
             if expected_type is object or not callable(expected_type):
-                return value
-                # mypy: unreachable
+                return cast(T, value)
             if expected_type is bool:
-                # Special handling for boolean values
-                try:
-                    val_lower = value.lower()
-                    if val_lower in ("true", "1", "yes", "y", "on"):
-                        return True
-                    elif val_lower in ("false", "0", "no", "n", "off"):
-                        return False
-                    else:
-                        raise ValueError(f"Cannot convert '{value}' to bool")
-                except AttributeError:
-                    return bool(value)
-            return expected_type(value)  # type: ignore[call-arg]
+                val_lower = value.lower()
+                if val_lower in ("true", "1", "yes", "y", "on"):
+                    return cast(T, True)
+                if val_lower in ("false", "0", "no", "n", "off"):
+                    return cast(T, False)
+                raise ValueError(f"Cannot convert '{value}' to bool")
+            converter = cast(Callable[[str], T], expected_type)
+            return converter(value)
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert environment variable {env_key}='{value}' to {expected_type.__name__}: {str(e)}") from e

@@ -17,8 +17,8 @@ The core of ``apiconfig`` is the ``ClientConfig`` class, which manages all confi
        hostname="api.example.com",
        version="v1",
        headers={"X-My-Header": "value"},
-       timeout=10.0,
-       retries=3,
+       timeout=10,
+       retries=2,
    )
 
    # Access the base URL

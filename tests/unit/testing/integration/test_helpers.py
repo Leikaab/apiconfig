@@ -1,5 +1,6 @@
 """Tests for the integration testing helpers."""
 
+from typing import Any, Sequence, cast
 from unittest.mock import MagicMock, patch
 
 import httpx
@@ -35,7 +36,7 @@ class TestMakeRequestWithConfig:
         mock_client = MagicMock()
         mock_client.request.return_value = mock_response
 
-        with patch("httpx.Client") as mock_client_class:
+        with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
             # Set up the mock client to return our mock response
             mock_client_instance = mock_client_class.return_value
             mock_client_instance.__enter__.return_value = mock_client
@@ -92,7 +93,7 @@ class TestMakeRequestWithConfig:
         mock_client = MagicMock()
         mock_client.request.return_value = mock_response
 
-        with patch("httpx.Client") as mock_client_class:
+        with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
             # Set up the mock client to return our mock response
             mock_client_instance = mock_client_class.return_value
             mock_client_instance.__enter__.return_value = mock_client
@@ -171,7 +172,7 @@ class TestMakeRequestWithConfig:
         ]
 
         for mock_server_url, path, expected_url in test_cases:
-            with patch("httpx.Client") as mock_client_class:
+            with patch("apiconfig.testing.integration.helpers.Client") as mock_client_class:
                 # Reset the mock for each iteration
                 mock_client.reset_mock()
 
@@ -218,13 +219,15 @@ class TestSetupMultiProviderManager:
         assert isinstance(manager, ConfigManager)
 
         # Check that the manager has two providers
-        assert len(manager._providers) == 2
+        assert len(manager.providers) == 2
+
+        providers = cast(Sequence[Any], manager.providers)
 
         # Check that the providers are MemoryProviders with the correct data and names
-        assert manager._providers[0]._config == {"api": {"hostname": "example1.com"}}
-        assert manager._providers[0].name == "source1"
-        assert manager._providers[1]._config == {"api": {"version": "v1"}}
-        assert manager._providers[1].name == "source2"
+        assert providers[0]._config == {"api": {"hostname": "example1.com"}}
+        assert providers[0].name == "source1"
+        assert providers[1]._config == {"api": {"version": "v1"}}
+        assert providers[1].name == "source2"
 
     def test_setup_multi_provider_manager_empty_sources(self) -> None:
         """Test setup_multi_provider_manager with empty sources."""
@@ -233,7 +236,7 @@ class TestSetupMultiProviderManager:
 
         # Check that the result is a ConfigManager with no providers
         assert isinstance(manager, ConfigManager)
-        assert len(manager._providers) == 0
+        assert len(manager.providers) == 0
 
 
 class TestSimulateTokenEndpoint:
@@ -284,11 +287,13 @@ class TestSimulateTokenEndpoint:
         # Check that the access token is the custom token
         assert access_token == "custom_token"
 
-        # Check that expect_request was called twice (once for error, once for success)
-        assert mock_httpserver.expect_request.call_count == 2
+        # Check that expect_request (error) and expect_ordered_request (success) were called
+        mock_httpserver.expect_request.assert_called_once_with(uri="/custom/token", method="POST")
+        mock_httpserver.expect_ordered_request.assert_called_once_with(
+            uri="/custom/token",
+            method="POST",
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data="grant_type=client_credentials",
+        )
 
-        # Check that the first call was for the error response
-        mock_httpserver.expect_request.assert_any_call(uri="/custom/token", method="POST")
-
-        # We can't easily check the second call with configure_mock_response without mocking it,
-        # but we can verify that the function completed successfully
+        # We verify that the function completed successfully

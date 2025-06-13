@@ -33,7 +33,7 @@ class ClientConfig:
     ----------
     hostname
         The base hostname of the API (e.g., "api.example.com").
-        If not provided, defaults to None.
+        Defaults to "api.example.com".
     version
         The API version string (e.g., "v1"). Appended to the hostname.
         Must not contain leading or trailing slashes. If not provided, defaults to None.
@@ -41,11 +41,11 @@ class ClientConfig:
         Default headers to include in every request.
         If not provided, defaults to an empty dictionary.
     timeout
-        Default request timeout in seconds. Must be a non-negative number.
-        Defaults to 10.0 seconds.
+        Default request timeout in seconds. Must be a non-negative number when provided.
+        Defaults to 10 seconds.
     retries
-        Default number of retries for failed requests. Must be a non-negative number.
-        Defaults to 3 retries.
+        Default number of retries for failed requests. Must be a non-negative number when provided.
+        Defaults to 2 retries.
     auth_strategy
         An instance of AuthStrategy for handling authentication.
         If not provided, defaults to None.
@@ -57,11 +57,11 @@ class ClientConfig:
         Defaults to False.
     """
 
-    hostname: Optional[str] = None
+    hostname: Optional[str] = "api.example.com"
     version: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
-    timeout: float = 10.0
-    retries: int = 3
+    timeout: Optional[int] = 10
+    retries: Optional[int] = 2
     auth_strategy: Optional["AuthStrategy"] = None
     log_request_body: bool = False
     log_response_body: bool = False
@@ -88,9 +88,9 @@ class ClientConfig:
         headers
             Default headers for requests.
         timeout
-            Request timeout in seconds. Must be a non-negative number (int or float).
+            Request timeout in seconds. Must be a non-negative number (int or float) when provided.
         retries
-            Number of retries for failed requests. Must be a non-negative number (int or float).
+            Number of retries for failed requests. Must be a non-negative number (int or float) when provided.
         auth_strategy
             Authentication strategy instance.
         log_request_body
@@ -120,18 +120,17 @@ class ClientConfig:
         timeout_value = timeout if timeout is not None else self.__class__.timeout
         # Validate timeout (must be non-negative number)
         if timeout_value is not None:
-            if not isinstance(timeout_value, (int, float)):
-                raise InvalidConfigError("Timeout must be a number (int or float).")
-            if timeout_value < 0:
+            timeout_float = float(timeout_value)
+            if timeout_float < 0:
                 raise InvalidConfigError("Timeout must be non-negative.")
+            timeout_value = int(timeout_float)
         self.timeout = timeout_value
 
         # Store retries value before validation
         retries_value = retries if retries is not None else self.__class__.retries
         # Validate retries (must be non-negative number)
         if retries_value is not None:
-            if not isinstance(retries_value, (int, float)):
-                raise InvalidConfigError("Retries must be a number (int or float).")
+            retries_value = int(retries_value)
             if retries_value < 0:
                 raise InvalidConfigError("Retries must be non-negative.")
         self.retries = retries_value
@@ -224,15 +223,14 @@ class ClientConfig:
 
         # Validate timeout (must be non-negative number)
         if new_instance.timeout is not None:
-            if not isinstance(new_instance.timeout, (int, float)):
-                raise InvalidConfigError("Merged timeout must be a number (int or float).")
-            if new_instance.timeout < 0:
+            timeout_float = float(new_instance.timeout)
+            if timeout_float < 0:
                 raise InvalidConfigError("Merged timeout must be non-negative.")
+            new_instance.timeout = int(timeout_float)
 
         # Validate retries (must be non-negative number)
         if new_instance.retries is not None:
-            if not isinstance(new_instance.retries, (int, float)):
-                raise InvalidConfigError("Merged retries must be a number (int or float).")
+            new_instance.retries = int(new_instance.retries)
             if new_instance.retries < 0:
                 raise InvalidConfigError("Merged retries must be non-negative.")
 
@@ -276,8 +274,6 @@ class ClientConfig:
         """Merge two ClientConfig instances.
 
         Static method wrapper around the instance merge() method.
-        This is a convenience method that validates both arguments are
-        ClientConfig instances before calling merge().
 
         Args
         ----
@@ -291,12 +287,5 @@ class ClientConfig:
         _TClientConfig
             A new ClientConfig instance representing the merged configuration.
 
-        Raises
-        ------
-        TypeError
-            If either argument is not an instance of ClientConfig.
         """
-        if not isinstance(base_config, ClientConfig) or not isinstance(other_config, ClientConfig):
-            raise TypeError("Both arguments must be instances of ClientConfig")
-
         return base_config.merge(other_config)

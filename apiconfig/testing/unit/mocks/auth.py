@@ -4,7 +4,7 @@
 import random
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.auth.strategies.api_key import ApiKeyAuth
@@ -12,7 +12,12 @@ from apiconfig.auth.strategies.basic import BasicAuth
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import TokenRefreshError
-from apiconfig.types import AuthRefreshCallback, TokenRefreshResult
+from apiconfig.types import (
+    AuthRefreshCallback,
+    QueryParamType,
+    QueryParamValueType,
+    TokenRefreshResult,
+)
 
 
 class MockAuthStrategy(AuthStrategy):
@@ -24,14 +29,14 @@ class MockAuthStrategy(AuthStrategy):
     """
 
     override_headers: Dict[str, str]
-    override_params: Dict[str, Any]
+    override_params: Dict[str, QueryParamValueType]
     raise_exception: Optional[Exception]
 
     def __init__(
         self,
         *,
         override_headers: Optional[Dict[str, str]] = None,
-        override_params: Optional[Dict[str, Any]] = None,
+        override_params: Optional[Mapping[str, QueryParamValueType]] = None,
         raise_exception: Optional[Exception] = None,
     ) -> None:
         """Initialize the MockAuthStrategy.
@@ -45,15 +50,15 @@ class MockAuthStrategy(AuthStrategy):
         raise_exception
             Optional exception instance to raise when prepare_request is called.
         """
-        self.override_headers = override_headers if override_headers is not None else {}
-        self.override_params = override_params if override_params is not None else {}
+        self.override_headers = dict(override_headers) if override_headers is not None else {}
+        self.override_params = dict(override_params) if override_params is not None else {}
         self.raise_exception = raise_exception
 
     def prepare_request(
         self,
         headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, str], Dict[str, Any]]:
+        params: Optional[QueryParamType] = None,
+    ) -> Tuple[Dict[str, str], QueryParamType]:
         """Prepare request headers and parameters, applying mock configurations.
 
         If `raise_exception` was provided during initialization, it will be raised.
@@ -69,7 +74,7 @@ class MockAuthStrategy(AuthStrategy):
 
         Returns
         -------
-        Tuple[Dict[str, str], Dict[str, Any]]
+        Tuple[Dict[str, str], QueryParamType]
             A tuple containing the prepared headers and parameters dictionaries.
 
         Raises
@@ -80,10 +85,10 @@ class MockAuthStrategy(AuthStrategy):
         if self.raise_exception:
             raise self.raise_exception
 
-        final_headers = headers.copy() if headers else {}
+        final_headers = dict(headers) if headers else {}
         final_headers.update(self.override_headers)
 
-        final_params = params.copy() if params else {}
+        final_params: Dict[str, QueryParamValueType] = dict(params) if params else {}
         final_params.update(self.override_params)
 
         return final_headers, final_params
@@ -93,9 +98,9 @@ class MockAuthStrategy(AuthStrategy):
         current_headers = headers if headers is not None else {}
         return current_headers
 
-    def prepare_request_params(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def prepare_request_params(self, params: Optional[QueryParamType] = None) -> QueryParamType:
         """Provide a dummy implementation required by AuthStrategy ABC."""
-        current_params = params if params is not None else {}
+        current_params: Dict[str, QueryParamValueType] = dict(params) if params is not None else {}
         return current_params
 
 
@@ -216,6 +221,12 @@ class MockApiKeyAuth(MockAuthStrategy, ApiKeyAuth):
 class MockRefreshableAuthStrategy(MockAuthStrategy):
     """Mock auth strategy with refresh capabilities for testing."""
 
+    _refresh_lock: Optional[threading.Lock]
+    _concurrent_refreshes: int
+    _max_concurrent_refreshes: int
+    _callback_calls: int
+    _callback_errors: List[Exception]
+
     def __init__(
         self,
         initial_token: str = "mock_token",
@@ -256,6 +267,16 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
         self._refresh_attempts = 0
         self._is_expired = False
         self._expiry_time: Optional[float] = None
+        self._refresh_lock = None
+        self._concurrent_refreshes = 0
+        self._max_concurrent_refreshes = 0
+        self._callback_calls = 0
+        self._callback_errors: list[Exception] = []
+
+    @property
+    def refresh_attempts(self) -> int:
+        """Number of refresh attempts that have been made."""
+        return self._refresh_attempts
 
     def can_refresh(self) -> bool:
         """Check if this auth strategy supports refresh and is configured to do so.
@@ -371,6 +392,25 @@ class MockBearerAuthWithRefresh(MockRefreshableAuthStrategy):
         """
         super().__init__(**kwargs)
 
+    @property
+    def concurrent_refreshes(self) -> int:
+        """Current number of concurrent refresh operations."""
+        return getattr(self, "_concurrent_refreshes", 0)
+
+    @property
+    def max_concurrent_refreshes(self) -> int:
+        """Maximum number of concurrent refresh operations observed."""
+        return getattr(self, "_max_concurrent_refreshes", 0)
+
+    def reset_refresh_counters(self) -> None:
+        """Reset counters tracking refresh attempts and concurrency."""
+        if hasattr(self, "_refresh_attempts"):
+            self._refresh_attempts = 0
+        if hasattr(self, "_concurrent_refreshes"):
+            self._concurrent_refreshes = 0
+        if hasattr(self, "_max_concurrent_refreshes"):
+            self._max_concurrent_refreshes = 0
+
     def apply_auth(self, headers: Dict[str, str]) -> None:
         """Apply Bearer authentication to headers.
 
@@ -461,7 +501,7 @@ class MockAuthErrorInjector:
         original_refresh = strategy.refresh
 
         def failing_refresh() -> Optional[TokenRefreshResult]:
-            if strategy._refresh_attempts >= failure_after_attempts:
+            if strategy.refresh_attempts >= failure_after_attempts:
                 if failure_type == "network":
                     raise ConnectionError("Mock network failure")
                 elif failure_type == "auth":
@@ -472,7 +512,8 @@ class MockAuthErrorInjector:
                     raise Exception(f"Mock {failure_type} failure")
             return original_refresh()
 
-        strategy.refresh = failing_refresh  # type: ignore[method-assign]
+        # Use setattr to avoid method assignment type warnings during static analysis
+        setattr(strategy, "refresh", failing_refresh)
         return strategy
 
     @staticmethod
@@ -499,7 +540,7 @@ class MockAuthErrorInjector:
                 raise TokenRefreshError("Mock intermittent failure")
             return original_refresh()
 
-        strategy.refresh = intermittent_refresh  # type: ignore[method-assign]
+        setattr(strategy, "refresh", intermittent_refresh)
         return strategy
 
 
@@ -526,7 +567,7 @@ class AuthTestScenarioBuilder:
 
         # Set expiry time based on current time + expiry duration
         # This avoids race conditions with background threads
-        strategy._expiry_time = time.time() + expires_after_seconds
+        strategy._expiry_time = time.time() + expires_after_seconds  # pyright: ignore[reportPrivateUsage]
         return strategy
 
     @staticmethod
@@ -546,28 +587,31 @@ class AuthTestScenarioBuilder:
         strategy = MockBearerAuthWithRefresh(max_refresh_attempts=num_concurrent_refreshes + 5)
 
         # Add thread safety tracking
-        strategy._refresh_lock = threading.Lock()  # type: ignore[attr-defined]
-        strategy._concurrent_refreshes = 0  # type: ignore[attr-defined]
-        strategy._max_concurrent_refreshes = 0  # type: ignore[attr-defined]
+        strategy._refresh_lock = threading.Lock()  # pyright: ignore[reportPrivateUsage]
+        strategy._concurrent_refreshes = 0  # pyright: ignore[reportPrivateUsage]
+        strategy._max_concurrent_refreshes = 0  # pyright: ignore[reportPrivateUsage]
 
         original_refresh = strategy.refresh
 
         def thread_safe_refresh() -> Optional[TokenRefreshResult]:
-            with strategy._refresh_lock:  # type: ignore[attr-defined]
-                strategy._concurrent_refreshes += 1  # type: ignore[attr-defined]
-                strategy._max_concurrent_refreshes = max(  # type: ignore[attr-defined]
-                    strategy._max_concurrent_refreshes,  # type: ignore[attr-defined]
-                    strategy._concurrent_refreshes,  # type: ignore[attr-defined]
+            lock = strategy._refresh_lock  # pyright: ignore[reportPrivateUsage]
+            assert lock is not None
+            with lock:
+                strategy._concurrent_refreshes += 1  # pyright: ignore[reportPrivateUsage]
+                strategy._max_concurrent_refreshes = max(  # pyright: ignore[reportPrivateUsage]
+                    strategy._max_concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
+                    strategy._concurrent_refreshes,  # pyright: ignore[reportPrivateUsage]
                 )
 
             try:
                 result = original_refresh()
                 return result
             finally:
-                with strategy._refresh_lock:  # type: ignore[attr-defined]
-                    strategy._concurrent_refreshes -= 1  # type: ignore[attr-defined]
+                assert lock is not None
+                with lock:
+                    strategy._concurrent_refreshes -= 1  # pyright: ignore[reportPrivateUsage]
 
-        strategy.refresh = thread_safe_refresh  # type: ignore[method-assign]
+        setattr(strategy, "refresh", thread_safe_refresh)
         return strategy
 
     @staticmethod
@@ -582,8 +626,8 @@ class AuthTestScenarioBuilder:
         strategy = MockRefreshableAuthStrategy()
 
         # Track callback usage
-        strategy._callback_calls = 0  # type: ignore[attr-defined]
-        strategy._callback_errors = []  # type: ignore[attr-defined]
+        strategy._callback_calls = 0  # pyright: ignore[reportPrivateUsage]
+        strategy._callback_errors = []  # pyright: ignore[reportPrivateUsage]
 
         original_get_refresh_callback = strategy.get_refresh_callback
 
@@ -593,16 +637,16 @@ class AuthTestScenarioBuilder:
                 return None
 
             def tracked_callback() -> None:
-                strategy._callback_calls += 1  # type: ignore[attr-defined]
+                strategy._callback_calls += 1  # pyright: ignore[reportPrivateUsage]
                 try:
                     return callback()
                 except Exception as e:
-                    strategy._callback_errors.append(e)  # type: ignore[attr-defined]
+                    strategy._callback_errors.append(e)  # pyright: ignore[reportPrivateUsage]
                     raise
 
             return tracked_callback
 
-        strategy.get_refresh_callback = tracked_get_refresh_callback  # type: ignore[method-assign]
+        setattr(strategy, "get_refresh_callback", tracked_get_refresh_callback)
         return strategy
 
 

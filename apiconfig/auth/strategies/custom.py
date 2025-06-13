@@ -1,10 +1,15 @@
 """Custom authentication strategy using user-provided callbacks."""
 
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Mapping, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
-from apiconfig.types import HttpRequestCallable, QueryParamType, TokenRefreshResult
+from apiconfig.types import (
+    HttpRequestCallable,
+    QueryParamType,
+    QueryParamValueType,
+    TokenRefreshResult,
+)
 
 
 class CustomAuth(AuthStrategy):
@@ -47,8 +52,8 @@ class CustomAuth(AuthStrategy):
 
     def __init__(
         self,
-        header_callback: Optional[Callable[[], Dict[str, str]]] = None,
-        param_callback: Optional[Callable[[], Dict[str, str]]] = None,
+        header_callback: Optional[Callable[..., Mapping[str, str]]] = None,
+        param_callback: Optional[Callable[..., Mapping[str, str]]] = None,
         refresh_func: Optional[Callable[[], Optional[TokenRefreshResult]]] = None,
         can_refresh_func: Optional[Callable[[], bool]] = None,
         is_expired_func: Optional[Callable[[], bool]] = None,
@@ -59,10 +64,12 @@ class CustomAuth(AuthStrategy):
 
         Parameters
         ----------
-        header_callback : Optional[Callable[[], Dict[str, str]]]
-            Function to generate authentication headers.
-        param_callback : Optional[Callable[[], Dict[str, str]]]
-            Function to generate authentication parameters.
+        header_callback : Optional[Callable[..., Mapping[str, str]]]
+            Function to generate authentication headers. The callback must
+            return a mapping of strings.
+        param_callback : Optional[Callable[..., Mapping[str, str]]]
+            Function to generate authentication parameters. The callback must
+            return a mapping of strings.
         refresh_func : Optional[Callable[[], Optional[TokenRefreshResult]]]
             Optional function to perform refresh operations.
         can_refresh_func : Optional[Callable[[], bool]]
@@ -146,7 +153,8 @@ class CustomAuth(AuthStrategy):
         Returns
         -------
         Dict[str, str]
-            A dictionary of headers.
+            A dictionary of headers generated from the callback. The callback
+            must return a mapping of strings.
 
         Raises
         ------
@@ -156,9 +164,7 @@ class CustomAuth(AuthStrategy):
         if self._header_callback:
             try:
                 result = self._header_callback()
-                if not isinstance(result, dict):
-                    raise AuthStrategyError("CustomAuth header callback must return a dictionary.")
-                return result
+                return dict(result)
             except Exception as e:
                 raise AuthStrategyError(f"CustomAuth header callback failed: {e}") from e
         return {}
@@ -166,8 +172,8 @@ class CustomAuth(AuthStrategy):
     def prepare_request(
         self,
         headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, str]] = None,
-    ) -> tuple[Dict[str, str], Dict[str, str]]:
+        params: Optional[QueryParamType] = None,
+    ) -> tuple[Dict[str, str], QueryParamType]:
         """
         Prepare authentication headers and parameters for an HTTP request.
 
@@ -175,28 +181,25 @@ class CustomAuth(AuthStrategy):
         ----------
         headers : Optional[Dict[str, str]]
             Optional initial headers dictionary to update.
-        params : Optional[Dict[str, str]]
+        params : Optional[QueryParamType]
             Optional initial parameters dictionary to update.
 
         Returns
         -------
-        tuple[Dict[str, str], Dict[str, str]]
+        tuple[Dict[str, str], QueryParamType]
             A tuple of (headers, params) dictionaries with authentication data.
         """
         # Initialize headers and params if not provided
-        headers = headers.copy() if headers else {}
-        params = params.copy() if params else {}
+        headers = dict(headers) if headers else {}
+        merged_params: Dict[str, QueryParamValueType] = dict(params) if params else {}
 
         # Update with authentication headers and params
         headers.update(self.prepare_request_headers())
         auth_params = self.prepare_request_params()
         if auth_params:
-            # Convert QueryParamType to Dict[str, str] for compatibility
-            for key, value in auth_params.items():
-                if value is not None:
-                    params[key] = str(value)
+            merged_params.update(auth_params)
 
-        return headers, params
+        return headers, merged_params
 
     def prepare_request_params(self) -> Optional[QueryParamType]:
         """
@@ -207,7 +210,8 @@ class CustomAuth(AuthStrategy):
         Returns
         -------
         Optional[QueryParamType]
-            A dictionary of parameters.
+            A dictionary of parameters generated from the callback. The callback
+            must return a mapping of strings.
 
         Raises
         ------
@@ -217,9 +221,7 @@ class CustomAuth(AuthStrategy):
         if self._param_callback:
             try:
                 result = self._param_callback()
-                if not isinstance(result, dict):
-                    raise AuthStrategyError("CustomAuth parameter callback must return a dictionary.")
-                return result
+                return dict(result)
             except Exception as e:
                 raise AuthStrategyError(f"CustomAuth parameter callback failed: {e}") from e
         return {}

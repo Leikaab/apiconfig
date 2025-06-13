@@ -1,7 +1,7 @@
 """Unit tests for the AuthStrategy base class."""
 
-from typing import Dict, Optional
-from unittest.mock import Mock
+from typing import Any, Callable, Dict, Optional, cast
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -61,13 +61,13 @@ class TestAuthStrategy:
     def test_init_without_http_request_callable(self) -> None:
         """Test initialization without http_request_callable."""
         strategy = ConcreteAuthStrategy()
-        assert strategy._http_request_callable is None
+        assert strategy._http_request_callable is None  # pyright: ignore[reportPrivateUsage]
 
     def test_init_with_http_request_callable(self) -> None:
         """Test initialization with http_request_callable."""
         mock_callable = Mock()
         strategy = ConcreteAuthStrategy(http_request_callable=mock_callable)
-        assert strategy._http_request_callable is mock_callable
+        assert strategy._http_request_callable is mock_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_can_refresh_default_implementation(self) -> None:
         """Test that can_refresh returns False by default."""
@@ -115,21 +115,20 @@ class TestAuthStrategy:
             }
         )
 
-        # Replace the refresh method with our mock
-        original_refresh = strategy.refresh
-        strategy.refresh = refresh_mock  # type: ignore
+        # Temporarily replace the refresh method with our mock
+        with patch.object(
+            strategy,
+            "refresh",
+            cast(Callable[..., Any], refresh_mock),
+        ):
+            callback = strategy.get_refresh_callback()
+            assert callback is not None
 
-        callback = strategy.get_refresh_callback()
-        assert callback is not None
+            # Call the callback
+            callback()
 
-        # Call the callback
-        callback()
-
-        # Verify refresh was called
-        refresh_mock.assert_called_once()
-
-        # Restore original method
-        strategy.refresh = original_refresh  # type: ignore
+            # Verify refresh was called
+            refresh_mock.assert_called_once()
 
     def test_refreshable_strategy_can_refresh_with_http_callable(self) -> None:
         """Test that RefreshableAuthStrategy can refresh when http_request_callable is provided."""
@@ -151,8 +150,10 @@ class TestAuthStrategy:
 
         assert result is not None
         assert "token_data" in result
-        assert result["token_data"]["access_token"] == "new-token"  # type: ignore
-        assert result["token_data"]["expires_in"] == 3600  # type: ignore
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "new-token"
+        assert token_data.get("expires_in") == 3600
 
     def test_refreshable_strategy_refresh_raises_when_cannot_refresh(self) -> None:
         """Test that RefreshableAuthStrategy.refresh raises NotImplementedError when cannot refresh."""

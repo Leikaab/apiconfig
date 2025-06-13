@@ -39,7 +39,7 @@ headers, params = auth.prepare_request()
 | `MockRefreshableAuthStrategy` | Adds refresh behaviour and helpers for testing concurrent refresh scenarios. |
 | `MockHttpRequestCallable` | Callable returning dummy HTTP responses for token refresh tests. |
 | `MockConfigProvider` | Duck-typed provider returning a predefined dictionary. |
-| `MockConfigManager` | Subclass of `ConfigManager` whose `load_config` method is a `MagicMock`. |
+| `MockConfigManager` | Simple config manager with a `load_config_mock` `MagicMock` invoked by `load_config()`. |
 
 ### Design
 The mocks follow a minimal design where behaviour is simulated through simple
@@ -63,3 +63,12 @@ pytest tests/unit/testing/unit/mocks -q
 
 ## Status
 Internal – provided solely for unit testing purposes but kept stable.
+
+### Maintenance Notes
+- Maintained alongside the unit tests; expect changes when mocks require new features.
+
+### Changelog
+- Mock updates are documented in the main changelog.
+
+### Future Considerations
+- Additional mocks may be added as the test suite expands.

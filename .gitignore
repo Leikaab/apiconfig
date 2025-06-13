@@ -305,9 +305,6 @@ Temporary Items
 # ruff
 .ruff_cache/
 
-# LSP config files
-pyrightconfig.json
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -360,8 +357,4 @@ models/
 .act/
 act_logs/
 changes.diff
-
-# act (GitHub Actions runner) temporary files
-.act/
-act_logs/
-changes.diff
+bin/

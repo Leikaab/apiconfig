@@ -1,12 +1,37 @@
 """Manages loading configuration from multiple providers."""
 
 import logging
-from typing import Any, Dict, Sequence
+from typing import (
+    Any,
+    Dict,
+    Mapping,
+    Protocol,
+    Sequence,
+    TypeAlias,
+    TypeVar,
+    runtime_checkable,
+)
 
 from apiconfig.exceptions.config import ConfigLoadError
 
-# Placeholder for a potential future ConfigProvider protocol or base class
-ConfigProvider = Any
+_TConfig = TypeVar("_TConfig", bound=Mapping[str, Any], covariant=True)
+
+
+@runtime_checkable
+class _SupportsLoad(Protocol[_TConfig]):
+    """Protocol for providers implementing ``load``."""
+
+    def load(self) -> _TConfig: ...
+
+
+@runtime_checkable
+class _SupportsGetConfig(Protocol[_TConfig]):
+    """Protocol for providers implementing ``get_config``."""
+
+    def get_config(self) -> _TConfig: ...
+
+
+ConfigProvider: TypeAlias = _SupportsLoad[Mapping[str, Any]] | _SupportsGetConfig[Mapping[str, Any]]
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -41,7 +66,14 @@ class ConfigManager:
             with later providers overriding settings from earlier ones.
             Each provider must implement either a `load()` or `get_config()` method.
         """
-        self._providers: Sequence[ConfigProvider] = providers
+        # Store providers with their ``ConfigProvider`` type to keep strong
+        # typing without leaking concrete provider details to consumers.
+        self._providers: Sequence[ConfigProvider] = list(providers)
+
+    @property
+    def providers(self) -> Sequence[ConfigProvider]:
+        """Return the configured providers."""
+        return self._providers
 
     def load_config(self) -> Dict[str, Any]:
         """
@@ -71,15 +103,13 @@ class ConfigManager:
         logger.debug("Loading configuration from %d providers...", len(self._providers))
 
         for provider in self._providers:
-            provider_name = getattr(provider, "__class__", type(provider)).__name__
+            provider_name = provider.__class__.__name__
             try:
                 logger.debug("Loading configuration from provider: %s", provider_name)
-                # Assuming providers have a 'load' or 'get_config' method
-                # Let's standardize on 'load' for now.
-                # We might need a Protocol later.
-                if hasattr(provider, "load"):
+                config_data: Mapping[str, Any] | None = None
+                if isinstance(provider, _SupportsLoad):
                     config_data = provider.load()
-                elif hasattr(provider, "get_config"):  # Fallback for potential variations
+                elif isinstance(provider, _SupportsGetConfig):  # pyright: ignore[reportUnnecessaryIsInstance]
                     config_data = provider.get_config()
                 else:
                     raise AttributeError(f"Provider {provider_name} lacks a 'load' or 'get_config' method.")

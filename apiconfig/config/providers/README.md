@@ -3,6 +3,12 @@
 Configuration providers for **apiconfig**. These helpers supply configuration values from
 different sources so they can be combined by `ConfigManager`.
 
+## Navigation
+
+**Parent Module:** [apiconfig.config](../README.md)
+
+**Submodules:** None
+
 ## Contents
 - `env.py` – load configuration from environment variables with optional type inference.
 - `file.py` – read configuration from JSON files.
@@ -52,5 +58,22 @@ python -m pip install pytest
 pytest tests/unit/config/providers -q
 ```
 
+## Dependencies
+This package uses a mix of Python's standard library and internal modules:
+
+- `json` – file parsing for `FileProvider`.
+- `os` – environment access for `EnvProvider`.
+- `ConfigManager` – orchestrates provider loading.
+- `apiconfig.exceptions` – base exceptions for error handling.
+
 ## Status
 Stable – used internally by other modules in the package.
+
+### Maintenance Notes
+- Stable provider API with incremental enhancements as new sources are added.
+
+### Changelog
+- Refer to project changelog for provider additions and fixes.
+
+### Future Considerations
+- Explore pluggable provider registration for custom environments.

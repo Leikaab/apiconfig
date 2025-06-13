@@ -17,7 +17,7 @@ JSONPlaceholder API
    config = ClientConfig(
        hostname="jsonplaceholder.typicode.com",
        # No version needed for this API
-       timeout=10.0,
+       timeout=10,
    )
 
    # Make a request to get a list of posts
@@ -78,7 +78,7 @@ Fiken API (OAuth2)
        headers.update(client_config.auth_strategy.prepare_request_headers())
 
    # Make a request to get a list of companies
-   with httpx.Client(timeout=10.0) as client:
+   with httpx.Client(timeout=10) as client:
        response = client.get(f"{client_config.base_url}/companies", headers=headers)
 
        if response.status_code == 200:
@@ -150,7 +150,7 @@ Tripletex API (API Key + Token)
        headers.update(client_config.auth_strategy.prepare_request_headers())
 
    # Make a request to get company information
-   with httpx.Client(timeout=10.0) as client:
+   with httpx.Client(timeout=10) as client:
        response = client.get(f"{client_config.base_url}/company", headers=headers)
 
        if response.status_code == 200:
@@ -193,7 +193,7 @@ OneFlow API (API Key)
        headers.update(client_config.auth_strategy.prepare_request_headers())
 
    # Make a request to get a list of contracts
-   with httpx.Client(timeout=10.0) as client:
+   with httpx.Client(timeout=10) as client:
        response = client.get(f"{client_config.base_url}/contracts", headers=headers)
 
        if response.status_code == 200:
@@ -225,8 +225,8 @@ Here's an example of creating a reusable API client class using ``apiconfig``:
            hostname: str = "api.example.com",
            version: str = "v1",
            token: Optional[str] = None,
-           timeout: float = 30.0,
-           retries: int = 3,
+          timeout: int = 30,
+          retries: int = 2,
        ):
            """Initialize the API client.
 

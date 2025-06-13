@@ -18,13 +18,13 @@ You can merge multiple configurations to combine settings from different sources
    # Base configuration with defaults
    base_config = ClientConfig(
        hostname="api.example.com",
-       timeout=30.0,
-       retries=3,
+       timeout=30,
+       retries=2,
    )
 
    # Override specific settings
    override_config = ClientConfig(
-       timeout=10.0,
+       timeout=10,
        headers={"X-Custom-Header": "value"},
    )
 
@@ -32,8 +32,8 @@ You can merge multiple configurations to combine settings from different sources
    merged_config = base_config.merge(override_config)
 
    print(merged_config.hostname)  # api.example.com (from base)
-   print(merged_config.timeout)   # 10.0 (from override)
-   print(merged_config.retries)   # 3 (from base)
+   print(merged_config.timeout)   # 10 (from override)
+   print(merged_config.retries)   # 2 (from base)
 
 Configuration Providers
 ~~~~~~~~~~~~~~~~~~~~~
@@ -58,7 +58,7 @@ Load configuration from environment variables:
 File Provider
 ^^^^^^^^^^^
 
-Load configuration from JSON or YAML files:
+Load configuration from JSON files:
 
 .. code-block:: python
 
@@ -68,9 +68,6 @@ Load configuration from JSON or YAML files:
    json_provider = FileProvider(file_path="config.json")
    json_config = json_provider.load()
 
-   # YAML file
-   yaml_provider = FileProvider(file_path="config.yaml")
-   yaml_config = yaml_provider.load()
 
 Memory Provider
 ^^^^^^^^^^^^^
@@ -87,8 +84,10 @@ Use in-memory configuration:
        "version": "v2",
        "timeout": 15.0,
    }
-   memory_provider = MemoryProvider(data=data)
-   config_dict = memory_provider.load()
+   # ``MemoryProvider`` stores data passed via ``config_data`` and returns it via
+   # ``get_config``
+   memory_provider = MemoryProvider(config_data=data)
+   config_dict = memory_provider.get_config()
 
 Authentication Strategies
 -----------------------
@@ -264,17 +263,13 @@ Logging
 .. code-block:: python
 
    import logging
-   from apiconfig.utils.logging.setup import configure_logging
+   from apiconfig.utils.logging import setup_logging
 
    # Basic logging setup
    logging.basicConfig(level=logging.INFO)
 
-   # Or use the built-in configuration
-   configure_logging(
-       level=logging.DEBUG,
-       format="detailed",  # or "simple"
-       redact_sensitive=True,
-   )
+   # Or use the built-in helper
+   setup_logging(level=logging.DEBUG)
 
    # Use the logger
    logger = logging.getLogger("apiconfig")

@@ -33,16 +33,11 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
     AssertionError
         If the config is invalid.
     """
-    # Import locally to avoid potential circular dependency issues
-    from apiconfig.config.base import ClientConfig
-
-    if not isinstance(config, ClientConfig):
-        raise AssertionError(f"Object {config!r} is not an instance of ClientConfig.")
     if not config.hostname:
         raise AssertionError("ClientConfig hostname cannot be empty or None.")
-    if config.timeout < 0:
+    if config.timeout is not None and config.timeout < 0:
         raise AssertionError(f"ClientConfig timeout cannot be negative: {config.timeout}")
-    if config.retries < 0:
+    if config.retries is not None and config.retries < 0:
         raise AssertionError(f"ClientConfig retries cannot be negative: {config.retries}")
     # Implicitly check base_url construction works
     try:
@@ -52,10 +47,9 @@ def assert_client_config_valid(config: "ClientConfig") -> None:
 
 
 def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[str, str]) -> None:
-    """
-    Assert that the AuthStrategy produces the expected headers.
+    """Assert that the AuthStrategy produces the expected headers.
 
-    Calls the strategy's `prepare_request_headers()` method and compares
+    Calls the strategy's ``prepare_request_headers()`` method and compares
     the result to the expected dictionary.
 
     Parameters
@@ -68,15 +62,8 @@ def assert_auth_header_correct(strategy: "AuthStrategy", expected_header: Dict[s
     Raises
     ------
     AssertionError
-        If the actual headers do not match the expected headers,
-        or if the strategy is not a valid AuthStrategy instance.
+        If the actual headers do not match the expected headers.
     """
-    # Import locally if needed
-    from apiconfig.auth.base import AuthStrategy
-
-    if not isinstance(strategy, AuthStrategy):
-        raise AssertionError(f"Object {strategy!r} is not an instance of AuthStrategy.")
-
     actual_header = strategy.prepare_request_headers()
     assert actual_header == expected_header, f"Auth header mismatch. Expected: {expected_header}, Got: {actual_header}"
 

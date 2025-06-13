@@ -1,5 +1,23 @@
 # apiconfig.config
 
+## Module Description
+
+`ClientConfig` encapsulates options for API clients, including hostname, API
+version, headers, timeouts, and authentication settings. A `ConfigManager`
+collects these values by loading configuration dictionaries from one or more
+providers and returning a unified mapping ready for consumption.
+
+Configuration providers supply configuration from sources like environment
+variables or JSON files. Providers are processed in the order given, and each
+dictionary merges into the next so later providers override earlier ones. This
+strategy supports flexible layering, letting environment-specific data trump
+defaults while still keeping predictable precedence.
+
+The configuration module works alongside packages such as `auth` and
+`exceptions`. Providers deliver raw dictionaries, the manager merges them, and
+`ClientConfig` validates and exposes the final settings that the rest of the
+library relies on.
+
 Core configuration system for **apiconfig**.  This module exposes the `ClientConfig`
 class used by API clients and the `ConfigManager` which coordinates loading of
 configuration values from one or more providers.
@@ -50,10 +68,26 @@ flowchart TB
 ## Tests
 Install dependencies and run the unit tests for the configuration package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/config -q
+poetry install --with dev
+poetry run pytest tests/unit/config -q
 ```
 
 ## Status
 Stable – used by API clients and covered by unit tests.
+
+### Maintenance Notes
+- Considered stable with occasional updates for new configuration sources.
+
+### Changelog
+- See the project changelog for release notes affecting configuration behavior.
+
+### Future Considerations
+- Potential support for dynamic configuration providers.
+
+## Navigation
+- [apiconfig](../README.md)
+- [providers](./providers/README.md)
+
+## See Also
+- [auth](../auth/README.md) - describes available authentication strategies used by `ClientConfig`.
+- [exceptions](../exceptions/README.md) - lists configuration-related errors raised when loading settings.

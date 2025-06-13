@@ -11,7 +11,9 @@ import threading
 from datetime import datetime, timedelta, timezone
 
 import pytest
-from pytest import LogCaptureFixture
+from _pytest.logging import LogCaptureFixture
+
+from apiconfig.types import TokenRefreshResult
 
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
     pytest.skip(
@@ -47,10 +49,10 @@ class TestTripletexAuthRefresh:
         # First, ensure we have a valid token
         countries = tripletex_client.list_countries()
         assert isinstance(countries, dict)
-        old_token = auth_strategy._session_token
+        old_token = auth_strategy.session_token
 
         # Force token expiration
-        auth_strategy._token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+        auth_strategy.token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
         assert auth_strategy.is_expired()
 
         # Make request - should trigger refresh via prepare_request_headers
@@ -59,9 +61,9 @@ class TestTripletexAuthRefresh:
 
         # Verify new token was obtained and is not expired
         assert not auth_strategy.is_expired()
-        assert auth_strategy._session_token is not None
+        assert auth_strategy.session_token is not None
         # Token should be refreshed (new token)
-        assert auth_strategy._session_token != old_token or auth_strategy._token_expires_at > datetime.now(timezone.utc)
+        assert auth_strategy.session_token != old_token or auth_strategy.token_expires_at > datetime.now(timezone.utc)
 
     def test_refresh_callback_integration(self, tripletex_client: TripletexClient) -> None:
         """Test integration with crudclient-style refresh callback."""
@@ -77,18 +79,18 @@ class TestTripletexAuthRefresh:
         assert refresh_callback is not None
 
         # Store old token and expiry
-        old_token = auth_strategy._session_token
-        old_expiry = auth_strategy._token_expires_at
+        old_token = auth_strategy.session_token
+        old_expiry = auth_strategy.token_expires_at
 
         # Simulate crudclient retry logic calling the callback
         refresh_callback()  # Should refresh without error
 
         # Verify token was refreshed
-        new_token = auth_strategy._session_token
+        new_token = auth_strategy.session_token
         assert new_token is not None
         assert not auth_strategy.is_expired()
         # Either token changed or expiry was updated
-        assert new_token != old_token or auth_strategy._token_expires_at != old_expiry
+        assert new_token != old_token or auth_strategy.token_expires_at != old_expiry
 
     def test_token_refresh_result_structure(self, tripletex_client: TripletexClient) -> None:
         """Test that refresh returns proper TokenRefreshResult structure."""
@@ -101,12 +103,12 @@ class TestTripletexAuthRefresh:
             assert "token_data" in result
             assert "config_updates" in result
 
-            token_data = result["token_data"]
+            token_data = result.get("token_data")
             assert token_data is not None
             assert "access_token" in token_data
             assert "expires_in" in token_data
             assert "token_type" in token_data
-            assert token_data["token_type"] == "session"
+            assert token_data.get("token_type") == "session"
 
     def test_concurrent_refresh_thread_safety(self, tripletex_client: TripletexClient) -> None:
         """Test that concurrent refresh operations are thread-safe."""
@@ -117,8 +119,8 @@ class TestTripletexAuthRefresh:
         countries = tripletex_client.list_countries()
         assert isinstance(countries, dict)
 
-        results = []
-        errors = []
+        results: list[TokenRefreshResult | None] = []
+        errors: list[Exception] = []
 
         def refresh_worker() -> None:
             try:
@@ -128,7 +130,7 @@ class TestTripletexAuthRefresh:
                 errors.append(e)
 
         # Start multiple refresh operations concurrently
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=refresh_worker)
             threads.append(thread)
@@ -143,8 +145,8 @@ class TestTripletexAuthRefresh:
         assert len(results) > 0, "No successful refresh operations"
 
         # Verify final state is consistent (token should be valid)
-        assert auth_strategy._session_token is not None
-        assert auth_strategy._token_expires_at is not None
+        assert auth_strategy.session_token is not None
+        assert auth_strategy.token_expires_at is not None
 
     def test_refresh_failure_handling(self, tripletex_client: TripletexClient) -> None:
         """Test proper error handling when refresh fails."""
@@ -195,7 +197,7 @@ class TestTripletexLiveScenarios:
         # 2. Force token expiration
         auth_strategy = tripletex_client.config.auth_strategy
         assert isinstance(auth_strategy, TripletexSessionAuth)
-        auth_strategy._token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+        auth_strategy.token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
 
         # 3. Make another API call - should trigger refresh
         companies = tripletex_client.list_currencies()
@@ -222,7 +224,7 @@ class TestTripletexLiveScenarios:
         assert setup_auth_func is not None
 
         # Simulate 401 error scenario
-        auth_strategy._token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+        auth_strategy.token_expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
 
         # Call setup_auth_func (as crudclient retry logic would)
         setup_auth_func()

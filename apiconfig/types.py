@@ -55,7 +55,7 @@ QueryParamType: TypeAlias = Mapping[str, QueryParamValueType]
 """Type alias for URL query parameters."""
 
 # Internal type for urllib.parse.urlencode
-_UrlencodeParamsType: TypeAlias = Dict[str, Union[str, List[str]]]
+UrlencodeParamsType: TypeAlias = Dict[str, Union[str, List[str]]]
 """Internal type for urllib.parse.urlencode compatibility."""
 
 DataType: TypeAlias = Union[str, bytes, JsonObject, Mapping[str, Any]]
@@ -84,6 +84,7 @@ class HttpResponseProtocol(Protocol):
     text: str  # For body preview
     request: Optional[Any]  # Most responses have .request
     reason: Optional[str]
+    history: Optional[List[Any]]  # For redirect history (requests, httpx)
 
 
 class HttpMethod(Enum):
@@ -111,6 +112,16 @@ AuthCredentials: TypeAlias = Any
 
 TokenStorageStrategy: TypeAlias = Any
 """Placeholder type alias for token storage strategy implementations."""
+
+# Data structure for persisted authentication tokens
+TokenData: TypeAlias = Dict[str, Any]
+"""Dictionary structure for stored authentication tokens.
+
+This alias represents the data saved by :class:`apiconfig.auth.token.storage.TokenStorage`
+implementations. Typical keys include ``access_token`` and ``refresh_token``,
+along with optional metadata such as ``expires_at``. Implementations may store
+additional fields as required by their authentication workflows.
+"""
 
 TokenRefreshCallable: TypeAlias = Callable[..., Any]
 """Placeholder type alias for token refresh logic callables."""
@@ -238,7 +249,7 @@ __all__ = [
     "HeadersType",
     "QueryParamType",
     "QueryParamValueType",
-    "_UrlencodeParamsType",
+    "UrlencodeParamsType",
     "DataType",
     "ResponseBodyType",
     "HttpRequestProtocol",
@@ -248,6 +259,7 @@ __all__ = [
     "ConfigProviderCallable",
     "AuthCredentials",
     "TokenStorageStrategy",
+    "TokenData",
     "TokenRefreshCallable",
     "RefreshedTokenData",
     "TokenRefreshResult",

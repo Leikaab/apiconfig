@@ -3,10 +3,11 @@
 import base64
 import json
 import logging
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Dict, Optional, cast
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import (
@@ -93,6 +94,24 @@ class TripletexSessionAuth(AuthStrategy):
         self._session_token: Optional[str] = None
         self._token_expires_at: Optional[datetime] = None
 
+    @property
+    def session_token(self) -> Optional[str]:
+        """Return the currently cached session token."""
+        return self._session_token
+
+    @session_token.setter
+    def session_token(self, value: Optional[str]) -> None:
+        self._session_token = value
+
+    @property
+    def token_expires_at(self) -> Optional[datetime]:
+        """Return the expiration datetime of the current session token."""
+        return self._token_expires_at
+
+    @token_expires_at.setter
+    def token_expires_at(self, value: Optional[datetime]) -> None:
+        self._token_expires_at = value
+
     def _get_session_token_url(self) -> str:
         """Construct the URL for fetching the session token."""
         path_prefix = ""
@@ -125,20 +144,24 @@ class TripletexSessionAuth(AuthStrategy):
                             f"Failed to decode JSON response from token endpoint: {e}. " f"Response body: {response_body_str}"
                         ) from e
 
-                    token_value_data = response_data.get("value")
-                    if not isinstance(token_value_data, dict):
+                    token_value_data_untyped = response_data.get("value")
+                    if not isinstance(token_value_data_untyped, dict):
                         raise AuthStrategyError(
-                            f"Unexpected 'value' format in token response: {token_value_data}. " f"Full response: {response_data}"
+                            f"Unexpected 'value' format in token response: {token_value_data_untyped}. " f"Full response: {response_data}"
                         )
 
-                    token_value_any = token_value_data.get("token")
-                    if not isinstance(token_value_any, str) or not token_value_any:  # Ensure it's a non-empty string
+                    if "token" not in token_value_data_untyped:
+                        raise AuthStrategyError(f"'token' missing from Tripletex response value: {token_value_data_untyped}.")
+
+                    token_value_data = cast(Dict[str, object], token_value_data_untyped)
+                    token_value_raw: object = token_value_data["token"]
+                    if not isinstance(token_value_raw, str) or not token_value_raw:
                         raise AuthStrategyError(
                             "Session token not found, not a string, or empty in Tripletex response. "
-                            f"'value.token' was: {token_value_any!r}. Full response: {response_data}"
+                            f"'value.token' was: {token_value_raw!r}. Full response: {response_data}"
                         )
-                    # At this point, token_value_any is confirmed to be a non-empty string
-                    token_value: str = token_value_any
+
+                    token_value: str = token_value_raw
 
                     # Set token expiration time (2 days from now)
                     self._token_expires_at = datetime.now(timezone.utc) + timedelta(days=2)

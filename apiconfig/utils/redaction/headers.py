@@ -3,7 +3,7 @@
 
 import re
 from collections.abc import Mapping
-from typing import Dict, Final, Optional, Set, Tuple
+from typing import Dict, Final, List, Optional, Set, Tuple
 
 # Default set of sensitive header keys (lowercase)
 DEFAULT_SENSITIVE_HEADERS: Final[Set[str]] = {
@@ -121,8 +121,8 @@ def _redact_cookie_header(cookie_value: str, sensitive_keys: Set[str]) -> str:
         return cookie_value
 
     # Split the cookie string into individual cookies
-    cookies = cookie_value.split(";")
-    redacted_cookies = []
+    cookies: List[str] = cookie_value.split(";")
+    redacted_cookies: List[str] = []
 
     for i, cookie in enumerate(cookies):
         # Skip empty segments
@@ -208,3 +208,19 @@ def _redact_set_cookie_header(set_cookie_value: str, sensitive_keys: Set[str]) -
         return f"{redacted_main_cookie}; {attributes}"
     else:
         return redacted_main_cookie
+
+
+# Public aliases for the helper functions
+redact_cookie_header = _redact_cookie_header
+redact_set_cookie_header = _redact_set_cookie_header
+
+
+__all__ = [
+    "DEFAULT_SENSITIVE_HEADERS",
+    "DEFAULT_SENSITIVE_HEADER_PREFIXES",
+    "DEFAULT_SENSITIVE_COOKIE_KEYS",
+    "REDACTED_VALUE",
+    "redact_headers",
+    "redact_cookie_header",
+    "redact_set_cookie_header",
+]

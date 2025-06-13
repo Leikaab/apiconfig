@@ -46,7 +46,7 @@ class TestPhase2CrossComponentIntegration:
             # Verify refresh result structure
             assert result is not None
             assert "token_data" in result
-            token_data = result["token_data"]
+            token_data = result.get("token_data")
             assert token_data is not None
             assert "access_token" in token_data
 
@@ -173,7 +173,7 @@ class TestPhase2CrossComponentIntegration:
                 verification_errors.append(e)
 
         # Start multiple verification threads
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=verify_worker)
             threads.append(thread)
@@ -201,7 +201,7 @@ class TestPhase2CrossComponentIntegration:
         callback()
 
         # Verify callback was tracked
-        assert crudclient_strategy._callback_calls == 1  # type: ignore[attr-defined]
+        assert crudclient_strategy._callback_calls == 1  # pyright: ignore[reportPrivateUsage]
 
         # Verify new token
         headers: Dict[str, str] = {}
@@ -231,6 +231,7 @@ class TestPhase2CrossComponentIntegration:
         token_data = response.json()
 
         # Create mock auth with the received token
+        assert "access_token" in token_data
         mock_auth = MockBearerAuthWithRefresh(initial_token=token_data["access_token"])
         headers: Dict[str, str] = {}
         mock_auth.apply_auth(headers)
@@ -292,7 +293,7 @@ class TestPhase2CrossComponentIntegration:
     def test_performance_cross_component(self) -> None:
         """Test performance of cross-component operations."""
         # Create multiple mock strategies
-        strategies = []
+        strategies: List[MockBearerAuthWithRefresh] = []
         for i in range(10):
             strategy = MockBearerAuthWithRefresh(initial_token=f"perf_token_{i}", refresh_delay=0.0)  # No artificial delay
             strategies.append(strategy)

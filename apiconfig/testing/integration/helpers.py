@@ -6,11 +6,12 @@ import typing
 import uuid
 
 import httpx
+from httpx import Client
 from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.config.base import ClientConfig
-from apiconfig.config.manager import ConfigManager
+from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.config.providers.memory import MemoryProvider
 from apiconfig.testing.integration.servers import configure_mock_response
 
@@ -42,12 +43,12 @@ def make_request_with_config(
     method : str, optional
         The HTTP method.
     **kwargs : Any
-        Additional arguments passed to `httpx.Client.request`.
+        Additional arguments passed to `Client.request`.
 
     Returns
     -------
     httpx.Response
-        The httpx.Response object.
+        The httpx Response object.
     """
     base_url = mock_server_url.rstrip("/")
     url = f"{base_url}/{path.lstrip('/')}"
@@ -71,9 +72,9 @@ def make_request_with_config(
     # Ensure headers are always dicts (not mocks)
     safe_headers = dict(prepared_headers)
 
-    # Use httpx for the actual request
+    # Use httpx's Client for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver
-    with httpx.Client(
+    with Client(
         base_url=base_url,
         timeout=config.timeout,
         follow_redirects=True,  # Typically desired in tests
@@ -107,11 +108,11 @@ def setup_multi_provider_manager(
     ConfigManager
         A configured ConfigManager instance.
     """
-    providers = []
+    providers: list[ConfigProvider] = []
     for name, data in config_sources:
-        providers.append(MemoryProvider(config_data=data))
-        # Store name as an attribute for testing
-        providers[-1].name = name  # type: ignore[attr-defined]
+        provider = MemoryProvider(config_data=data)
+        setattr(provider, "name", name)
+        providers.append(provider)
     return ConfigManager(providers=providers)
 
 

@@ -15,10 +15,10 @@ These utilities are particularly useful for:
 - Validating error handling in API client code
 """
 import json
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pytest_httpserver import HTTPServer
-from werkzeug.wrappers import Request, Response
+from pytest_httpserver import HTTPServer, RequestHandler
+from werkzeug.wrappers import Response
 
 
 def configure_mock_response(
@@ -105,17 +105,32 @@ def configure_mock_response(
         response_kwargs["response_data"] = response_data
     # Handle None case implicitly (empty body)
 
-    # Pass 'ordered' for test compatibility; type: ignore needed for real HTTPServer
-    expectation = httpserver.expect_request(uri=path, method=method, ordered=ordered, **expect_kwargs)  # type: ignore[call-arg]
-    expectation.respond_with_response(Response(status=status_code, headers=response_headers), **response_kwargs)
+    # Pass 'ordered' for test compatibility
+    expectation: RequestHandler
+    if ordered:
+        expectation = httpserver.expect_ordered_request(
+            uri=path,
+            method=method,
+            **expect_kwargs,
+        )
+    else:
+        expectation = httpserver.expect_request(
+            uri=path,
+            method=method,
+            **expect_kwargs,
+        )
+    expectation.respond_with_response(
+        Response(status=status_code, headers=response_headers),
+        **response_kwargs,
+    )
 
 
 def assert_request_received(
     httpserver: HTTPServer,
     path: str,
     method: str = "GET",
-    expected_headers: Optional[Dict[str, str]] = None,
-    expected_query: Optional[Dict[str, str]] = None,
+    expected_headers: dict[str, str] | None = None,
+    expected_query: dict[str, str] | None = None,
     expected_json: Optional[Any] = None,
     expected_data: Optional[str] = None,
     count: Optional[int] = 1,
@@ -132,10 +147,10 @@ def assert_request_received(
         The expected URL path.
     method : str, default "GET"
         The expected HTTP method.
-    expected_headers : Optional[Dict[str, str]], default None
+    expected_headers : dict[str, str] | None, default None
         A dictionary of headers expected in the request. Checks for
         presence and exact value match. Case-insensitive header keys.
-    expected_query : Optional[Dict[str, str]], default None
+    expected_query : dict[str, str] | None, default None
         A dictionary of query parameters expected. Checks for presence
         and exact value match.
     expected_json : Optional[Any], default None
@@ -150,17 +165,17 @@ def assert_request_received(
     AssertionError
         If the expected request(s) were not found in the server log.
     """
-    matching_requests = []
-    lower_expected_headers = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
+    matching_requests: List[Tuple[Any, Response]] = []
+    lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
     log = httpserver.log
     for entry in log:
-        request: Request = entry[0]  # entry is a tuple (request, response)
+        request = entry[0]  # entry is a tuple (request, response)
         if request.path == path and request.method == method:
             match = True
             # Check headers
             if lower_expected_headers:
-                request_headers_lower = {k.lower(): v for k, v in request.headers.items()}
+                request_headers_lower: dict[str, str] = {k.lower(): v for k, v in request.headers.items()}
                 if not all(item in request_headers_lower.items() for item in lower_expected_headers.items()):
                     match = False
             # Check query parameters

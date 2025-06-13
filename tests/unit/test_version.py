@@ -21,7 +21,10 @@ class TestVersion:
     def test_version_uses_metadata_when_available(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """__version__ should use the value from package metadata when available."""
 
-        monkeypatch.setattr(importlib.metadata, "version", lambda _name: "1.2.3")
+        def _fake_version(_name: str) -> str:
+            return "1.2.3"
+
+        monkeypatch.setattr(importlib.metadata, "version", _fake_version)
 
         module = importlib.reload(importlib.import_module("apiconfig"))
         assert module.__version__ == "1.2.3"

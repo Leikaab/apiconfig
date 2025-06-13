@@ -46,7 +46,7 @@ class TestCustomAuth:
         assert auth.refresh_func is refresh_func
         assert auth.can_refresh_func is can_refresh_func
         assert auth.is_expired_func is is_expired_func
-        assert auth._http_request_callable is http_request_callable
+        assert auth._http_request_callable is http_request_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_can_refresh_with_can_refresh_func(self) -> None:
         """Test can_refresh when can_refresh_func is provided."""
@@ -152,7 +152,7 @@ class TestCustomAuth:
 
         auth = CustomAuth(header_callback=invalid_header_callback)  # type: ignore[arg-type]
 
-        with pytest.raises(AuthStrategyError, match="must return a dictionary"):
+        with pytest.raises(AuthStrategyError, match="header callback failed"):
             auth.prepare_request_headers()
 
     def test_prepare_request_headers_with_raising_callback(self) -> None:
@@ -196,7 +196,7 @@ class TestCustomAuth:
 
         auth = CustomAuth(param_callback=invalid_param_callback)  # type: ignore[arg-type]
 
-        with pytest.raises(AuthStrategyError, match="must return a dictionary"):
+        with pytest.raises(AuthStrategyError, match="parameter callback failed"):
             auth.prepare_request_params()
 
     def test_prepare_request_params_with_raising_callback(self) -> None:
@@ -310,7 +310,7 @@ class TestCustomAuthFactoryMethods:
         http_callable = Mock()
         auth = CustomAuth.create_api_key_custom(api_key="test-key", http_request_callable=http_callable)
 
-        assert auth._http_request_callable is http_callable
+        assert auth._http_request_callable is http_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_create_session_token_custom(self) -> None:
         """Test create_session_token_custom factory method."""
@@ -335,10 +335,11 @@ class TestCustomAuthFactoryMethods:
         # Test refresh functionality
         result = auth.refresh()
         assert result is not None
-        assert result["token_data"] is not None
-        assert result["token_data"]["access_token"] == "refreshed-token-1"
-        assert result["token_data"]["token_type"] == "session"
-        assert result["config_updates"] is None
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "refreshed-token-1"
+        assert token_data.get("token_type") == "session"
+        assert result.get("config_updates") is None
 
         # Test that headers are updated after refresh
         headers = auth.prepare_request_headers()
@@ -377,7 +378,7 @@ class TestCustomAuthFactoryMethods:
             session_token="initial-token", session_refresh_func=mock_refresh_func, http_request_callable=http_callable
         )
 
-        assert auth._http_request_callable is http_callable
+        assert auth._http_request_callable is http_callable  # pyright: ignore[reportPrivateUsage]
 
     def test_factory_methods_return_correct_type(self) -> None:
         """Test that factory methods return CustomAuth instances."""
@@ -445,8 +446,9 @@ class TestCustomAuthRefreshIntegration:
         # Refresh the token
         result = auth.refresh()
         assert result is not None
-        assert result["token_data"] is not None
-        assert result["token_data"]["access_token"] == "refreshed-token"
+        token_data = result.get("token_data")
+        assert token_data is not None
+        assert token_data.get("access_token") == "refreshed-token"
 
         # Token should no longer be expired and headers should be updated
         assert not auth.is_expired()

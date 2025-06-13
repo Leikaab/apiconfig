@@ -1,5 +1,6 @@
 """Unit tests for HTTP exception protocol support."""
 
+from typing import Any, cast
 from unittest.mock import Mock
 
 import pytest
@@ -41,6 +42,7 @@ class TestProtocolCompliance:
                 self.text = "Not found"
                 self.request = None
                 self.reason: str | None = "Not Found"
+                self.history: list[Any] | None = None
 
         response = MinimalResponse()
         # Skip runtime type check that causes mypy issues
@@ -70,7 +72,8 @@ class TestProtocolCompliance:
         # Extra attributes are not extracted but object is accessible
         assert error.request is request
         # Access body through the original object, not the protocol
-        assert hasattr(error.request, "body") and error.request.body == '{"key": "value"}'
+        req_any = cast(Any, error.request)
+        assert hasattr(req_any, "body") and req_any.body == '{"key": "value"}'
 
     def test_duck_typing_without_protocol_decorator(self) -> None:
         """Test that duck typing works even without explicit Protocol implementation."""
@@ -78,7 +81,8 @@ class TestProtocolCompliance:
         # Simple object that happens to have the right attributes
         request = type("Request", (), {"method": "PUT", "url": "https://api.example.com/resource/123", "headers": {}})()
 
-        error = ApiClientError("Update failed", request=request)
+        request_obj: HttpRequestProtocol = cast(HttpRequestProtocol, request)
+        error = ApiClientError("Update failed", request=request_obj)
         assert error.method == "PUT"
         assert error.url == "https://api.example.com/resource/123"
 

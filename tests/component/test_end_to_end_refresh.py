@@ -71,10 +71,10 @@ class TestEndToEndRefresh:
         assert "token_data" in result
         assert "config_updates" in result
 
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
-        assert token_data["access_token"] == "new_access_token"
-        assert token_data["refresh_token"] == "new_refresh_token"
+        assert token_data.get("access_token") == "new_access_token"
+        assert token_data.get("refresh_token") == "new_refresh_token"
 
         # Verify internal state updated
         assert auth.access_token == "new_access_token"
@@ -102,9 +102,9 @@ class TestEndToEndRefresh:
 
         result = auth.refresh()
         assert result is not None
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
-        assert token_data["access_token"] == "new_token"
+        assert token_data.get("access_token") == "new_token"
 
         headers = auth.prepare_request_headers()
         assert headers["Authorization"] == "Bearer new_token"

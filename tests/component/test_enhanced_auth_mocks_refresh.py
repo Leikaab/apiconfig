@@ -16,6 +16,7 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
+from apiconfig.types import TokenRefreshResult
 
 
 class TestEnhancedAuthMocksRefresh:
@@ -35,10 +36,10 @@ class TestEnhancedAuthMocksRefresh:
         result = mock_auth.refresh()
         assert result is not None
         assert "token_data" in result
-        token_data = result["token_data"]
+        token_data = result.get("token_data")
         assert token_data is not None
         assert "access_token" in token_data
-        assert token_data["access_token"] == "initial_token_refreshed_1"
+        assert token_data.get("access_token") == "initial_token_refreshed_1"
         assert mock_auth.current_token == "initial_token_refreshed_1"
 
     def test_mock_refreshable_auth_strategy_refresh_failure(self) -> None:
@@ -196,22 +197,21 @@ class TestEnhancedAuthMocksRefresh:
 
         # Test that strategy has thread safety attributes
         assert hasattr(strategy, "_refresh_lock")
-        assert hasattr(strategy, "_concurrent_refreshes")
-        assert hasattr(strategy, "_max_concurrent_refreshes")
 
         # Test concurrent refresh operations
-        results = []
-        errors = []
+        results: list[TokenRefreshResult] = []
+        errors: list[Exception] = []
 
         def refresh_worker() -> None:
             try:
                 result = strategy.refresh()
-                results.append(result)
+                if result is not None:
+                    results.append(result)
             except Exception as e:
                 errors.append(e)
 
         # Start multiple threads
-        threads = []
+        threads: list[threading.Thread] = []
         for _ in range(3):
             thread = threading.Thread(target=refresh_worker)
             threads.append(thread)
@@ -224,7 +224,7 @@ class TestEnhancedAuthMocksRefresh:
         # Check results
         assert len(results) == 3
         assert len(errors) == 0
-        assert strategy._max_concurrent_refreshes >= 1
+        assert strategy.max_concurrent_refreshes >= 1
 
     def test_auth_test_scenario_builder_crudclient_integration(self) -> None:
         """Test AuthTestScenarioBuilder crudclient integration scenario."""
@@ -243,8 +243,8 @@ class TestEnhancedAuthMocksRefresh:
         callback()
 
         # Check tracking
-        assert strategy._callback_calls == 2
-        assert len(strategy._callback_errors) == 0
+        assert strategy._callback_calls == 2  # pyright: ignore[reportPrivateUsage]
+        assert len(strategy._callback_errors) == 0  # pyright: ignore[reportPrivateUsage]
 
     def test_mock_http_request_callable(self) -> None:
         """Test MockHttpRequestCallable functionality."""

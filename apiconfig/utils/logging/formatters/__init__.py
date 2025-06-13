@@ -10,9 +10,15 @@ from apiconfig.utils.redaction.headers import (
 )
 
 from .detailed import DetailedFormatter
-from .redacting import RedactingFormatter
+from .redacting import (
+    RedactingFormatter,
+    format_exception_text_helper,
+    format_stack_info_helper,
+    redact_message_helper,
+    redact_structured_helper,
+)
 
-__all__: tuple[str, ...] = (
+__all__: list[str] = [
     "DetailedFormatter",
     "RedactingFormatter",
     "redact_body",
@@ -20,4 +26,8 @@ __all__: tuple[str, ...] = (
     "REDACTED_VALUE",
     "DEFAULT_SENSITIVE_HEADERS",
     "DEFAULT_SENSITIVE_HEADER_PREFIXES",
-)
+    "redact_message_helper",
+    "redact_structured_helper",
+    "format_exception_text_helper",
+    "format_stack_info_helper",
+]

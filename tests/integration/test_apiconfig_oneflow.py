@@ -123,13 +123,16 @@ class TestOneFlowIntegration:
         contracts = oneflow_client.list_contracts()
 
         # OneFlow may return different structures, handle both cases
+        assert isinstance(contracts, (list, dict)), f"Unexpected response type: {type(contracts)}"
         if isinstance(contracts, dict):
-            # Dict response with data key
-            if "data" in contracts:
-                assert isinstance(contracts["data"], list)
-        elif isinstance(contracts, list):
-            # Direct list response
-            assert len(contracts) >= 0  # May be empty
+            assert "data" in contracts, f"Response dict missing 'data' key: {contracts.keys()}"
+            contracts_list = contracts.get("data", [])
+            assert isinstance(contracts_list, list)
+        else:
+            contracts_list = contracts
+
+        if contracts_list:
+            assert isinstance(contracts_list[0], dict)
 
     def test_configuration_validation(self) -> None:
         """Test that proper configuration validation occurs.
@@ -169,7 +172,7 @@ class TestOneFlowIntegration:
         """
         # Test with invalid endpoint to trigger error handling
         with pytest.raises(HTTPUtilsError) as exc_info:
-            oneflow_client._request(HttpMethod.GET, "/nonexistent")
+            oneflow_client.request(HttpMethod.GET, "/nonexistent")
 
         # Verify we get proper apiconfig HTTP exceptions
         error_message = str(exc_info.value)

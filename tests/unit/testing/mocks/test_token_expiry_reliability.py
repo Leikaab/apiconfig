@@ -3,12 +3,14 @@
 
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Tuple
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 
 import pytest
 
-from apiconfig.testing.unit.mocks.auth import AuthTestScenarioBuilder
+from apiconfig.testing.unit.mocks.auth import (
+    AuthTestScenarioBuilder,
+    MockBearerAuthWithRefresh,
+)
 
 
 class TestTokenExpiryReliability:
@@ -32,7 +34,7 @@ class TestTokenExpiryReliability:
                 sum(range(1000))
 
         # Start multiple CPU-burning threads to simulate high load
-        burn_threads = []
+        burn_threads: list[threading.Thread] = []
         for _ in range(10):  # 10 threads to really stress the system
             thread = threading.Thread(target=cpu_burner, daemon=True)
             thread.start()
@@ -60,9 +62,9 @@ class TestTokenExpiryReliability:
         # Create a token that expires in 0.1 seconds
         strategy = AuthTestScenarioBuilder.create_token_expiry_scenario(initial_token="concurrent_test_token", expires_after_seconds=0.1)
 
-        results: List[Tuple[float, bool]] = []
+        results: list[tuple[float, bool]] = []
 
-        def check_expiry() -> Tuple[float, bool]:
+        def check_expiry() -> tuple[float, bool]:
             """Check expiry status and return timestamp and result."""
             timestamp = time.time()
             is_expired = strategy.is_expired()
@@ -71,7 +73,7 @@ class TestTokenExpiryReliability:
         # Use ThreadPoolExecutor to check expiry from multiple threads
         with ThreadPoolExecutor(max_workers=20) as executor:
             # Submit checks over a time period that spans the expiry
-            futures = []
+            futures: list[Future[tuple[float, bool]]] = []
             start_time = time.time()
 
             # Submit checks for 0.2 seconds (before and after expiry)
@@ -166,7 +168,7 @@ class TestRaceConditionPrevention:
         initial_thread_count = threading.active_count()
 
         # Create multiple expiry scenarios
-        strategies = []
+        strategies: list[MockBearerAuthWithRefresh] = []
         for i in range(10):
             strategy = AuthTestScenarioBuilder.create_token_expiry_scenario(initial_token=f"thread_test_{i}", expires_after_seconds=0.1 * (i + 1))
             strategies.append(strategy)
@@ -189,11 +191,11 @@ class TestRaceConditionPrevention:
             )
 
             # Take measurements at specific intervals
-            measurements = []
+            measurements: list[tuple[float, bool]] = []
             start_time = time.time()
 
             # Measure every 10ms for 100ms
-            for i in range(10):
+            for _ in range(10):
                 is_expired = strategy.is_expired()
                 elapsed = time.time() - start_time
                 measurements.append((elapsed, is_expired))

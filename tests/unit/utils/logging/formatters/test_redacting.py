@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import pytest
 
-from apiconfig.utils.logging.formatters import RedactingFormatter
+from apiconfig.utils.logging.formatters import (
+    RedactingFormatter,
+    redact_message_helper,
+    redact_structured_helper,
+)
 
 
 @pytest.fixture
@@ -37,6 +41,16 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
         return record
 
     return make
+
+
+def _always_false(msg: Any) -> bool:
+    """Return ``False`` for any input."""
+    return False
+
+
+def _always_false_structured(msg: Any, content_type: Any) -> bool:
+    """Return ``False`` for any input and content type."""
+    return False
 
 
 def test_redacting_formatter_basic(
@@ -272,8 +286,8 @@ def test_redacting_formatter_fallback_branch_strmsg(
 def test_redacting_formatter_is_structured_dict_list() -> None:
     """Test that _is_structured correctly identifies dict and list as structured data."""
     fmt = RedactingFormatter()
-    assert fmt._is_structured({"foo": "bar"}, None) is True
-    assert fmt._is_structured([1, 2, 3], None) is True
+    assert fmt._is_structured({"foo": "bar"}, None) is True  # pyright: ignore[reportPrivateUsage]
+    assert fmt._is_structured([1, 2, 3], None) is True  # pyright: ignore[reportPrivateUsage]
 
 
 def test_redacting_formatter_redact_structured_dict_from_string(
@@ -290,7 +304,7 @@ def test_redacting_formatter_redact_structured_dict_from_string(
     monkeypatch.setattr(fmt, "_redact_body", mock_redact_body)
 
     # Test with a JSON string that should be parsed and redacted
-    result = fmt._redact_structured('{"token": "secret"}', "application/json")
+    result = redact_structured_helper(fmt, '{"token": "secret"}', "application/json")
 
     # Verify json.dumps was called
     import json
@@ -319,7 +333,7 @@ def test_redacting_formatter_redact_structured_list_from_string_direct(
 
     try:
         # Call _redact_structured with a string that will be processed as JSON
-        result = fmt._redact_structured(json_string, "application/json")
+        result = redact_structured_helper(fmt, json_string, "application/json")
 
         # Verify json.dumps was called
         import json
@@ -351,7 +365,7 @@ def test_redacting_formatter_redact_structured_other_type_direct(
 
     try:
         # Call _redact_structured with a string
-        result = fmt._redact_structured(test_input, "text/plain")
+        result = redact_structured_helper(fmt, test_input, "text/plain")
 
         # Verify str() was called on the returned value
         assert result == "42"
@@ -382,7 +396,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
         record = log_record_factory(msg={"sensitive": "secret", "normal": "value"})
 
         # Call _redact_message directly
-        fmt._redact_message(record)
+        redact_message_helper(fmt, record)
 
         # Verify the message was converted to a JSON string
         assert isinstance(record.msg, str)
@@ -412,13 +426,13 @@ def test_redacting_formatter_unknown_type_fallback_direct(
     record = log_record_factory(msg=obj)
 
     # Patch all the condition methods to return False using monkeypatch
-    monkeypatch.setattr(fmt, "_is_binary", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_empty", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_structured", lambda msg, content_type: False)
+    monkeypatch.setattr(fmt, "_is_binary", _always_false)
+    monkeypatch.setattr(fmt, "_is_empty", _always_false)
+    monkeypatch.setattr(fmt, "_is_structured", _always_false_structured)
 
     try:
         # Call _redact_message directly
-        fmt._redact_message(record)
+        redact_message_helper(fmt, record)
 
         # Verify str() was called on the object
         assert record.msg == "custom object"
@@ -442,7 +456,7 @@ def test_redacting_formatter_redact_structured_string_exception_fallback(
 
     # Test with a string input
     test_string = "test string"
-    result = fmt._redact_structured(test_string, "text/plain")
+    result = redact_structured_helper(fmt, test_string, "text/plain")
 
     # Verify the original string is returned
     assert result == test_string
@@ -471,12 +485,12 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
     )
 
     # Override all the condition methods to ensure we hit the fallback branch
-    monkeypatch.setattr(fmt, "_is_binary", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_empty", lambda msg: False)
-    monkeypatch.setattr(fmt, "_is_structured", lambda msg, content_type: False)
+    monkeypatch.setattr(fmt, "_is_binary", _always_false)
+    monkeypatch.setattr(fmt, "_is_empty", _always_false)
+    monkeypatch.setattr(fmt, "_is_structured", _always_false_structured)
 
     # Call _redact_message directly
-    fmt._redact_message(record)
+    redact_message_helper(fmt, record)
 
     # Verify str() was called on the object
     assert record.msg == "custom object str representation"
@@ -493,15 +507,14 @@ def test_redacting_formatter_line_220_direct(monkeypatch: pytest.MonkeyPatch) ->
     redacted_dict = {"form_data": "[REDACTED]"}
 
     # Override redact_body to return our dict using monkeypatch
-    monkeypatch.setattr(
-        fmt,
-        "_redact_body",
-        lambda msg, **kwargs: redacted_dict if msg == string_input else msg,
-    )
+    def redact_body_override(msg: str, **kwargs: Any) -> dict[str, str]:
+        return redacted_dict if msg == string_input else cast(dict[str, str], msg)
+
+    monkeypatch.setattr(fmt, "_redact_body", redact_body_override)
 
     try:
         # Call _redact_structured with our string input and form content type
-        result = fmt._redact_structured(string_input, "application/x-www-form-urlencoded")
+        result = redact_structured_helper(fmt, string_input, "application/x-www-form-urlencoded")
 
         # Verify json.dumps was called
         import json
@@ -531,15 +544,15 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
     custom_output = CustomOutput()
 
     # Override redact_body to return our custom output using monkeypatch
-    monkeypatch.setattr(
-        fmt,
-        "_redact_body",
-        lambda msg, **kwargs: custom_output if msg == custom_input else msg,
-    )
+
+    def _fake_redact_body(msg: Any, **kwargs: Any) -> Any:
+        return custom_output if msg == custom_input else msg
+
+    monkeypatch.setattr(fmt, "_redact_body", _fake_redact_body)
 
     try:
         # Call _redact_structured with our custom input
-        result = fmt._redact_structured(custom_input, None)
+        result = redact_structured_helper(fmt, custom_input, None)
 
         # Verify str() was called
         assert result == "custom output str representation"

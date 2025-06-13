@@ -57,6 +57,16 @@ repos:
         require_serial: true
         always_run: true
 
+      - id: pyright
+        name: pyright (warn only)
+        stages: [pre-commit]
+        language: system
+        entry: bash -c 'poetry run pyright; exit 0'
+        types_or: [python, pyi]
+        require_serial: true
+        always_run: true
+        verbose: true
+
       - id: pytest
         name: pytest (all tests)
         stages: [pre-commit]

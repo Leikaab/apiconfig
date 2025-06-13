@@ -2,6 +2,20 @@
 
 Authentication framework for **apiconfig**.  This package defines the common `AuthStrategy` base class and bundles the built in authentication strategies and token utilities.
 
+## Module Description
+
+`AuthStrategy` defines the interface used by all authentication implementations.
+The package includes ready-made strategies such as `BasicAuth`, `BearerAuth`,
+and `ApiKeyAuth` so clients can authenticate without custom code.
+
+Centralizing authentication ensures headers and query parameters are prepared
+consistently across APIs. Each `ClientConfig` instance holds a strategy, keeping
+request logic independent of specific credentials or token refresh flows.
+
+This design follows the Strategy pattern and encourages extensibility.
+Applications can swap built-in strategies or provide custom implementations
+without modifying consumers of `ClientConfig`.
+
 ## Contents
 - `base.py` – abstract `AuthStrategy` with refresh support.
 - `strategies/` – collection of ready to use strategies such as `BasicAuth`, `BearerAuth` and `ApiKeyAuth`.
@@ -50,10 +64,43 @@ sequenceDiagram
 ## Tests
 Install dependencies and run the unit tests for the authentication package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/auth -q
+poetry install --with dev
+poetry run pytest tests/unit/auth -q
 ```
+
+## Dependencies
+
+### Standard Library
+- `abc` – defines the abstract base class for auth strategies.
+- `base64` – encodes Basic authentication credentials.
+- `datetime` – handles token expiry timestamps.
+- `json`, `logging`, and `time` – used in token refresh helpers.
+- `typing` – provides type hints throughout the package.
+
+### Internal Dependencies
+- `apiconfig.exceptions.auth` – custom exceptions for authentication errors.
+- `apiconfig.types` – shared type definitions used in strategy interfaces.
+
+### Optional Dependencies
+- `httpx` – recommended HTTP client for token refresh callbacks and testing.
 
 ## Status
 Stable – used by the configuration system and tested via the unit suite.
+
+### Maintenance Notes
+- Authentication layer is stable and updated as new schemes are supported.
+
+### Changelog
+- Significant auth changes are captured in the project changelog.
+
+### Future Considerations
+- Upcoming work includes improved OAuth2 token refresh handling.
+
+## Navigation
+- [apiconfig](../README.md) – project overview and main documentation.
+- [strategies](./strategies/README.md) – built-in authentication strategies.
+- [token](./token/README.md) – utilities for managing OAuth2 tokens.
+
+## See Also
+- [apiconfig.config](../config/README.md) – configuration system used with auth strategies
+- [apiconfig.exceptions.auth](../exceptions/auth/README.md) – exceptions raised during authentication

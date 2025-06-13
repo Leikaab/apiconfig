@@ -1,7 +1,9 @@
 """Abstract base classes and in-memory implementation for token storage."""
 
 import abc
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
+
+from ...types import TokenData
 
 
 class TokenStorage(abc.ABC):
@@ -13,7 +15,7 @@ class TokenStorage(abc.ABC):
     """
 
     @abc.abstractmethod
-    def store_token(self, key: str, token_data: Any) -> None:
+    def store_token(self, key: str, token_data: TokenData) -> None:
         """
         Store token data associated with a key.
 
@@ -21,13 +23,14 @@ class TokenStorage(abc.ABC):
         ----------
         key : str
             The unique identifier for the token.
-        token_data : Any
-            The token data to store (e.g., a string, dictionary).
+        token_data : TokenData
+            The token data to store, typically containing fields like
+            ``access_token`` and ``refresh_token``.
         """
         raise NotImplementedError
 
     @abc.abstractmethod
-    def retrieve_token(self, key: str) -> Optional[Any]:
+    def retrieve_token(self, key: str) -> Optional[TokenData]:
         """
         Retrieve token data associated with a key.
 
@@ -38,7 +41,7 @@ class TokenStorage(abc.ABC):
 
         Returns
         -------
-        Optional[Any]
+        Optional[TokenData]
             The stored token data, or None if the key is not found.
         """
         raise NotImplementedError
@@ -64,13 +67,18 @@ class InMemoryTokenStorage(TokenStorage):
     instance terminates. Suitable for testing or short-lived processes.
     """
 
-    _storage: Dict[str, Any]
+    _storage: Dict[str, TokenData]
 
     def __init__(self) -> None:
         """Initialize the in-memory storage dictionary."""
-        self._storage: Dict[str, Any] = {}
+        self._storage: Dict[str, TokenData] = {}
 
-    def store_token(self, key: str, token_data: Any) -> None:
+    @property
+    def storage(self) -> Dict[str, TokenData]:
+        """Return the internal storage dictionary."""
+        return self._storage
+
+    def store_token(self, key: str, token_data: TokenData) -> None:
         """
         Store token data in the internal dictionary.
 
@@ -78,12 +86,12 @@ class InMemoryTokenStorage(TokenStorage):
         ----------
         key : str
             The unique identifier for the token.
-        token_data : Any
+        token_data : TokenData
             The token data to store.
         """
         self._storage[key] = token_data
 
-    def retrieve_token(self, key: str) -> Optional[Any]:
+    def retrieve_token(self, key: str) -> Optional[TokenData]:
         """
         Retrieve token data from the internal dictionary.
 
@@ -94,7 +102,7 @@ class InMemoryTokenStorage(TokenStorage):
 
         Returns
         -------
-        Optional[Any]
+        Optional[TokenData]
             The stored token data, or None if the key is not found.
         """
         return self._storage.get(key)

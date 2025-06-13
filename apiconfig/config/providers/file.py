@@ -2,7 +2,7 @@
 
 import json
 import pathlib
-from typing import Any, Dict, Optional, Type, TypeVar, Union
+from typing import Any, Dict, Optional, Type, TypeVar, Union, cast, overload
 
 from apiconfig.exceptions.config import ConfigLoadError, ConfigValueError
 
@@ -33,6 +33,11 @@ class FileProvider:
             or a pathlib.Path object. The path is converted to a Path object internally.
         """
         self._file_path = pathlib.Path(file_path)
+
+    @property
+    def file_path(self) -> pathlib.Path:
+        """Return the path to the configuration file."""
+        return self._file_path
 
     def load(self) -> Dict[str, Any]:
         """
@@ -74,6 +79,7 @@ class FileProvider:
 
             if not isinstance(config_data, dict):
                 raise ConfigLoadError(f"Configuration file must contain a JSON object: {file_path_str}")
+            config_data = cast(dict[str, Any], config_data)
             return config_data
         except ConfigLoadError:
             # Re-raise our own errors unchanged
@@ -82,7 +88,19 @@ class FileProvider:
             # Catch-all for any other unexpected errors
             raise ConfigLoadError(f"Error reading configuration file: {file_path_str}") from e
 
-    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> Any:
+    @overload
+    def get(self, key: str) -> Any | None: ...
+
+    @overload
+    def get(self, key: str, *, expected_type: Type[T]) -> T | None: ...
+
+    @overload
+    def get(self, key: str, default: T) -> T: ...
+
+    @overload
+    def get(self, key: str, default: T, *, expected_type: Type[T]) -> T: ...
+
+    def get(self, key: str, default: Any = None, expected_type: Optional[Type[T]] = None) -> T | None:
         """
         Get a configuration value from the loaded configuration.
 
@@ -108,7 +126,7 @@ class FileProvider:
 
         Returns
         -------
-        Any
+        T | None
             The configuration value (coerced to expected_type if specified), or the default if the key is not found.
 
         Raises
@@ -118,38 +136,39 @@ class FileProvider:
         ConfigLoadError
             If there's an error loading the configuration file.
         """
-        config = self.load()
+        config: Dict[str, Any] = self.load()
 
         # Handle dot notation for nested keys
         parts = key.split(".")
-        value = config
+        value: Any = config
 
         # Navigate through nested dictionaries
         for part in parts:
             if not isinstance(value, dict) or part not in value:
-                return default
-            value = value[part]
+                return cast(T, default)
+            value = cast(Dict[str, Any], value)[part]
 
         if expected_type is None or isinstance(value, expected_type):
-            return value
+            return cast(T, value)
 
         try:
             # Handle other types through standard conversion
             if expected_type is object or not callable(expected_type):
-                return value
+                return cast(T, value)
                 # mypy: unreachable
             if expected_type is bool:
                 # Special handling for boolean values
                 try:
-                    val_lower = value.lower()  # type: ignore[attr-defined]
+                    lower: str = cast(str, value).lower()
+                    val_lower: str = lower
                     if val_lower in ("true", "1", "yes", "y", "on"):
-                        return True
+                        return cast(T, True)
                     elif val_lower in ("false", "0", "no", "n", "off"):
-                        return False
+                        return cast(T, False)
                     else:
                         raise ValueError(f"Cannot convert '{value}' to bool")
                 except AttributeError:
-                    return bool(value)
-            return expected_type(value)  # type: ignore[call-arg]
+                    return cast(T, bool(value))
+            return cast(T, expected_type(value))  # type: ignore[call-arg,redundant-cast]
         except (ValueError, TypeError) as e:
             raise ConfigValueError(f"Cannot convert configuration value for '{key}' ({value}) to {expected_type.__name__}: {str(e)}") from e

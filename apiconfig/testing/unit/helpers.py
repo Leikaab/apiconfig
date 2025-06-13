@@ -4,7 +4,7 @@ import contextlib
 import os
 import tempfile
 import unittest
-from typing import Any, Dict, Generator, Optional, Protocol, Type
+from typing import Any, ClassVar, Dict, Generator, Optional, Protocol, Type
 
 from apiconfig.auth.base import AuthStrategy
 
@@ -182,8 +182,8 @@ class BaseAuthStrategyTest(unittest.TestCase):
         """Ensure subclasses provide a strategy."""
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
-        if not hasattr(cls, "strategy") or not isinstance(cls.strategy, AuthStrategy):
-            raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy' " "of type AuthStrategy.")
+        if not hasattr(cls, "strategy"):
+            raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy'.")
         check_auth_strategy_interface(cls.strategy)
 
     def assertAuthHeaderCorrect(self, expected_header: str, expected_value: str) -> None:
@@ -207,10 +207,10 @@ class BaseConfigProviderTest(unittest.TestCase):
     Provides helper context managers for temporary environments.
     """
 
-    provider_class: Optional[Type[ConfigProviderProtocol]] = None
-    required_env_vars: Optional[Dict[str, str]] = None
-    config_content: Optional[str] = None
-    config_suffix: str = ".tmp"
+    provider_class: ClassVar[Optional[Type[ConfigProviderProtocol]]] = None
+    required_env_vars: ClassVar[Optional[Dict[str, str]]] = None
+    config_content: ClassVar[Optional[str]] = None
+    config_suffix: ClassVar[str] = ".tmp"
 
     def get_provider_instance(self, *args: Any, **kwargs: Any) -> ConfigProviderProtocol:
         """

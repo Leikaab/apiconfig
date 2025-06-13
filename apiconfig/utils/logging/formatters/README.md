@@ -88,9 +88,8 @@ None
 ## Tests
 Install dependencies and run the formatter tests:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/utils/logging/formatters -q
+poetry install --with dev
+poetry run pytest tests/unit/utils/logging/formatters -q
 ```
 
 ## Status

@@ -66,7 +66,10 @@ This package uses a mix of Python's standard library and internal modules:
 - `apiconfig.exceptions` – base exceptions for error handling.
 
 ## Status
-Stable – used internally by other modules in the package.
+
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Stable provider API with incremental enhancements as new sources are added.

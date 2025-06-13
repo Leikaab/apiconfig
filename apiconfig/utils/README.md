@@ -82,9 +82,8 @@ flowchart TD
 ## Tests
 Run the unit tests for utility modules:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/utils -q
+poetry install --with dev
+poetry run pytest tests/unit/utils -q
 ```
 
 ## Status

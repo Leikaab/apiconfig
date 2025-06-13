@@ -94,6 +94,10 @@ pytest -q
 ## Status
 Internal – APIs may evolve alongside the test suite.
 
+**Stability:** Internal
+**API Version:** 0.3.1
+**Deprecations:** None
+
 ### Maintenance Notes
 - Test utilities are maintained with the suite and may change frequently.
 
@@ -106,3 +110,4 @@ Internal – APIs may evolve alongside the test suite.
 ## See Also
 - [unit](./unit/README.md) – unit-test helpers
 - [integration](./integration/README.md) – integration test utilities
+- [helpers_for_tests](../helpers_for_tests/README.md) – further examples

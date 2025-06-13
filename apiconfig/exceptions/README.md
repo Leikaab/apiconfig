@@ -3,8 +3,25 @@
 `apiconfig.exceptions` contains the exception hierarchy used throughout the
 **apiconfig** project. All exceptions derive from `APIConfigError`, and the
 modules are grouped by domain: authentication, configuration and HTTP utilities.
+
 Importing from `apiconfig.exceptions` gives quick access to the most commonly
 used classes without reaching into each submodule.
+
+## Module Description
+This package centralises all error classes used by **apiconfig**. By defining
+a consistent hierarchy rooted at `APIConfigError`, it allows callers to handle
+failures uniformly across authentication, configuration and HTTP utilities.
+
+The hierarchy solves the problem of disparate error handling. Each subpackage
+raises these exceptions, enabling a consumer to catch a specific subclass when
+needed or handle general issues by catching `APIConfigError`. This approach is
+used throughout the project, from the authentication layer to configuration
+parsers and HTTP helpers.
+
+Base classes such as `AuthenticationError` and `ConfigurationError` derive from
+`APIConfigError`, while specialised classes inherit from these bases. Factory
+helpers map HTTP status codes to the correct subclass, keeping error handling
+both explicit and extensible.
 
 ## Navigation
 - [Back to parent module](../README.md)

@@ -14,6 +14,21 @@ staying compatible with the standard `logging` handlers. Thread-local context
 filters add request or user metadata to log records so that each entry carries
 useful debugging information.
 
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+**Submodules:**
+- [formatters](./formatters/README.md) - Custom log formatters
+
+## Dependencies
+
+### Standard Library
+- `logging` – Python logging framework used by handlers and formatters
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – redaction helpers for sanitising log output
+
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.
@@ -114,13 +129,6 @@ Stable – provides common logging setup for the library.
 
 ### Future Considerations
 - Planned formatter enhancements will improve log readability.
-
-## Navigation
-
-**Parent Module:** [apiconfig.utils](../README.md)
-
-**Submodules:**
-- [formatters](./formatters/README.md) - Custom log formatters
 
 ## See Also
 - [apiconfig.utils.redaction](../redaction/README.md) – used by log formatters

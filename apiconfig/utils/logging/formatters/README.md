@@ -19,6 +19,11 @@ delegate sensitive-data handling to the utilities in
 match formatters and redaction strategies without rewriting their logging
 setup.
 
+## Navigation
+
+**Parent Package:** [apiconfig.utils.logging](../README.md)
+
+
 ## Contents
 - `detailed.py` – `DetailedFormatter` adds timestamps, level names, logger names
   and file/line information with smart handling of multiline messages and stack
@@ -88,8 +93,4 @@ Stable – widely used by other modules for consistent logging behaviour.
 
 ### Future Considerations
 - Additional formatter presets are planned for upcoming releases.
-
-## Navigation
-
-**Parent Package:** [apiconfig.utils.logging](../README.md)
 

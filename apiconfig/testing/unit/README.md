@@ -68,13 +68,24 @@ python -m pip install pytest pytest-xdist
 pytest tests/unit/testing/unit -q
 ```
 
+### Test Structure
+- `tests/unit/testing/unit`
+
 ## See Also
 - [integration](../integration/README.md) – end-to-end helpers.
 
 ## Dependencies
 
-Unit tests depend on `pytest` for execution. Install all development
-dependencies with:
+### External
+- `pytest`
+
+### Internal
+- apiconfig testing utilities
+
+### Optional
+- None
+
+Install all development dependencies with:
 
 ```bash
 poetry install --with dev

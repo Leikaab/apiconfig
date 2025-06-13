@@ -132,7 +132,15 @@ graph TD
 
 ## Dependencies
 
-This project relies on [pytest](https://docs.pytest.org/) and [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) for testing. Core functionality is built on internal modules such as `apiconfig.config`.
+### External
+- [pytest](https://docs.pytest.org/)
+- [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver)
+
+### Internal
+- Core modules such as `apiconfig.config`
+
+### Optional
+- None
 
 ## Usage
 
@@ -303,6 +311,9 @@ apiconfig is fully tested with `pytest` and `coverage.py`. To run tests and chec
 pytest --cov=apiconfig --cov-report=html
 ```
 
+### Test Structure
+Unit tests for the testing helpers live in `tests/unit/testing/unit`.
+
 ### Static Type Checking
 
 apiconfig uses [Pyright](https://github.com/microsoft/pyright) for optional static
@@ -348,8 +359,17 @@ LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
 ## Dependencies
 
-The project relies on `pytest` and `pytest_httpserver` for its test suite. Install development
-dependencies with:
+### External
+- `pytest` – test runner
+- `pytest_httpserver` – local HTTP server for integration tests
+
+### Internal
+- Modules such as `apiconfig.config`
+
+### Optional
+- None
+
+Install development dependencies with:
 
 ```bash
 poetry install --with dev

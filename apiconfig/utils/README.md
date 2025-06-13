@@ -28,13 +28,23 @@ to avoid duplicating boilerplate code.
 - `logging/` – custom formatters and setup helpers for the library's logging.
 - `__init__.py` – exposes the modules above for convenience.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 from apiconfig.utils import http, url
 
 if http.is_success(200):
     full_url = url.build_url("https://api.example.com", "/ping")
     print(full_url)
+```
+
+### Advanced
+```python
+from apiconfig.utils.redaction import redact_dict
+
+data = {"token": "secret", "value": 42}
+print(redact_dict(data, {"token"}))
 ```
 
 ## Key modules

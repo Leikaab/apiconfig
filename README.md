@@ -346,6 +346,15 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
 
+## Dependencies
+
+The project relies on `pytest` and `pytest_httpserver` for its test suite. Install development
+dependencies with:
+
+```bash
+poetry install --with dev
+```
+
 ## Status
 
 **Stability:** Stable - the project is actively used in production environments.

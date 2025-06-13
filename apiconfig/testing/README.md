@@ -36,13 +36,23 @@ simple to contribute to and easier to maintain.
 - `auth_verification.py` – common checks for authentication headers during tests.
 - `__init__.py` – exposes the most useful helpers across subpackages.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 from apiconfig.testing.integration import configure_mock_response
 from apiconfig.testing.unit import create_valid_client_config
 
 config = create_valid_client_config(hostname="api.test")
 configure_mock_response(httpserver, path="/ping", response_data={"ok": True})
+```
+
+### Advanced
+```python
+from apiconfig.testing.integration import assert_request_received
+
+# After configuring responses and making requests, verify the server interaction
+assert_request_received(httpserver, path="/ping")
 ```
 
 ## Key modules
@@ -67,6 +77,15 @@ Install dependencies and run all project tests:
 python -m pip install -e .
 python -m pip install pytest pytest-httpserver pytest-xdist
 pytest -q
+```
+
+## Dependencies
+
+Testing relies on `pytest` and `pytest_httpserver`. Install them via the project
+development dependencies:
+
+```bash
+poetry install --with dev
 ```
 
 ## Status

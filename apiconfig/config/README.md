@@ -22,6 +22,10 @@ Core configuration system for **apiconfig**.  This module exposes the `ClientCon
 class used by API clients and the `ConfigManager` which coordinates loading of
 configuration values from one or more providers.
 
+## Navigation
+- [apiconfig](../README.md)
+- [providers](./providers/README.md)
+
 ## Contents
 - `base.py` – `ClientConfig` with helpers for merging settings and constructing `base_url`.
 - `manager.py` – `ConfigManager` that merges dictionaries from multiple providers.
@@ -83,10 +87,6 @@ Stable – used by API clients and covered by unit tests.
 
 ### Future Considerations
 - Potential support for dynamic configuration providers.
-
-## Navigation
-- [apiconfig](../README.md)
-- [providers](./providers/README.md)
 
 ## See Also
 - [auth](../auth/README.md) - describes available authentication strategies used by `ClientConfig`.

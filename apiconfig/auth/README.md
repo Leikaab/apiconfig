@@ -16,6 +16,11 @@ This design follows the Strategy pattern and encourages extensibility.
 Applications can swap built-in strategies or provide custom implementations
 without modifying consumers of `ClientConfig`.
 
+## Navigation
+- [apiconfig](../README.md) – project overview and main documentation.
+- [strategies](./strategies/README.md) – built-in authentication strategies.
+- [token](./token/README.md) – utilities for managing OAuth2 tokens.
+
 ## Contents
 - `base.py` – abstract `AuthStrategy` with refresh support.
 - `strategies/` – collection of ready to use strategies such as `BasicAuth`, `BearerAuth` and `ApiKeyAuth`.
@@ -95,11 +100,6 @@ Stable – used by the configuration system and tested via the unit suite.
 
 ### Future Considerations
 - Upcoming work includes improved OAuth2 token refresh handling.
-
-## Navigation
-- [apiconfig](../README.md) – project overview and main documentation.
-- [strategies](./strategies/README.md) – built-in authentication strategies.
-- [token](./token/README.md) – utilities for managing OAuth2 tokens.
 
 ## See Also
 - [apiconfig.config](../config/README.md) – configuration system used with auth strategies

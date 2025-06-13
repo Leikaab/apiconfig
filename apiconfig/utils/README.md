@@ -4,6 +4,14 @@ Miscellaneous utilities shipped with **apiconfig**. They cover HTTP helpers,
 URL construction, redaction of sensitive data and logging setup. Each subpackage
 can be used independently by API clients.
 
+## Module Description
+
+The utilities package centralizes common helpers used across `apiconfig`.
+It provides HTTP status helpers, tools for safe URL building, utilities for
+redacting sensitive data and helpers for configuring consistent logging.
+These modules are lightweight and are imported by other parts of the project
+to avoid duplicating boilerplate code.
+
 ## Navigation
 
 **Parent Module:** [apiconfig](../README.md)

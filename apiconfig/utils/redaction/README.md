@@ -1,6 +1,16 @@
 # apiconfig.utils.redaction
 
-Utilities for scrubbing sensitive information from HTTP requests, responses and logs. The package centralises common redaction logic so that clients and logging helpers can easily avoid leaking secrets.
+## Module Description
+
+Redaction utilities exist to ensure that tokens, credentials and other personal
+information never appear in logs or request dumps. They provide a centralised
+set of helpers for sanitising HTTP bodies and headers, preventing accidental
+data leaks. Modules such as `apiconfig.utils.logging` rely on these helpers to
+prepare safe output for log handlers and monitoring services.
+
+Utilities for scrubbing sensitive information from HTTP requests, responses and
+logs. The package centralises common redaction logic so that clients and logging
+helpers can easily avoid leaking secrets.
 
 ## Navigation
 

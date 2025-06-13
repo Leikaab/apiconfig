@@ -16,16 +16,22 @@ This design follows the Strategy pattern and encourages extensibility.
 Applications can swap built-in strategies or provide custom implementations
 without modifying consumers of `ClientConfig`.
 
+## Navigation
+- [apiconfig](../README.md) – project overview and main documentation.
+- [strategies](./strategies/README.md) – built-in authentication strategies.
+- [token](./token/README.md) – utilities for managing OAuth2 tokens.
+
 ## Contents
 - `base.py` – abstract `AuthStrategy` with refresh support.
 - `strategies/` – collection of ready to use strategies such as `BasicAuth`, `BearerAuth` and `ApiKeyAuth`.
 - `token/` – helpers for OAuth2 token refresh and storage.
 - `__init__.py` – re-exports the most used classes for convenience.
 
-## Usage example
+## Usage Examples
+
+### Basic
 ```python
 from datetime import datetime, timedelta, timezone
-from apiconfig.auth import AuthStrategy
 from apiconfig.auth.strategies import BearerAuth
 from apiconfig.config import ClientConfig
 
@@ -37,6 +43,17 @@ auth = BearerAuth(
 
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 headers = auth.prepare_request_headers()
+```
+
+### Advanced
+```python
+from apiconfig.auth.strategies import CustomAuth
+from apiconfig.config import ClientConfig
+
+# Custom strategy using callbacks
+auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
+
+config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 ```
 
 ## Key classes
@@ -95,11 +112,6 @@ Stable – used by the configuration system and tested via the unit suite.
 
 ### Future Considerations
 - Upcoming work includes improved OAuth2 token refresh handling.
-
-## Navigation
-- [apiconfig](../README.md) – project overview and main documentation.
-- [strategies](./strategies/README.md) – built-in authentication strategies.
-- [token](./token/README.md) – utilities for managing OAuth2 tokens.
 
 ## See Also
 - [apiconfig.config](../config/README.md) – configuration system used with auth strategies

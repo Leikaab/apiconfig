@@ -1,7 +1,7 @@
 # apiconfig.config.providers
 
-Configuration providers for **apiconfig**. These helpers supply configuration values from
-different sources so they can be combined by `ConfigManager`.
+## Module Description
+Configuration providers for **apiconfig**. These helpers supply configuration values from different sources so they can be combined by `ConfigManager`.
 
 ## Navigation
 
@@ -53,9 +53,8 @@ flowchart TB
 ## Testing
 Install requirements and run the unit tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/config/providers -q
+poetry install --with dev
+poetry run pytest tests/unit/config/providers -q
 ```
 
 ## Dependencies

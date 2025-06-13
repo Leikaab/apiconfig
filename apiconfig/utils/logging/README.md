@@ -29,6 +29,10 @@ useful debugging information.
 ### Internal Dependencies
 - `apiconfig.utils.redaction` – redaction helpers for sanitising log output
 
+### Optional Dependencies
+- `pytest` and `pytest_httpserver` – test utilities for running the logging
+  tests
+
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.
@@ -93,14 +97,6 @@ flowchart TD
     Formatter -->|redact| Redaction
 ```
 
-## Dependencies
-
-### Standard Library
-- `logging` – built on Python's logging framework for handlers and configuration.
-
-### Internal Dependencies
-- `apiconfig.utils.redaction` – utilities for scrubbing sensitive data from log messages.
-
 ## Tests
 Run the logging-related unit tests:
 ```bash
@@ -109,14 +105,6 @@ python -m pip install pytest pytest-xdist
 pytest tests/unit/utils/logging -q
 ```
 
-## Dependencies
-
-Logging utilities are tested with `pytest` and rely on `pytest_httpserver` for
-mock servers. Install them along with all development requirements:
-
-```bash
-poetry install --with dev
-```
 
 ## Status
 Stable – provides common logging setup for the library.

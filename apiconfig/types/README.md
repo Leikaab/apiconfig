@@ -24,6 +24,26 @@ method: HttpMethod = HttpMethod.GET
 payload: JsonObject = {"ping": "pong"}
 ```
 
+## Testing
+
+Run the unit tests covering these type definitions:
+
+```bash
+poetry run pytest tests/unit/types
+```
+
+## Dependencies
+
+### Standard Library
+- `typing` – foundational type hints and protocols
+- `enum` – enumeration for `HttpMethod`
+- `json` – encoders and decoders used in JSON type aliases
+
+### Internal Modules
+- `apiconfig.auth` – authentication strategies rely on `TokenRefreshResult` and `HttpRequestCallable`
+- `apiconfig.config` – configuration providers use `ConfigDict` and `ConfigProviderCallable`
+- `apiconfig.utils` – utilities depend on `HeadersType`, `QueryParamType`, and related aliases
+
 ## Status
 Stable – used throughout the library for type checking.
 

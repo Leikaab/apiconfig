@@ -47,6 +47,10 @@ poetry run pytest tests/unit/types
 ## Status
 Stable – used throughout the library for type checking.
 
+**Stability:** Stable
+**API Version:** 0.3.2
+**Deprecations:** None
+
 ### Maintenance Notes
 New type aliases are added only when multiple modules need the same
 structure. Every addition is documented in the changelog and covered by unit

@@ -21,7 +21,9 @@ useful debugging information.
 - `setup.py` – `setup_logging` function to configure the library's logger.
 - `__init__.py` – exports the common classes and helpers.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 import logging
 from apiconfig.utils.logging import setup_logging
@@ -31,7 +33,7 @@ logger = logging.getLogger("apiconfig")
 logger.info("configured")
 ```
 
-### Advanced Usage
+### Advanced
 Use the building blocks directly when you need full control over handlers and
 formatters.
 
@@ -82,6 +84,15 @@ Run the logging-related unit tests:
 python -m pip install -e .
 python -m pip install pytest pytest-xdist
 pytest tests/unit/utils/logging -q
+```
+
+## Dependencies
+
+Logging utilities are tested with `pytest` and rely on `pytest_httpserver` for
+mock servers. Install them along with all development requirements:
+
+```bash
+poetry install --with dev
 ```
 
 ## Status

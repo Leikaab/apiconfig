@@ -18,7 +18,9 @@ of external dependencies.
 - `mocks/` – lightweight mock implementations of auth strategies and config providers.
 - `__init__.py` – re-exports the most common helpers.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 from apiconfig.testing.unit import (
     create_valid_client_config,
@@ -30,6 +32,14 @@ provider = MockConfigProvider({"hostname": "api.test"})
 manager = MockConfigManager([provider])
 config = manager.load_config()
 assert config.hostname == "api.test"
+```
+
+### Advanced
+```python
+from apiconfig.testing.unit import create_invalid_client_config
+
+# Use factories to build intentionally invalid configs for edge cases
+config = create_invalid_client_config()
 ```
 
 ## Key helpers
@@ -60,6 +70,15 @@ pytest tests/unit/testing/unit -q
 
 ## See Also
 - [integration](../integration/README.md) – end-to-end helpers.
+
+## Dependencies
+
+Unit tests depend on `pytest` for execution. Install all development
+dependencies with:
+
+```bash
+poetry install --with dev
+```
 
 ## Status
 

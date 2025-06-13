@@ -15,6 +15,8 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Quickstart](#quickstart)
 - [Installation](#installation)
 - [Key Features](#key-features)
+- [Key Components](#key-components)
+- [Architecture](#architecture)
 - [Usage](#usage)
   - [Basic Configuration](#basic-configuration)
   - [Authentication Strategies](#authentication-strategies)
@@ -26,6 +28,7 @@ _Flexible, extensible configuration and authentication for Python API clients._
 - [Testing and Coverage](#testing-and-coverage)
 - [CI/CD](#cicd)
 - [Further Documentation](#further-documentation)
+- [See Also](#see-also)
 - [Navigation](#navigation)
 - [License](#license)
 
@@ -100,6 +103,30 @@ poetry add apiconfig
 - **Type Safety**: Strong type hints and type-checked public API.
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
 - **High Test Coverage**: Around 94% coverage with unit and integration tests.
+
+## Key Components
+
+| Alias | Description |
+| ----- | ----------- |
+| `JsonObject` | Dictionary representing a JSON object |
+| `HeadersType` | Mapping of HTTP header names to values |
+| `QueryParamType` | Mapping for URL query parameters |
+| `DataType` | HTTP request body data |
+| `ResponseBodyType` | API response body |
+
+## Architecture
+
+```mermaid
+graph TD
+    types["apiconfig.types"]
+    auth["apiconfig.auth"]
+    config["apiconfig.config"]
+    utils["apiconfig.utils"]
+
+    auth --> types
+    config --> types
+    utils --> types
+```
 
 ---
 
@@ -306,6 +333,8 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 ## See Also
 
 - [Internal Documentation Guide](docs/internal_documentation_guide.md)
+- [apiconfig.auth](apiconfig/auth/README.md) – authentication strategies using these types
+- [apiconfig.utils](apiconfig/utils/README.md) – utilities built on the shared aliases
 
 ---
 

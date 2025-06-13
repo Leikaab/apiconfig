@@ -1,5 +1,13 @@
 # apiconfig.auth.token
 
+## Module Description
+
+The token utilities in `apiconfig.auth.token` provide a lightweight framework for handling OAuth2 token refresh logic. They offer simple helpers that exchange refresh tokens for new access tokens and manage related errors.
+
+These utilities exist to keep authentication workflows consistent across projects. By consolidating refresh operations, other modules can focus on their primary functionality while relying on a uniform approach to obtaining updated credentials.
+
+The module integrates closely with the rest of `apiconfig` by using the same HTTP client configuration and pluggable storage pattern found throughout the library. Token data can be persisted through any implementation of the `TokenStorage` interface, ensuring compatibility with the different API clients defined elsewhere in the package.
+
 Helpers for OAuth2 token refresh and storage in **apiconfig**. The module handles refresh logic and exposes a minimal storage interface.
 
 ## Navigation

@@ -4,6 +4,10 @@ Helpers for writing unit tests against **apiconfig**. The package provides
 assertions, factory functions and mock objects so tests remain concise and free
 of external dependencies.
 
+## Module Description
+These helpers isolate unit tests from network calls and other side effects.
+They provide mocks, factories and assertions for validating configuration logic.
+
 ## Navigation
 
 - **Parent:** [../README.md](../README.md)
@@ -63,9 +67,8 @@ flowchart TD
 ## Running tests
 Install dependencies and execute the unit tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/testing/unit -q
+poetry install --with dev
+poetry run pytest tests/unit/testing/unit -q
 ```
 
 ## See Also

@@ -96,7 +96,10 @@ Internal modules:
 - `apiconfig.auth`
 
 ## Status
-Stable – used by API clients and covered by unit tests.
+
+**Stability:** Stable
+**API Version:** 0.3.2
+**Deprecations:** None
 
 ### Maintenance Notes
 - Considered stable with occasional updates for new configuration sources.

@@ -381,6 +381,7 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 - [Internal Documentation Guide](docs/internal_documentation_guide.md)
 - [apiconfig.auth](apiconfig/auth/README.md) – authentication strategies using these types
 - [apiconfig.utils](apiconfig/utils/README.md) – utilities built on the shared aliases
+- [helpers_for_tests](../helpers_for_tests/README.md) – helper clients for tests
 
 ---
 

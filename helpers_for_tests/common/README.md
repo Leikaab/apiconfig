@@ -55,9 +55,8 @@ sequenceDiagram
 
 ## Testing
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/helpers/common -q
+poetry install --with dev
+poetry run pytest tests/unit/helpers/common -q
 ```
 
 ## Dependencies

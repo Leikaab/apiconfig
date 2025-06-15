@@ -109,3 +109,9 @@ None
 ### Future Considerations
 - Provide asynchronous variants of the helpers for `httpx.AsyncClient`.
 - Offer higher-level fixtures for more complex authentication flows.
+
+## See Also
+- [../unit/README.md](../unit/README.md) – unit test helpers for isolated testing
+  of configuration logic.
+- [../../helpers_for_tests/README.md](../../helpers_for_tests/README.md) –
+  example clients used in integration scenarios.

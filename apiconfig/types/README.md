@@ -44,6 +44,28 @@ poetry run pytest tests/unit/types
 - `apiconfig.config` – configuration providers use `ConfigDict` and `ConfigProviderCallable`
 - `apiconfig.utils` – utilities depend on `HeadersType`, `QueryParamType`, and related aliases
 
+### Design
+Type aliases are centralised in `types.py` to keep their definitions consistent across modules. The `HttpMethod` enum lists the standard verbs used by API clients.
+
+## Architecture
+```mermaid
+classDiagram
+    class HttpMethod {
+        +GET
+        +POST
+        +PUT
+        +DELETE
+        +PATCH
+        +HEAD
+        +OPTIONS
+    }
+    HeadersType <|-- HttpMethod
+    JsonObject <|-- HttpMethod
+    ConfigDict <|-- HttpMethod
+```
+
+This diagram shows the HttpMethod enum and how common type aliases reference it.
+
 ## Status
 Stable – used throughout the library for type checking.
 

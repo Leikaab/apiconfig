@@ -60,9 +60,8 @@ flowchart TD
 ## Testing
 Run only the tests related to the mocks package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/testing/unit/mocks -q
+poetry install --with dev
+poetry run pytest tests/unit/testing/unit/mocks -q
 ```
 
 ## Dependencies

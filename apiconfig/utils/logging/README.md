@@ -21,18 +21,6 @@ useful debugging information.
 **Submodules:**
 - [formatters](./formatters/README.md) - Custom log formatters
 
-## Dependencies
-
-### Standard Library
-- `logging` – Python logging framework used by handlers and formatters
-
-### Internal Dependencies
-- `apiconfig.utils.redaction` – redaction helpers for sanitising log output
-
-### Optional Dependencies
-- `pytest` and `pytest_httpserver` – test utilities for running the logging
-  tests
-
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.
@@ -103,6 +91,18 @@ Run the logging-related unit tests using Poetry:
 poetry install --with dev
 poetry run pytest tests/unit/utils/logging -q
 ```
+
+## Dependencies
+
+### Standard Library
+- `logging` – Python logging framework used by handlers and formatters
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – redaction helpers for sanitising log output
+
+### Optional Dependencies
+- `pytest` and `pytest_httpserver` – test utilities for running the logging
+  tests
 
 
 ## Status

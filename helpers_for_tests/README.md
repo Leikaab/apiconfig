@@ -4,6 +4,7 @@
 This directory provides thin example clients used in the test suite. Each package offers minimal wrappers around **apiconfig** to simplify integration scenarios.
 
 ## Navigation
+**Parent Module:** [apiconfig.testing](../apiconfig/testing/README.md)
 - [common](common/README.md) – shared `BaseClient` utilities
 - [fiken](fiken/README.md) – Fiken API helpers
 - [oneflow](oneflow/README.md) – OneFlow API helpers

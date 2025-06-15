@@ -97,3 +97,8 @@ poetry run pytest -q
 
 ### Future Considerations
 - Expand documentation for custom provider integrations.
+
+## See Also
+
+- [helpers_for_tests](../helpers_for_tests/README.md) – example clients used in the test suite
+- [project_plans](../project_plans/README.md) – design documents and task lists for upcoming features

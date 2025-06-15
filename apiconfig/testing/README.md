@@ -82,7 +82,10 @@ assert_request_received(httpserver, path="/ping")
 ### Optional Dependencies
 None
 
-## Running tests
+## Testing
+Use these helpers to validate your API clients with the project's full test suite.
+
+### Running tests
 Install dependencies and run all project tests:
 ```bash
 poetry install --with dev

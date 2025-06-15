@@ -79,3 +79,7 @@ This package uses a mix of Python's standard library and internal modules:
 
 ### Future Considerations
 - Explore pluggable provider registration for custom environments.
+
+## See Also
+- [../manager.py](../manager.py) – `ConfigManager` orchestrates loading from all providers.
+- [../../exceptions/README.md](../../exceptions/README.md) – overview of exception classes used for configuration errors.

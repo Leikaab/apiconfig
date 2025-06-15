@@ -71,9 +71,8 @@ sequenceDiagram
 ## Test instructions
 Install dependencies and run the unit tests for this module:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/auth/strategies -q
+poetry install --with dev
+poetry run pytest tests/unit/auth/strategies -q
 ```
 
 ## Status

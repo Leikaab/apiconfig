@@ -56,11 +56,13 @@ print(config.base_url)
 ```
 
 ## Key classes
-| Class | Description |
-| ----- | ----------- |
-| `ClientConfig` | Stores hostname, API version, headers, timeouts and authentication strategy. |
-| `ConfigManager` | Loads configuration from providers and merges them in order. |
-| `EnvProvider` / `FileProvider` / `MemoryProvider` | Return configuration dictionaries from environment, JSON files or in‑memory data. |
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `ClientConfig` | Stores hostname, API version, headers, timeouts and authentication strategy. | `base_url()`, `merge()` |
+| `ConfigManager` | Loads configuration from providers and merges them in order. | `load_config()` |
+| `EnvProvider` | Reads configuration from environment variables. | `load()` |
+| `FileProvider` | Reads configuration from JSON files. | `load()` |
+| `MemoryProvider` | Supplies in-memory configuration data. | `get_config()` |
 
 ### Design
 The manager and providers follow a simple **Strategy** style. Each provider
@@ -77,6 +79,24 @@ flowchart TB
     end
     M[ConfigManager] --> D[dict]
     D -->|\*args| ClientConfig
+```
+
+## Architecture
+The overall configuration flow is illustrated below:
+
+```mermaid
+flowchart LR
+    subgraph Providers
+        Env[EnvProvider]
+        File[FileProvider]
+        Memory[MemoryProvider]
+    end
+    Env --> Manager
+    File --> Manager
+    Memory --> Manager
+    Manager[ConfigManager] --> Data[config dict]
+    Data -->|**kwargs| Config[ClientConfig]
+    Config --> Client[API Client]
 ```
 
 ## Tests

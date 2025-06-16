@@ -56,14 +56,14 @@ auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth)
 ```
 
-## Key classes
-| Name | Description |
-| ---- | ----------- |
-| `AuthStrategy` | Base class defining `prepare_request_headers`, `prepare_request_params` and optional refresh logic. |
-| `ApiKeyAuth` | Sends an API key either in a header or as a query parameter. |
-| `BasicAuth` | Adds `Authorization: Basic ...` headers with a username and password. |
-| `BearerAuth` | Uses a bearer token and can refresh it when expired. |
-| `CustomAuth` | Allows user provided callbacks for headers, parameters and refresh. |
+## Key Components
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `AuthStrategy` | Base class defining the common authentication interface. | `prepare_request_headers`, `prepare_request_params`, `refresh` |
+| `ApiKeyAuth` | Sends an API key either in a header or as a query parameter. | `prepare_request_headers`, `prepare_request_params` |
+| `BasicAuth` | Adds `Authorization: Basic ...` headers with a username and password. | `prepare_request_headers` |
+| `BearerAuth` | Uses a bearer token and can refresh it when expired. | `prepare_request_headers`, `refresh` |
+| `CustomAuth` | Allows user provided callbacks for headers, parameters and refresh. | `prepare_request_headers`, `prepare_request_params`, `refresh` |
 
 ### Design pattern
 All strategies implement **Strategy** pattern via the `AuthStrategy` interface and can be swapped without affecting client code.
@@ -76,6 +76,24 @@ sequenceDiagram
     Client->>Strategy: prepare_request_headers()
     Strategy-->>Client: headers
     Client->>Server: HTTP request with headers
+```
+
+## Architecture
+
+### Class Hierarchy
+```mermaid
+classDiagram
+    AuthStrategy <|-- BasicAuth
+    AuthStrategy <|-- BearerAuth
+    AuthStrategy <|-- ApiKeyAuth
+    AuthStrategy <|-- CustomAuth
+```
+
+### Authentication Flow
+```mermaid
+flowchart TD
+    A[Client Request] --> B[AuthStrategy.prepare_request_headers]
+    B --> C[Send HTTP Request]
 ```
 
 ## Dependencies

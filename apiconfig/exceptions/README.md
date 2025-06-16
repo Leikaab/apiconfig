@@ -54,39 +54,39 @@ print(type(err))  # <class 'apiconfig.exceptions.http.ApiClientNotFoundError'>
 ```
 
 ## Key classes
-| Class | Description |
-| ----- | ----------- |
-| `APIConfigError` | Base class for all apiconfig errors. |
-| `AuthenticationError` | Base for authentication failures and token refresh issues. |
-| `ConfigurationError` | Base for configuration loading errors. |
-| `HTTPUtilsError` | Base for errors raised by HTTP helpers. |
-| `ApiClientError` | Base for HTTP API client errors with request/response context. |
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `APIConfigError` | Base class for all apiconfig errors. | – |
+| `AuthenticationError` | Base for authentication failures and token refresh issues. | `__init__`, `__str__` |
+| `ConfigurationError` | Base for configuration loading errors. | – |
+| `HTTPUtilsError` | Base for errors raised by HTTP helpers. | – |
+| `ApiClientError` | Base for HTTP API client errors with request/response context. | `__init__`, `__str__` |
 
-### Design
+## Architecture
 The exceptions follow a simple inheritance tree allowing you to catch broad
 categories or specific errors as needed.
 
 ```mermaid
-graph TD
-    APIConfigError --> AuthenticationError
-    APIConfigError --> ConfigurationError
-    APIConfigError --> HTTPUtilsError
-    AuthenticationError --> InvalidCredentialsError
-    AuthenticationError --> ExpiredTokenError
-    AuthenticationError --> MissingCredentialsError
-    AuthenticationError --> TokenRefreshError
-    TokenRefreshError --> TokenRefreshJsonError
-    TokenRefreshError --> TokenRefreshTimeoutError
-    TokenRefreshError --> TokenRefreshNetworkError
-    HTTPUtilsError --> ApiClientError
-    ApiClientError --> ApiClientBadRequestError
-    ApiClientError --> ApiClientUnauthorizedError
-    ApiClientError --> ApiClientForbiddenError
-    ApiClientError --> ApiClientNotFoundError
-    ApiClientError --> ApiClientConflictError
-    ApiClientError --> ApiClientUnprocessableEntityError
-    ApiClientError --> ApiClientRateLimitError
-    ApiClientError --> ApiClientInternalServerError
+classDiagram
+    APIConfigError <|-- AuthenticationError
+    APIConfigError <|-- ConfigurationError
+    APIConfigError <|-- HTTPUtilsError
+    AuthenticationError <|-- InvalidCredentialsError
+    AuthenticationError <|-- ExpiredTokenError
+    AuthenticationError <|-- MissingCredentialsError
+    AuthenticationError <|-- TokenRefreshError
+    TokenRefreshError <|-- TokenRefreshJsonError
+    TokenRefreshError <|-- TokenRefreshTimeoutError
+    TokenRefreshError <|-- TokenRefreshNetworkError
+    HTTPUtilsError <|-- ApiClientError
+    ApiClientError <|-- ApiClientBadRequestError
+    ApiClientError <|-- ApiClientUnauthorizedError
+    ApiClientError <|-- ApiClientForbiddenError
+    ApiClientError <|-- ApiClientNotFoundError
+    ApiClientError <|-- ApiClientConflictError
+    ApiClientError <|-- ApiClientUnprocessableEntityError
+    ApiClientError <|-- ApiClientRateLimitError
+    ApiClientError <|-- ApiClientInternalServerError
 ```
 
 ## Testing

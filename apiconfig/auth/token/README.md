@@ -46,17 +46,26 @@ storage.store_token("default", new_tokens)
 
 ## Key Classes and Functions
 
-| Name | Description |
-| ---- | ----------- |
-| `TokenStorage` | Abstract base class defining `store_token`, `retrieve_token` and `delete_token`. |
-| `InMemoryTokenStorage` | Simple implementation storing tokens in an internal dictionary, useful for testing. |
-| `refresh_oauth2_token` | Performs the token refresh operation, handling timeout, HTTP errors, JSON decoding and retry logic. |
+| Name | Description | Key Methods |
+| ---- | ----------- | ----------- |
+| `TokenStorage` | Abstract base class defining how tokens are saved and retrieved. | `store_token`, `retrieve_token`, `delete_token` |
+| `InMemoryTokenStorage` | Simple implementation storing tokens in an internal dictionary, useful for testing. | `store_token`, `retrieve_token`, `delete_token` |
+| `refresh_oauth2_token` | Performs the token refresh operation, handling timeout, HTTP errors, JSON decoding and retry logic. | n/a |
 
 ### Design Pattern
 
 `TokenStorage` follows the **Strategy** pattern so different storage mechanisms can be used interchangeably.
 
-## Sequence Diagram
+## Architecture
+
+### Class Hierarchy
+
+```
+TokenStorage
+└── InMemoryTokenStorage
+```
+
+### Sequence Diagram
 
 ```mermaid
 sequenceDiagram

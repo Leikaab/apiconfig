@@ -11,29 +11,40 @@ _Flexible, extensible configuration and authentication for Python API clients._
 
 ## Table of Contents
 
-- [Project Overview](#project-overview)
-- [Quickstart](#quickstart)
-- [Installation](#installation)
-- [Key Features](#key-features)
-- [Key Components](#key-components)
-- [Architecture](#architecture)
-- [Usage](#usage)
+- [Module Description](#module-description)
+- [Navigation](#navigation)
+- [Contents](#contents)
+- [Usage Examples](#usage-examples)
+  - [Quickstart](#quickstart)
+  - [Installation](#installation)
   - [Basic Configuration](#basic-configuration)
   - [Authentication Strategies](#authentication-strategies)
   - [Using Configuration Providers](#using-configuration-providers)
   - [Merging Configurations](#merging-configurations)
-- [Practical Example: Real API Client Setup](#practical-example-real-api-client-setup)
-- [Logging](#logging)
-- [Error Handling](#error-handling)
-- [Testing and Coverage](#testing-and-coverage)
-- [Running tests](#running-tests)
-- [CI/CD](#cicd)
+  - [Practical Example: Real API Client Setup](#practical-example-real-api-client-setup)
+  - [Logging](#logging)
+  - [Error Handling](#error-handling)
+- [Key Components](#key-components)
+- [Architecture](#architecture)
+- [Testing](#testing)
+- [Dependencies](#dependencies)
+- [Status](#status)
 - [Further Documentation](#further-documentation)
 - [See Also](#see-also)
-- [Navigation](#navigation)
 - [License](#license)
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://leikaab.github.io/apiconfig/)
+
+## Module Description
+
+**apiconfig** is a standalone Python library for managing API client configuration and authentication. It provides a robust, extensible foundation for building API clients, handling configuration (base URLs, timeouts, retries, headers) and supporting multiple authentication strategies (API key, Basic, Bearer, custom).
+
+apiconfig is designed for:
+- Developers building reusable, testable API clients.
+- Projects needing flexible configuration sources (env, file, memory).
+- Secure, pluggable authentication for HTTP APIs.
+
+---
 
 ## Navigation
 
@@ -45,18 +56,20 @@ _Flexible, extensible configuration and authentication for Python API clients._
 
 ---
 
-## Project Overview
+## Contents
 
-**apiconfig** is a standalone Python library for managing API client configuration and authentication. It provides a robust, extensible foundation for building API clients, handling configuration (base URLs, timeouts, retries, headers) and supporting multiple authentication strategies (API key, Basic, Bearer, custom).
+```
+apiconfig/
+├── auth/          # Authentication strategies (basic, bearer, API key, custom)
+├── config/        # API client configuration and providers
+├── exceptions/    # Structured exception hierarchy
+├── testing/       # Test utilities and helpers
+├── utils/         # Logging, redaction, and utilities
+└── types.py       # Shared type definitions
+```
 
-apiconfig is designed for:
-- Developers building reusable, testable API clients.
-- Projects needing flexible configuration sources (env, file, memory).
-- Secure, pluggable authentication for HTTP APIs.
-
----
-
-## Quickstart
+## Usage Examples
+### Quickstart
 
 ```bash
 pip install apiconfig
@@ -78,7 +91,7 @@ print(config.base_url)  # https://api.example.com/v1
 
 ---
 
-## Installation
+### Installation
 
 Install from PyPI:
 
@@ -94,7 +107,7 @@ poetry add apiconfig
 
 ---
 
-## Key Features
+### Key Features
 
 - **Unified API Client Configuration**: Manage base URLs, versions, headers, timeouts, retries, and more with a single, validated config object.
 - **Authentication Strategies**: Built-in support for API Key, Basic, Bearer, and custom authentication via the Strategy Pattern.
@@ -105,52 +118,6 @@ poetry add apiconfig
 - **Logging Integration**: Standard logging hooks for debugging and auditability.
 - **High Test Coverage**: Around 94% coverage with unit and integration tests.
 
-## Key Components
-
-| Alias | Description |
-| ----- | ----------- |
-| `JsonObject` | Dictionary representing a JSON object |
-| `HeadersType` | Mapping of HTTP header names to values |
-| `QueryParamType` | Mapping for URL query parameters |
-| `DataType` | HTTP request body data |
-| `ResponseBodyType` | API response body |
-
-## Architecture
-
-```mermaid
-graph TD
-    types["apiconfig.types"]
-    auth["apiconfig.auth"]
-    config["apiconfig.config"]
-    utils["apiconfig.utils"]
-
-    auth --> types
-    config --> types
-    utils --> types
-```
-
----
-
-## Dependencies
-
-### External
-
-- [pytest](https://docs.pytest.org/) – test runner
-- [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) – HTTP server for integration tests
-
-### Internal
-
-- Modules like `apiconfig.config`, `apiconfig.auth`, and `apiconfig.utils`
-
-### Optional
-
-- [coverage.py](https://coverage.readthedocs.io/) for measuring test coverage
-- [Pyright](https://github.com/microsoft/pyright) for optional static type checking
-
-### Optional Dependencies
-None
-
-## Usage
 
 ### Basic Configuration
 
@@ -245,7 +212,7 @@ merged = base.merge(override)
 
 ---
 
-## Practical Example: Real API Client Setup
+### Practical Example: Real API Client Setup
 
 Below is a real-world example based on the integration tests. This pattern demonstrates how to use apiconfig to load configuration and secrets from environment variables, set up authentication, and make a request with an HTTP client (e.g., httpx):
 
@@ -286,7 +253,7 @@ This approach can be adapted for any API and authentication method supported by 
 
 ---
 
-## Logging
+### Logging
 
 apiconfig uses standard Python logging. To enable debug output:
 
@@ -299,7 +266,7 @@ logging.getLogger("apiconfig").setLevel(logging.INFO)
 
 ---
 
-## Error Handling
+### Error Handling
 
 All errors are structured and documented. Common exceptions include:
 - `APIConfigError`
@@ -311,7 +278,49 @@ All errors are structured and documented. Common exceptions include:
 
 ---
 
-## Testing and Coverage
+## Key Components
+
+| Alias | Description |
+| ----- | ----------- |
+| `JsonObject` | Dictionary representing a JSON object |
+| `HeadersType` | Mapping of HTTP header names to values |
+| `QueryParamType` | Mapping for URL query parameters |
+| `DataType` | HTTP request body data |
+| `ResponseBodyType` | API response body |
+
+## Architecture
+
+### Class Hierarchy
+```mermaid
+classDiagram
+    ClientConfig --> AuthStrategy : uses
+    ConfigManager --> ClientConfig : manages
+    AuthStrategy <|-- ApiKeyAuth
+    AuthStrategy <|-- BasicAuth
+    AuthStrategy <|-- BearerAuth
+```
+
+### Authentication Flow
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AuthStrategy
+    participant HTTPClient
+
+    Client->>AuthStrategy: prepare_request_headers()
+    AuthStrategy-->>Client: headers
+    Client->>HTTPClient: request with headers
+
+    alt token expired
+        HTTPClient-->>Client: 401
+        Client->>AuthStrategy: refresh()
+        AuthStrategy-->>Client: new token
+        Client->>HTTPClient: retry request
+    end
+```
+
+## Testing
+### Testing and Coverage
 
 apiconfig is fully tested with `pytest` and `coverage.py`. To run tests and check coverage:
 
@@ -341,7 +350,7 @@ Tests rely only on `pytest` and the `apiconfig` package; no external services ar
 
 ---
 
-## Running tests
+### Running tests
 
 Use `pytest` to execute the full test suite:
 
@@ -367,6 +376,47 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 
 ---
 
+## Dependencies
+
+### External
+
+- [pytest](https://docs.pytest.org/) – test runner
+- [pytest_httpserver](https://github.com/pytest-dev/pytest-httpserver) – HTTP server for integration tests
+
+### Internal
+
+- Modules like `apiconfig.config`, `apiconfig.auth`, and `apiconfig.utils`
+
+### Optional
+
+- [coverage.py](https://coverage.readthedocs.io/) for measuring test coverage
+- [Pyright](https://github.com/microsoft/pyright) for optional static type checking
+### Optional Dependencies
+None
+
+Install development dependencies with:
+
+```bash
+poetry install --with dev
+```
+
+## Status
+
+**Stability:** Stable - the project is actively used in production environments.
+**API Version:** Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at version 0.x.
+**Deprecations:** None
+
+### Maintenance Notes
+
+The library is currently **stable** and actively maintained. Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
+
+### Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
+
+### Future Considerations
+
+Planned improvements include enhanced documentation, additional auth strategies, expanded test coverage, and formatter enhancements for more consistent styling.
 ## Further Documentation
 
 - [Documentation (latest)](https://leikaab.github.io/apiconfig/)
@@ -388,32 +438,3 @@ Continuous integration and deployment are managed with GitHub Actions. All pushe
 ## License
 
 LGPL-3.0-or-later. See [LICENSE](LICENSE) for details.
-
-## Dependencies
-
-Install development dependencies with:
-
-```bash
-poetry install --with dev
-```
-
-### Optional Dependencies
-None
-
-## Status
-
-**Stability:** Stable - the project is actively used in production environments.
-**API Version:** Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) starting at version 0.x.
-**Deprecations:** None
-
-### Maintenance Notes
-
-The library is currently **stable** and actively maintained. Issues and pull requests are triaged on a best-effort basis. Minor feature requests and fixes are welcome.
-
-### Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes.
-
-### Future Considerations
-
-Planned improvements include enhanced documentation, additional auth strategies, expanded test coverage, and formatter enhancements for more consistent styling.

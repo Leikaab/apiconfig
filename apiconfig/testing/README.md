@@ -55,20 +55,18 @@ from apiconfig.testing.integration import assert_request_received
 assert_request_received(httpserver, path="/ping")
 ```
 
-## Key modules
-| Module | Purpose |
-| ------ | ------- |
-| `unit` | Mocks and assertions for fast unit tests. |
-| `integration` | Spin up mock HTTP servers and provide fixtures for real‑world flows. |
-| `auth_verification` | Advanced helpers for verifying auth behaviour in tests. |
+## Key Components
+| Module | Purpose | Key Methods |
+| ------ | ------- | ----------- |
+| `unit` | Mocks and assertions for fast unit tests. | `create_valid_client_config`, `assert_client_config_valid` |
+| `integration` | Spin up mock HTTP servers and provide fixtures for real‑world flows. | `configure_mock_response`, `make_request_with_config` |
+| `auth_verification` | Advanced helpers for verifying auth behaviour in tests. | `AuthHeaderVerification.verify_basic_auth_header` |
 
-### Diagram
+## Architecture
 ```mermaid
     flowchart TD
-        subgraph Testing
-            U[unit] -- mocks --> T[tests]
-            I[integration] -- fixtures --> T
-        end
+        U["unit helpers"] --> UT["unit test suite"]
+        I["integration helpers"] --> IT["integration test suite"]
 ```
 
 ## Dependencies

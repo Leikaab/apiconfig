@@ -47,13 +47,13 @@ custom_auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth_header)
 ```
 
-## Key classes
-| Class | Description |
-| ------ | ----------- |
-| `ApiKeyAuth` | Sends an API key in a header or as a query parameter. |
-| `BasicAuth` | Adds an `Authorization: Basic` header using a username and password. |
-| `BearerAuth` | Uses a bearer token and can refresh it when `expires_at` is set and a refresh function is available. |
-| `CustomAuth` | Allows custom callbacks for headers, parameters and refresh logic. |
+## Key Components
+| Class | Description | Key Methods |
+| ------ | ----------- | ----------- |
+| `ApiKeyAuth` | Sends an API key in a header or as a query parameter. | `prepare_request_headers()`, `prepare_request_params()` |
+| `BasicAuth` | Adds an `Authorization: Basic` header using a username and password. | `prepare_request_headers()`, `prepare_request_params()` |
+| `BearerAuth` | Uses a bearer token and can refresh it when `expires_at` is set and a refresh function is available. | `is_expired()`, `refresh()`, `prepare_request_headers()` |
+| `CustomAuth` | Allows custom callbacks for headers, parameters and refresh logic. | `prepare_request_headers()`, `prepare_request_params()`, `refresh()` |
 
 ### Design pattern
 The strategies implement the **Strategy pattern**: each one conforms to `AuthStrategy` so they can be swapped without changing client code.
@@ -66,6 +66,36 @@ sequenceDiagram
     Client->>Strategy: prepare_request_headers()
     Strategy-->>Client: headers
     Client->>Server: HTTP request with auth headers
+```
+
+## Architecture
+
+### Class Hierarchy
+```mermaid
+classDiagram
+    AuthStrategy <|-- ApiKeyAuth
+    AuthStrategy <|-- BasicAuth
+    AuthStrategy <|-- BearerAuth
+    AuthStrategy <|-- CustomAuth
+```
+
+### Token Refresh Flow
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Strategy as AuthStrategy
+    participant Server
+
+    Client->>Strategy: prepare_request_headers()
+    Strategy-->>Client: headers
+    Client->>Server: HTTP request
+
+    alt Token expired
+        Server-->>Client: 401 Unauthorized
+        Client->>Strategy: refresh()
+        Strategy-->>Client: new token
+        Client->>Server: retry request
+    end
 ```
 
 ## Test instructions

@@ -24,6 +24,20 @@ method: HttpMethod = HttpMethod.GET
 payload: JsonObject = {"ping": "pong"}
 ```
 
+## Key Components
+| Name | Description | Key Methods |
+| ---- | ----------- | ----------- |
+| `JsonObject` | Dictionary representing a JSON object | - |
+| `HeadersType` | Mapping of HTTP header names to values | - |
+| `QueryParamType` | Mapping for URL query parameters | - |
+| `HttpMethod` | Enum listing standard HTTP methods | - |
+| `HttpRequestProtocol` | Protocol representing an HTTP request | `method`, `url`, `headers` |
+| `HttpResponseProtocol` | Protocol representing an HTTP response | `status_code`, `headers`, `text` |
+| `ConfigDict` | Dictionary of configuration values | - |
+| `ConfigProviderCallable` | Callable returning a `ConfigDict` | - |
+| `TokenRefreshResult` | Result data from token refresh | - |
+| `HttpRequestCallable` | Callable used for HTTP requests | - |
+
 ## Testing
 
 Run the unit tests covering these type definitions:
@@ -47,24 +61,6 @@ poetry run pytest tests/unit/types
 ### Design
 Type aliases are centralised in `types.py` to keep their definitions consistent across modules. The `HttpMethod` enum lists the standard verbs used by API clients.
 
-## Architecture
-```mermaid
-classDiagram
-    class HttpMethod {
-        +GET
-        +POST
-        +PUT
-        +DELETE
-        +PATCH
-        +HEAD
-        +OPTIONS
-    }
-    HeadersType <|-- HttpMethod
-    JsonObject <|-- HttpMethod
-    ConfigDict <|-- HttpMethod
-```
-
-This diagram shows the HttpMethod enum and how common type aliases reference it.
 
 ## Status
 Stable – used throughout the library for type checking.
@@ -84,6 +80,25 @@ release cycle.
 
 ### Future Considerations
 - Additional generic types may be introduced as new modules appear.
+
+## Architecture
+```mermaid
+classDiagram
+    class HttpMethod {
+        +GET
+        +POST
+        +PUT
+        +DELETE
+        +PATCH
+        +HEAD
+        +OPTIONS
+    }
+    HeadersType <|-- HttpMethod
+    JsonObject <|-- HttpMethod
+    ConfigDict <|-- HttpMethod
+```
+
+This diagram shows the HttpMethod enum and how common type aliases reference it.
 
 ## See Also
 - [`apiconfig.auth`](../auth) – authentication strategies and token handling

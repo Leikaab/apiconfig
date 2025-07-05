@@ -1,6 +1,6 @@
 """Test integration with existing apiconfig components."""
 
-import logging
+import logging as logging_mod
 from io import StringIO
 from typing import Any, Dict
 from unittest.mock import Mock
@@ -71,10 +71,10 @@ class TestExistingComponentIntegration:
         """Test integration with logging system."""
         # Capture log output
         log_capture = StringIO()
-        handler = logging.StreamHandler(log_capture)
-        logger = logging.getLogger("apiconfig")
+        handler = logging_mod.StreamHandler(log_capture)
+        logger = logging_mod.getLogger("apiconfig")
         logger.addHandler(handler)
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging_mod.INFO)
 
         try:
             mock_http = Mock()

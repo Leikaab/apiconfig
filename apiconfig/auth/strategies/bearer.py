@@ -1,6 +1,6 @@
 """Implements Bearer Token authentication strategy."""
 
-import logging
+import logging as logging_mod
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 
@@ -12,7 +12,7 @@ from apiconfig.types import (
     TokenRefreshResult,
 )
 
-log = logging.getLogger(__name__)
+log = logging_mod.getLogger(__name__)
 
 
 class BearerAuth(AuthStrategy):

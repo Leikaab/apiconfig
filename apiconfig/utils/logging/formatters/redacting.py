@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-import logging
+import logging as logging_mod
 import re
 from typing import Any, Literal, Mapping, Optional, Set, Tuple
 
@@ -24,7 +24,7 @@ from apiconfig.utils.redaction.headers import (
 from .detailed import DetailedFormatter
 
 
-class RedactingFormatter(logging.Formatter):
+class RedactingFormatter(logging_mod.Formatter):
     """Automatically redact sensitive information from log messages and HTTP headers.
 
     Guarantees
@@ -113,7 +113,7 @@ class RedactingFormatter(logging.Formatter):
         self._redact_body = redact_body
         self._redact_headers_func = redact_headers
 
-    def format(self, record: logging.LogRecord) -> str:
+    def format(self, record: logging_mod.LogRecord) -> str:
         """Format the specified record as text, redacting sensitive data.
 
         Args
@@ -130,7 +130,7 @@ class RedactingFormatter(logging.Formatter):
         self._redact_message(record)
         return super().format(record)
 
-    def _redact_headers(self, record: logging.LogRecord) -> None:
+    def _redact_headers(self, record: logging_mod.LogRecord) -> None:
         headers: Mapping[str, str] | None = getattr(record, "headers", None)
         if headers is not None:
             try:
@@ -145,7 +145,7 @@ class RedactingFormatter(logging.Formatter):
             except Exception:
                 pass
 
-    def _redact_message(self, record: logging.LogRecord) -> None:
+    def _redact_message(self, record: logging_mod.LogRecord) -> None:
         """Redact the log message in-place on the record.
 
         Handles all input types robustly:
@@ -279,7 +279,7 @@ def redact_structured_helper(formatter: RedactingFormatter, msg: Any, content_ty
     return formatter._redact_structured(msg, content_type)  # pyright: ignore[reportPrivateUsage]
 
 
-def redact_message_helper(formatter: RedactingFormatter, record: logging.LogRecord) -> None:
+def redact_message_helper(formatter: RedactingFormatter, record: logging_mod.LogRecord) -> None:
     """Public helper to call ``RedactingFormatter._redact_message`` for tests."""
     formatter._redact_message(record)  # pyright: ignore[reportPrivateUsage]
 
@@ -287,7 +287,7 @@ def redact_message_helper(formatter: RedactingFormatter, record: logging.LogReco
 def format_exception_text_helper(
     formatter: DetailedFormatter,
     formatted: str,
-    record: logging.LogRecord,
+    record: logging_mod.LogRecord,
 ) -> str:
     """Public helper to call ``DetailedFormatter._format_exception_text`` for tests."""
     return formatter._format_exception_text(formatted, record)  # pyright: ignore[reportPrivateUsage]
@@ -296,7 +296,7 @@ def format_exception_text_helper(
 def format_stack_info_helper(
     formatter: DetailedFormatter,
     formatted: str,
-    record: logging.LogRecord,
+    record: logging_mod.LogRecord,
 ) -> str:
     """Public helper to call ``DetailedFormatter._format_stack_info`` for tests."""
     return formatter._format_stack_info(formatted, record)  # pyright: ignore[reportPrivateUsage]

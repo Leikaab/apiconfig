@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 """Logging setup utilities for the apiconfig library."""
 
-import logging
+import logging as logging_mod
 import sys
 from typing import List, Optional, Union
 
 from .formatters import RedactingFormatter
 from .handlers import RedactingStreamHandler
 
-_logger: logging.Logger = logging.getLogger("apiconfig")
+_logger: logging_mod.Logger = logging_mod.getLogger("apiconfig")
 
 
 def setup_logging(
-    level: Union[int, str] = logging.WARNING,
-    handlers: Optional[List[logging.Handler]] = None,
-    formatter: Optional[logging.Formatter] = None,
+    level: Union[int, str] = logging_mod.WARNING,
+    handlers: Optional[List[logging_mod.Handler]] = None,
+    formatter: Optional[logging_mod.Formatter] = None,
 ) -> None:
     """Configure logging for the apiconfig library.
 

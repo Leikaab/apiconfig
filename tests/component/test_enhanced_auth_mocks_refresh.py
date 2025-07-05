@@ -1,7 +1,7 @@
 """Component tests for enhanced auth mocks refresh scenarios."""
 
 import threading
-import time
+import time as time_mod
 from typing import Dict
 
 import pytest
@@ -186,7 +186,7 @@ class TestEnhancedAuthMocksRefresh:
         assert not strategy.is_expired()
 
         # Wait for expiry
-        time.sleep(0.2)
+        time_mod.sleep(0.2)
 
         # Should now be expired
         assert strategy.is_expired()
@@ -283,9 +283,9 @@ class TestEnhancedAuthMocksRefresh:
         """Test MockHttpRequestCallable with delay."""
         mock_http = MockHttpRequestCallable(delay=0.1)
 
-        start_time = time.time()
+        start_time = time_mod.time()
         response = mock_http("GET", "/test")
-        end_time = time.time()
+        end_time = time_mod.time()
 
         # Should have taken at least 0.1 seconds
         assert end_time - start_time >= 0.1

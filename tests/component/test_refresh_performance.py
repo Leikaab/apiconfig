@@ -1,6 +1,6 @@
 """Test performance characteristics of refresh operations."""
 
-import time
+import time as time_mod
 from typing import Any, Dict
 from unittest.mock import Mock
 
@@ -27,9 +27,9 @@ class TestRefreshPerformance:
         auth = TestBearerAuth(access_token="token", http_request_callable=mock_http)
 
         # Measure refresh time
-        start_time = time.time()
+        start_time = time_mod.time()
         auth.refresh()
-        refresh_time = time.time() - start_time
+        refresh_time = time_mod.time() - start_time
 
         # Should complete quickly (< 100ms excluding network)
         assert refresh_time < 0.1
@@ -39,9 +39,9 @@ class TestRefreshPerformance:
         auth = BearerAuth(access_token="token")
 
         # Measure callback creation time
-        start_time = time.time()
+        start_time = time_mod.time()
         auth.get_refresh_callback()  # Test callback creation overhead
-        callback_time = time.time() - start_time
+        callback_time = time_mod.time() - start_time
 
         # Should be negligible overhead
         assert callback_time < 0.01
@@ -61,18 +61,18 @@ class TestRefreshPerformance:
         auth = CustomAuth(header_callback=header_callback, refresh_func=refresh_func, can_refresh_func=lambda: True)
 
         # Measure header preparation time
-        start_time = time.time()
+        start_time = time_mod.time()
         headers = auth.prepare_request_headers()
-        header_time = time.time() - start_time
+        header_time = time_mod.time() - start_time
 
         # Should be very fast
         assert header_time < 0.01
         assert headers["Authorization"] == "Bearer token_1"
 
         # Measure refresh time
-        start_time = time.time()
+        start_time = time_mod.time()
         result = auth.refresh()
-        refresh_time = time.time() - start_time
+        refresh_time = time_mod.time() - start_time
 
         # Should be fast
         assert refresh_time < 0.01
@@ -98,10 +98,10 @@ class TestRefreshPerformance:
         auth = TestBearerAuth(access_token="initial_token", http_request_callable=Mock())
 
         # Measure time for multiple refreshes
-        start_time = time.time()
+        start_time = time_mod.time()
         for _ in range(10):
             auth.refresh()
-        total_time = time.time() - start_time
+        total_time = time_mod.time() - start_time
 
         # Should complete all refreshes quickly
         assert total_time < 0.1
@@ -123,9 +123,9 @@ class TestRefreshPerformance:
         assert callback is not None
 
         # Measure callback invocation time
-        start_time = time.time()
+        start_time = time_mod.time()
         callback()
-        callback_time = time.time() - start_time
+        callback_time = time_mod.time() - start_time
 
         # Should be very fast
         assert callback_time < 0.01

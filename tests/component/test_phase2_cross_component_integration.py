@@ -1,7 +1,7 @@
 """Component tests for Phase 2 cross-component integration."""
 
 import base64
-import time
+import time as time_mod
 from typing import Dict, List
 
 import pytest
@@ -142,7 +142,7 @@ class TestPhase2CrossComponentIntegration:
         assert AuthHeaderVerification.verify_bearer_auth_header(headers["Authorization"])
 
         # Wait for expiry
-        time.sleep(0.2)
+        time_mod.sleep(0.2)
         assert expiry_strategy.is_expired()
 
         # Headers should still be verifiable (token doesn't change until refresh)
@@ -299,7 +299,7 @@ class TestPhase2CrossComponentIntegration:
             strategies.append(strategy)
 
         # Measure time for auth application and verification
-        start_time = time.time()
+        start_time = time_mod.time()
 
         for strategy in strategies:
             headers: Dict[str, str] = {}
@@ -314,7 +314,7 @@ class TestPhase2CrossComponentIntegration:
                 strategy.apply_auth(new_headers)
                 AuthHeaderVerification.verify_bearer_auth_header(new_headers["Authorization"])
 
-        end_time = time.time()
+        end_time = time_mod.time()
 
         # Should complete quickly (less than 1 second for 10 strategies)
         assert end_time - start_time < 1.0

@@ -3,7 +3,7 @@
 
 import random
 import threading
-import time
+import time as time_mod
 from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 from apiconfig.auth.base import AuthStrategy
@@ -297,7 +297,7 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
             True if credentials are known to be expired, False otherwise.
         """
         # Check timestamp-based expiry first
-        if self._expiry_time is not None and time.time() >= self._expiry_time:
+        if self._expiry_time is not None and time_mod.time() >= self._expiry_time:
             return True
         return self._is_expired
 
@@ -326,7 +326,7 @@ class MockRefreshableAuthStrategy(MockAuthStrategy):
             If refresh fails due to configuration or attempt limits.
         """
         if self._refresh_delay > 0:
-            time.sleep(self._refresh_delay)
+            time_mod.sleep(self._refresh_delay)
 
         # Check if refresh is available before incrementing attempts
         if not self.can_refresh():
@@ -567,7 +567,7 @@ class AuthTestScenarioBuilder:
 
         # Set expiry time based on current time + expiry duration
         # This avoids race conditions with background threads
-        strategy._expiry_time = time.time() + expires_after_seconds  # pyright: ignore[reportPrivateUsage]
+        strategy._expiry_time = time_mod.time() + expires_after_seconds  # pyright: ignore[reportPrivateUsage]
         return strategy
 
     @staticmethod
@@ -697,7 +697,7 @@ class MockHttpRequestCallable:
         self.call_history.append({"method": method, "url": url, "kwargs": kwargs})
 
         if self.delay > 0:
-            time.sleep(self.delay)
+            time_mod.sleep(self.delay)
 
         if random.random() < self.failure_rate:
             raise ConnectionError("Mock HTTP failure")

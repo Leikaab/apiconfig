@@ -2,7 +2,7 @@
 """Test to ensure token expiry mechanism is reliable under high load conditions."""
 
 import threading
-import time
+import time as time_mod
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 
 import pytest
@@ -42,7 +42,7 @@ class TestTokenExpiryReliability:
 
         try:
             # Wait for expiry time plus a small buffer
-            time.sleep(0.08)  # 0.05s expiry + 0.03s buffer
+            time_mod.sleep(0.08)  # 0.05s expiry + 0.03s buffer
 
             # Check if token is expired - this should ALWAYS be True
             # With the old thread-based implementation, this could fail
@@ -57,7 +57,7 @@ class TestTokenExpiryReliability:
     def test_concurrent_expiry_checks(self) -> None:
         """Test multiple threads checking expiry status concurrently."""
         # Record the creation time before creating the strategy
-        creation_time = time.time()
+        creation_time = time_mod.time()
 
         # Create a token that expires in 0.1 seconds
         strategy = AuthTestScenarioBuilder.create_token_expiry_scenario(initial_token="concurrent_test_token", expires_after_seconds=0.1)
@@ -66,7 +66,7 @@ class TestTokenExpiryReliability:
 
         def check_expiry() -> tuple[float, bool]:
             """Check expiry status and return timestamp and result."""
-            timestamp = time.time()
+            timestamp = time_mod.time()
             is_expired = strategy.is_expired()
             return (timestamp, is_expired)
 
@@ -74,12 +74,12 @@ class TestTokenExpiryReliability:
         with ThreadPoolExecutor(max_workers=20) as executor:
             # Submit checks over a time period that spans the expiry
             futures: list[Future[tuple[float, bool]]] = []
-            start_time = time.time()
+            start_time = time_mod.time()
 
             # Submit checks for 0.2 seconds (before and after expiry)
-            while time.time() - start_time < 0.2:
+            while time_mod.time() - start_time < 0.2:
                 futures.append(executor.submit(check_expiry))
-                time.sleep(0.005)  # Small delay between submissions
+                time_mod.sleep(0.005)  # Small delay between submissions
 
             # Collect results
             for future in as_completed(futures):
@@ -111,12 +111,12 @@ class TestTokenExpiryReliability:
             assert not strategy.is_expired()
 
             # Wait exactly the expiry time
-            time.sleep(expiry_seconds)
+            time_mod.sleep(expiry_seconds)
 
             # Should be expired now (or very close to it)
             # We allow one more check in case we're right at the boundary
             is_expired_1 = strategy.is_expired()
-            time.sleep(0.001)  # Tiny additional wait
+            time_mod.sleep(0.001)  # Tiny additional wait
             is_expired_2 = strategy.is_expired()
 
             assert is_expired_1 or is_expired_2, f"Token with {expiry_seconds}s expiry should be expired after waiting"
@@ -138,7 +138,7 @@ class TestTokenExpiryReliability:
         assert not strategy.is_expired()
 
         # Wait past the original expiry time
-        time.sleep(1.1)
+        time_mod.sleep(1.1)
 
         # Should be expired now due to timestamp
         assert strategy.is_expired()
@@ -154,7 +154,7 @@ class TestTokenExpiryReliability:
         assert not strategy.is_expired()
 
         # Wait for expiry
-        time.sleep(delay_seconds * 1.2)  # 20% buffer
+        time_mod.sleep(delay_seconds * 1.2)  # 20% buffer
 
         # Should be expired
         assert strategy.is_expired()
@@ -192,14 +192,14 @@ class TestRaceConditionPrevention:
 
             # Take measurements at specific intervals
             measurements: list[tuple[float, bool]] = []
-            start_time = time.time()
+            start_time = time_mod.time()
 
             # Measure every 10ms for 100ms
             for _ in range(10):
                 is_expired = strategy.is_expired()
-                elapsed = time.time() - start_time
+                elapsed = time_mod.time() - start_time
                 measurements.append((elapsed, is_expired))
-                time.sleep(0.01)
+                time_mod.sleep(0.01)
 
             # Verify the transition happens at the expected time
             for elapsed, is_expired in measurements:

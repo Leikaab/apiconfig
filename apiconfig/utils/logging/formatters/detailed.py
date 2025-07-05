@@ -3,7 +3,7 @@
 
 import logging as logging_mod
 import textwrap
-import types as stdlib_types
+import types as builtin_types
 from typing import Any, Literal, Mapping, Optional
 
 
@@ -82,7 +82,7 @@ class DetailedFormatter(logging_mod.Formatter):
 
     def formatException(
         self,
-        ei: tuple[type[BaseException], BaseException, stdlib_types.TracebackType | None] | tuple[None, None, None],
+        ei: tuple[type[BaseException], BaseException, builtin_types.TracebackType | None] | tuple[None, None, None],
     ) -> str:
         """Format the specified exception information as a string.
 

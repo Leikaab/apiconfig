@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import traceback
 from typing import Any, Callable
@@ -13,6 +14,10 @@ from apiconfig.utils.logging.formatters import (
 
 class TypedLogRecord(logging.LogRecord):
     headers: dict[str, str]
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.headers: dict[str, str] = {}
 
 
 @pytest.fixture
@@ -58,8 +63,6 @@ def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[...
     record = log_record_factory(msg=msg)
     output = fmt.format(record)
     assert expected_in in output
-    import os
-
     assert f"({os.path.basename(__file__)}:42)" in output
 
 

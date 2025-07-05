@@ -121,7 +121,8 @@ class ApiClientError(APIConfigError, HttpContextMixin):
         response : Optional[HttpResponseProtocol]
             HTTP response object
         """
-        super().__init__(message)
+        APIConfigError.__init__(self, message)
+        HttpContextMixin.__init__(self)
         self._init_http_context(request=request, response=response, status_code=status_code)
 
     def __str__(self) -> str:

@@ -199,8 +199,8 @@ def assert_request_received(
                 matching_requests.append(entry)
 
     if count is not None:
-        assert len(matching_requests) == count, (
-            f"Expected {count} request(s) matching criteria for {method} {path}, " f"but found {len(matching_requests)}. Log: {log}"
-        )
+        assert (
+            len(matching_requests) == count
+        ), f"Expected {count} request(s) matching criteria for {method} {path}, but found {len(matching_requests)}. Log: {log}"
     else:
-        assert len(matching_requests) > 0, f"Expected at least one request matching criteria for {method} {path}, " f"but found none. Log: {log}"
+        assert len(matching_requests) > 0, f"Expected at least one request matching criteria for {method} {path}, but found none. Log: {log}"

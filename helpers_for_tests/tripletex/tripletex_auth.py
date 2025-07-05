@@ -140,14 +140,12 @@ class TripletexSessionAuth(AuthStrategy):
                     try:
                         response_data = json.loads(response_body_str)
                     except json.JSONDecodeError as e:
-                        raise AuthStrategyError(
-                            f"Failed to decode JSON response from token endpoint: {e}. " f"Response body: {response_body_str}"
-                        ) from e
+                        raise AuthStrategyError(f"Failed to decode JSON response from token endpoint: {e}. Response body: {response_body_str}") from e
 
                     token_value_data_untyped = response_data.get("value")
                     if not isinstance(token_value_data_untyped, dict):
                         raise AuthStrategyError(
-                            f"Unexpected 'value' format in token response: {token_value_data_untyped}. " f"Full response: {response_data}"
+                            f"Unexpected 'value' format in token response: {token_value_data_untyped}. Full response: {response_data}"
                         )
 
                     if "token" not in token_value_data_untyped:
@@ -157,8 +155,7 @@ class TripletexSessionAuth(AuthStrategy):
                     token_value_raw: object = token_value_data["token"]
                     if not isinstance(token_value_raw, str) or not token_value_raw:
                         raise AuthStrategyError(
-                            "Session token not found, not a string, or empty in Tripletex response. "
-                            f"'value.token' was: {token_value_raw!r}. Full response: {response_data}"
+                            f"Session token not found, not a string, or empty in Tripletex response. 'value.token' was: {token_value_raw!r}. Full response: {response_data}"
                         )
 
                     token_value: str = token_value_raw
@@ -169,17 +166,15 @@ class TripletexSessionAuth(AuthStrategy):
                     return token_value
                 elif response.status in [401, 403]:
                     raise InvalidCredentialsError(
-                        f"Failed to fetch Tripletex session token: {response.status} "
-                        f"{response.reason}. Check consumer/employee tokens. "
-                        f"Response: {response_body_str}"
+                        f"Failed to fetch Tripletex session token: {response.status} {response.reason}. Check consumer/employee tokens. Response: {response_body_str}"
                     )
                 else:
                     raise AuthStrategyError(
-                        f"Failed to fetch Tripletex session token: {response.status} " f"{response.reason}. Response: {response_body_str}"
+                        f"Failed to fetch Tripletex session token: {response.status} {response.reason}. Response: {response_body_str}"
                     )
         except urllib.error.HTTPError as e:  # Should be caught by status check above, but as fallback
             response_body = e.read().decode(errors="ignore") if hasattr(e, "read") else ""
-            raise AuthStrategyError(f"HTTP error fetching Tripletex session token: {e.code} {e.reason}. " f"Response: {response_body}") from e
+            raise AuthStrategyError(f"HTTP error fetching Tripletex session token: {e.code} {e.reason}. Response: {response_body}") from e
         except urllib.error.URLError as e:
             raise AuthStrategyError(f"URL error fetching Tripletex session token: {e.reason}") from e
         except Exception as e:  # Catch any other unexpected errors

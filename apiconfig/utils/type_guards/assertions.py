@@ -1,96 +1,19 @@
 """
-Type guard utilities for runtime validation.
+Assertion utilities for type validation.
 
-This module contains TypeGuard functions that help static type checkers understand
-the intent of isinstance checks, making them explicit runtime validation rather
-than redundant type checking.
+This module contains the generic assert_type function and convenience assertion
+functions that combine type checking with error raising for ergonomic parameter validation.
 """
 
 import inspect
-from typing import Any, Callable, Dict, Optional, TypeGuard
+from typing import Any, Callable, Optional, TypeGuard
+
+from .basic import is_bool, is_bytes, is_int, is_str
+from .collections import is_dict, is_list, is_tuple
+from .complex import is_dict_or_list, is_tuple_of_two_strings
+from .optional import is_dict_or_none, is_str_or_none
 
 
-def is_str(value: Any) -> TypeGuard[str]:
-    """
-    Runtime type guard to validate string parameters.
-
-    This function tells static type checkers that isinstance checks for strings
-    are intentional runtime validation, not redundant type checking.
-
-    Parameters
-    ----------
-    value : Any
-        The value to check
-
-    Returns
-    -------
-    TypeGuard[str]
-        True if value is a string, False otherwise
-    """
-    return isinstance(value, str)
-
-
-def is_dict_or_none(value: Any) -> TypeGuard[Optional[Dict[str, Any]]]:
-    """
-    Runtime type guard to validate optional dictionary parameters.
-
-    This function tells static type checkers that isinstance checks for
-    optional dictionaries are intentional runtime validation.
-
-    Parameters
-    ----------
-    value : Any
-        The value to check
-
-    Returns
-    -------
-    TypeGuard[Optional[Dict[str, Any]]]
-        True if value is None or a dictionary, False otherwise
-    """
-    return value is None or isinstance(value, dict)
-
-
-def is_bool(value: Any) -> TypeGuard[bool]:
-    """
-    Runtime type guard to validate boolean parameters.
-
-    This function tells static type checkers that isinstance checks for booleans
-    are intentional runtime validation, not redundant type checking.
-
-    Parameters
-    ----------
-    value : Any
-        The value to check
-
-    Returns
-    -------
-    TypeGuard[bool]
-        True if value is a boolean, False otherwise
-    """
-    return isinstance(value, bool)
-
-
-def is_dict(value: Any) -> TypeGuard[Dict[str, Any]]:
-    """
-    Runtime type guard to validate dictionary parameters.
-
-    This function tells static type checkers that isinstance checks for
-    dictionaries are intentional runtime validation.
-
-    Parameters
-    ----------
-    value : Any
-        The value to check
-
-    Returns
-    -------
-    TypeGuard[Dict[str, Any]]
-        True if value is a dictionary, False otherwise
-    """
-    return isinstance(value, dict)
-
-
-# Generic assertion function for ergonomic parameter validation
 def assert_type(value: Any, type_guard: Callable[[Any], TypeGuard[Any]], expected_type_name: str, param_name: Optional[str] = None) -> None:
     """
     Assert that a value passes a type guard, raising TypeError if not.
@@ -148,9 +71,9 @@ def assert_str(value: Any, param_name: Optional[str] = None) -> None:
     assert_type(value, is_str, "a string", param_name)
 
 
-def assert_dict_or_none(value: Any, param_name: Optional[str] = None) -> None:
-    """Assert that a value is a dictionary or None."""
-    assert_type(value, is_dict_or_none, "a dictionary or None", param_name)
+def assert_int(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is an integer."""
+    assert_type(value, is_int, "an integer", param_name)
 
 
 def assert_bool(value: Any, param_name: Optional[str] = None) -> None:
@@ -158,6 +81,41 @@ def assert_bool(value: Any, param_name: Optional[str] = None) -> None:
     assert_type(value, is_bool, "a boolean", param_name)
 
 
+def assert_bytes(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is bytes."""
+    assert_type(value, is_bytes, "bytes", param_name)
+
+
 def assert_dict(value: Any, param_name: Optional[str] = None) -> None:
     """Assert that a value is a dictionary."""
     assert_type(value, is_dict, "a dictionary", param_name)
+
+
+def assert_list(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a list."""
+    assert_type(value, is_list, "a list", param_name)
+
+
+def assert_tuple(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a tuple."""
+    assert_type(value, is_tuple, "a tuple", param_name)
+
+
+def assert_str_or_none(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a string or None."""
+    assert_type(value, is_str_or_none, "a string or None", param_name)
+
+
+def assert_dict_or_none(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a dictionary or None."""
+    assert_type(value, is_dict_or_none, "a dictionary or None", param_name)
+
+
+def assert_dict_or_list(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a dictionary or list."""
+    assert_type(value, is_dict_or_list, "a dictionary or list", param_name)
+
+
+def assert_tuple_of_two_strings(value: Any, param_name: Optional[str] = None) -> None:
+    """Assert that a value is a tuple of two strings."""
+    assert_type(value, is_tuple_of_two_strings, "a tuple of two strings", param_name)

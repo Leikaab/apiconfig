@@ -1,7 +1,8 @@
 """Test complete refresh flows from trigger to completion."""
 
 from typing import Dict, Optional
-from unittest.mock import Mock, patch
+from unittest.mock import Mock as MockClass
+from unittest.mock import patch
 
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
@@ -12,7 +13,7 @@ class TestEndToEndRefresh:
     """Test complete refresh flows from trigger to completion."""
 
     @patch("apiconfig.auth.token.refresh.refresh_oauth2_token")
-    def test_bearer_token_refresh_flow(self, mock_refresh: Mock) -> None:
+    def test_bearer_token_refresh_flow(self, mock_refresh: MockClass) -> None:
         """Test complete Bearer token refresh flow."""
         # Setup mock response
         mock_refresh.return_value = {
@@ -30,7 +31,7 @@ class TestEndToEndRefresh:
                 refresh_token: Optional[str] = None,
                 token_url: Optional[str] = None,
                 client_id: Optional[str] = None,
-                http_request_callable: Optional[Mock] = None,
+                http_request_callable: Optional[MockClass] = None,
             ) -> None:
                 super().__init__(access_token, http_request_callable=http_request_callable)
                 self.refresh_token = refresh_token
@@ -59,7 +60,7 @@ class TestEndToEndRefresh:
             refresh_token="old_refresh",
             token_url="https://example.com/token",
             client_id="test_client",
-            http_request_callable=Mock(),
+            http_request_callable=MockClass(),
         )
 
         # Simulate refresh trigger

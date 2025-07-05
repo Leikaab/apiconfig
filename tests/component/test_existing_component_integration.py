@@ -3,7 +3,7 @@
 import logging as logging_mod
 from io import StringIO
 from typing import Any, Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
@@ -44,8 +44,8 @@ class TestExistingComponentIntegration:
                 return {"token_data": {"access_token": "new_token", "refresh_token": "new_refresh"}, "config_updates": None}
 
         # Test saving back to storage after refresh
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh"})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh"})
 
         auth = TestBearerAuth(access_token="stored_token", http_request_callable=mock_http)
         auth.refresh_token = "stored_refresh"
@@ -77,8 +77,8 @@ class TestExistingComponentIntegration:
         logger.setLevel(logging_mod.INFO)
 
         try:
-            mock_http = Mock()
-            mock_http.return_value = Mock(json=lambda: {"access_token": "new_token"})
+            mock_http = MockClass()
+            mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token"})
 
             # Create a test subclass that logs during refresh
             class TestBearerAuth(BearerAuth):

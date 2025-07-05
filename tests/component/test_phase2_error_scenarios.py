@@ -3,7 +3,7 @@
 import base64
 import json
 from typing import Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -293,7 +293,7 @@ class TestPhase2ErrorScenarios:
             AuthHeaderVerification.verify_basic_auth_header("Basic !!invalid_base64!!")
 
         # Test verification with None values (should be handled gracefully)
-        mock_strategy = Mock()
+        mock_strategy = MockClass()
         mock_strategy.prepare_request_headers.return_value = {"Authorization": None}
 
         headers = mock_strategy.prepare_request_headers()

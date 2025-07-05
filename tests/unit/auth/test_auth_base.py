@@ -1,7 +1,8 @@
 """Unit tests for the AuthStrategy base class."""
 
 from typing import Any, Callable, Dict, Optional, cast
-from unittest.mock import Mock, patch
+from unittest.mock import Mock as MockClass
+from unittest.mock import patch
 
 import pytest
 
@@ -65,7 +66,7 @@ class TestAuthStrategy:
 
     def test_init_with_http_request_callable(self) -> None:
         """Test initialization with http_request_callable."""
-        mock_callable = Mock()
+        mock_callable = MockClass()
         strategy = ConcreteAuthStrategy(http_request_callable=mock_callable)
         assert strategy._http_request_callable is mock_callable  # pyright: ignore[reportPrivateUsage]
 
@@ -93,7 +94,7 @@ class TestAuthStrategy:
 
     def test_get_refresh_callback_returns_callable_when_can_refresh(self) -> None:
         """Test that get_refresh_callback returns a callable when can_refresh is True."""
-        mock_callable = Mock()
+        mock_callable = MockClass()
         strategy = RefreshableAuthStrategy(http_request_callable=mock_callable)
         callback = strategy.get_refresh_callback()
 
@@ -102,11 +103,11 @@ class TestAuthStrategy:
 
     def test_get_refresh_callback_calls_refresh_when_invoked(self) -> None:
         """Test that the callback returned by get_refresh_callback calls refresh."""
-        mock_callable = Mock()
+        mock_callable = MockClass()
         strategy = RefreshableAuthStrategy(http_request_callable=mock_callable)
 
         # Create a mock for the refresh method
-        refresh_mock = Mock(
+        refresh_mock = MockClass(
             return_value={
                 "token_data": {
                     "access_token": "new-token",
@@ -132,7 +133,7 @@ class TestAuthStrategy:
 
     def test_refreshable_strategy_can_refresh_with_http_callable(self) -> None:
         """Test that RefreshableAuthStrategy can refresh when http_request_callable is provided."""
-        mock_callable = Mock()
+        mock_callable = MockClass()
         strategy = RefreshableAuthStrategy(http_request_callable=mock_callable)
         assert strategy.can_refresh() is True
 
@@ -143,7 +144,7 @@ class TestAuthStrategy:
 
     def test_refreshable_strategy_refresh_returns_token_data(self) -> None:
         """Test that RefreshableAuthStrategy.refresh returns expected token data."""
-        mock_callable = Mock()
+        mock_callable = MockClass()
         strategy = RefreshableAuthStrategy(http_request_callable=mock_callable)
 
         result = strategy.refresh()

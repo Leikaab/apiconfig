@@ -4,8 +4,14 @@
 from __future__ import annotations
 
 import logging as logging_mod
-import re
-from typing import Any, Literal, Mapping, Optional, Set, Tuple
+import re as re_mod
+from typing import Any as typing_any
+from typing import Literal
+from typing import Literal as typing_literal
+from typing import Mapping as typing_mapping
+from typing import Optional as typing_optional
+from typing import Set as typing_set
+from typing import Tuple as typing_tuple
 
 from apiconfig.utils.redaction.body import (
     DEFAULT_SENSITIVE_KEYS_PATTERN as DEFAULT_BODY_KEYS_PATTERN,
@@ -22,6 +28,8 @@ from apiconfig.utils.redaction.headers import (
 )
 
 from .detailed import DetailedFormatter
+
+typing_literal_alias = typing_literal
 
 
 class RedactingFormatter(logging_mod.Formatter):
@@ -83,18 +91,18 @@ class RedactingFormatter(logging_mod.Formatter):
 
     def __init__(
         self,
-        fmt: Optional[str] = None,
-        datefmt: Optional[str] = None,
+        fmt: typing_optional[str] = None,
+        datefmt: typing_optional[str] = None,
         style: Literal["%", "{", "$"] = "%",
         validate: bool = True,
         *,
-        body_sensitive_keys_pattern: re.Pattern[str] = DEFAULT_BODY_KEYS_PATTERN,
-        body_sensitive_value_pattern: Optional[re.Pattern[str]] = None,
-        header_sensitive_keys: Set[str] = DEFAULT_SENSITIVE_HEADERS,
-        header_sensitive_prefixes: Tuple[str, ...] = DEFAULT_SENSITIVE_HEADER_PREFIXES,
-        header_sensitive_name_pattern: Optional[re.Pattern[str]] = None,
-        header_sensitive_cookie_keys: Set[str] = DEFAULT_SENSITIVE_COOKIE_KEYS,
-        defaults: Optional[Mapping[str, Any]] = None,
+        body_sensitive_keys_pattern: re_mod.Pattern[str] = DEFAULT_BODY_KEYS_PATTERN,
+        body_sensitive_value_pattern: typing_optional[re_mod.Pattern[str]] = None,
+        header_sensitive_keys: typing_set[str] = DEFAULT_SENSITIVE_HEADERS,
+        header_sensitive_prefixes: typing_tuple[str, ...] = DEFAULT_SENSITIVE_HEADER_PREFIXES,
+        header_sensitive_name_pattern: typing_optional[re_mod.Pattern[str]] = None,
+        header_sensitive_cookie_keys: typing_set[str] = DEFAULT_SENSITIVE_COOKIE_KEYS,
+        defaults: typing_optional[typing_mapping[str, typing_any]] = None,
     ) -> None:
         super().__init__(
             fmt=fmt,
@@ -131,7 +139,7 @@ class RedactingFormatter(logging_mod.Formatter):
         return super().format(record)
 
     def _redact_headers(self, record: logging_mod.LogRecord) -> None:
-        headers: Mapping[str, str] | None = getattr(record, "headers", None)
+        headers: typing_mapping[str, str] | None = getattr(record, "headers", None)
         if headers is not None:
             try:
                 redacted = self._redact_headers_func(
@@ -158,7 +166,7 @@ class RedactingFormatter(logging_mod.Formatter):
         msg = record.getMessage()
         content_type = getattr(record, "content_type", None)
         # Start with the original message so every branch updates ``redacted_msg``
-        redacted_msg: Any = msg
+        redacted_msg: typing_any = msg
 
         # 1. If the original message is bytes, always redact as '[REDACTED BODY]'
         if isinstance(orig_msg, bytes):
@@ -190,13 +198,13 @@ class RedactingFormatter(logging_mod.Formatter):
             record.msg = str(redacted_msg)
         record.args = ()
 
-    def _is_binary(self, msg: Any) -> bool:
+    def _is_binary(self, msg: typing_any) -> bool:
         return isinstance(msg, bytes)
 
-    def _is_empty(self, msg: Any) -> bool:
+    def _is_empty(self, msg: typing_any) -> bool:
         return msg == "" or msg is None
 
-    def _is_structured(self, msg: Any, content_type: Any) -> bool:
+    def _is_structured(self, msg: typing_any, content_type: typing_any) -> bool:
         if isinstance(msg, (dict, list)):
             return True
         if isinstance(msg, str):
@@ -213,11 +221,11 @@ class RedactingFormatter(logging_mod.Formatter):
         # Always redact binary data as '[REDACTED BODY]'
         return "[REDACTED BODY]"
 
-    def _redact_empty(self, msg: Any) -> str:
+    def _redact_empty(self, msg: typing_any) -> str:
         # Always output '[REDACTED]' for empty messages to ensure output is not empty
         return "[REDACTED]"
 
-    def _redact_structured(self, msg: Any, content_type: Any) -> str:
+    def _redact_structured(self, msg: typing_any, content_type: typing_any) -> str:
         import json
 
         # If msg is a string and looks like JSON, always parse, redact, and serialize
@@ -274,7 +282,7 @@ class RedactingFormatter(logging_mod.Formatter):
         return msg
 
 
-def redact_structured_helper(formatter: RedactingFormatter, msg: Any, content_type: Any) -> str:
+def redact_structured_helper(formatter: RedactingFormatter, msg: typing_any, content_type: typing_any) -> str:
     """Public helper to call ``RedactingFormatter._redact_structured`` for tests."""
     return formatter._redact_structured(msg, content_type)  # pyright: ignore[reportPrivateUsage]
 

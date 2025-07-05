@@ -2,7 +2,7 @@
 
 import time
 from typing import Any, Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
@@ -14,8 +14,8 @@ class TestRefreshPerformance:
 
     def test_refresh_performance(self) -> None:
         """Test refresh operation performance."""
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": "new_token", "expires_in": 3600})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token", "expires_in": 3600})
 
         # Create a test subclass that implements refresh
         class TestBearerAuth(BearerAuth):
@@ -95,7 +95,7 @@ class TestRefreshPerformance:
                 self.access_token = f"token_{self.refresh_count}"
                 return {"token_data": {"access_token": self.access_token}, "config_updates": None}
 
-        auth = TestBearerAuth(access_token="initial_token", http_request_callable=Mock())
+        auth = TestBearerAuth(access_token="initial_token", http_request_callable=MockClass())
 
         # Measure time for multiple refreshes
         start_time = time.time()
@@ -117,7 +117,7 @@ class TestRefreshPerformance:
                 self.access_token = "refreshed_token"
                 return {"token_data": {"access_token": "refreshed_token"}, "config_updates": None}
 
-        auth = TestBearerAuth(access_token="initial_token", http_request_callable=Mock())
+        auth = TestBearerAuth(access_token="initial_token", http_request_callable=MockClass())
 
         callback = auth.get_refresh_callback()
         assert callback is not None

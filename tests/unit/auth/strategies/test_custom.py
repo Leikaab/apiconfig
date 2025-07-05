@@ -1,7 +1,7 @@
 """Tests for the CustomAuth strategy."""
 
 from typing import Dict, Optional
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -30,10 +30,10 @@ class TestCustomAuth:
 
     def test_init_with_refresh_functions(self) -> None:
         """Test initialization with refresh-related functions."""
-        refresh_func = Mock(return_value={"token_data": {"access_token": "new_token"}})
-        can_refresh_func = Mock(return_value=True)
-        is_expired_func = Mock(return_value=False)
-        http_request_callable = Mock()
+        refresh_func = MockClass(return_value={"token_data": {"access_token": "new_token"}})
+        can_refresh_func = MockClass(return_value=True)
+        is_expired_func = MockClass(return_value=False)
+        http_request_callable = MockClass()
 
         auth = CustomAuth(
             header_callback=lambda: {"Authorization": "Bearer token"},
@@ -50,7 +50,7 @@ class TestCustomAuth:
 
     def test_can_refresh_with_can_refresh_func(self) -> None:
         """Test can_refresh when can_refresh_func is provided."""
-        can_refresh_func = Mock(return_value=True)
+        can_refresh_func = MockClass(return_value=True)
         auth = CustomAuth(
             header_callback=lambda: {},
             can_refresh_func=can_refresh_func,
@@ -62,7 +62,7 @@ class TestCustomAuth:
 
     def test_can_refresh_without_can_refresh_func_with_refresh_func(self) -> None:
         """Test can_refresh when only refresh_func is provided."""
-        refresh_func = Mock()
+        refresh_func = MockClass()
         auth = CustomAuth(
             header_callback=lambda: {},
             refresh_func=refresh_func,
@@ -80,7 +80,7 @@ class TestCustomAuth:
 
     def test_is_expired_with_is_expired_func(self) -> None:
         """Test is_expired when is_expired_func is provided."""
-        is_expired_func = Mock(return_value=True)
+        is_expired_func = MockClass(return_value=True)
         auth = CustomAuth(
             header_callback=lambda: {},
             is_expired_func=is_expired_func,
@@ -103,7 +103,7 @@ class TestCustomAuth:
             "token_data": {"access_token": "new_token"},
             "config_updates": None,
         }
-        refresh_func = Mock(return_value=expected_result)
+        refresh_func = MockClass(return_value=expected_result)
         auth = CustomAuth(
             header_callback=lambda: {},
             refresh_func=refresh_func,
@@ -122,7 +122,7 @@ class TestCustomAuth:
 
     def test_refresh_with_failing_refresh_func(self) -> None:
         """Test refresh when refresh_func raises an exception."""
-        refresh_func = Mock(side_effect=ValueError("Refresh failed"))
+        refresh_func = MockClass(side_effect=ValueError("Refresh failed"))
         auth = CustomAuth(
             header_callback=lambda: {},
             refresh_func=refresh_func,
@@ -307,7 +307,7 @@ class TestCustomAuthFactoryMethods:
 
     def test_create_api_key_custom_with_http_request_callable(self) -> None:
         """Test create_api_key_custom with http_request_callable."""
-        http_callable = Mock()
+        http_callable = MockClass()
         auth = CustomAuth.create_api_key_custom(api_key="test-key", http_request_callable=http_callable)
 
         assert auth._http_request_callable is http_callable  # pyright: ignore[reportPrivateUsage]
@@ -369,7 +369,7 @@ class TestCustomAuthFactoryMethods:
 
     def test_create_session_token_custom_with_http_request_callable(self) -> None:
         """Test create_session_token_custom with http_request_callable."""
-        http_callable = Mock()
+        http_callable = MockClass()
 
         def mock_refresh_func() -> str:
             return "refreshed-token"

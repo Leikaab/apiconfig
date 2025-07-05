@@ -1,6 +1,6 @@
 """Unit tests for HTTP exception classes."""
 
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 from apiconfig.exceptions.base import APIConfigError, AuthenticationError
 from apiconfig.exceptions.http import (
@@ -39,7 +39,7 @@ class TestApiClientError:
 
     def test_initialization_with_request_object(self) -> None:
         """Test initialization with request object."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/users"
 
@@ -51,7 +51,7 @@ class TestApiClientError:
 
     def test_initialization_with_full_context(self) -> None:
         """Test initialization with both status code and request object."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/users"
 
@@ -64,12 +64,12 @@ class TestApiClientError:
     def test_initialization_with_response_object(self) -> None:
         """Test initialization with response object that includes request."""
         # Create mock request
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "DELETE"
         request.url = "https://api.example.com/item/123"
 
         # Create mock response with request
-        response = Mock(spec=["status_code", "reason", "request", "headers", "text"])
+        response = MockClass(spec=["status_code", "reason", "request", "headers", "text"])
         response.status_code = 404
         response.reason = "Not Found"
         response.request = request
@@ -88,7 +88,7 @@ class TestApiClientError:
     def test_str_with_partial_request_object(self) -> None:
         """Test string representation with partial request object."""
         # Only method
-        request = Mock(spec=["method"])
+        request = MockClass(spec=["method"])
         request.method = "GET"
 
         error = ApiClientError("Test error", request=request)
@@ -97,7 +97,7 @@ class TestApiClientError:
         assert error.url is None
 
         # Only URL
-        request = Mock(spec=["url"])
+        request = MockClass(spec=["url"])
         request.url = "https://api.example.com/users"
 
         error = ApiClientError("Test error", request=request)
@@ -107,7 +107,7 @@ class TestApiClientError:
 
     def test_str_with_empty_request_object(self) -> None:
         """Test string representation with empty request object."""
-        request = Mock(spec=[])  # No attributes
+        request = MockClass(spec=[])  # No attributes
         error = ApiClientError("Test error", request=request)
         assert str(error) == "Test error"
         assert error.method is None
@@ -137,7 +137,7 @@ class TestApiClientBadRequestError:
 
     def test_with_context(self) -> None:
         """Test initialization with context."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://api.example.com/users"
 
@@ -177,11 +177,11 @@ class TestApiClientUnauthorizedError:
 
     def test_with_context(self) -> None:
         """Test initialization with context."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/protected"
 
-        response = Mock(spec=["status_code", "reason", "headers", "text", "request"])
+        response = MockClass(spec=["status_code", "reason", "headers", "text", "request"])
         response.status_code = 401
         response.reason = "Unauthorized"
         response.headers = {}
@@ -199,7 +199,7 @@ class TestApiClientUnauthorizedError:
 
     def test_both_parent_init_called(self) -> None:
         """Test that both parent __init__ methods are called properly."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/test"
 
@@ -224,12 +224,12 @@ class TestApiClientUnauthorizedError:
         assert str(error) == "Test message (HTTP 401)"
 
         # Test with empty request object
-        empty_request = Mock(spec=[])
+        empty_request = MockClass(spec=[])
         error_empty_context = ApiClientUnauthorizedError("Test message", request=empty_request)
         assert str(error_empty_context) == "Test message (HTTP 401)"
 
         # Test with response but no request - should still get status from response
-        response = Mock(spec=["status_code", "headers", "text"])
+        response = MockClass(spec=["status_code", "headers", "text"])
         response.status_code = 401
         response.headers = {}
         response.text = ""
@@ -418,11 +418,11 @@ class TestCreateApiClientError:
 
     def test_with_context(self) -> None:
         """Test creation with request and response objects."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/users"
 
-        response = Mock(spec=["status_code", "reason", "request", "headers", "text"])
+        response = MockClass(spec=["status_code", "reason", "request", "headers", "text"])
         response.status_code = 404
         response.reason = "Not Found"
         response.request = request
@@ -504,12 +504,12 @@ class TestHttpExceptionIntegration:
 
     def test_context_preservation_through_factory(self) -> None:
         """Test that context is preserved when using the factory function."""
-        request = Mock(spec=["method", "url", "headers"])
+        request = MockClass(spec=["method", "url", "headers"])
         request.method = "POST"
         request.url = "https://api.example.com/users"
         request.headers = {"Content-Type": "application/json"}
 
-        response = Mock(spec=["status_code", "headers", "text", "reason", "request"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason", "request"])
         response.status_code = 422
         response.headers = {"Content-Type": "application/json"}
         response.text = '{"error": "validation failed"}'

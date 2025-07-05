@@ -2,7 +2,7 @@
 
 import base64
 from typing import Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -23,7 +23,7 @@ class TestAuthVerificationIntegration:
     def test_basic_auth_verification_with_mock_strategy(self) -> None:
         """Test Basic Auth verification with mocked strategy."""
         # Create mock basic auth strategy
-        mock_basic_auth = Mock()
+        mock_basic_auth = MockClass()
         credentials = base64.b64encode(b"user:pass").decode()
         mock_basic_auth.prepare_request_headers.return_value = {"Authorization": f"Basic {credentials}"}
 
@@ -39,7 +39,7 @@ class TestAuthVerificationIntegration:
     def test_bearer_auth_verification_with_mock_strategy(self) -> None:
         """Test Bearer Auth verification with mocked strategy."""
         # Create mock bearer auth strategy
-        mock_bearer_auth = Mock()
+        mock_bearer_auth = MockClass()
         mock_bearer_auth.prepare_request_headers.return_value = {"Authorization": "Bearer test_token_12345"}
 
         # Get headers from mock
@@ -57,7 +57,7 @@ class TestAuthVerificationIntegration:
     def test_api_key_verification_with_mock_strategy(self) -> None:
         """Test API Key verification with mocked strategy."""
         # Create mock API key auth strategy
-        mock_api_key_auth = Mock()
+        mock_api_key_auth = MockClass()
         mock_api_key_auth.prepare_request_headers.return_value = {"X-API-Key": "sk-test_key_123"}
 
         # Get headers from mock
@@ -75,10 +75,10 @@ class TestAuthVerificationIntegration:
     def test_multiple_auth_headers_verification_with_mocks(self) -> None:
         """Test multiple auth headers verification with mocked strategies."""
         # Create mock strategies
-        mock_bearer = Mock()
+        mock_bearer = MockClass()
         mock_bearer.prepare_request_headers.return_value = {"Authorization": "Bearer bearer_token_123"}
 
-        mock_api_key = Mock()
+        mock_api_key = MockClass()
         mock_api_key.prepare_request_headers.return_value = {"X-API-Key": "api_key_456"}
 
         # Combine headers

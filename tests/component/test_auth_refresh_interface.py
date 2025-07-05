@@ -1,6 +1,6 @@
 """Test refresh interface consistency across auth strategies."""
 
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
@@ -13,8 +13,8 @@ class TestAuthRefreshInterface:
     def test_refresh_interface_consistency(self) -> None:
         """Test that all refreshable strategies implement consistent interface."""
         # Mock HTTP callable
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh", "expires_in": 3600})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh", "expires_in": 3600})
 
         # Create a test subclass of BearerAuth that implements refresh
         class TestBearerAuth(BearerAuth):
@@ -52,8 +52,8 @@ class TestAuthRefreshInterface:
 
     def test_crudclient_callback_compatibility(self) -> None:
         """Test compatibility with crudclient's setup_auth_func pattern."""
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": "new_token", "expires_in": 3600})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token", "expires_in": 3600})
 
         # Create a test subclass that implements refresh
         class TestBearerAuth(BearerAuth):

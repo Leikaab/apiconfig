@@ -3,7 +3,7 @@
 import threading
 import time
 from typing import Any
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -18,7 +18,7 @@ class TestRefreshErrorHandling:
 
     def test_refresh_failure_handling(self) -> None:
         """Test handling of refresh failures."""
-        mock_http = Mock()
+        mock_http = MockClass()
         mock_http.side_effect = Exception("Network error")
 
         # Create a test subclass that uses the http_request_callable
@@ -48,8 +48,8 @@ class TestRefreshErrorHandling:
 
     def test_concurrent_refresh_safety(self) -> None:
         """Test thread safety of concurrent refresh operations."""
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": f"token_{time.time()}", "expires_in": 3600})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": f"token_{time.time()}", "expires_in": 3600})
 
         # Create a test subclass with thread-safe refresh
         class TestBearerAuth(BearerAuth):

@@ -3,6 +3,7 @@
 import json
 import os
 import pathlib
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -65,8 +66,6 @@ class TestFileProvider:
 
             provider = FileProvider(file_path=temp_file.name)
 
-            import re
-
             # Match the new error message with colon and normalized path
             expected_path = re.escape(os.path.normpath(temp_file.name))
             pattern = rf"must contain a JSON object: {expected_path}"
@@ -76,7 +75,6 @@ class TestFileProvider:
     def test_load_file_not_found(self) -> None:
         """Test loading a file that doesn't exist."""
         # Use a path that definitely doesn't exist
-        import re
 
         non_existent_path = os.path.join("path", "that", "definitely", "does", "not", "exist", "config.json")
         provider = FileProvider(file_path=non_existent_path)
@@ -96,8 +94,6 @@ class TestFileProvider:
             temp_file.flush()
 
             provider = FileProvider(file_path=temp_file.name)
-
-            import re
 
             # Match the new error message with colon and normalized path
             expected_path = re.escape(os.path.normpath(temp_file.name))

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any, Callable, cast
 
 import pytest
@@ -141,8 +142,6 @@ def test_redacting_formatter_headers_redaction(
 def test_redacting_formatter_plain_string_secret(
     log_record_factory: Callable[..., logging.LogRecord],
 ) -> None:
-    import re
-
     secret_pattern = re.compile(r"secret_[a-z0-9]+", re.IGNORECASE)
     fmt = RedactingFormatter(body_sensitive_value_pattern=secret_pattern)
     record = log_record_factory(msg="this is a secret_abc123 and should be redacted")

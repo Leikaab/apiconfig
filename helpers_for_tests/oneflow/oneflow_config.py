@@ -58,9 +58,9 @@ def create_oneflow_auth_strategy(config_manager: ConfigManager) -> ApiKeyAuth:
     pytest.skip
         If required credentials are missing.
     """
-    config = config_manager.load_config()
+    settings = config_manager.load_config()
 
-    api_key = config.get("API_KEY")
+    api_key = settings.get("API_KEY")
     if not api_key:
         raise MissingCredentialsError("ONEFLOW_API_KEY cannot be empty.")
 
@@ -82,20 +82,20 @@ def create_oneflow_client_config() -> ClientConfig:
         If required configuration is missing.
     """
     config_manager = create_oneflow_config_manager()
-    config = config_manager.load_config()
+    settings = config_manager.load_config()
 
     auth_strategy = create_oneflow_auth_strategy(config_manager)
 
-    hostname = config["hostname"]
-    version = config["version"]
+    hostname = settings["hostname"]
+    version = settings["version"]
     try:
-        timeout = float(config["timeout"])
+        timeout = float(settings["timeout"])
     except (ValueError, TypeError) as e:
         pytest.skip(f"Invalid timeout value in ONEFLOW_timeout: {e}")
 
     # Handle user email header if provided
     headers: dict[str, str] = {}
-    user_email = config.get("USER_EMAIL")
+    user_email = settings.get("USER_EMAIL")
     if user_email:
         headers["x-oneflow-user-email"] = user_email
 

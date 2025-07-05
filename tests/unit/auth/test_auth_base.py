@@ -6,21 +6,21 @@ from unittest.mock import patch
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.auth.base import AuthStrategy
-from apiconfig.types import HttpRequestCallable, QueryParamType, TokenRefreshResult
 
 
 class ConcreteAuthStrategy(AuthStrategy):
     """Concrete implementation of AuthStrategy for testing."""
 
-    def __init__(self, http_request_callable: Optional[HttpRequestCallable] = None) -> None:
+    def __init__(self, http_request_callable: Optional[api_types.HttpRequestCallable] = None) -> None:
         super().__init__(http_request_callable)
 
     def prepare_request_headers(self) -> Dict[str, str]:
         """Test implementation."""
         return {"Authorization": "Bearer test-token"}
 
-    def prepare_request_params(self) -> Optional[QueryParamType]:
+    def prepare_request_params(self) -> Optional[api_types.QueryParamType]:
         """Test implementation."""
         return None
 
@@ -28,7 +28,7 @@ class ConcreteAuthStrategy(AuthStrategy):
 class RefreshableAuthStrategy(AuthStrategy):
     """Concrete implementation that supports refresh for testing."""
 
-    def __init__(self, http_request_callable: Optional[HttpRequestCallable] = None) -> None:
+    def __init__(self, http_request_callable: Optional[api_types.HttpRequestCallable] = None) -> None:
         super().__init__(http_request_callable)
         self._can_refresh = True
 
@@ -36,7 +36,7 @@ class RefreshableAuthStrategy(AuthStrategy):
         """Test implementation."""
         return {"Authorization": "Bearer test-token"}
 
-    def prepare_request_params(self) -> Optional[QueryParamType]:
+    def prepare_request_params(self) -> Optional[api_types.QueryParamType]:
         """Test implementation."""
         return None
 
@@ -44,7 +44,7 @@ class RefreshableAuthStrategy(AuthStrategy):
         """Override to return True for testing."""
         return self._can_refresh and self._http_request_callable is not None
 
-    def refresh(self) -> Optional[TokenRefreshResult]:
+    def refresh(self) -> Optional[api_types.TokenRefreshResult]:
         """Override with test implementation."""
         if not self.can_refresh():
             raise NotImplementedError("This auth strategy does not support refresh")

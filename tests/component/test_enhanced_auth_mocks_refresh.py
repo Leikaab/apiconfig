@@ -6,6 +6,7 @@ from typing import Dict
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.exceptions.auth import TokenRefreshError
 from apiconfig.testing.unit.mocks.auth import (
     AuthTestScenarioBuilder,
@@ -16,7 +17,6 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
-from apiconfig.types import TokenRefreshResult
 
 
 class TestEnhancedAuthMocksRefresh:
@@ -199,7 +199,7 @@ class TestEnhancedAuthMocksRefresh:
         assert hasattr(strategy, "_refresh_lock")
 
         # Test concurrent refresh operations
-        results: list[TokenRefreshResult] = []
+        results: list[api_types.TokenRefreshResult] = []
         errors: list[Exception] = []
 
         def refresh_worker() -> None:

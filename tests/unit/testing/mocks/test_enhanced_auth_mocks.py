@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.exceptions.auth import TokenRefreshError
 from apiconfig.testing.unit.mocks.auth import (
     AuthTestScenarioBuilder,
@@ -18,7 +19,6 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
-from apiconfig.types import TokenRefreshResult
 
 
 class TestMockRefreshableAuthStrategy:
@@ -183,7 +183,7 @@ class TestMockRefreshableAuthStrategy:
         """Test refresh callback raises error when refresh returns None."""
 
         class RefreshReturnsNone(MockRefreshableAuthStrategy):
-            def refresh(self) -> Optional[TokenRefreshResult]:
+            def refresh(self) -> Optional[api_types.TokenRefreshResult]:
                 return None
 
         strategy = RefreshReturnsNone()

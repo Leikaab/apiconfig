@@ -2,9 +2,10 @@
 """HTTP related utility functions."""
 
 import json as json_lib
-from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union, cast
+import typing as typing_mod
+from typing import Any, Dict, Mapping, Optional, Union, cast
 
-if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
+if typing_mod.TYPE_CHECKING:  # pragma: no cover - imported only for type checking
     from apiconfig.exceptions.http import (
         HTTPUtilsError,
         JSONDecodeError,

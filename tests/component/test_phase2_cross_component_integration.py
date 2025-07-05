@@ -81,10 +81,10 @@ class TestPhase2CrossComponentIntegration:
         header = {"typ": "JWT", "alg": "HS256"}
         payload = {"sub": "1234567890", "name": "Test User", "exp": 1234567890}
 
-        import json
+        import json as json_lib
 
-        header_b64 = base64.b64encode(json.dumps(header).encode()).decode().rstrip("=")
-        payload_b64 = base64.b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+        header_b64 = base64.b64encode(json_lib.dumps(header).encode()).decode().rstrip("=")
+        payload_b64 = base64.b64encode(json_lib.dumps(payload).encode()).decode().rstrip("=")
         signature_b64 = "mock_signature"
 
         jwt_token = f"{header_b64}.{payload_b64}.{signature_b64}"

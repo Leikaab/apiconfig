@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Union  # Add missing imports
+from typing import (  # Add missing imports  # pyright: ignore[reportShadowedImports]
+    Any,
+    Dict,
+    List,
+    Union,
+)
 from urllib.parse import ParseResult
 
 import pytest

@@ -72,7 +72,7 @@ Custom Auth Strategy with Refresh
 .. code-block:: python
 
     from apiconfig.auth.base import AuthStrategy
-    from apiconfig.types import TokenRefreshResult, RefreshedTokenData
+    import apiconfig.types as api_types
 
     class CustomSessionAuth(AuthStrategy):
         def __init__(self, session_token, refresh_endpoint, http_request_callable=None):

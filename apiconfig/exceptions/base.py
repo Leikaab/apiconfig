@@ -23,6 +23,13 @@ class ConfigurationError(APIConfigError):
 class HttpContextMixin:
     """Mixin to add HTTP context extraction capabilities to exceptions."""
 
+    status_code: Optional[int] = None
+    method: Optional[str] = None
+    url: Optional[str] = None
+    reason: Optional[str] = None
+    request: Optional[HttpRequestProtocol] = None
+    response: Optional[HttpResponseProtocol] = None
+
     def _init_http_context(
         self, request: Optional[HttpRequestProtocol] = None, response: Optional[HttpResponseProtocol] = None, status_code: Optional[int] = None
     ) -> None:

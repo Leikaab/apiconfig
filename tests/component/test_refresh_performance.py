@@ -4,9 +4,9 @@ import time
 from typing import Any, Dict
 from unittest.mock import Mock
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
-from apiconfig.types import TokenRefreshResult
 
 
 class TestRefreshPerformance:
@@ -19,7 +19,7 @@ class TestRefreshPerformance:
 
         # Create a test subclass that implements refresh
         class TestBearerAuth(BearerAuth):
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 # Simulate minimal refresh logic
                 self.access_token = "new_token"
                 return {"token_data": {"access_token": "new_token"}, "config_updates": None}
@@ -55,7 +55,7 @@ class TestRefreshPerformance:
             call_count += 1
             return {"Authorization": f"Bearer token_{call_count}"}
 
-        def refresh_func() -> TokenRefreshResult:
+        def refresh_func() -> api_types.TokenRefreshResult:
             return {"token_data": {"access_token": f"new_token_{call_count}"}, "config_updates": None}
 
         auth = CustomAuth(header_callback=header_callback, refresh_func=refresh_func, can_refresh_func=lambda: True)
@@ -90,7 +90,7 @@ class TestRefreshPerformance:
                 super().__init__(*args, **kwargs)
                 self.refresh_count = 0
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 self.refresh_count += 1
                 self.access_token = f"token_{self.refresh_count}"
                 return {"token_data": {"access_token": self.access_token}, "config_updates": None}
@@ -113,7 +113,7 @@ class TestRefreshPerformance:
 
         # Create a test subclass with fast refresh
         class TestBearerAuth(BearerAuth):
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 self.access_token = "refreshed_token"
                 return {"token_data": {"access_token": "refreshed_token"}, "config_updates": None}
 

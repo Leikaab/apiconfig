@@ -7,6 +7,7 @@ from unittest.mock import Mock
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
 from apiconfig.testing.auth_verification import (
     AdvancedAuthVerification,
@@ -19,7 +20,6 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
-from apiconfig.types import TokenRefreshResult
 
 
 class TestPhase2ErrorScenarios:
@@ -336,7 +336,7 @@ class TestPhase2ErrorScenarios:
         concurrent_fail_strategy = MockAuthErrorInjector.create_failing_refresh_strategy(failure_type="auth", failure_after_attempts=1)
 
         errors: list[Exception] = []
-        successes: list[TokenRefreshResult | None] = []
+        successes: list[api_types.TokenRefreshResult | None] = []
 
         def concurrent_refresh() -> None:
             try:

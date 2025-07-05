@@ -5,10 +5,10 @@ from io import StringIO
 from typing import Any, Dict
 from unittest.mock import Mock
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.auth.token.storage import InMemoryTokenStorage
-from apiconfig.types import TokenRefreshResult
 
 
 class TestExistingComponentIntegration:
@@ -37,7 +37,7 @@ class TestExistingComponentIntegration:
                 self.refresh_token: str = "default_refresh"
                 self.expires_at: str = "default_expires"
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 # Simulate refresh
                 self.access_token = "new_token"
                 self.refresh_token = "new_refresh"
@@ -82,7 +82,7 @@ class TestExistingComponentIntegration:
 
             # Create a test subclass that logs during refresh
             class TestBearerAuth(BearerAuth):
-                def refresh(self) -> TokenRefreshResult:
+                def refresh(self) -> api_types.TokenRefreshResult:
                     logger.info("Bearer token refresh started")
                     self.access_token = "new_token"
                     logger.info("Bearer token refresh successful")
@@ -113,7 +113,7 @@ class TestExistingComponentIntegration:
         def header_callback() -> Dict[str, str]:
             return {"X-API-Key": current_token["value"]}
 
-        def refresh_func() -> TokenRefreshResult:
+        def refresh_func() -> api_types.TokenRefreshResult:
             # Simulate refresh
             new_key = "refreshed_api_key"
             current_token["value"] = new_key

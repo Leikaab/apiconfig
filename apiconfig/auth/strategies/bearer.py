@@ -116,8 +116,7 @@ class BearerAuth(AuthStrategy):
         # This is a basic implementation that should be overridden by subclasses
         # or enhanced with specific refresh logic for the use case
         raise NotImplementedError(
-            f"Bearer auth refresh requires custom implementation for {self.__class__.__name__}. "
-            "Override this method or use a specialized auth strategy for your token type."
+            f"Bearer auth refresh requires custom implementation for {self.__class__.__name__}. Override this method or use a specialized auth strategy for your token type."
         )
 
     def prepare_request_headers(self) -> Dict[str, str]:

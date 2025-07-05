@@ -1,7 +1,7 @@
 """Test error handling in refresh scenarios."""
 
 import threading
-import time
+import time as time_mod
 from typing import Any
 from unittest.mock import Mock
 
@@ -49,7 +49,7 @@ class TestRefreshErrorHandling:
     def test_concurrent_refresh_safety(self) -> None:
         """Test thread safety of concurrent refresh operations."""
         mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": f"token_{time.time()}", "expires_in": 3600})
+        mock_http.return_value = Mock(json=lambda: {"access_token": f"token_{time_mod.time()}", "expires_in": 3600})
 
         # Create a test subclass with thread-safe refresh
         class TestBearerAuth(BearerAuth):
@@ -60,8 +60,8 @@ class TestRefreshErrorHandling:
             def refresh(self) -> TokenRefreshResult:
                 with self._refresh_lock:
                     # Simulate some processing time
-                    time.sleep(0.01)
-                    new_token = f"token_{time.time()}"
+                    time_mod.sleep(0.01)
+                    new_token = f"token_{time_mod.time()}"
                     self.access_token = new_token
                     return {"token_data": {"access_token": new_token}, "config_updates": None}
 

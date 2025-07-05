@@ -2,7 +2,7 @@
 """Unit tests for enhanced auth mocks with refresh scenarios."""
 
 import threading
-import time
+import time as time_mod
 from typing import Any, Dict, Optional
 from unittest.mock import patch
 
@@ -113,9 +113,9 @@ class TestMockRefreshableAuthStrategy:
         """Test refresh operation with delay."""
         strategy = MockRefreshableAuthStrategy(refresh_delay=0.1)
 
-        start_time = time.time()
+        start_time = time_mod.time()
         strategy.refresh()
-        end_time = time.time()
+        end_time = time_mod.time()
 
         assert end_time - start_time >= 0.1
 
@@ -377,7 +377,7 @@ class TestAuthTestScenarioBuilder:
         assert strategy.is_expired() is False
 
         # Wait for expiration
-        time.sleep(0.15)
+        time_mod.sleep(0.15)
         assert strategy.is_expired() is True
 
     def test_create_concurrent_refresh_scenario(self) -> None:
@@ -510,9 +510,9 @@ class TestMockHttpRequestCallable:
         """Test calling with delay."""
         mock_http = MockHttpRequestCallable(delay=0.1)
 
-        start_time = time.time()
+        start_time = time_mod.time()
         mock_http("GET", "http://example.com")
-        end_time = time.time()
+        end_time = time_mod.time()
 
         assert end_time - start_time >= 0.1
 

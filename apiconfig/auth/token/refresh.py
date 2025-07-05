@@ -8,7 +8,7 @@ It includes retry logic for transient errors.
 
 import json
 import logging
-import time
+import time as time_mod
 
 # Import httpx only for type annotations, not for actual use
 # This allows for proper type checking without runtime dependency
@@ -202,7 +202,7 @@ def _make_token_refresh_request(
 
     try:
         logger.debug(f"Making token refresh request to {token_url}")
-        start_time = time.time()
+        start_time = time_mod.time()
 
         # Make the HTTP request using the provided client
         response = http_client.post(
@@ -212,7 +212,7 @@ def _make_token_refresh_request(
             timeout=timeout,
         )
 
-        elapsed = time.time() - start_time
+        elapsed = time_mod.time() - start_time
         logger.debug(f"Token refresh request completed in {elapsed:.2f}s")
 
         # Check for HTTP errors
@@ -390,7 +390,7 @@ def _execute_with_retry(
             if attempt > 0:
                 backoff_time = min(2**attempt, 10)  # Exponential backoff with max of 10 seconds
                 logger.debug(f"Retry attempt {attempt + 1}/{max_retries}, waiting {backoff_time}s")
-                time.sleep(backoff_time)
+                time_mod.sleep(backoff_time)
 
             # Make the request
             token_data = _make_token_refresh_request(

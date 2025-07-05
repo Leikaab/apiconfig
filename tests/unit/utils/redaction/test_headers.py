@@ -1,5 +1,11 @@
-import re
-from typing import Dict, Optional, Pattern, Set, Tuple
+import re  # pyright: ignore[reportShadowedImports]
+from typing import (  # pyright: ignore[reportShadowedImports]
+    Dict,
+    Optional,
+    Pattern,
+    Set,
+    Tuple,
+)
 
 import pytest
 

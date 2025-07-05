@@ -5,12 +5,12 @@ from unittest.mock import Mock
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
 from apiconfig.exceptions.http import (
     ApiClientError,
     create_api_client_error,
 )
-from apiconfig.types import HttpRequestProtocol
 
 
 class TestProtocolCompliance:
@@ -26,7 +26,7 @@ class TestProtocolCompliance:
                 self.headers: dict[str, str] = {}
 
         request = MinimalRequest()
-        assert isinstance(request, HttpRequestProtocol)
+        assert isinstance(request, api_types.HttpRequestProtocol)
 
         error = ApiClientError("Test", request=request)
         assert error.method == "GET"
@@ -81,7 +81,7 @@ class TestProtocolCompliance:
         # Simple object that happens to have the right attributes
         request = type("Request", (), {"method": "PUT", "url": "https://api.example.com/resource/123", "headers": {}})()
 
-        request_obj: HttpRequestProtocol = cast(HttpRequestProtocol, request)
+        request_obj: api_types.HttpRequestProtocol = cast(api_types.HttpRequestProtocol, request)
         error = ApiClientError("Update failed", request=request_obj)
         assert error.method == "PUT"
         assert error.url == "https://api.example.com/resource/123"

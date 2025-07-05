@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
+import apiconfig.types as api_types
 
 from .base import AuthenticationError
 
@@ -26,9 +26,9 @@ class InvalidCredentialsError(AuthenticationError):
     ----------
     message : str
         Error message describing the invalid credentials (default: "Invalid credentials provided")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -36,8 +36,8 @@ class InvalidCredentialsError(AuthenticationError):
         self,
         message: str = "Invalid credentials provided",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -49,9 +49,9 @@ class ExpiredTokenError(AuthenticationError):
     ----------
     message : str
         Error message describing the token expiration (default: "Authentication token has expired")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -59,8 +59,8 @@ class ExpiredTokenError(AuthenticationError):
         self,
         message: str = "Authentication token has expired",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -72,9 +72,9 @@ class MissingCredentialsError(AuthenticationError):
     ----------
     message : str
         Error message describing the missing credentials (default: "Required credentials not provided")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -82,8 +82,8 @@ class MissingCredentialsError(AuthenticationError):
         self,
         message: str = "Required credentials not provided",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -95,9 +95,9 @@ class TokenRefreshError(AuthenticationError):
     ----------
     message : str
         Error message describing the token refresh failure (default: "Failed to refresh authentication token")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -105,8 +105,8 @@ class TokenRefreshError(AuthenticationError):
         self,
         message: str = "Failed to refresh authentication token",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -118,9 +118,9 @@ class TokenRefreshJsonError(TokenRefreshError):
     ----------
     message : str
         Error message describing the JSON decoding failure (default: "Failed to decode JSON from token refresh response")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -128,8 +128,8 @@ class TokenRefreshJsonError(TokenRefreshError):
         self,
         message: str = "Failed to decode JSON from token refresh response",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -141,9 +141,9 @@ class TokenRefreshTimeoutError(TokenRefreshError):
     ----------
     message : str
         Error message describing the timeout (default: "Token refresh request timed out")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -151,8 +151,8 @@ class TokenRefreshTimeoutError(TokenRefreshError):
         self,
         message: str = "Token refresh request timed out",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -164,9 +164,9 @@ class TokenRefreshNetworkError(TokenRefreshError):
     ----------
     message : str
         Error message describing the network failure (default: "Token refresh request failed due to network issues")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -174,8 +174,8 @@ class TokenRefreshNetworkError(TokenRefreshError):
         self,
         message: str = "Token refresh request failed due to network issues",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)
 
@@ -187,9 +187,9 @@ class AuthStrategyError(AuthenticationError):
     ----------
     message : str
         Error message describing the authentication strategy error (default: "Authentication strategy error")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     """
 
@@ -197,7 +197,7 @@ class AuthStrategyError(AuthenticationError):
         self,
         message: str = "Authentication strategy error",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, request=request, response=response)

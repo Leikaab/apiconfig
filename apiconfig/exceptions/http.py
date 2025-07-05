@@ -8,7 +8,7 @@ exceptions where applicable.
 import json
 from typing import Any, Dict, List, Optional, Type, cast, final
 
-from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
+import apiconfig.types as api_types
 
 from .base import APIConfigError, AuthenticationError, HttpContextMixin
 
@@ -93,9 +93,9 @@ class ApiClientError(APIConfigError, HttpContextMixin):
         Error message describing the API client failure
     status_code : Optional[int]
         HTTP status code associated with the error
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -104,8 +104,8 @@ class ApiClientError(APIConfigError, HttpContextMixin):
         message: str,
         status_code: Optional[int] = None,
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         """
         Initialize API client error with HTTP context.
@@ -116,9 +116,9 @@ class ApiClientError(APIConfigError, HttpContextMixin):
             Error message describing the API client failure
         status_code : Optional[int]
             HTTP status code associated with the error
-        request : Optional[HttpRequestProtocol]
+        request : Optional[api_types.HttpRequestProtocol]
             HTTP request object
-        response : Optional[HttpResponseProtocol]
+        response : Optional[api_types.HttpResponseProtocol]
             HTTP response object
         """
         super().__init__(message)
@@ -150,9 +150,9 @@ class ApiClientBadRequestError(ApiClientError):
     ----------
     message : str
         Error message describing the bad request (default: "Bad Request")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -160,8 +160,8 @@ class ApiClientBadRequestError(ApiClientError):
         self,
         message: str = "Bad Request",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=400, request=request, response=response)
 
@@ -178,9 +178,9 @@ class ApiClientUnauthorizedError(ApiClientError, AuthenticationError):
     ----------
     message : str
         Error message describing the unauthorized access (default: "Unauthorized")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -188,8 +188,8 @@ class ApiClientUnauthorizedError(ApiClientError, AuthenticationError):
         self,
         message: str = "Unauthorized",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         # Only call ApiClientError.__init__ since it already handles HTTP context initialization
         ApiClientError.__init__(self, message, status_code=401, request=request, response=response)
@@ -208,9 +208,9 @@ class ApiClientForbiddenError(ApiClientError):
     ----------
     message : str
         Error message describing the forbidden access (default: "Forbidden")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -218,8 +218,8 @@ class ApiClientForbiddenError(ApiClientError):
         self,
         message: str = "Forbidden",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=403, request=request, response=response)
 
@@ -232,9 +232,9 @@ class ApiClientNotFoundError(ApiClientError):
     ----------
     message : str
         Error message describing the not found resource (default: "Not Found")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -242,8 +242,8 @@ class ApiClientNotFoundError(ApiClientError):
         self,
         message: str = "Not Found",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=404, request=request, response=response)
 
@@ -256,9 +256,9 @@ class ApiClientConflictError(ApiClientError):
     ----------
     message : str
         Error message describing the conflict (default: "Conflict")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -266,8 +266,8 @@ class ApiClientConflictError(ApiClientError):
         self,
         message: str = "Conflict",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=409, request=request, response=response)
 
@@ -280,9 +280,9 @@ class ApiClientUnprocessableEntityError(ApiClientError):
     ----------
     message : str
         Error message describing the unprocessable entity (default: "Unprocessable Entity")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -290,8 +290,8 @@ class ApiClientUnprocessableEntityError(ApiClientError):
         self,
         message: str = "Unprocessable Entity",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=422, request=request, response=response)
 
@@ -304,9 +304,9 @@ class ApiClientRateLimitError(ApiClientError):
     ----------
     message : str
         Error message describing the rate limit (default: "Rate Limit Exceeded")
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -314,8 +314,8 @@ class ApiClientRateLimitError(ApiClientError):
         self,
         message: str = "Rate Limit Exceeded",
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=429, request=request, response=response)
 
@@ -330,9 +330,9 @@ class ApiClientInternalServerError(ApiClientError):
         Error message describing the server error (default: "Internal Server Error")
     status_code : int
         HTTP status code (default: 500)
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
     """
 
@@ -341,8 +341,8 @@ class ApiClientInternalServerError(ApiClientError):
         message: str = "Internal Server Error",
         status_code: int = 500,
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         super().__init__(message, status_code=status_code, request=request, response=response)
 
@@ -351,8 +351,8 @@ def create_api_client_error(
     status_code: int,
     message: Optional[str] = None,
     *,
-    request: Optional[HttpRequestProtocol] = None,
-    response: Optional[HttpResponseProtocol] = None,
+    request: Optional[api_types.HttpRequestProtocol] = None,
+    response: Optional[api_types.HttpResponseProtocol] = None,
 ) -> ApiClientError:
     """
     Create appropriate ApiClientError subclass based on HTTP status code.
@@ -367,9 +367,9 @@ def create_api_client_error(
         HTTP status code
     message : Optional[str]
         Custom error message (uses default if not provided)
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object
 
     Returns

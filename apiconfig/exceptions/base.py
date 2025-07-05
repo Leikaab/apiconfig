@@ -2,7 +2,7 @@
 
 from typing import Any, List, Optional
 
-from apiconfig.types import HttpRequestProtocol, HttpResponseProtocol
+import apiconfig.types as api_types
 
 __all__: list[str] = [
     "APIConfigError",
@@ -24,7 +24,10 @@ class HttpContextMixin:
     """Mixin to add HTTP context extraction capabilities to exceptions."""
 
     def _init_http_context(
-        self, request: Optional[HttpRequestProtocol] = None, response: Optional[HttpResponseProtocol] = None, status_code: Optional[int] = None
+        self,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
+        status_code: Optional[int] = None,
     ) -> None:
         """Initialize HTTP context attributes from request/response objects."""
         # Initialize all attributes
@@ -89,9 +92,9 @@ class AuthenticationError(APIConfigError, HttpContextMixin):
     ----------
     message : str
         Error message describing the authentication failure
-    request : Optional[HttpRequestProtocol]
+    request : Optional[api_types.HttpRequestProtocol]
         HTTP request object (optional)
-    response : Optional[HttpResponseProtocol]
+    response : Optional[api_types.HttpResponseProtocol]
         HTTP response object (optional)
     *args : Any
         Additional positional arguments for base exception
@@ -103,8 +106,8 @@ class AuthenticationError(APIConfigError, HttpContextMixin):
         self,
         message: str,
         *,
-        request: Optional[HttpRequestProtocol] = None,
-        response: Optional[HttpResponseProtocol] = None,
+        request: Optional[api_types.HttpRequestProtocol] = None,
+        response: Optional[api_types.HttpResponseProtocol] = None,
     ) -> None:
         """
         Initialize authentication error with optional HTTP context.
@@ -113,9 +116,9 @@ class AuthenticationError(APIConfigError, HttpContextMixin):
         ----------
         message : str
             Error message describing the authentication failure
-        request : Optional[HttpRequestProtocol]
+        request : Optional[api_types.HttpRequestProtocol]
             HTTP request object (optional)
-        response : Optional[HttpResponseProtocol]
+        response : Optional[api_types.HttpResponseProtocol]
             HTTP response object (optional)
         """
         super().__init__(message)

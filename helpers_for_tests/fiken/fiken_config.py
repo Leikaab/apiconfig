@@ -4,7 +4,7 @@ import os
 from typing import Optional
 
 import pytest
-from dotenv import load_dotenv
+from dotenv import load_dotenv as dotenv_load
 
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.config.base import ClientConfig
@@ -23,7 +23,7 @@ def create_fiken_config_manager() -> ConfigManager:
     ConfigManager
         Configured manager for loading Fiken settings.
     """
-    load_dotenv(dotenv_path=".env", override=True)
+    dotenv_load(dotenv_path=".env", override=True)
 
     defaults = {
         "hostname": "https://api.fiken.no/api",
@@ -110,7 +110,7 @@ def get_fiken_test_credentials() -> Optional[str]:
     Optional[str]
         Optional access token string or None if not available.
     """
-    load_dotenv(dotenv_path=".env", override=True)
+    dotenv_load(dotenv_path=".env", override=True)
     return os.getenv("FIKEN_ACCESS_TOKEN")
 
 

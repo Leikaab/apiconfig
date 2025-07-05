@@ -11,7 +11,7 @@ from apiconfig.exceptions import (
 from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
 
 # Only run if requests is available
-requests = pytest.importorskip("requests")
+requests_lib = pytest.importorskip("requests")
 
 
 class TestRequestsResponseObjects:
@@ -20,11 +20,11 @@ class TestRequestsResponseObjects:
     def test_with_real_requests_response(self) -> None:
         """Test with actual requests.Response object."""
         # Create a mock requests response
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 400
         response.reason = "Bad Request"
         response.url = "https://api.example.com/test"
-        response.request = requests.Request(method="POST", url=response.url).prepare()
+        response.request = requests_lib.Request(method="POST", url=response.url).prepare()
         response._content = b'{"error": "Invalid data"}'
 
         exc = ApiClientBadRequestError("Request failed", response=response)
@@ -39,15 +39,15 @@ class TestRequestsResponseObjects:
 
     def test_requests_error_chaining(self) -> None:
         """Test exception chaining from requests.HTTPError."""
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 404
         response.reason = "Not Found"
         response.url = "https://api.example.com/missing"
-        response.request = requests.Request(method="GET", url=response.url).prepare()
+        response.request = requests_lib.Request(method="GET", url=response.url).prepare()
 
         try:
             response.raise_for_status()
-        except requests.HTTPError as e:
+        except requests_lib.HTTPError as e:
             exc = ApiClientNotFoundError("Resource not found", response=e.response)
             assert exc.status_code == 404
             assert exc.method == "GET"
@@ -55,11 +55,11 @@ class TestRequestsResponseObjects:
 
     def test_requests_with_factory_function(self) -> None:
         """Test factory function with requests objects."""
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 422
         response.reason = "Unprocessable Entity"
         response.url = "https://api.example.com/validate"
-        response.request = requests.Request(method="PUT", url=response.url).prepare()
+        response.request = requests_lib.Request(method="PUT", url=response.url).prepare()
         response._content = b'{"errors": ["field1 is required"]}'
 
         exc = create_api_client_error(422, "Validation failed", response=response)
@@ -72,12 +72,12 @@ class TestRequestsResponseObjects:
     def test_requests_session_response(self) -> None:
         """Test with response from requests.Session."""
         # Create a session and prepare a request
-        session = requests.Session()
-        request = requests.Request(method="DELETE", url="https://api.example.com/item/123", headers={"Authorization": "Bearer token123"})
+        session = requests_lib.Session()
+        request = requests_lib.Request(method="DELETE", url="https://api.example.com/item/123", headers={"Authorization": "Bearer token123"})
         prepared = session.prepare_request(request)
 
         # Create a response
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 401
         response.reason = "Unauthorized"
         response.url = prepared.url
@@ -93,11 +93,11 @@ class TestRequestsResponseObjects:
 
     def test_requests_with_json_response(self) -> None:
         """Test with requests response containing JSON data."""
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 400
         response.reason = "Bad Request"
         response.url = "https://api.example.com/data"
-        response.request = requests.Request(method="POST", url=response.url).prepare()
+        response.request = requests_lib.Request(method="POST", url=response.url).prepare()
         response._content = b'{"error": "Invalid input", "code": "VALIDATION_ERROR"}'
         response.headers["Content-Type"] = "application/json"
 
@@ -110,11 +110,11 @@ class TestRequestsResponseObjects:
     def test_requests_token_refresh_scenario(self) -> None:
         """Test token refresh error with requests."""
         # Simulate a token refresh request
-        refresh_request = requests.Request(
+        refresh_request = requests_lib.Request(
             method="POST", url="https://auth.example.com/oauth/token", data={"grant_type": "refresh_token", "refresh_token": "expired_token"}
         ).prepare()
 
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 400
         response.reason = "Bad Request"
         response.url = refresh_request.url
@@ -133,12 +133,12 @@ class TestRequestsEdgeCases:
 
     def test_response_without_prepared_request(self) -> None:
         """Test response that has unprepared request."""
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 500
         response.reason = "Internal Server Error"
         response.url = "https://api.example.com/error"
         # Create unprepared request
-        response.request = requests.Request(method="GET", url=response.url)
+        response.request = requests_lib.Request(method="GET", url=response.url)
 
         exc = ApiClientError("Server error", response=response)
 
@@ -150,18 +150,18 @@ class TestRequestsEdgeCases:
     def test_response_with_redirect_history(self) -> None:
         """Test response that went through redirects."""
         # Create the final response
-        response = requests.Response()
+        response = requests_lib.Response()
         response.status_code = 404
         response.reason = "Not Found"
         response.url = "https://api.example.com/final/location"
-        response.request = requests.Request(method="GET", url="https://api.example.com/final/location").prepare()
+        response.request = requests_lib.Request(method="GET", url="https://api.example.com/final/location").prepare()
 
         # Add redirect history
-        redirect1 = requests.Response()
+        redirect1 = requests_lib.Response()
         redirect1.status_code = 301
         redirect1.url = "https://api.example.com/original"
 
-        redirect2 = requests.Response()
+        redirect2 = requests_lib.Response()
         redirect2.status_code = 302
         redirect2.url = "https://api.example.com/intermediate"
 

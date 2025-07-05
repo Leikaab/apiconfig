@@ -106,9 +106,7 @@ class BaseClient:
             If JSON parsing fails.
         """
         if not is_success(response.status_code):
-            error_message = (
-                f"HTTP request to {method.value} {url} failed with status {response.status_code}. " f"Response: '{response.text[:200]}...'"
-            )
+            error_message = f"HTTP request to {method.value} {url} failed with status {response.status_code}. Response: '{response.text[:200]}...'"
             raise HTTPUtilsError(error_message)
 
         if not response.text.strip():
@@ -123,15 +121,11 @@ class BaseClient:
             return cast(JsonObject, {})
         except json.JSONDecodeError as e:
             raise JSONDecodeError(
-                f"Failed to decode JSON response from {method.value} {url}. "
-                f"Status: {response.status_code}. JSON error: {e}. "
-                f"Response: '{response.text[:200]}...'"
+                f"Failed to decode JSON response from {method.value} {url}. Status: {response.status_code}. JSON error: {e}. Response: '{response.text[:200]}...'"
             ) from e
         except Exception as e:
             raise JSONDecodeError(
-                f"Failed to decode JSON response from {method.value} {url}. "
-                f"Status: {response.status_code}. Original error: {e}. "
-                f"Response: '{response.text[:200]}...'"
+                f"Failed to decode JSON response from {method.value} {url}. Status: {response.status_code}. Original error: {e}. Response: '{response.text[:200]}...'"
             ) from e
 
     def _request(
@@ -220,9 +214,4 @@ class BaseClient:
 
     def __repr__(self) -> str:
         """Return string representation of the client."""
-        return (
-            f"<{self.__class__.__name__} "
-            f"base_url='{self.config.base_url if self.config else 'N/A'}' "
-            f"auth='{type(self.config.auth_strategy).__name__ if self.config and self.config.auth_strategy else 'N/A'}'"
-            ">"
-        )
+        return f"<{self.__class__.__name__} base_url='{self.config.base_url if self.config else 'N/A'}' auth='{type(self.config.auth_strategy).__name__ if self.config and self.config.auth_strategy else 'N/A'}'>"

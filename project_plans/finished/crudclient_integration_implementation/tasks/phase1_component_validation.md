@@ -22,7 +22,7 @@ import pytest
 from unittest.mock import Mock, patch
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
-from apiconfig.types import TokenRefreshResult
+import apiconfig.types as api_types
 
 class TestAuthRefreshInterface:
     """Test refresh interface consistency across auth strategies."""

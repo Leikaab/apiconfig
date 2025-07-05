@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+import logging as logging_mod
 from typing import Any, Callable, cast
 
 import pytest
@@ -13,7 +13,7 @@ from apiconfig.utils.logging.formatters import (
 
 
 @pytest.fixture
-def log_record_factory() -> Callable[..., logging.LogRecord]:
+def log_record_factory() -> Callable[..., logging_mod.LogRecord]:
     """Factory for creating LogRecord objects with various parameters."""
 
     def make(
@@ -22,12 +22,12 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
         exc_info: Any = None,
         stack_info: Any = None,
         name: str = "test.logger",
-        level: int = logging.INFO,
+        level: int = logging_mod.INFO,
         pathname: str = __file__,
         lineno: int = 42,
         func: str | None = None,
-    ) -> logging.LogRecord:
-        record = logging.LogRecord(
+    ) -> logging_mod.LogRecord:
+        record = logging_mod.LogRecord(
             name=name,
             level=level,
             pathname=pathname,
@@ -54,11 +54,11 @@ def _always_false_structured(msg: Any, content_type: Any) -> bool:
 
 
 def test_redacting_formatter_basic(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="redact test")
-    assert fmt.format(record) == logging.Formatter().format(record)
+    assert fmt.format(record) == logging_mod.Formatter().format(record)
 
 
 def test_redacting_formatter_class_and_docstring() -> None:
@@ -70,7 +70,7 @@ def test_redacting_formatter_class_and_docstring() -> None:
 
 
 def test_redacting_formatter_format(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="redact format test")
@@ -100,7 +100,7 @@ def test_redacting_formatter_format(
     ],
 )
 def test_redacting_formatter_structured_redaction(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
     msg: Any,
     content_type: str | None,
     expected: str,
@@ -117,7 +117,7 @@ def test_redacting_formatter_structured_redaction(
 
 
 def test_redacting_formatter_headers_redaction(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="headers test")
@@ -139,7 +139,7 @@ def test_redacting_formatter_headers_redaction(
 
 
 def test_redacting_formatter_plain_string_secret(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     import re
 
@@ -152,7 +152,7 @@ def test_redacting_formatter_plain_string_secret(
 
 
 def test_redacting_formatter_binary_and_unparsable(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg=b"\x00\x01\x02\x03")
@@ -166,7 +166,7 @@ def test_redacting_formatter_binary_and_unparsable(
 
 
 def test_redacting_formatter_empty_message(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="")
@@ -176,7 +176,7 @@ def test_redacting_formatter_empty_message(
 
 
 def test_redacting_formatter_fallback_branch(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
 
@@ -191,7 +191,7 @@ def test_redacting_formatter_fallback_branch(
 
 def test_redacting_formatter_redact_headers_exception(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg="headers test")
@@ -211,7 +211,7 @@ def test_redacting_formatter_redact_headers_exception(
 
 def test_redacting_formatter_redact_structured_exception(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"foo": "bar"})
@@ -227,7 +227,7 @@ def test_redacting_formatter_redact_structured_exception(
 
 
 def test_redacting_formatter_structured_dict_list_coverage(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"secret": "abc", "foo": "bar"})
@@ -240,7 +240,7 @@ def test_redacting_formatter_structured_dict_list_coverage(
 
 def test_redacting_formatter_structured_string_json_exception(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg='{"token": "abc"}')
@@ -256,7 +256,7 @@ def test_redacting_formatter_structured_string_json_exception(
 
 def test_redacting_formatter_structured_dict_exception(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
     record = log_record_factory(msg={"token": "abc"})
@@ -270,7 +270,7 @@ def test_redacting_formatter_structured_dict_exception(
 
 
 def test_redacting_formatter_fallback_branch_strmsg(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = RedactingFormatter()
 
@@ -292,7 +292,7 @@ def test_redacting_formatter_is_structured_dict_list() -> None:
 
 def test_redacting_formatter_redact_structured_dict_from_string(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     """Test that _redact_structured correctly handles dict return from redact_body."""
     fmt = RedactingFormatter()
@@ -376,7 +376,7 @@ def test_redacting_formatter_redact_structured_other_type_direct(
 
 def test_redacting_formatter_redact_message_dict_json_dumps_direct(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     """Test that a dict message is converted to JSON in _redact_message."""
     fmt = RedactingFormatter()
@@ -410,7 +410,7 @@ def test_redacting_formatter_redact_message_dict_json_dumps_direct(
 
 
 def test_redacting_formatter_unknown_type_fallback_direct(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Test the fallback branch in _redact_message for unknown types."""
@@ -443,7 +443,7 @@ def test_redacting_formatter_unknown_type_fallback_direct(
 
 def test_redacting_formatter_redact_structured_string_exception_fallback(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     """Test the exception fallback for string input in _redact_structured."""
     fmt = RedactingFormatter()
@@ -474,9 +474,9 @@ def test_redacting_formatter_line_138_direct(monkeypatch: pytest.MonkeyPatch) ->
     obj = NonStringNonDictNonList()
 
     # Create a record with our custom object
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test.logger",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=42,
         msg=obj,
@@ -563,7 +563,7 @@ def test_redacting_formatter_line_224_direct(monkeypatch: pytest.MonkeyPatch) ->
 
 def test_redacting_formatter_line_138_direct_with_format(
     monkeypatch: pytest.MonkeyPatch,
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     """Exercise _redact_message via format() with a custom object."""
     fmt = RedactingFormatter()
@@ -603,7 +603,7 @@ def test_redacting_formatter_line_138_with_subclass() -> None:
 
     # Create a subclass that overrides the necessary methods to force the fallback branch
     class TestRedactingFormatter(RedactingFormatter):
-        def _redact_message(self, record: logging.LogRecord) -> None:
+        def _redact_message(self, record: logging_mod.LogRecord) -> None:
             # Get the original message
             orig_msg = getattr(record, "msg", None)
 
@@ -625,9 +625,9 @@ def test_redacting_formatter_line_138_with_subclass() -> None:
     obj = TestObject()
 
     # Create a record with the custom object
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test.logger",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=42,
         msg=obj,

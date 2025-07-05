@@ -1,7 +1,7 @@
 """Unit tests for HTTP exception protocol support."""
 
 from typing import Any, cast
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -92,7 +92,7 @@ class TestProtocolExtraction:
 
     def test_extraction_with_none_values(self) -> None:
         """Test extraction handles None values gracefully."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = None
         request.url = None
 
@@ -108,7 +108,7 @@ class TestProtocolExtraction:
             def __str__(self) -> str:
                 return "https://custom.url"
 
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = 1  # Non-string
         request.url = CustomURL()  # Object with __str__
 
@@ -118,7 +118,7 @@ class TestProtocolExtraction:
 
     def test_response_without_request_attribute(self) -> None:
         """Test response objects that don't have a request attribute."""
-        response = Mock(spec=["status_code", "headers", "text", "reason"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason"])
         response.status_code = 500
         response.headers = {}
         response.text = "Internal error"
@@ -135,7 +135,7 @@ class TestProtocolExtraction:
 
     def test_response_with_none_request(self) -> None:
         """Test response with request attribute set to None."""
-        response = Mock(spec=["status_code", "headers", "text", "reason", "request"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason", "request"])
         response.status_code = 400
         response.headers = {}
         response.text = "Bad request"
@@ -153,11 +153,11 @@ class TestFactoryFunctionWithProtocols:
 
     def test_factory_with_response_object(self) -> None:
         """Test factory function with protocol-compliant response."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "DELETE"
         request.url = "https://api.example.com/item/456"
 
-        response = Mock(spec=["status_code", "headers", "text", "reason", "request"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason", "request"])
         response.status_code = 404
         response.headers = {}
         response.text = "Item not found"
@@ -172,11 +172,11 @@ class TestFactoryFunctionWithProtocols:
 
     def test_factory_with_separate_request_response(self) -> None:
         """Test factory with both request and response objects."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "PATCH"
         request.url = "https://api.example.com/user/789"
 
-        response = Mock(spec=["status_code", "headers", "text", "reason"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason"])
         response.status_code = 422
         response.headers = {}
         response.text = "Validation error"
@@ -195,7 +195,7 @@ class TestAuthExceptionsWithProtocols:
 
     def test_auth_error_with_response(self) -> None:
         """Test AuthenticationError with response object."""
-        response = Mock(spec=["status_code", "headers", "text", "reason"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason"])
         response.status_code = 401
         response.headers = {"WWW-Authenticate": "Bearer"}
         response.text = "Invalid token"
@@ -208,11 +208,11 @@ class TestAuthExceptionsWithProtocols:
 
     def test_token_refresh_error_with_full_context(self) -> None:
         """Test TokenRefreshError with full HTTP context."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "POST"
         request.url = "https://auth.example.com/token/refresh"
 
-        response = Mock(spec=["status_code", "headers", "text", "reason", "request"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason", "request"])
         response.status_code = 400
         response.headers = {"Content-Type": "application/json"}
         response.text = '{"error": "invalid_refresh_token"}'
@@ -252,11 +252,11 @@ class TestEdgeCases:
 
     def test_circular_reference(self) -> None:
         """Test handling of circular references between request and response."""
-        request = Mock(spec=["method", "url"])
+        request = MockClass(spec=["method", "url"])
         request.method = "GET"
         request.url = "https://api.example.com/data"
 
-        response = Mock(spec=["status_code", "headers", "text", "reason", "request"])
+        response = MockClass(spec=["status_code", "headers", "text", "reason", "request"])
         response.status_code = 200
         response.headers = {}
         response.text = "OK"

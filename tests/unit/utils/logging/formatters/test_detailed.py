@@ -1,4 +1,4 @@
-import logging
+import logging as logging_mod
 import sys
 import traceback
 from typing import Any, Callable
@@ -11,12 +11,12 @@ from apiconfig.utils.logging.formatters import (
 )
 
 
-class TypedLogRecord(logging.LogRecord):
+class TypedLogRecord(logging_mod.LogRecord):
     headers: dict[str, str]
 
 
 @pytest.fixture
-def log_record_factory() -> Callable[..., logging.LogRecord]:
+def log_record_factory() -> Callable[..., logging_mod.LogRecord]:
     """Factory for creating LogRecord objects with various parameters."""
 
     def make(
@@ -25,12 +25,12 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
         exc_info: Any = None,
         stack_info: Any = None,
         name: str = "test.logger",
-        level: int = logging.INFO,
+        level: int = logging_mod.INFO,
         pathname: str = __file__,
         lineno: int = 42,
         func: str | None = None,
-    ) -> logging.LogRecord:
-        record = logging.LogRecord(
+    ) -> logging_mod.LogRecord:
+        record = logging_mod.LogRecord(
             name=name,
             level=level,
             pathname=pathname,
@@ -53,7 +53,7 @@ def log_record_factory() -> Callable[..., logging.LogRecord]:
         ("multi\nline\nmessage", "multi\n"),
     ],
 )
-def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[..., logging.LogRecord], msg: str, expected_in: str) -> None:
+def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[..., logging_mod.LogRecord], msg: str, expected_in: str) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg=msg)
     output = fmt.format(record)
@@ -64,7 +64,7 @@ def test_detailed_formatter_basic_and_multiline(log_record_factory: Callable[...
 
 
 def test_detailed_formatter_custom_format(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     custom_fmt = "[%(levelname)s] %(message)s"
     fmt = DetailedFormatter(fmt=custom_fmt)
@@ -75,7 +75,7 @@ def test_detailed_formatter_custom_format(
 
 
 def test_detailed_formatter_indents_multiline_message(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     msg = "first line\nsecond line\nthird line"
     fmt = DetailedFormatter()
@@ -87,7 +87,7 @@ def test_detailed_formatter_indents_multiline_message(
 
 
 def test_detailed_formatter_with_exception(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     try:
@@ -102,7 +102,7 @@ def test_detailed_formatter_with_exception(
 
 
 def test_detailed_formatter_with_stack_info(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     stack = "".join(traceback.format_stack())
@@ -115,7 +115,7 @@ def test_detailed_formatter_with_stack_info(
 
 
 def test_detailed_formatter_with_exception_and_stack(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     stack = "".join(traceback.format_stack())
@@ -134,7 +134,7 @@ def test_detailed_formatter_with_exception_and_stack(
 
 
 def test_detailed_formatter_exc_info_and_stack_full_branch(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     stack = "".join(traceback.format_stack())
@@ -155,7 +155,7 @@ def test_detailed_formatter_exc_info_and_stack_full_branch(
 
 
 @pytest.mark.parametrize("style", ["%"])
-def test_detailed_formatter_style_variants(log_record_factory: Callable[..., logging.LogRecord], style: str) -> None:
+def test_detailed_formatter_style_variants(log_record_factory: Callable[..., logging_mod.LogRecord], style: str) -> None:
     from typing import Literal, cast
 
     fmt = DetailedFormatter(style=cast(Literal["%", "{", "$"], style))
@@ -165,7 +165,7 @@ def test_detailed_formatter_style_variants(log_record_factory: Callable[..., log
 
 
 def test_detailed_formatter_repr_and_str(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg="repr test")
@@ -174,7 +174,7 @@ def test_detailed_formatter_repr_and_str(
 
 
 def test_detailed_formatter_empty_message(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     record = log_record_factory(msg="")
@@ -184,7 +184,7 @@ def test_detailed_formatter_empty_message(
 
 
 def test_detailed_formatter_metadata_len_minus_one(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     custom_fmt = "%(asctime)s [%(levelname)s] [%(name)s]\n%(message)s"
     fmt = DetailedFormatter(fmt=custom_fmt)
@@ -203,7 +203,7 @@ def test_detailed_formatter_metadata_len_minus_one(
 
 
 def test_detailed_formatter_exc_info_sets_exc_text(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     try:
@@ -217,7 +217,7 @@ def test_detailed_formatter_exc_info_sets_exc_text(
 
 
 def test_detailed_formatter_exc_info_sets_exc_text_branch(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     fmt = DetailedFormatter()
     try:
@@ -232,7 +232,7 @@ def test_detailed_formatter_exc_info_sets_exc_text_branch(
 
 
 def test_detailed_formatter_format_exception_text_direct(
-    log_record_factory: Callable[..., logging.LogRecord],
+    log_record_factory: Callable[..., logging_mod.LogRecord],
 ) -> None:
     """Test _format_exception_text via its public helper."""
     fmt = DetailedFormatter()

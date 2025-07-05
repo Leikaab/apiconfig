@@ -1,13 +1,13 @@
 """Extension-related type definitions."""
 
-import logging
+import logging as logging_mod
 from typing import Any, Callable, TypeAlias
 
 # Extension Types
-CustomLogFormatter: TypeAlias = logging.Formatter
+CustomLogFormatter: TypeAlias = logging_mod.Formatter
 """Type alias for custom log formatter instances."""
 
-CustomLogHandler: TypeAlias = logging.Handler
+CustomLogHandler: TypeAlias = logging_mod.Handler
 """Type alias for custom log handler instances."""
 
 CustomRedactionRule: TypeAlias = Callable[[str], str]

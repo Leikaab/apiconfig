@@ -175,14 +175,14 @@ class BaseAuthStrategyTest(unittest.TestCase):
     strategy they want to test.
     """
 
-    strategy: AuthStrategy
+    strategy: ClassVar[AuthStrategy | None] = None
 
     @classmethod
     def setUpClass(cls) -> None:
         """Ensure subclasses provide a strategy."""
         if cls is BaseAuthStrategyTest:
             return  # Skip setup for the base class itself
-        if not hasattr(cls, "strategy"):
+        if cls.strategy is None:
             raise NotImplementedError(f"{cls.__name__} must define a class attribute 'strategy'.")
         check_auth_strategy_interface(cls.strategy)
 
@@ -197,6 +197,8 @@ class BaseAuthStrategyTest(unittest.TestCase):
         expected_value : str
             The expected value of the header.
         """
+        if self.strategy is None:
+            raise NotImplementedError("No strategy defined for this test case.")
         assert_auth_header_correct(self.strategy, expected_header, expected_value)
 
 

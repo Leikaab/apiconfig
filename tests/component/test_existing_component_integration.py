@@ -1,14 +1,14 @@
 """Test integration with existing apiconfig components."""
 
-import logging
+import logging as logging_mod
 from io import StringIO
 from typing import Any, Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.auth.token.storage import InMemoryTokenStorage
-from apiconfig.types import TokenRefreshResult
 
 
 class TestExistingComponentIntegration:
@@ -37,15 +37,15 @@ class TestExistingComponentIntegration:
                 self.refresh_token: str = "default_refresh"
                 self.expires_at: str = "default_expires"
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 # Simulate refresh
                 self.access_token = "new_token"
                 self.refresh_token = "new_refresh"
                 return {"token_data": {"access_token": "new_token", "refresh_token": "new_refresh"}, "config_updates": None}
 
         # Test saving back to storage after refresh
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh"})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token", "refresh_token": "new_refresh"})
 
         auth = TestBearerAuth(access_token="stored_token", http_request_callable=mock_http)
         auth.refresh_token = "stored_refresh"
@@ -71,18 +71,18 @@ class TestExistingComponentIntegration:
         """Test integration with logging system."""
         # Capture log output
         log_capture = StringIO()
-        handler = logging.StreamHandler(log_capture)
-        logger = logging.getLogger("apiconfig")
+        handler = logging_mod.StreamHandler(log_capture)
+        logger = logging_mod.getLogger("apiconfig")
         logger.addHandler(handler)
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging_mod.INFO)
 
         try:
-            mock_http = Mock()
-            mock_http.return_value = Mock(json=lambda: {"access_token": "new_token"})
+            mock_http = MockClass()
+            mock_http.return_value = MockClass(json=lambda: {"access_token": "new_token"})
 
             # Create a test subclass that logs during refresh
             class TestBearerAuth(BearerAuth):
-                def refresh(self) -> TokenRefreshResult:
+                def refresh(self) -> api_types.TokenRefreshResult:
                     logger.info("Bearer token refresh started")
                     self.access_token = "new_token"
                     logger.info("Bearer token refresh successful")
@@ -113,7 +113,7 @@ class TestExistingComponentIntegration:
         def header_callback() -> Dict[str, str]:
             return {"X-API-Key": current_token["value"]}
 
-        def refresh_func() -> TokenRefreshResult:
+        def refresh_func() -> api_types.TokenRefreshResult:
             # Simulate refresh
             new_key = "refreshed_api_key"
             current_token["value"] = new_key

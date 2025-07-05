@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import io
-import logging
+import logging as logging_mod
 import re
 from typing import Any, Generator, Protocol, cast
 
@@ -17,13 +17,13 @@ def log_stream() -> Generator[io.StringIO, None, None]:
     stream.close()
 
 
-def get_logger_with_formatter(stream: io.StringIO, **fmt_kwargs: Any) -> logging.Logger:
-    logger = logging.getLogger("integration.redact")
+def get_logger_with_formatter(stream: io.StringIO, **fmt_kwargs: Any) -> logging_mod.Logger:
+    logger = logging_mod.getLogger("integration.redact")
     logger.handlers.clear()
-    handler = logging.StreamHandler(stream)
+    handler = logging_mod.StreamHandler(stream)
     handler.setFormatter(RedactingFormatter(**fmt_kwargs))
     logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging_mod.INFO)
     return logger
 
 
@@ -71,9 +71,9 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
     # For integration, we check that the record's headers are redacted
     # (This is a limitation of logging, but we can at least check the handler's formatter)
     # So we check that the handler's formatter redacts headers
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="integration.redact",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="header test",
@@ -92,7 +92,7 @@ def test_redacting_formatter_integration_headers(log_stream: io.StringIO) -> Non
     class TypedLogRecord(Protocol):
         headers: dict[str, str]
 
-    handler = logging.StreamHandler(io.StringIO())
+    handler = logging_mod.StreamHandler(io.StringIO())
     handler.setFormatter(RedactingFormatter())
     handler.format(record)
     # Use cast only for attribute access
@@ -107,9 +107,9 @@ def test_redacting_formatter_integration_cookie_header(log_stream: io.StringIO) 
     _ = get_logger_with_formatter(log_stream)
 
     # Create a record with a Cookie header
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="integration.redact",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="cookie header test",
@@ -130,7 +130,7 @@ def test_redacting_formatter_integration_cookie_header(log_stream: io.StringIO) 
         headers: dict[str, str]
 
     # Format the record
-    handler = logging.StreamHandler(io.StringIO())
+    handler = logging_mod.StreamHandler(io.StringIO())
     handler.setFormatter(RedactingFormatter())
     handler.format(record)
 
@@ -148,9 +148,9 @@ def test_redacting_formatter_integration_set_cookie_header(
     _ = get_logger_with_formatter(log_stream)
 
     # Create a record with a Set-Cookie header
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="integration.redact",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="set-cookie header test",
@@ -171,7 +171,7 @@ def test_redacting_formatter_integration_set_cookie_header(
         headers: dict[str, str]
 
     # Format the record
-    handler = logging.StreamHandler(io.StringIO())
+    handler = logging_mod.StreamHandler(io.StringIO())
     handler.setFormatter(RedactingFormatter())
     handler.format(record)
 

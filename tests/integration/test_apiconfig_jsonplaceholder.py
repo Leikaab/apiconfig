@@ -20,8 +20,8 @@ def test_jsonplaceholder_get_post_1() -> None:
     Asserts status code 200 and required fields in the response.
     """
     # Load base URL from environment using EnvProvider (default if not set)
-    env = EnvProvider(prefix="")
-    env_vars: Dict[str, Any] = env.load()
+    env_provider = EnvProvider(prefix="")
+    env_vars: Dict[str, Any] = env_provider.load()
     base_url: str = env_vars.get(
         "JSONPLACEHOLDER_BASE_URL",
         os.environ.get("JSONPLACEHOLDER_BASE_URL", "https://jsonplaceholder.typicode.com"),

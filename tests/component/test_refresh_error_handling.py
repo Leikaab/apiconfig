@@ -3,14 +3,14 @@
 import threading
 import time
 from typing import Any
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import AuthStrategyError, TokenRefreshError
-from apiconfig.types import TokenRefreshResult
 
 
 class TestRefreshErrorHandling:
@@ -18,7 +18,7 @@ class TestRefreshErrorHandling:
 
     def test_refresh_failure_handling(self) -> None:
         """Test handling of refresh failures."""
-        mock_http = Mock()
+        mock_http = MockClass()
         mock_http.side_effect = Exception("Network error")
 
         # Create a test subclass that uses the http_request_callable
@@ -48,8 +48,8 @@ class TestRefreshErrorHandling:
 
     def test_concurrent_refresh_safety(self) -> None:
         """Test thread safety of concurrent refresh operations."""
-        mock_http = Mock()
-        mock_http.return_value = Mock(json=lambda: {"access_token": f"token_{time.time()}", "expires_in": 3600})
+        mock_http = MockClass()
+        mock_http.return_value = MockClass(json=lambda: {"access_token": f"token_{time.time()}", "expires_in": 3600})
 
         # Create a test subclass with thread-safe refresh
         class TestBearerAuth(BearerAuth):
@@ -57,7 +57,7 @@ class TestRefreshErrorHandling:
                 super().__init__(*args, **kwargs)
                 self._refresh_lock = threading.Lock()
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 with self._refresh_lock:
                     # Simulate some processing time
                     time.sleep(0.01)
@@ -67,7 +67,7 @@ class TestRefreshErrorHandling:
 
         auth = TestBearerAuth(access_token="initial", http_request_callable=mock_http)
 
-        results: list[TokenRefreshResult] = []
+        results: list[api_types.TokenRefreshResult] = []
         errors: list[Exception] = []
 
         def refresh_worker() -> None:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """HTTP related utility functions."""
 
-import json
+import json as json_lib
 from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union, cast
 
 if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
@@ -230,12 +230,12 @@ def safe_json_decode(
         if not stripped_content:
             return None  # Return None for empty or whitespace-only content
 
-        result = json.loads(stripped_content)
+        result = json_lib.loads(stripped_content)
         if not isinstance(result, dict):
             raise JSONDecodeError("Decoded JSON is not an object (dict).")
         result = cast(Dict[str, Any], result)
         return result
-    except json.JSONDecodeError as e:
+    except json_lib.JSONDecodeError as e:
         raise JSONDecodeError(f"Failed to decode JSON: {e}") from e
     except UnicodeDecodeError as e:
         raise JSONDecodeError(f"Failed to decode response body with encoding '{encoding or 'utf-8'}': {e}") from e
@@ -293,7 +293,7 @@ def safe_json_encode(
 
     try:
         # Attempt to encode the data as JSON
-        json_string = json.dumps(data, ensure_ascii=ensure_ascii, indent=indent)
+        json_string = json_lib.dumps(data, ensure_ascii=ensure_ascii, indent=indent)
 
         # Check the size of the resulting string
         encoded_size = len(json_string.encode("utf-8"))

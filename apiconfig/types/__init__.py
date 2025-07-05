@@ -34,16 +34,20 @@ from .http import (
     ResponseBodyType,
     UrlencodeParamsType,
 )
-from .json import (
-    JsonDecoder,
-    JsonDeserializerCallable,
-    JsonEncoder,
-    JsonList,
-    JsonObject,
-    JsonPrimitive,
-    JsonSerializerCallable,
-    JsonValue,
-)
+
+# isort: off
+from . import json as json_types
+
+# isort: on
+
+JsonDecoder = json_types.JsonDecoder
+JsonDeserializerCallable = json_types.JsonDeserializerCallable
+JsonEncoder = json_types.JsonEncoder
+JsonList = json_types.JsonList
+JsonObject = json_types.JsonObject
+JsonPrimitive = json_types.JsonPrimitive
+JsonSerializerCallable = json_types.JsonSerializerCallable
+JsonValue = json_types.JsonValue
 
 __all__ = [
     # JSON types

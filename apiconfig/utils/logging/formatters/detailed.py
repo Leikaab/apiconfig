@@ -3,7 +3,7 @@
 
 import logging as logging_mod
 import textwrap
-import types
+import types as stdlib_types
 from typing import Any, Literal, Mapping, Optional
 
 
@@ -26,7 +26,12 @@ class DetailedFormatter(logging_mod.Formatter):
         defaults: Optional[Mapping[str, Any]] = None,
     ) -> None:
         # Default format string
-        default_fmt = "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s" "\n    (%(filename)s:%(lineno)d)"
+        # fmt: off
+        default_fmt = (
+            "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s\n"
+            "    (%(filename)s:%(lineno)d)"
+        )
+        # fmt: on
         super().__init__(
             fmt=fmt or default_fmt,
             datefmt=datefmt,
@@ -77,7 +82,7 @@ class DetailedFormatter(logging_mod.Formatter):
 
     def formatException(
         self,
-        ei: tuple[type[BaseException], BaseException, types.TracebackType | None] | tuple[None, None, None],
+        ei: tuple[type[BaseException], BaseException, stdlib_types.TracebackType | None] | tuple[None, None, None],
     ) -> str:
         """Format the specified exception information as a string.
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Generator
+from typing import Any, Generator  # pyright: ignore[reportShadowedImports]
 
 import pytest
 

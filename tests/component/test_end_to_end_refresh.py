@@ -4,9 +4,9 @@ from typing import Dict, Optional
 from unittest.mock import Mock as MockClass
 from unittest.mock import patch
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
-from apiconfig.types import TokenRefreshResult
 
 
 class TestEndToEndRefresh:
@@ -38,7 +38,7 @@ class TestEndToEndRefresh:
                 self.token_url = token_url
                 self.client_id = client_id
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 # Simulate calling the refresh utility
                 result = mock_refresh()
                 self.access_token = result["access_token"]
@@ -91,7 +91,7 @@ class TestEndToEndRefresh:
         def header_callback() -> Dict[str, str]:
             return {"Authorization": f"Bearer {current_token['value']}"}
 
-        def refresh_func() -> TokenRefreshResult:
+        def refresh_func() -> api_types.TokenRefreshResult:
             current_token["value"] = "new_token"
             return {"token_data": {"access_token": "new_token"}, "config_updates": None}
 

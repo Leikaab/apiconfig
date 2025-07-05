@@ -5,9 +5,9 @@ from unittest.mock import Mock as MockClass
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import AuthStrategyError
-from apiconfig.types import TokenRefreshResult
 
 
 class TestCustomAuth:
@@ -411,7 +411,7 @@ class TestCustomAuthRefreshIntegration:
             assert isinstance(expires_at, int)
             return current_time >= expires_at
 
-        def refresh_callback() -> Optional[TokenRefreshResult]:
+        def refresh_callback() -> Optional[api_types.TokenRefreshResult]:
             # Simulate getting a new token
             token_state["access_token"] = "refreshed-token"
             current_time = token_state["current_time"]
@@ -458,7 +458,7 @@ class TestCustomAuthRefreshIntegration:
     def test_custom_refresh_error_handling(self) -> None:
         """Test error handling in custom refresh scenarios."""
 
-        def failing_refresh() -> Optional[TokenRefreshResult]:
+        def failing_refresh() -> Optional[api_types.TokenRefreshResult]:
             raise ConnectionError("Network error during refresh")
 
         auth = CustomAuth(

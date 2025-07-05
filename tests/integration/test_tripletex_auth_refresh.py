@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from apiconfig.types import TokenRefreshResult
+import apiconfig.types as api_types
 
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
     pytest.skip(
@@ -119,7 +119,7 @@ class TestTripletexAuthRefresh:
         countries = tripletex_client.list_countries()
         assert isinstance(countries, dict)
 
-        results: list[TokenRefreshResult | None] = []
+        results: list[api_types.TokenRefreshResult | None] = []
         errors: list[Exception] = []
 
         def refresh_worker() -> None:

@@ -2,9 +2,9 @@
 
 from unittest.mock import Mock as MockClass
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
-from apiconfig.types import TokenRefreshResult
 
 
 class TestAuthRefreshInterface:
@@ -18,7 +18,7 @@ class TestAuthRefreshInterface:
 
         # Create a test subclass of BearerAuth that implements refresh
         class TestBearerAuth(BearerAuth):
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 return {"token_data": {"access_token": "new_token"}, "config_updates": None}
 
         strategies = [
@@ -57,7 +57,7 @@ class TestAuthRefreshInterface:
 
         # Create a test subclass that implements refresh
         class TestBearerAuth(BearerAuth):
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 # old_token = self.access_token  # Unused variable
                 self.access_token = "new_token"
                 return {"token_data": {"access_token": "new_token"}, "config_updates": None}

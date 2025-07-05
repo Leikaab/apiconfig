@@ -7,10 +7,10 @@ from unittest.mock import Mock as MockClass
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.auth.strategies.bearer import BearerAuth
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.exceptions.auth import AuthStrategyError, TokenRefreshError
-from apiconfig.types import TokenRefreshResult
 
 
 class TestRefreshErrorHandling:
@@ -57,7 +57,7 @@ class TestRefreshErrorHandling:
                 super().__init__(*args, **kwargs)
                 self._refresh_lock = threading.Lock()
 
-            def refresh(self) -> TokenRefreshResult:
+            def refresh(self) -> api_types.TokenRefreshResult:
                 with self._refresh_lock:
                     # Simulate some processing time
                     time.sleep(0.01)
@@ -67,7 +67,7 @@ class TestRefreshErrorHandling:
 
         auth = TestBearerAuth(access_token="initial", http_request_callable=mock_http)
 
-        results: list[TokenRefreshResult] = []
+        results: list[api_types.TokenRefreshResult] = []
         errors: list[Exception] = []
 
         def refresh_worker() -> None:

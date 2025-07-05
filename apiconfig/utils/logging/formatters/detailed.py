@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Detailed logging formatter."""
 
-import logging
+import logging as logging_mod
 import textwrap
 import types
 from typing import Any, Literal, Mapping, Optional
 
 
-class DetailedFormatter(logging.Formatter):
+class DetailedFormatter(logging_mod.Formatter):
     """
     A logging formatter that provides detailed, potentially multi-line output.
 
@@ -35,7 +35,7 @@ class DetailedFormatter(logging.Formatter):
             defaults=defaults,
         )
 
-    def format(self, record: logging.LogRecord) -> str:
+    def format(self, record: logging_mod.LogRecord) -> str:
         """Format the specified record as text.
 
         Handles multi-line messages, exception text, and stack information.
@@ -58,7 +58,7 @@ class DetailedFormatter(logging.Formatter):
         formatted = self._format_stack_info(formatted, record)
         return formatted
 
-    def _format_multiline_message(self, formatted: str, record: logging.LogRecord) -> str:
+    def _format_multiline_message(self, formatted: str, record: logging_mod.LogRecord) -> str:
         lines = formatted.split("\n")
         if len(lines) <= 1:
             return formatted
@@ -112,7 +112,7 @@ class DetailedFormatter(logging.Formatter):
         """
         return super().formatStack(stack_info)
 
-    def _format_exception_text(self, formatted: str, record: logging.LogRecord) -> str:
+    def _format_exception_text(self, formatted: str, record: logging_mod.LogRecord) -> str:
         if record.exc_info and not getattr(record, "exc_text", None):
             record.exc_text = self.formatException(record.exc_info)
         if getattr(record, "exc_text", None):
@@ -122,7 +122,7 @@ class DetailedFormatter(logging.Formatter):
             formatted += exc_text
         return formatted
 
-    def _format_stack_info(self, formatted: str, record: logging.LogRecord) -> str:
+    def _format_stack_info(self, formatted: str, record: logging_mod.LogRecord) -> str:
         if record.stack_info:
             stack_info = textwrap.indent(self.formatStack(record.stack_info), "    ")
             if formatted[-1:] != "\n":

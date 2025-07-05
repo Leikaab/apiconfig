@@ -5,7 +5,7 @@ as a real-world example, validating the complete refresh flow from auth strategy
 successful API calls.
 """
 
-import logging
+import logging as logging_mod
 import os
 import threading
 from datetime import datetime, timedelta, timezone
@@ -173,7 +173,7 @@ class TestTripletexAuthRefresh:
         auth_strategy = tripletex_client.config.auth_strategy
         assert isinstance(auth_strategy, TripletexSessionAuth)
 
-        with caplog.at_level(logging.DEBUG):
+        with caplog.at_level(logging_mod.DEBUG):
             auth_strategy.refresh()
 
         # Verify refresh operation was logged (check for any log messages)

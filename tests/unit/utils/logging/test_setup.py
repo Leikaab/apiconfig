@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+import logging as logging_mod
 import sys
 from unittest.mock import MagicMock, patch
 
@@ -11,7 +11,7 @@ from apiconfig.utils.logging.setup import setup_logging
 # but we patch the standard ones here to avoid import issues if those aren't implemented/exported yet
 # and to focus the test on the setup logic itself.
 DEFAULT_LOGGER_NAME = "apiconfig"
-DEFAULT_LOG_LEVEL = logging.WARNING  # Default level is WARNING as per .pyi
+DEFAULT_LOG_LEVEL = logging_mod.WARNING  # Default level is WARNING as per .pyi
 DEFAULT_FORMAT_STRING = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 
@@ -28,8 +28,8 @@ def test_setup_logging_default(
     mock_logger.handlers = []
     mock_logger.reset_mock()  # Reset mock from potential previous tests or module load
 
-    mock_handler_instance = MagicMock(spec=logging.Handler)
-    mock_formatter_instance = MagicMock(spec=logging.Formatter)
+    mock_handler_instance = MagicMock(spec=logging_mod.Handler)
+    mock_formatter_instance = MagicMock(spec=logging_mod.Formatter)
     mock_handler_cls.return_value = mock_handler_instance
     mock_formatter_cls.return_value = mock_formatter_instance
 
@@ -59,11 +59,11 @@ def test_setup_logging_custom_handlers(
     mock_logger.hasHandlers.return_value = False  # No handlers initially
 
     # Use mocks with spec for type compatibility (mypy fix)
-    custom_handler1 = MagicMock(spec=logging.Handler)
-    custom_handler2 = MagicMock(spec=logging.Handler)
-    custom_handlers: list[logging.Handler] = [custom_handler1, custom_handler2]
+    custom_handler1 = MagicMock(spec=logging_mod.Handler)
+    custom_handler2 = MagicMock(spec=logging_mod.Handler)
+    custom_handlers: list[logging_mod.Handler] = [custom_handler1, custom_handler2]
 
-    mock_formatter_instance = MagicMock(spec=logging.Formatter)
+    mock_formatter_instance = MagicMock(spec=logging_mod.Formatter)
     mock_formatter_cls.return_value = mock_formatter_instance
 
     # Call setup_logging with custom handlers
@@ -100,9 +100,9 @@ def test_setup_logging_custom_formatter(
     """Test setup_logging with a custom formatter."""
     mock_logger.handlers = []
     mock_logger.reset_mock()
-    custom_formatter = logging.Formatter("%(levelname)s: %(message)s")
+    custom_formatter = logging_mod.Formatter("%(levelname)s: %(message)s")
 
-    mock_handler_instance = MagicMock(spec=logging.Handler)
+    mock_handler_instance = MagicMock(spec=logging_mod.Handler)
     mock_handler_cls.return_value = mock_handler_instance
 
     # Call setup_logging with custom formatter
@@ -130,10 +130,10 @@ def test_setup_logging_custom_level(
     mock_logger.handlers = []
     mock_logger.reset_mock()
     mock_logger.hasHandlers.return_value = False  # No handlers initially
-    custom_level = logging.DEBUG
+    custom_level = logging_mod.DEBUG
 
-    mock_handler_instance = MagicMock(spec=logging.Handler)
-    mock_formatter_instance = MagicMock(spec=logging.Formatter)
+    mock_handler_instance = MagicMock(spec=logging_mod.Handler)
+    mock_formatter_instance = MagicMock(spec=logging_mod.Formatter)
     mock_handler_cls.return_value = mock_handler_instance
     mock_formatter_cls.return_value = mock_formatter_instance
 
@@ -159,8 +159,8 @@ def test_setup_logging_removes_existing_handlers(
 ) -> None:
     """Test that existing handlers are removed via clear() before adding new ones."""
     # Simulate pre-existing handlers
-    existing_handler1 = MagicMock(spec=logging.Handler)
-    existing_handler2 = MagicMock(spec=logging.Handler)
+    existing_handler1 = MagicMock(spec=logging_mod.Handler)
+    existing_handler2 = MagicMock(spec=logging_mod.Handler)
     # Assign to a separate list first, then assign to mock_logger.handlers
     # This allows us to mock clear() on the list object itself if needed,
     # although checking the final state might be more robust.
@@ -175,8 +175,8 @@ def test_setup_logging_removes_existing_handlers(
     mock_logger.hasHandlers.reset_mock()
     mock_logger.removeHandler.reset_mock()
 
-    mock_new_handler_instance = MagicMock(spec=logging.Handler)
-    mock_formatter_instance = MagicMock(spec=logging.Formatter)
+    mock_new_handler_instance = MagicMock(spec=logging_mod.Handler)
+    mock_formatter_instance = MagicMock(spec=logging_mod.Formatter)
     mock_handler_cls.return_value = mock_new_handler_instance
     mock_formatter_cls.return_value = mock_formatter_instance
 

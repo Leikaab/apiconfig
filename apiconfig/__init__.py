@@ -8,7 +8,7 @@ strategies (Basic, Bearer, API Key, etc.).
 """
 
 import importlib.metadata
-import logging
+import logging as logging_mod
 
 # Core components re-exported for easier access
 from .auth.base import AuthStrategy
@@ -88,4 +88,4 @@ __all__: list[str] = [
 ]
 
 # Configure null handler for library logging
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+logging_mod.getLogger(__name__).addHandler(logging_mod.NullHandler())

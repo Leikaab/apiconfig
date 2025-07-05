@@ -7,7 +7,7 @@ It includes retry logic for transient errors.
 """
 
 import json
-import logging
+import logging as logging_mod
 import time
 
 # Import httpx only for type annotations, not for actual use
@@ -26,7 +26,7 @@ from ...exceptions.auth import (
 )
 
 # Set up logging
-logger = logging.getLogger(__name__)
+logger = logging_mod.getLogger(__name__)
 
 
 class OAuthTokenData(TypedDict, total=False):

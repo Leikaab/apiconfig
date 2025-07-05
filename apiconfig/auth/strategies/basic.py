@@ -5,14 +5,14 @@ credentials (base64-encoded username:password) to HTTP requests.
 """
 
 import base64
-import logging
+import logging as logging_mod
 from typing import Dict, Optional
 
 from apiconfig.auth.base import AuthStrategy
 from apiconfig.exceptions.auth import AuthStrategyError
 from apiconfig.types import QueryParamType
 
-log: logging.Logger = logging.getLogger(__name__)
+log: logging_mod.Logger = logging_mod.getLogger(__name__)
 
 
 class BasicAuth(AuthStrategy):

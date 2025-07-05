@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """Logging filters, including context injection."""
 
-import logging
+import logging as logging_mod
 import threading
 from typing import Any
 
 _log_context = threading.local()
 
 
-class ContextFilter(logging.Filter):
+class ContextFilter(logging_mod.Filter):
     """Inject context variables from thread-local storage into log records.
 
     Usage
@@ -21,13 +21,13 @@ class ContextFilter(logging.Filter):
 
     Example Formatter Usage
     -----------------------
-    formatter = logging.Formatter(
+    formatter = logging_mod.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] - %(message)s'
     )
     # Assuming 'request_id' was set using set_log_context('request_id', ...)
     """
 
-    def filter(self, record: logging.LogRecord) -> bool:
+    def filter(self, record: logging_mod.LogRecord) -> bool:
         """Add context variables from thread-local storage to the log record.
 
         Args

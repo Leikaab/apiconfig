@@ -1,8 +1,8 @@
 """Test integration with existing apiconfig components."""
 
+import io as io_mod
 import logging as logging_mod
-from io import StringIO
-from typing import Any, Dict
+import typing as typing_mod
 from unittest.mock import Mock as MockClass
 
 import apiconfig.types as api_types
@@ -32,7 +32,7 @@ class TestExistingComponentIntegration:
 
         # Create a test subclass that implements refresh
         class TestBearerAuth(BearerAuth):
-            def __init__(self, *args: Any, **kwargs: Any) -> None:
+            def __init__(self, *args: typing_mod.Any, **kwargs: typing_mod.Any) -> None:
                 super().__init__(*args, **kwargs)
                 self.refresh_token: str = "default_refresh"
                 self.expires_at: str = "default_expires"
@@ -70,7 +70,7 @@ class TestExistingComponentIntegration:
     def test_logging_integration(self) -> None:
         """Test integration with logging system."""
         # Capture log output
-        log_capture = StringIO()
+        log_capture = io_mod.StringIO()
         handler = logging_mod.StreamHandler(log_capture)
         logger = logging_mod.getLogger("apiconfig")
         logger.addHandler(handler)
@@ -110,7 +110,7 @@ class TestExistingComponentIntegration:
         assert stored_data is not None
         current_token = {"value": stored_data["api_key"]}
 
-        def header_callback() -> Dict[str, str]:
+        def header_callback() -> typing_mod.Dict[str, str]:
             return {"X-API-Key": current_token["value"]}
 
         def refresh_func() -> api_types.TokenRefreshResult:

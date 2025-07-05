@@ -12,7 +12,7 @@ from apiconfig.utils.logging.formatters import (
 
 
 class TypedLogRecord(logging_mod.LogRecord):
-    headers: dict[str, str]
+    headers: dict[str, str] = {}
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 """Unit tests for apiconfig.utils.http module."""
 
-from typing import Any
+from typing import Any  # pyright: ignore[reportShadowedImports]
 
 import pytest
 

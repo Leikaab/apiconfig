@@ -175,7 +175,7 @@ class BaseAuthStrategyTest(unittest.TestCase):
     strategy they want to test.
     """
 
-    strategy: AuthStrategy
+    strategy: ClassVar[AuthStrategy]
 
     @classmethod
     def setUpClass(cls) -> None:

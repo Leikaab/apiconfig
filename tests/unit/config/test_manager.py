@@ -185,8 +185,6 @@ class TestConfigManager:
 
     def test_load_config_provider_returns_non_dict_value_warning(self, caplog: LogCaptureFixture) -> None:
         """Test loading config from a provider that returns a non-dict value logs a warning."""
-        import logging
-
         caplog.set_level(logging.WARNING)
 
         # Create a provider that returns a non-dict value

@@ -64,11 +64,11 @@ def create_tripletex_auth_strategy(config_manager: ConfigManager) -> TripletexSe
         If credentials are invalid.
     """
     # Load configuration from all providers
-    config = config_manager.load_config()
+    settings = config_manager.load_config()
 
     try:
-        consumer_token = config["CONSUMER_TOKEN"]
-        employee_token = config["EMPLOYEE_TOKEN"]
+        consumer_token = settings["CONSUMER_TOKEN"]
+        employee_token = settings["EMPLOYEE_TOKEN"]
     except KeyError as e:
         pytest.skip(f"Missing required environment variable: TRIPLETEX_TEST_{e}")
 
@@ -76,9 +76,9 @@ def create_tripletex_auth_strategy(config_manager: ConfigManager) -> TripletexSe
         pytest.skip("TRIPLETEX_TEST_CONSUMER_TOKEN or TRIPLETEX_TEST_EMPLOYEE_TOKEN environment variables are empty")
 
     # Get additional configuration (defaults provided by config manager)
-    hostname = config["hostname"]
-    company_id = config["company_id"]
-    version = config["version"]
+    hostname = settings["hostname"]
+    company_id = settings["company_id"]
+    version = settings["version"]
 
     # Create a simple HTTP callable for refresh operations
     def http_request_callable(*args: Any, **kwargs: Any) -> None:
@@ -116,16 +116,16 @@ def create_tripletex_client_config() -> ClientConfig:
     config_manager = create_tripletex_config_manager()
 
     # Load configuration from all providers
-    config = config_manager.load_config()
+    settings = config_manager.load_config()
 
     # Create authentication strategy
     auth_strategy = create_tripletex_auth_strategy(config_manager)
 
     # Get client configuration (defaults provided by config manager)
-    hostname = config["hostname"]
-    version = config["version"]
+    hostname = settings["hostname"]
+    version = settings["version"]
     try:
-        timeout = float(config["timeout"])
+        timeout = float(settings["timeout"])
     except (ValueError, TypeError) as e:
         pytest.skip(f"Invalid timeout value in TRIPLETEX_TEST_timeout: {e}")
 

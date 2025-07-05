@@ -4,15 +4,15 @@ This module provides minimal wrappers around urllib.parse functions,
 adding only type safety and parameter normalization.
 """
 
+import typing as typing_mod
 import urllib.parse
-from typing import Any, Dict, List, Optional, TypeAlias, Union
 
 from apiconfig.types import QueryParamType
 
-UrlencodeParams: TypeAlias = Dict[str, List[str]]
+UrlencodeParams: typing_mod.TypeAlias = typing_mod.Dict[str, typing_mod.List[str]]
 
 
-def normalize_query_params(params: Optional[QueryParamType]) -> UrlencodeParams:
+def normalize_query_params(params: typing_mod.Optional[QueryParamType]) -> UrlencodeParams:
     """
     Convert QueryParamType to format expected by urllib.parse.urlencode.
 
@@ -33,7 +33,7 @@ def normalize_query_params(params: Optional[QueryParamType]) -> UrlencodeParams:
     return result
 
 
-def build_url(base_url: str, path: str = "", params: Optional[QueryParamType] = None, version: Optional[str] = None) -> str:
+def build_url(base_url: str, path: str = "", params: typing_mod.Optional[QueryParamType] = None, version: typing_mod.Optional[str] = None) -> str:
     """
     Build URL using urllib.parse - simple and robust.
 
@@ -43,7 +43,7 @@ def build_url(base_url: str, path: str = "", params: Optional[QueryParamType] = 
         Base URL (e.g., "https://api.example.com")
     path : str
         Path to join (e.g., "/users/123")
-    params : Optional[QueryParamType]
+    params : typing_mod.Optional[QueryParamType]
         Query parameters
 
     Returns
@@ -145,7 +145,7 @@ def add_query_params(url: str, params: QueryParamType, replace: bool = False) ->
     return urllib.parse.urlunparse(parsed._replace(query=query_string))
 
 
-def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
+def get_query_params(url: str) -> typing_mod.Dict[str, typing_mod.Union[str, typing_mod.List[str]]]:
     """
     Extract query parameters from URL using urllib.parse.
 
@@ -156,14 +156,14 @@ def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
 
     Returns
     -------
-    Dict[str, Union[str, List[str]]]
+    typing_mod.Dict[str, typing_mod.Union[str, typing_mod.List[str]]]
         Dictionary of query parameters
     """
     parsed = urllib.parse.urlparse(url)
     params = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
 
     # Simplify single-item lists to strings
-    result: Dict[str, Union[str, List[str]]] = {}
+    result: typing_mod.Dict[str, typing_mod.Union[str, typing_mod.List[str]]] = {}
     for key, values in params.items():
         if len(values) == 1:
             result[key] = values[0]
@@ -176,9 +176,9 @@ def get_query_params(url: str) -> Dict[str, Union[str, List[str]]]:
 def build_url_with_auth(
     base_url: str,
     path: str = "",
-    query_params: Optional[QueryParamType] = None,
-    auth_params: Optional[QueryParamType] = None,
-    version: Optional[str] = None,
+    query_params: typing_mod.Optional[QueryParamType] = None,
+    auth_params: typing_mod.Optional[QueryParamType] = None,
+    version: typing_mod.Optional[str] = None,
 ) -> str:
     """
     Build URL with separate query and auth parameters.
@@ -186,7 +186,7 @@ def build_url_with_auth(
     This is the ONLY high-level function needed for most use cases.
     """
     # Merge parameters
-    all_params: Dict[str, Any] = {}
+    all_params: typing_mod.Dict[str, typing_mod.Any] = {}
     if query_params:
         all_params.update(query_params)
     if auth_params:

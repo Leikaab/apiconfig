@@ -5,8 +5,8 @@
 import typing
 import uuid
 
-import httpx
-from httpx import Client
+from httpx import Client as HttpxClient
+from httpx import Response as HttpxResponse
 from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
@@ -14,6 +14,10 @@ from apiconfig.config.base import ClientConfig
 from apiconfig.config.manager import ConfigManager, ConfigProvider
 from apiconfig.config.providers.memory import MemoryProvider
 from apiconfig.testing.integration.servers import configure_mock_response
+
+# Backwards compatible names for mocking
+Client = HttpxClient
+Response = HttpxResponse
 
 _T = typing.TypeVar("_T")
 
@@ -25,7 +29,7 @@ def make_request_with_config(
     path: str,
     method: str = "GET",
     **kwargs: typing.Any,
-) -> httpx.Response:
+) -> HttpxResponse:
     """Make an HTTP request using the provided config and auth strategy to a mock server.
 
     Handles applying authentication via the strategy's `prepare_request` method.
@@ -50,27 +54,27 @@ def make_request_with_config(
     httpx.Response
         The httpx Response object.
     """
-    base_url = mock_server_url.rstrip("/")
-    url = f"{base_url}/{path.lstrip('/')}"
+    base_url: str = mock_server_url.rstrip("/")
+    url: str = f"{base_url}/{path.lstrip('/')}"
 
-    headers = kwargs.pop("headers", {})
-    params = kwargs.pop("params", {})
-    data = kwargs.pop("data", None)
-    json_data = kwargs.pop("json", None)
+    headers: dict[str, str] = kwargs.pop("headers", {})
+    params: dict[str, str] = kwargs.pop("params", {})
+    data: typing.Any = kwargs.pop("data", None)
+    json_data: typing.Any = kwargs.pop("json", None)
 
     # Prepare request using auth strategy
-    prepared_headers = auth_strategy.prepare_request_headers()
+    prepared_headers: dict[str, str] = auth_strategy.prepare_request_headers()
     prepared_params = auth_strategy.prepare_request_params()
 
     # Merge any user-supplied headers/params (user takes precedence)
     prepared_headers.update(headers)
 
     # Convert prepared_params to dict and merge with user params
-    safe_params = dict(prepared_params) if prepared_params else {}
+    safe_params: dict[str, typing.Any] = dict(prepared_params) if prepared_params else {}
     safe_params.update(params)
 
     # Ensure headers are always dicts (not mocks)
-    safe_headers = dict(prepared_headers)
+    safe_headers: dict[str, str] = dict(prepared_headers)
 
     # Use httpx's Client for the actual request
     # Use verify=False for self-signed certs often used by pytest-httpserver
@@ -110,7 +114,7 @@ def setup_multi_provider_manager(
     """
     providers: list[ConfigProvider] = []
     for name, data in config_sources:
-        provider = MemoryProvider(config_data=data)
+        provider: MemoryProvider = MemoryProvider(config_data=data)
         setattr(provider, "name", name)
         providers.append(provider)
     return ConfigManager(providers=providers)
@@ -160,7 +164,7 @@ def simulate_token_endpoint(
     if access_token is None:
         access_token = str(uuid.uuid4())
 
-    success_response = {
+    success_response: dict[str, typing.Any] = {
         "access_token": access_token,
         "token_type": token_type,
         "expires_in": expires_in,
@@ -168,10 +172,10 @@ def simulate_token_endpoint(
 
     if expected_body:
         # Convert dict to form-encoded string for matching
-        expected_data_str = "&".join(f"{k}={v}" for k, v in expected_body.items())
+        expected_data_str: str = "&".join(f"{k}={v}" for k, v in expected_body.items())
 
         # Configure error response if body doesn't match
-        error_resp_data = error_response or {"error": "invalid_request"}
+        error_resp_data: dict[str, str] = error_response or {"error": "invalid_request"}
         httpserver.expect_request(uri=token_path, method="POST").respond_with_json(error_resp_data, status=error_status_code)
 
         # Configure success response for matching body

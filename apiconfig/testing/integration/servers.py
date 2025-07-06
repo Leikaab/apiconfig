@@ -15,21 +15,21 @@ These utilities are particularly useful for:
 - Validating error handling in API client code
 """
 import json
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from pytest_httpserver import HTTPServer, RequestHandler
-from werkzeug.wrappers import Response
+from werkzeug.wrappers import Request, Response
 
 
 def configure_mock_response(
     httpserver: HTTPServer,
     path: str,
     method: str = "GET",
-    response_data: Optional[Union[Dict[str, Any], str]] = None,
+    response_data: Optional[Union[dict[str, Any], str]] = None,
     status_code: int = 200,
-    response_headers: Optional[Dict[str, str]] = None,
-    match_headers: Optional[Dict[str, str]] = None,
-    match_query_string: Optional[Dict[str, str]] = None,
+    response_headers: Optional[dict[str, str]] = None,
+    match_headers: Optional[dict[str, str]] = None,
+    match_query_string: Optional[dict[str, str]] = None,
     match_json: Optional[Any] = None,
     match_data: Optional[str] = None,
     ordered: bool = False,
@@ -52,16 +52,16 @@ def configure_mock_response(
         The URL path to match (e.g., "/api/v1/resource").
     method : str, default "GET"
         The HTTP method to match (e.g., "GET", "POST").
-    response_data : Optional[Union[Dict[str, Any], str]], default None
+    response_data : Optional[Union[dict[str, Any], str]], default None
         The JSON data or raw string to return in the response body.
         If None, an empty body is returned.
     status_code : int, default 200
         The HTTP status code to return.
-    response_headers : Optional[Dict[str, str]], default None
+    response_headers : Optional[dict[str, str]], default None
         Optional dictionary of headers to return in the response.
-    match_headers : Optional[Dict[str, str]], default None
+    match_headers : Optional[dict[str, str]], default None
         Optional dictionary of headers that must be present in the request.
-    match_query_string : Optional[Dict[str, str]], default None
+    match_query_string : Optional[dict[str, str]], default None
         Optional dictionary of query parameters that must be present.
     match_json : Optional[Any], default None
         Optional JSON data that the request body must match.
@@ -86,7 +86,7 @@ def configure_mock_response(
         response_headers["Content-Type"] = "application/json"
 
     # Prepare matching arguments for expect_request
-    expect_kwargs = kwargs.copy()
+    expect_kwargs: dict[str, Any] = kwargs.copy()
     if match_headers:
         expect_kwargs["headers"] = match_headers
     if match_query_string:
@@ -98,7 +98,7 @@ def configure_mock_response(
         expect_kwargs["data"] = match_data
 
     # pytest-httpserver expects response_json for dicts and response_data for strings
-    response_kwargs: Dict[str, Any] = {}
+    response_kwargs: dict[str, Any] = {}
     if isinstance(response_data, dict):
         response_kwargs["response_json"] = response_data
     elif isinstance(response_data, str):
@@ -165,10 +165,10 @@ def assert_request_received(
     AssertionError
         If the expected request(s) were not found in the server log.
     """
-    matching_requests: List[Tuple[Any, Response]] = []
+    matching_requests: list[tuple[Request, Response]] = []
     lower_expected_headers: dict[str, str] | None = {k.lower(): v for k, v in expected_headers.items()} if expected_headers else None
 
-    log = httpserver.log
+    log: list[tuple[Request, Response]] = httpserver.log
     for entry in log:
         request = entry[0]  # entry is a tuple (request, response)
         if request.path == path and request.method == method:

@@ -80,7 +80,7 @@ def make_request_with_config(
         follow_redirects=True,  # Typically desired in tests
         verify=False,  # Add this for pytest-httpserver compatibility
     ) as client:
-        response = client.request(
+        response: httpx.Response = client.request(
             method=method,
             url=url,
             headers=safe_headers,

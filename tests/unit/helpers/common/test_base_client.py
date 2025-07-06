@@ -2,6 +2,7 @@ from typing import Dict, Optional
 
 import httpx
 import pytest
+from httpx import Response
 
 import apiconfig.types as api_types
 from apiconfig.auth.base import AuthStrategy
@@ -21,7 +22,7 @@ class DummyAuthStrategy(AuthStrategy):
 class DummyClient(BaseClient):
     def handle_response(
         self,
-        response: httpx.Response,
+        response: Response,
         method: api_types.HttpMethod,
         url: str,
     ) -> api_types.JsonObject | api_types.JsonList:
@@ -36,7 +37,7 @@ def _make_client() -> DummyClient:
 
 def test_handle_response_raises_on_error_status() -> None:
     client = _make_client()
-    response = httpx.Response(status_code=404, text="not found")
+    response: Response = httpx.Response(status_code=404, text="not found")
     with pytest.raises(HTTPUtilsError):
         client.handle_response(
             response,
@@ -47,7 +48,7 @@ def test_handle_response_raises_on_error_status() -> None:
 
 def test_handle_response_parses_json() -> None:
     client = _make_client()
-    response = httpx.Response(status_code=200, json={"ok": True})
+    response: Response = httpx.Response(status_code=200, json={"ok": True})
     result = client.handle_response(
         response,
         api_types.HttpMethod.GET,
@@ -58,7 +59,7 @@ def test_handle_response_parses_json() -> None:
 
 def test_handle_response_invalid_json() -> None:
     client = _make_client()
-    response = httpx.Response(status_code=200, text="{invalid json")
+    response: Response = httpx.Response(status_code=200, text="{invalid json")
     with pytest.raises(JSONDecodeError):
         client.handle_response(
             response,
@@ -71,7 +72,7 @@ def test_handle_response_invalid_json() -> None:
 def test_handle_response_empty_or_non_object_returns_empty_dict(body: str) -> None:
     """Non-object JSON bodies should result in an empty dict."""
     client = _make_client()
-    response = httpx.Response(status_code=200, text=body)
+    response: Response = httpx.Response(status_code=200, text=body)
     result = client.handle_response(
         response,
         api_types.HttpMethod.GET,

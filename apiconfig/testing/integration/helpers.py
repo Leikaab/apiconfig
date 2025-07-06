@@ -4,9 +4,13 @@
 # apiconfig/testing/integration/helpers.py
 import typing
 import uuid
+from typing import TYPE_CHECKING
 
 import httpx
-from httpx import Client
+from httpx import Client, Response
+
+if TYPE_CHECKING:  # pragma: no cover - types only
+    from httpx import AsyncClient, Request
 from pytest_httpserver import HTTPServer
 
 from apiconfig.auth.base import AuthStrategy
@@ -80,7 +84,7 @@ def make_request_with_config(
         follow_redirects=True,  # Typically desired in tests
         verify=False,  # Add this for pytest-httpserver compatibility
     ) as client:
-        response = client.request(
+        response: Response = client.request(
             method=method,
             url=url,
             headers=safe_headers,
@@ -196,3 +200,8 @@ def simulate_token_endpoint(
         )
 
     return access_token
+
+
+if TYPE_CHECKING:  # pragma: no cover - keep imported types referenced
+    _unused_async_client: AsyncClient | None = None
+    _unused_request: Request | None = None

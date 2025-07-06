@@ -1,5 +1,11 @@
 import re
-from typing import Dict, Optional, Pattern, Set, Tuple
+from typing import (
+    Dict,
+    Optional,
+    Pattern,
+    Set,
+    Tuple,
+)
 
 import pytest
 

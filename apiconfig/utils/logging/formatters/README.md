@@ -19,6 +19,11 @@ delegate sensitive-data handling to the utilities in
 match formatters and redaction strategies without rewriting their logging
 setup.
 
+## Navigation
+
+**Parent Package:** [apiconfig.utils.logging](../README.md)
+
+
 ## Contents
 - `detailed.py` – `DetailedFormatter` adds timestamps, level names, logger names
   and file/line information with smart handling of multiline messages and stack
@@ -69,12 +74,22 @@ sequenceDiagram
     Formatter-->>Logger: formatted string
 ```
 
+## Dependencies
+
+### External Dependencies
+- `logging` – built-in logging package for creating formatters.
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – redaction utilities used by `RedactingFormatter`.
+
+### Optional Dependencies
+None
+
 ## Tests
 Install dependencies and run the formatter tests:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/utils/logging/formatters -q
+poetry install --with dev
+poetry run pytest tests/unit/utils/logging/formatters -q
 ```
 
 ## Status
@@ -88,8 +103,4 @@ Stable – widely used by other modules for consistent logging behaviour.
 
 ### Future Considerations
 - Additional formatter presets are planned for upcoming releases.
-
-## Navigation
-
-**Parent Package:** [apiconfig.utils.logging](../README.md)
 

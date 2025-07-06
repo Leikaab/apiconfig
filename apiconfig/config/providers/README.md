@@ -1,7 +1,7 @@
 # apiconfig.config.providers
 
-Configuration providers for **apiconfig**. These helpers supply configuration values from
-different sources so they can be combined by `ConfigManager`.
+## Module Description
+Configuration providers for **apiconfig**. These helpers supply configuration values from different sources so they can be combined by `ConfigManager`.
 
 ## Navigation
 
@@ -32,30 +32,30 @@ print(config["timeout"])
 ```
 
 ## Key Classes
-| Class | Description |
-| ----- | ----------- |
-| `EnvProvider` | Loads variables with a prefix (default `APICONFIG_`) and coerces simple types when possible. |
-| `FileProvider` | Reads JSON files and allows retrieval of values with dot notation and type conversion. |
-| `MemoryProvider` | Stores configuration in an internal dictionary. |
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `EnvProvider` | Loads variables with a prefix (default `APICONFIG_`) and coerces simple types when possible. | `load()`, `get()` |
+| `FileProvider` | Reads JSON files and allows retrieval of values with dot notation and type conversion. | `load()`, `get()` |
+| `MemoryProvider` | Stores configuration in an internal dictionary. | `get_config()` |
 
 ### Design
 Providers follow a simple strategy-like pattern: each exposes a `load()` method returning
 a dictionary which `ConfigManager` merges in order. Later providers override earlier ones.
 
+## Architecture
 ```mermaid
 flowchart TB
-    A[EnvProvider] --> M(ConfigManager)
-    B[FileProvider] --> M
-    C[MemoryProvider] --> M
-    M --> D[Config dict]
+    EnvProvider --> ConfigManager
+    FileProvider --> ConfigManager
+    MemoryProvider --> ConfigManager
+    ConfigManager --> ConfigDict[Config dict]
 ```
 
 ## Testing
 Install requirements and run the unit tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/config/providers -q
+poetry install --with dev
+poetry run pytest tests/unit/config/providers -q
 ```
 
 ## Dependencies
@@ -67,7 +67,10 @@ This package uses a mix of Python's standard library and internal modules:
 - `apiconfig.exceptions` – base exceptions for error handling.
 
 ## Status
-Stable – used internally by other modules in the package.
+
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Stable provider API with incremental enhancements as new sources are added.
@@ -77,3 +80,7 @@ Stable – used internally by other modules in the package.
 
 ### Future Considerations
 - Explore pluggable provider registration for custom environments.
+
+## See Also
+- [../manager.py](../manager.py) – `ConfigManager` orchestrates loading from all providers.
+- [../../exceptions/README.md](../../exceptions/README.md) – overview of exception classes used for configuration errors.

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 import pytest
-from pytest_httpserver import HTTPServer
+from pytest_httpserver import HTTPServer as PytestHTTPServer
 
 from apiconfig.auth.strategies.custom import CustomAuth
 from apiconfig.config.manager import ConfigManager
@@ -30,7 +30,7 @@ def httpserver_listen_address() -> tuple[str, int]:
 
 
 @pytest.fixture(scope="function")
-def mock_api_url(httpserver: HTTPServer) -> str:
+def mock_api_url(httpserver: PytestHTTPServer) -> str:
     """Provide the base URL of the running mock API server."""
     # Ensures trailing slash for easy joining with paths
     return str(httpserver.url_for("/"))

@@ -1,6 +1,6 @@
 """Implements Bearer Token authentication strategy."""
 
-import logging
+import logging as logging_mod
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 
@@ -12,7 +12,7 @@ from apiconfig.types import (
     TokenRefreshResult,
 )
 
-log = logging.getLogger(__name__)
+log = logging_mod.getLogger(__name__)
 
 
 class BearerAuth(AuthStrategy):
@@ -116,7 +116,7 @@ class BearerAuth(AuthStrategy):
         # This is a basic implementation that should be overridden by subclasses
         # or enhanced with specific refresh logic for the use case
         raise NotImplementedError(
-            "Bearer auth refresh requires custom implementation. " "Override this method or use a specialized auth strategy for your token type."
+            f"Bearer auth refresh requires custom implementation for {self.__class__.__name__}. Override this method or use a specialized auth strategy for your token type."
         )
 
     def prepare_request_headers(self) -> Dict[str, str]:

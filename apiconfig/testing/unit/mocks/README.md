@@ -4,6 +4,10 @@ Mocks used for unit testing **apiconfig** components.  These helpers provide
 lightweight stand-ins for the real authentication strategies and configuration
 classes so that tests can run without talking to external services.
 
+## Navigation
+
+- **Parent:** [../README.md](../README.md)
+
 ## Contents
 - `auth.py` – mock implementations of the authentication strategies (`BasicAuth`,
   `BearerAuth`, `ApiKeyAuth`, `CustomAuth`) plus refreshable variants and a
@@ -53,13 +57,23 @@ flowchart TD
     MockBasicAuth --> AuthStrategy
 ```
 
-## Tests
+## Testing
 Run only the tests related to the mocks package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/testing/unit/mocks -q
+poetry install --with dev
+poetry run pytest tests/unit/testing/unit/mocks -q
 ```
+
+## Dependencies
+
+### Standard Library
+- `random`, `threading`, `time`, `typing`, `unittest.mock`
+
+### Internal Dependencies
+- `apiconfig.auth` – base classes and concrete strategies
+- `apiconfig.config` – configuration manager and providers
+- `apiconfig.exceptions` – error types used in mocks
+- `apiconfig.types` – shared type definitions
 
 ## Status
 Internal – provided solely for unit testing purposes but kept stable.

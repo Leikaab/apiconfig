@@ -36,7 +36,9 @@ simple to contribute to and easier to maintain.
 - `auth_verification.py` – common checks for authentication headers during tests.
 - `__init__.py` – exposes the most useful helpers across subpackages.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 from apiconfig.testing.integration import configure_mock_response
 from apiconfig.testing.unit import create_valid_client_config
@@ -45,32 +47,56 @@ config = create_valid_client_config(hostname="api.test")
 configure_mock_response(httpserver, path="/ping", response_data={"ok": True})
 ```
 
-## Key modules
-| Module | Purpose |
-| ------ | ------- |
-| `unit` | Mocks and assertions for fast unit tests. |
-| `integration` | Spin up mock HTTP servers and provide fixtures for real‑world flows. |
-| `auth_verification` | Advanced helpers for verifying auth behaviour in tests. |
+### Advanced
+```python
+from apiconfig.testing.integration import assert_request_received
 
-### Diagram
-```mermaid
-flowchart TD
-    subgraph Testing
-        U[unit] -- mocks --> T[tests]
-        I[integration] -- fixtures --> T
-    end
+# After configuring responses and making requests, verify the server interaction
+assert_request_received(httpserver, path="/ping")
 ```
 
-## Running tests
+## Key Components
+| Module | Purpose | Key Methods |
+| ------ | ------- | ----------- |
+| `unit` | Mocks and assertions for fast unit tests. | `create_valid_client_config`, `assert_client_config_valid` |
+| `integration` | Spin up mock HTTP servers and provide fixtures for real‑world flows. | `configure_mock_response`, `make_request_with_config` |
+| `auth_verification` | Advanced helpers for verifying auth behaviour in tests. | `AuthHeaderVerification.verify_basic_auth_header` |
+
+## Architecture
+```mermaid
+    flowchart TD
+        U["unit helpers"] --> UT["unit test suite"]
+        I["integration helpers"] --> IT["integration test suite"]
+```
+
+## Dependencies
+
+### External Dependencies
+- `pytest`, `pytest_httpserver`, and `pytest-xdist` for running the test suite.
+
+### Internal Dependencies
+- `apiconfig.testing.unit` and `apiconfig.testing.integration` utilities.
+
+### Optional Dependencies
+None
+
+## Testing
+Use these helpers to validate your API clients with the project's full test suite.
+
+### Running tests
 Install dependencies and run all project tests:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-httpserver pytest-xdist
-pytest -q
+poetry install --with dev
+poetry run pytest -q
 ```
+
 
 ## Status
 Internal – APIs may evolve alongside the test suite.
+
+**Stability:** Internal
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Test utilities are maintained with the suite and may change frequently.
@@ -84,3 +110,4 @@ Internal – APIs may evolve alongside the test suite.
 ## See Also
 - [unit](./unit/README.md) – unit-test helpers
 - [integration](./integration/README.md) – integration test utilities
+- [helpers_for_tests](../helpers_for_tests/README.md) – further examples

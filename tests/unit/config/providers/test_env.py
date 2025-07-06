@@ -1,9 +1,10 @@
 """Tests for the EnvProvider class."""
 
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Iterator
 
 import pytest
+from pytest import MonkeyPatch
 
 from apiconfig.config.providers.env import EnvProvider
 from apiconfig.exceptions.config import ConfigValueError, InvalidConfigError
@@ -12,19 +13,12 @@ from apiconfig.exceptions.config import ConfigValueError, InvalidConfigError
 class TestEnvProvider:
     """Tests for the EnvProvider class."""
 
-    def setup_method(self) -> None:
-        """Set up test environment."""
-        # Clear any existing test environment variables
+    @pytest.fixture(autouse=True)
+    def _clean_env(self, monkeypatch: MonkeyPatch) -> Iterator[None]:
         for key in list(os.environ.keys()):
             if key.startswith("TEST_"):
-                del os.environ[key]
-
-    def teardown_method(self) -> None:
-        """Clean up test environment."""
-        # Clear any test environment variables
-        for key in list(os.environ.keys()):
-            if key.startswith("TEST_"):
-                del os.environ[key]
+                monkeypatch.delenv(key, raising=False)
+        yield
 
     def test_init(self) -> None:
         """Test that EnvProvider initializes correctly with custom prefix."""
@@ -41,14 +35,14 @@ class TestEnvProvider:
         config = provider.load()
         assert config == {}
 
-    def test_load_with_values(self) -> None:
+    def test_load_with_values(self, monkeypatch: MonkeyPatch) -> None:
         """Test loading with various types of environment variables."""
         # Set up test environment variables
-        os.environ["TEST_STRING"] = "hello"
-        os.environ["TEST_INT"] = "123"
-        os.environ["TEST_FLOAT"] = "45.67"
-        os.environ["TEST_BOOL_TRUE"] = "true"
-        os.environ["TEST_BOOL_FALSE"] = "false"
+        monkeypatch.setenv("TEST_STRING", "hello")
+        monkeypatch.setenv("TEST_INT", "123")
+        monkeypatch.setenv("TEST_FLOAT", "45.67")
+        monkeypatch.setenv("TEST_BOOL_TRUE", "true")
+        monkeypatch.setenv("TEST_BOOL_FALSE", "false")
 
         provider = EnvProvider(prefix="TEST_")
         config = provider.load()
@@ -59,7 +53,7 @@ class TestEnvProvider:
         assert config["BOOL_TRUE"] is True
         assert config["BOOL_FALSE"] is False
 
-    def test_load_invalid_int(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_load_invalid_int(self, monkeypatch: MonkeyPatch) -> None:
         """Test loading with an invalid integer value."""
         # Instead of trying to mock str.isdigit (which is immutable),
         # we'll mock the EnvProvider.is_digit method
@@ -104,15 +98,15 @@ class TestEnvProvider:
 
         monkeypatch.setattr(EnvProvider, "load", patched_load)
 
-        os.environ["TEST_INVALID_INT"] = "not_an_int"
+        monkeypatch.setenv("TEST_INVALID_INT", "not_an_int")
         provider = EnvProvider(prefix="TEST_")
 
         with pytest.raises(InvalidConfigError, match="Invalid integer value"):
             provider.load()
 
-    def test_get_existing_value(self) -> None:
+    def test_get_existing_value(self, monkeypatch: MonkeyPatch) -> None:
         """Test getting an existing environment variable."""
-        os.environ["TEST_STRING"] = "hello"
+        monkeypatch.setenv("TEST_STRING", "hello")
         provider = EnvProvider(prefix="TEST_")
 
         value = provider.get("STRING")
@@ -130,12 +124,12 @@ class TestEnvProvider:
         value = provider.get("MISSING")
         assert value is None
 
-    def test_get_with_type_coercion(self) -> None:
+    def test_get_with_type_coercion(self, monkeypatch: MonkeyPatch) -> None:
         """Test getting values with type coercion."""
-        os.environ["TEST_INT_STR"] = "123"
-        os.environ["TEST_FLOAT_STR"] = "45.67"
-        os.environ["TEST_BOOL_STR_TRUE"] = "true"
-        os.environ["TEST_BOOL_STR_FALSE"] = "false"
+        monkeypatch.setenv("TEST_INT_STR", "123")
+        monkeypatch.setenv("TEST_FLOAT_STR", "45.67")
+        monkeypatch.setenv("TEST_BOOL_STR_TRUE", "true")
+        monkeypatch.setenv("TEST_BOOL_STR_FALSE", "false")
 
         provider = EnvProvider(prefix="TEST_")
 
@@ -155,7 +149,7 @@ class TestEnvProvider:
         bool_false = provider.get("BOOL_STR_FALSE", expected_type=bool)
         assert bool_false is False
 
-    def test_get_with_bool_variations(self) -> None:
+    def test_get_with_bool_variations(self, monkeypatch: MonkeyPatch) -> None:
         """Test boolean coercion with various string representations."""
         test_values: Dict[str, bool] = {
             "true": True,
@@ -179,29 +173,29 @@ class TestEnvProvider:
         provider = EnvProvider(prefix="TEST_")
 
         for string_value, expected_bool in test_values.items():
-            os.environ["TEST_BOOL"] = string_value
+            monkeypatch.setenv("TEST_BOOL", string_value)
             bool_value = provider.get("BOOL", expected_type=bool)
             assert bool_value is expected_bool, f"Failed for '{string_value}'"
 
-    def test_get_invalid_bool(self) -> None:
+    def test_get_invalid_bool(self, monkeypatch: MonkeyPatch) -> None:
         """Test boolean coercion with invalid string."""
-        os.environ["TEST_INVALID_BOOL"] = "not_a_bool"
+        monkeypatch.setenv("TEST_INVALID_BOOL", "not_a_bool")
         provider = EnvProvider(prefix="TEST_")
 
         with pytest.raises(ConfigValueError, match="Cannot convert.*to bool"):
             provider.get("INVALID_BOOL", expected_type=bool)
 
-    def test_get_invalid_int(self) -> None:
+    def test_get_invalid_int(self, monkeypatch: MonkeyPatch) -> None:
         """Test integer coercion with invalid string."""
-        os.environ["TEST_INVALID_INT"] = "not_an_int"
+        monkeypatch.setenv("TEST_INVALID_INT", "not_an_int")
         provider = EnvProvider(prefix="TEST_")
 
         with pytest.raises(ConfigValueError, match="Cannot convert.*to int"):
             provider.get("INVALID_INT", expected_type=int)
 
-    def test_get_invalid_float(self) -> None:
+    def test_get_invalid_float(self, monkeypatch: MonkeyPatch) -> None:
         """Test float coercion with invalid string."""
-        os.environ["TEST_INVALID_FLOAT"] = "not_a_float"
+        monkeypatch.setenv("TEST_INVALID_FLOAT", "not_a_float")
         provider = EnvProvider(prefix="TEST_")
 
         with pytest.raises(ConfigValueError, match="Cannot convert.*to float"):

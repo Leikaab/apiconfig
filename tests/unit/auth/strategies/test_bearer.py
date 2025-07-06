@@ -1,7 +1,7 @@
 """Tests for the BearerAuth strategy."""
 
 from datetime import datetime, timedelta, timezone
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
@@ -22,7 +22,7 @@ class TestBearerAuth:
     def test_init_with_all_parameters(self) -> None:
         """Test initialization with all parameters."""
         expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
-        http_callable = Mock()
+        http_callable = MockClass()
 
         auth = BearerAuth(access_token="valid_token", expires_at=expires_at, http_request_callable=http_callable)
 
@@ -47,7 +47,7 @@ class TestBearerAuth:
 
     def test_can_refresh_with_http_callable(self) -> None:
         """Test can_refresh returns True when HTTP callable is provided."""
-        http_callable = Mock()
+        http_callable = MockClass()
         auth = BearerAuth(access_token="test_token", http_request_callable=http_callable)
         assert auth.can_refresh() is True
 
@@ -90,7 +90,7 @@ class TestBearerAuth:
 
     def test_refresh_raises_not_implemented_when_refreshable(self) -> None:
         """Test refresh raises NotImplementedError when refreshable but no custom logic."""
-        http_callable = Mock()
+        http_callable = MockClass()
         auth = BearerAuth(access_token="test_token", http_request_callable=http_callable)
 
         with pytest.raises(NotImplementedError, match="Bearer auth refresh requires custom implementation"):
@@ -113,7 +113,7 @@ class TestBearerAuth:
     def test_prepare_request_headers_with_expired_refreshable_token(self) -> None:
         """Test prepare_request_headers works with expired but refreshable token."""
         expires_at = datetime.now(timezone.utc) - timedelta(hours=1)
-        http_callable = Mock()
+        http_callable = MockClass()
         auth = BearerAuth(access_token="test_token", expires_at=expires_at, http_request_callable=http_callable)
 
         # Should not raise ExpiredTokenError since token can be refreshed
@@ -134,7 +134,7 @@ class TestBearerAuth:
 
     def test_get_refresh_callback_with_refresh_capability(self) -> None:
         """Test get_refresh_callback returns a callable when refresh is supported."""
-        http_callable = Mock()
+        http_callable = MockClass()
         auth = BearerAuth(access_token="test_token", http_request_callable=http_callable)
         callback = auth.get_refresh_callback()
 

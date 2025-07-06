@@ -6,7 +6,13 @@ temp_config_file, assert_provider_loads, BaseAuthStrategyTest, BaseConfigProvide
 """
 
 import os
-from typing import Any, Dict, Optional, Type, cast
+from typing import (
+    Any,
+    Dict,
+    Optional,
+    Type,
+    cast,
+)
 
 import pytest
 

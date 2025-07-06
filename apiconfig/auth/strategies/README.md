@@ -47,13 +47,13 @@ custom_auth = CustomAuth(header_callback=lambda: {"X-Custom": "value"})
 config = ClientConfig(hostname="api.example.com", auth_strategy=auth_header)
 ```
 
-## Key classes
-| Class | Description |
-| ------ | ----------- |
-| `ApiKeyAuth` | Sends an API key in a header or as a query parameter. |
-| `BasicAuth` | Adds an `Authorization: Basic` header using a username and password. |
-| `BearerAuth` | Uses a bearer token and can refresh it when `expires_at` is set and a refresh function is available. |
-| `CustomAuth` | Allows custom callbacks for headers, parameters and refresh logic. |
+## Key Components
+| Class | Description | Key Methods |
+| ------ | ----------- | ----------- |
+| `ApiKeyAuth` | Sends an API key in a header or as a query parameter. | `prepare_request_headers()`, `prepare_request_params()` |
+| `BasicAuth` | Adds an `Authorization: Basic` header using a username and password. | `prepare_request_headers()`, `prepare_request_params()` |
+| `BearerAuth` | Uses a bearer token and can refresh it when `expires_at` is set and a refresh function is available. | `is_expired()`, `refresh()`, `prepare_request_headers()` |
+| `CustomAuth` | Allows custom callbacks for headers, parameters and refresh logic. | `prepare_request_headers()`, `prepare_request_params()`, `refresh()` |
 
 ### Design pattern
 The strategies implement the **Strategy pattern**: each one conforms to `AuthStrategy` so they can be swapped without changing client code.
@@ -68,16 +68,48 @@ sequenceDiagram
     Client->>Server: HTTP request with auth headers
 ```
 
+## Architecture
+
+### Class Hierarchy
+```mermaid
+classDiagram
+    AuthStrategy <|-- ApiKeyAuth
+    AuthStrategy <|-- BasicAuth
+    AuthStrategy <|-- BearerAuth
+    AuthStrategy <|-- CustomAuth
+```
+
+### Token Refresh Flow
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Strategy as AuthStrategy
+    participant Server
+
+    Client->>Strategy: prepare_request_headers()
+    Strategy-->>Client: headers
+    Client->>Server: HTTP request
+
+    alt Token expired
+        Server-->>Client: 401 Unauthorized
+        Client->>Strategy: refresh()
+        Strategy-->>Client: new token
+        Client->>Server: retry request
+    end
+```
+
 ## Test instructions
 Install dependencies and run the unit tests for this module:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/auth/strategies -q
+poetry install --with dev
+poetry run pytest tests/unit/auth/strategies -q
 ```
 
 ## Status
-Stable – the strategies are used by other parts of **apiconfig** and have dedicated test coverage.
+
+**Stability:** Stable
+**API Version:** 0.3.2
+**Deprecations:** None
 
 ### Maintenance Notes
 - Strategies are stable with occasional improvements for new authentication flows.

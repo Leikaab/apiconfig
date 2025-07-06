@@ -1,6 +1,6 @@
 """Manages loading configuration from multiple providers."""
 
-import logging
+import logging as logging_mod
 from typing import (
     Any,
     Dict,
@@ -33,7 +33,7 @@ class _SupportsGetConfig(Protocol[_TConfig]):
 
 ConfigProvider: TypeAlias = _SupportsLoad[Mapping[str, Any]] | _SupportsGetConfig[Mapping[str, Any]]
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger: logging_mod.Logger = logging_mod.getLogger(__name__)
 
 
 class ConfigManager:

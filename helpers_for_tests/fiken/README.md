@@ -2,6 +2,9 @@
 
 Helper modules for integration tests with the Fiken API.
 
+## Navigation
+- [helpers_for_tests](../README.md)
+
 ## Contents
 - `fiken_client.py` – `FikenClient` for basic API calls
 - `fiken_config.py` – configuration helpers (`create_fiken_client_config`, etc.)
@@ -34,8 +37,18 @@ FIKEN_version=v2
 FIKEN_timeout=10.0
 ```
 
+## Tests
+```bash
+poetry install --with dev
+poetry run pytest tests/integration/test_apiconfig_fiken.py -q
+```
+
 ## Status
 Internal – for example tests only.
+
+**Stability:** Internal
+**API Version:** v2
+**Deprecations:** None
 
 ### Maintenance Notes
 - Used solely for testing; interfaces may change.

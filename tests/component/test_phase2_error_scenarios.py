@@ -3,10 +3,11 @@
 import base64
 import json
 from typing import Dict
-from unittest.mock import Mock
+from unittest.mock import Mock as MockClass
 
 import pytest
 
+import apiconfig.types as api_types
 from apiconfig.exceptions.auth import AuthenticationError, TokenRefreshError
 from apiconfig.testing.auth_verification import (
     AdvancedAuthVerification,
@@ -19,7 +20,6 @@ from apiconfig.testing.unit.mocks.auth import (
     MockHttpRequestCallable,
     MockRefreshableAuthStrategy,
 )
-from apiconfig.types import TokenRefreshResult
 
 
 class TestPhase2ErrorScenarios:
@@ -293,7 +293,7 @@ class TestPhase2ErrorScenarios:
             AuthHeaderVerification.verify_basic_auth_header("Basic !!invalid_base64!!")
 
         # Test verification with None values (should be handled gracefully)
-        mock_strategy = Mock()
+        mock_strategy = MockClass()
         mock_strategy.prepare_request_headers.return_value = {"Authorization": None}
 
         headers = mock_strategy.prepare_request_headers()
@@ -336,7 +336,7 @@ class TestPhase2ErrorScenarios:
         concurrent_fail_strategy = MockAuthErrorInjector.create_failing_refresh_strategy(failure_type="auth", failure_after_attempts=1)
 
         errors: list[Exception] = []
-        successes: list[TokenRefreshResult | None] = []
+        successes: list[api_types.TokenRefreshResult | None] = []
 
         def concurrent_refresh() -> None:
             try:

@@ -22,13 +22,27 @@ Core configuration system for **apiconfig**.  This module exposes the `ClientCon
 class used by API clients and the `ConfigManager` which coordinates loading of
 configuration values from one or more providers.
 
+## Navigation
+- [apiconfig](../README.md)
+- [providers](./providers/README.md)
+
 ## Contents
 - `base.py` – `ClientConfig` with helpers for merging settings and constructing `base_url`.
 - `manager.py` – `ConfigManager` that merges dictionaries from multiple providers.
 - `providers/` – built‑in configuration providers such as `EnvProvider` and `FileProvider`.
 - `__init__.py` – re‑exports the main classes for convenience.
 
-## Example usage
+## Usage Examples
+
+### Basic
+```python
+from apiconfig.config import ClientConfig
+
+config = ClientConfig(hostname="api.example.com", version="v1")
+print(config.base_url)
+```
+
+### Advanced
 ```python
 from apiconfig.config import ClientConfig, ConfigManager
 from apiconfig.config.providers import EnvProvider, FileProvider
@@ -42,11 +56,13 @@ print(config.base_url)
 ```
 
 ## Key classes
-| Class | Description |
-| ----- | ----------- |
-| `ClientConfig` | Stores hostname, API version, headers, timeouts and authentication strategy. |
-| `ConfigManager` | Loads configuration from providers and merges them in order. |
-| `EnvProvider` / `FileProvider` / `MemoryProvider` | Return configuration dictionaries from environment, JSON files or in‑memory data. |
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `ClientConfig` | Stores hostname, API version, headers, timeouts and authentication strategy. | `base_url()`, `merge()` |
+| `ConfigManager` | Loads configuration from providers and merges them in order. | `load_config()` |
+| `EnvProvider` | Reads configuration from environment variables. | `load()` |
+| `FileProvider` | Reads configuration from JSON files. | `load()` |
+| `MemoryProvider` | Supplies in-memory configuration data. | `get_config()` |
 
 ### Design
 The manager and providers follow a simple **Strategy** style. Each provider
@@ -65,6 +81,24 @@ flowchart TB
     D -->|\*args| ClientConfig
 ```
 
+## Architecture
+The overall configuration flow is illustrated below:
+
+```mermaid
+flowchart LR
+    subgraph Providers
+        Env[EnvProvider]
+        File[FileProvider]
+        Memory[MemoryProvider]
+    end
+    Env --> Manager
+    File --> Manager
+    Memory --> Manager
+    Manager[ConfigManager] --> Data[config dict]
+    Data -->|**kwargs| Config[ClientConfig]
+    Config --> Client[API Client]
+```
+
 ## Tests
 Install dependencies and run the unit tests for the configuration package:
 ```bash
@@ -72,8 +106,20 @@ poetry install --with dev
 poetry run pytest tests/unit/config -q
 ```
 
+## Dependencies
+Standard library modules:
+- `os`
+- `json`
+
+Internal modules:
+- `apiconfig.exceptions`
+- `apiconfig.auth`
+
 ## Status
-Stable – used by API clients and covered by unit tests.
+
+**Stability:** Stable
+**API Version:** 0.3.2
+**Deprecations:** None
 
 ### Maintenance Notes
 - Considered stable with occasional updates for new configuration sources.
@@ -83,10 +129,6 @@ Stable – used by API clients and covered by unit tests.
 
 ### Future Considerations
 - Potential support for dynamic configuration providers.
-
-## Navigation
-- [apiconfig](../README.md)
-- [providers](./providers/README.md)
 
 ## See Also
 - [auth](../auth/README.md) - describes available authentication strategies used by `ClientConfig`.

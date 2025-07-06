@@ -1,4 +1,4 @@
-import logging
+import logging as logging_mod
 from typing import Any, Generator
 
 import pytest
@@ -20,9 +20,9 @@ def clear_context() -> Generator[None, None, None]:
 
 def test_set_log_context_sets_value() -> None:
     set_log_context("user_id", 123)
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="msg",
@@ -38,9 +38,9 @@ def test_clear_log_context_removes_all_keys() -> None:
     set_log_context("foo", "bar")
     set_log_context("baz", 42)
     clear_log_context()
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="msg",
@@ -65,9 +65,9 @@ def test_context_filter_filter_adds_context_to_record(context: dict[str, Any]) -
     clear_log_context()
     for k, v in context.items():
         set_log_context(k, v)
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="msg",
@@ -83,9 +83,9 @@ def test_context_filter_filter_adds_context_to_record(context: dict[str, Any]) -
 
 def test_context_filter_filter_no_context_does_not_fail() -> None:
     clear_log_context()
-    record = logging.LogRecord(
+    record = logging_mod.LogRecord(
         name="test",
-        level=logging.INFO,
+        level=logging_mod.INFO,
         pathname=__file__,
         lineno=1,
         msg="msg",

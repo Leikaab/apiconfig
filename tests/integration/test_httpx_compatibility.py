@@ -11,7 +11,7 @@ from apiconfig.exceptions import (
 from apiconfig.exceptions.auth import ExpiredTokenError
 
 # Only run if httpx is available
-httpx = pytest.importorskip("httpx")
+httpx_lib = pytest.importorskip("httpx")
 
 
 class TestHttpxResponseObjects:
@@ -20,8 +20,8 @@ class TestHttpxResponseObjects:
     def test_with_real_httpx_response(self) -> None:
         """Test with actual httpx.Response object."""
         # Create a mock httpx response
-        request = httpx.Request("GET", "https://api.example.com/data")
-        response = httpx.Response(
+        request = httpx_lib.Request("GET", "https://api.example.com/data")
+        response = httpx_lib.Response(
             status_code=404,
             headers={"content-type": "application/json"},
             content=b'{"error": "Not found"}',
@@ -40,8 +40,8 @@ class TestHttpxResponseObjects:
 
     def test_httpx_sync_client_response(self) -> None:
         """Test with httpx sync client response."""
-        request = httpx.Request("DELETE", "https://api.example.com/resource/123")
-        response = httpx.Response(
+        request = httpx_lib.Request("DELETE", "https://api.example.com/resource/123")
+        response = httpx_lib.Response(
             status_code=403,
             request=request,
             content=b"Forbidden",
@@ -56,8 +56,8 @@ class TestHttpxResponseObjects:
     @pytest.mark.asyncio
     async def test_httpx_async_client_response(self) -> None:
         """Test with httpx async client response."""
-        request = httpx.Request("POST", "https://api.example.com/async/data")
-        response = httpx.Response(
+        request = httpx_lib.Request("POST", "https://api.example.com/async/data")
+        response = httpx_lib.Response(
             status_code=429,
             headers={"Retry-After": "60"},
             request=request,
@@ -75,8 +75,8 @@ class TestHttpxResponseObjects:
 
     def test_httpx_with_json_response(self) -> None:
         """Test with httpx response containing JSON data."""
-        request = httpx.Request("PUT", "https://api.example.com/user/456")
-        response = httpx.Response(
+        request = httpx_lib.Request("PUT", "https://api.example.com/user/456")
+        response = httpx_lib.Response(
             status_code=422,
             headers={"content-type": "application/json"},
             content=b'{"errors": [{"field": "email", "message": "Invalid format"}]}',
@@ -91,8 +91,8 @@ class TestHttpxResponseObjects:
 
     def test_httpx_auth_error(self) -> None:
         """Test authentication error with httpx."""
-        request = httpx.Request("GET", "https://api.example.com/protected", headers={"Authorization": "Bearer expired_token"})
-        response = httpx.Response(
+        request = httpx_lib.Request("GET", "https://api.example.com/protected", headers={"Authorization": "Bearer expired_token"})
+        response = httpx_lib.Response(
             status_code=401,
             headers={"WWW-Authenticate": "Bearer realm='api'"},
             request=request,
@@ -111,10 +111,10 @@ class TestHttpxStreamingResponses:
 
     def test_stream_response(self) -> None:
         """Test with httpx stream response."""
-        request = httpx.Request("GET", "https://api.example.com/stream")
+        request = httpx_lib.Request("GET", "https://api.example.com/stream")
 
         # Create a response with streaming content
-        response = httpx.Response(
+        response = httpx_lib.Response(
             status_code=200,
             request=request,
             # httpx supports various content types
@@ -139,7 +139,7 @@ class TestHttpxEdgeCases:
         handles this specific case gracefully.
         """
         # httpx allows creating responses without requests
-        response = httpx.Response(
+        response = httpx_lib.Response(
             status_code=500,
             content=b"Internal error",
         )
@@ -160,8 +160,8 @@ class TestHttpxEdgeCases:
     def test_httpx_with_custom_transport(self) -> None:
         """Test with httpx response from custom transport."""
         # Simulate a response from a custom transport
-        request = httpx.Request("PATCH", "https://custom.transport/api")
-        response = httpx.Response(
+        request = httpx_lib.Request("PATCH", "https://custom.transport/api")
+        response = httpx_lib.Response(
             status_code=400,
             request=request,
             content=b"Bad request from custom transport",

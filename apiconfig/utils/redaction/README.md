@@ -57,8 +57,18 @@ flowchart TD
 ## Testing
 Run unit tests with coverage:
 ```bash
-pytest --cov=apiconfig --cov-report=html
+poetry install --with dev
+poetry run pytest --cov=apiconfig --cov-report=html
 ```
+
+## Dependencies
+
+### Standard Library
+- `typing` – common type hints for function signatures.
+- `http` – HTTP utilities referenced in examples.
+
+### Internal Modules
+- `apiconfig.utils.http` – helpers used to build request representations.
 
 ## Status
 
@@ -76,3 +86,8 @@ or security patches. No major changes are currently planned.
 ### Future Considerations
 Possible enhancements include more granular redaction options and performance
 optimisations for handling very large payloads.
+
+## See Also
+
+- [apiconfig.utils.logging](../logging/README.md)
+- [apiconfig.utils](../README.md)

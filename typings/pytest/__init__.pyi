@@ -5,6 +5,7 @@ from typing import Pattern, Type, overload
 
 from _pytest.fixtures import fixture
 from _pytest.mark import MARK_GEN as mark
+from _pytest.mark.structures import MarkDecorator
 from _pytest.monkeypatch import MonkeyPatch
 from _pytest.outcomes import fail, importorskip, skip
 
@@ -30,11 +31,15 @@ def raises(
 ) -> RaisesContext: ...
 
 parametrize = mark.parametrize
+skipif: MarkDecorator = mark.skipif
+asyncio: MarkDecorator = mark.asyncio
 
 __all__ = [
     "fixture",
     "mark",
     "parametrize",
+    "skipif",
+    "asyncio",
     "raises",
     "MonkeyPatch",
     "fail",

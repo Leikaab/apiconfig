@@ -3,11 +3,11 @@
 
 from __future__ import annotations
 
-import logging
+import logging as logging_mod
 import sys
 from typing import IO, Optional
 
-_StreamHandlerBase = logging.StreamHandler[IO[str]]
+_StreamHandlerBase = logging_mod.StreamHandler[IO[str]]
 
 
 class ConsoleHandler(_StreamHandlerBase):

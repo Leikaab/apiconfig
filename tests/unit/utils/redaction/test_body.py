@@ -1,6 +1,11 @@
 import json
 import re
-from typing import Any, Optional, Pattern, Union
+from typing import (
+    Any,
+    Optional,
+    Pattern,
+    Union,
+)
 
 import pytest
 

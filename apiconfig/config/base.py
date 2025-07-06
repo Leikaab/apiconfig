@@ -6,7 +6,7 @@ like hostname, version, headers, timeout, retries, and authentication.
 """
 
 import copy
-import logging
+import logging as logging_mod
 import warnings
 from typing import TYPE_CHECKING, Dict, Optional, TypeVar
 from urllib.parse import urljoin
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from apiconfig.auth.base import AuthStrategy  # noqa: F401 - Used for type hinting
 
 # Set up logging
-logger = logging.getLogger(__name__)
+logger = logging_mod.getLogger(__name__)
 
 
 _TClientConfig = TypeVar("_TClientConfig", bound="ClientConfig")

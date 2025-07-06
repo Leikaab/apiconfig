@@ -10,7 +10,7 @@ verification scenarios like JWT and OAuth2 tokens.
 
 import base64
 import json
-import re
+import re as re_mod
 from typing import Any, Dict, List, Optional
 
 from apiconfig.exceptions.auth import AuthenticationError
@@ -132,7 +132,7 @@ class AuthHeaderVerification:
             raise AuthenticationError(f"Expected token '{expected_token}', got '{token}'")
 
         if token_pattern is not None:
-            if not re.match(token_pattern, token):
+            if not re_mod.match(token_pattern, token):
                 raise AuthenticationError(f"Token does not match pattern '{token_pattern}'")
 
         return True
@@ -181,7 +181,7 @@ class AuthHeaderVerification:
             raise AuthenticationError(f"Expected key '{expected_key}', got '{header_value}'")
 
         if key_pattern is not None:
-            if not re.match(key_pattern, header_value):
+            if not re_mod.match(key_pattern, header_value):
                 raise AuthenticationError(f"API key does not match pattern '{key_pattern}'")
 
         return True

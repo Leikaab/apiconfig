@@ -5,7 +5,7 @@ as a real-world example, validating the complete refresh flow from auth strategy
 successful API calls.
 """
 
-import logging
+import logging as logging_mod
 import os
 import threading
 from datetime import datetime, timedelta, timezone
@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from apiconfig.types import TokenRefreshResult
+import apiconfig.types as api_types
 
 if os.getenv("PYTEST_SKIP_INTEGRATION", "false").lower() == "true":
     pytest.skip(
@@ -119,7 +119,7 @@ class TestTripletexAuthRefresh:
         countries = tripletex_client.list_countries()
         assert isinstance(countries, dict)
 
-        results: list[TokenRefreshResult | None] = []
+        results: list[api_types.TokenRefreshResult | None] = []
         errors: list[Exception] = []
 
         def refresh_worker() -> None:
@@ -173,7 +173,7 @@ class TestTripletexAuthRefresh:
         auth_strategy = tripletex_client.config.auth_strategy
         assert isinstance(auth_strategy, TripletexSessionAuth)
 
-        with caplog.at_level(logging.DEBUG):
+        with caplog.at_level(logging_mod.DEBUG):
             auth_strategy.refresh()
 
         # Verify refresh operation was logged (check for any log messages)

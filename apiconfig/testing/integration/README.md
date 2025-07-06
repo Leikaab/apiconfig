@@ -1,6 +1,12 @@
 # apiconfig.testing.integration
 
-Utilities for end-to-end tests of **apiconfig** based clients. The package contains helpers for spinning up mock HTTP servers and convenient pytest fixtures so integrations can be validated without hitting real services.
+## Module Description
+
+Utilities for end-to-end tests of **apiconfig** based clients. The package
+provides helpers for spinning up mock HTTP servers and convenient pytest
+fixtures so integrations can be validated without hitting real services. These
+helpers are separate from the unit test helpers because they rely on external
+tools and focus on full request flows instead of isolated functions.
 
 ## Navigation
 
@@ -69,10 +75,22 @@ sequenceDiagram
 ## Testing
 Install dependencies and run the integration tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-httpserver
-pytest tests/integration -q
+poetry install --with dev
+poetry run pytest tests/integration -q
 ```
+
+## Dependencies
+
+### External Dependencies
+- `pytest` – required to run the integration tests.
+- `typing` and `http` – standard library modules used in examples.
+
+### Internal Dependencies
+- `apiconfig.utils.http` – URL and request helpers reused in tests.
+- Internal mocks from [`apiconfig.testing.unit.mocks`](../unit/mocks/README.md) – used in various examples.
+
+### Optional Dependencies
+None
 
 ## Status
 
@@ -91,3 +109,9 @@ pytest tests/integration -q
 ### Future Considerations
 - Provide asynchronous variants of the helpers for `httpx.AsyncClient`.
 - Offer higher-level fixtures for more complex authentication flows.
+
+## See Also
+- [../unit/README.md](../unit/README.md) – unit test helpers for isolated testing
+  of configuration logic.
+- [../../helpers_for_tests/README.md](../../helpers_for_tests/README.md) –
+  example clients used in integration scenarios.

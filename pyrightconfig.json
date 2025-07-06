@@ -76,6 +76,11 @@
   "reportUnsupportedDunderAll": true,
   "reportInconsistentConstructor": true,
   "reportCallInDefaultInitializer": true,
+  "reportImplicitStringConcatenation": "warning",
+  "reportUninitializedInstanceVariable": true,
+  "reportImportCycles": true,
+  "reportUnnecessaryContains": true,
+  "reportUnusedCoroutine": true,
   "pythonPlatform": "All",
   "executionEnvironments": [
     {

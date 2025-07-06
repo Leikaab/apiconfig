@@ -23,15 +23,27 @@ class ConfigurationError(APIConfigError):
 class HttpContextMixin:
     """Mixin to add HTTP context extraction capabilities to exceptions."""
 
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: D401 - simple initializer
+        super().__init__(*args, **kwargs)
+        self.status_code: int | None = None
+        self.method: str | None = None
+        self.url: str | None = None
+        self.reason: str | None = None
+        self.request: HttpRequestProtocol | None = None
+        self.response: HttpResponseProtocol | None = None
+
     def _init_http_context(
-        self, request: Optional[HttpRequestProtocol] = None, response: Optional[HttpResponseProtocol] = None, status_code: Optional[int] = None
+        self,
+        request: Optional[HttpRequestProtocol] = None,
+        response: Optional[HttpResponseProtocol] = None,
+        status_code: Optional[int] = None,
     ) -> None:
         """Initialize HTTP context attributes from request/response objects."""
         # Initialize all attributes
         self.status_code = status_code
-        self.method: Optional[str] = None
-        self.url: Optional[str] = None
-        self.reason: Optional[str] = None
+        self.method = None
+        self.url = None
+        self.reason = None
         self.request = None  # Original request object
         self.response = None  # Original response object
 
@@ -118,7 +130,8 @@ class AuthenticationError(APIConfigError, HttpContextMixin):
         response : Optional[HttpResponseProtocol]
             HTTP response object (optional)
         """
-        super().__init__(message)
+        APIConfigError.__init__(self, message)
+        HttpContextMixin.__init__(self)
         self._init_http_context(request=request, response=response)
 
     def __str__(self) -> str:

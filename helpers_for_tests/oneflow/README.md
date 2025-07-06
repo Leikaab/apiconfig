@@ -2,6 +2,9 @@
 
 Utilities for testing integrations with the OneFlow API.
 
+## Navigation
+- [Back to `helpers_for_tests`](../README.md)
+
 ## Contents
 - `oneflow_client.py` – `OneFlowClient` with simple user and contract endpoints
 - `oneflow_config.py` – configuration helpers (`create_oneflow_client_config`, etc.)
@@ -35,8 +38,16 @@ ONEFLOW_version=v1
 ONEFLOW_timeout=10.0
 ```
 
+## Tests
+```bash
+poetry run pytest tests/integration/test_apiconfig_oneflow.py -q
+```
+
 ## Status
-Internal – for example tests only.
+
+- **Stability:** Internal – for example tests only.
+- **API Version:** Matches sample endpoints used in tests.
+- **Deprecations:** None.
 
 ### Maintenance Notes
 - Provided for integration tests and may change without notice.

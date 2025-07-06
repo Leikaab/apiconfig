@@ -14,6 +14,13 @@ staying compatible with the standard `logging` handlers. Thread-local context
 filters add request or user metadata to log records so that each entry carries
 useful debugging information.
 
+## Navigation
+
+**Parent Module:** [apiconfig.utils](../README.md)
+
+**Submodules:**
+- [formatters](./formatters/README.md) - Custom log formatters
+
 ## Contents
 - `filters.py` – thread-local `ContextFilter` and helper functions for log context.
 - `handlers.py` – `ConsoleHandler` and `RedactingStreamHandler` wrappers around `logging.StreamHandler`.
@@ -21,7 +28,9 @@ useful debugging information.
 - `setup.py` – `setup_logging` function to configure the library's logger.
 - `__init__.py` – exports the common classes and helpers.
 
-## Example
+## Usage Examples
+
+### Basic
 ```python
 import logging
 from apiconfig.utils.logging import setup_logging
@@ -31,7 +40,7 @@ logger = logging.getLogger("apiconfig")
 logger.info("configured")
 ```
 
-### Advanced Usage
+### Advanced
 Use the building blocks directly when you need full control over handlers and
 formatters.
 
@@ -77,15 +86,29 @@ flowchart TD
 ```
 
 ## Tests
-Run the logging-related unit tests:
+Run the logging-related unit tests using Poetry:
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/utils/logging -q
+poetry install --with dev
+poetry run pytest tests/unit/utils/logging -q
 ```
 
+## Dependencies
+
+### Standard Library
+- `logging` – Python logging framework used by handlers and formatters
+
+### Internal Dependencies
+- `apiconfig.utils.redaction` – redaction helpers for sanitising log output
+
+### Optional Dependencies
+- `pytest` and `pytest_httpserver` – test utilities for running the logging
+  tests
+
+
 ## Status
-Stable – provides common logging setup for the library.
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Logging utilities are stable; maintenance focuses on bug fixes and minor improvements.
@@ -95,13 +118,6 @@ Stable – provides common logging setup for the library.
 
 ### Future Considerations
 - Planned formatter enhancements will improve log readability.
-
-## Navigation
-
-**Parent Module:** [apiconfig.utils](../README.md)
-
-**Submodules:**
-- [formatters](./formatters/README.md) - Custom log formatters
 
 ## See Also
 - [apiconfig.utils.redaction](../redaction/README.md) – used by log formatters

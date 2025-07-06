@@ -54,48 +54,56 @@ print(type(err))  # <class 'apiconfig.exceptions.http.ApiClientNotFoundError'>
 ```
 
 ## Key classes
-| Class | Description |
-| ----- | ----------- |
-| `APIConfigError` | Base class for all apiconfig errors. |
-| `AuthenticationError` | Base for authentication failures and token refresh issues. |
-| `ConfigurationError` | Base for configuration loading errors. |
-| `HTTPUtilsError` | Base for errors raised by HTTP helpers. |
-| `ApiClientError` | Base for HTTP API client errors with request/response context. |
+| Class | Description | Key Methods |
+| ----- | ----------- | ----------- |
+| `APIConfigError` | Base class for all apiconfig errors. | – |
+| `AuthenticationError` | Base for authentication failures and token refresh issues. | `__init__`, `__str__` |
+| `ConfigurationError` | Base for configuration loading errors. | – |
+| `HTTPUtilsError` | Base for errors raised by HTTP helpers. | – |
+| `ApiClientError` | Base for HTTP API client errors with request/response context. | `__init__`, `__str__` |
 
-### Design
+## Architecture
 The exceptions follow a simple inheritance tree allowing you to catch broad
 categories or specific errors as needed.
 
 ```mermaid
-graph TD
-    APIConfigError --> AuthenticationError
-    APIConfigError --> ConfigurationError
-    APIConfigError --> HTTPUtilsError
-    AuthenticationError --> InvalidCredentialsError
-    AuthenticationError --> ExpiredTokenError
-    AuthenticationError --> MissingCredentialsError
-    AuthenticationError --> TokenRefreshError
-    TokenRefreshError --> TokenRefreshJsonError
-    TokenRefreshError --> TokenRefreshTimeoutError
-    TokenRefreshError --> TokenRefreshNetworkError
-    HTTPUtilsError --> ApiClientError
-    ApiClientError --> ApiClientBadRequestError
-    ApiClientError --> ApiClientUnauthorizedError
-    ApiClientError --> ApiClientForbiddenError
-    ApiClientError --> ApiClientNotFoundError
-    ApiClientError --> ApiClientConflictError
-    ApiClientError --> ApiClientUnprocessableEntityError
-    ApiClientError --> ApiClientRateLimitError
-    ApiClientError --> ApiClientInternalServerError
+classDiagram
+    APIConfigError <|-- AuthenticationError
+    APIConfigError <|-- ConfigurationError
+    APIConfigError <|-- HTTPUtilsError
+    AuthenticationError <|-- InvalidCredentialsError
+    AuthenticationError <|-- ExpiredTokenError
+    AuthenticationError <|-- MissingCredentialsError
+    AuthenticationError <|-- TokenRefreshError
+    TokenRefreshError <|-- TokenRefreshJsonError
+    TokenRefreshError <|-- TokenRefreshTimeoutError
+    TokenRefreshError <|-- TokenRefreshNetworkError
+    HTTPUtilsError <|-- ApiClientError
+    ApiClientError <|-- ApiClientBadRequestError
+    ApiClientError <|-- ApiClientUnauthorizedError
+    ApiClientError <|-- ApiClientForbiddenError
+    ApiClientError <|-- ApiClientNotFoundError
+    ApiClientError <|-- ApiClientConflictError
+    ApiClientError <|-- ApiClientUnprocessableEntityError
+    ApiClientError <|-- ApiClientRateLimitError
+    ApiClientError <|-- ApiClientInternalServerError
 ```
 
 ## Testing
 Install dependencies and run the unit tests for this package:
 ```bash
-python -m pip install -e .
-python -m pip install pytest
-pytest tests/unit/exceptions -q
+poetry install --with dev
+poetry run pytest tests/unit/exceptions -q
 ```
+
+## Dependencies
+
+### Standard Library
+- `typing` – used for type annotations in the exceptions.
+- `http` – provides HTTP status codes for certain errors.
+
+### Internal Modules
+- `apiconfig.utils.http` – helpers used when raising client errors.
 
 ## See Also
 - [auth](../auth/README.md) – strategies that raise authentication errors
@@ -104,6 +112,10 @@ pytest tests/unit/exceptions -q
 ## Status
 Stable – exceptions are widely used across the library and covered by unit
 tests.
+
+**Stability:** Stable
+**API Version:** 0.3.1
+**Deprecations:** None
 
 ### Maintenance Notes
 - Exception hierarchy is stable; new exceptions added as needed.

@@ -1,5 +1,13 @@
 # apiconfig.auth.token
 
+## Module Description
+
+The token utilities in `apiconfig.auth.token` provide a lightweight framework for handling OAuth2 token refresh logic. They offer simple helpers that exchange refresh tokens for new access tokens and manage related errors.
+
+These utilities exist to keep authentication workflows consistent across projects. By consolidating refresh operations, other modules can focus on their primary functionality while relying on a uniform approach to obtaining updated credentials.
+
+The module integrates closely with the rest of `apiconfig` by using the same HTTP client configuration and pluggable storage pattern found throughout the library. Token data can be persisted through any implementation of the `TokenStorage` interface, ensuring compatibility with the different API clients defined elsewhere in the package.
+
 Helpers for OAuth2 token refresh and storage in **apiconfig**. The module handles refresh logic and exposes a minimal storage interface.
 
 ## Navigation
@@ -38,17 +46,26 @@ storage.store_token("default", new_tokens)
 
 ## Key Classes and Functions
 
-| Name | Description |
-| ---- | ----------- |
-| `TokenStorage` | Abstract base class defining `store_token`, `retrieve_token` and `delete_token`. |
-| `InMemoryTokenStorage` | Simple implementation storing tokens in an internal dictionary, useful for testing. |
-| `refresh_oauth2_token` | Performs the token refresh operation, handling timeout, HTTP errors, JSON decoding and retry logic. |
+| Name | Description | Key Methods |
+| ---- | ----------- | ----------- |
+| `TokenStorage` | Abstract base class defining how tokens are saved and retrieved. | `store_token`, `retrieve_token`, `delete_token` |
+| `InMemoryTokenStorage` | Simple implementation storing tokens in an internal dictionary, useful for testing. | `store_token`, `retrieve_token`, `delete_token` |
+| `refresh_oauth2_token` | Performs the token refresh operation, handling timeout, HTTP errors, JSON decoding and retry logic. | n/a |
 
 ### Design Pattern
 
 `TokenStorage` follows the **Strategy** pattern so different storage mechanisms can be used interchangeably.
 
-## Sequence Diagram
+## Architecture
+
+### Class Hierarchy
+
+```
+TokenStorage
+└── InMemoryTokenStorage
+```
+
+### Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -78,9 +95,8 @@ sequenceDiagram
 Install the packages and run the unit tests for this module:
 
 ```bash
-python -m pip install -e .
-python -m pip install pytest pytest-xdist
-pytest tests/unit/auth/token -q
+poetry install --with dev
+poetry run pytest tests/unit/auth/token -q
 ```
 
 ## Status

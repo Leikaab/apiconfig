@@ -1,6 +1,6 @@
 """Tests for the ConfigManager class."""
 
-import logging
+import logging as logging_mod
 from typing import Any, Dict, Optional, cast
 
 import pytest
@@ -169,7 +169,7 @@ class TestConfigManager:
 
     def test_load_config_logging(self, caplog: LogCaptureFixture) -> None:
         """Test that ConfigManager logs appropriate messages."""
-        caplog.set_level(logging.DEBUG)
+        caplog.set_level(logging_mod.DEBUG)
 
         provider1 = MockProvider(config_data={"api": {"hostname": "example1.com"}}, name="Provider1")
         provider2 = MockProvider(config_data={"api": {"hostname": "example2.com"}}, name="Provider2")
@@ -185,9 +185,9 @@ class TestConfigManager:
 
     def test_load_config_provider_returns_non_dict_value_warning(self, caplog: LogCaptureFixture) -> None:
         """Test loading config from a provider that returns a non-dict value logs a warning."""
-        import logging
+        import logging as logging_mod
 
-        caplog.set_level(logging.WARNING)
+        caplog.set_level(logging_mod.WARNING)
 
         # Create a provider that returns a non-dict value
         class BadProvider:

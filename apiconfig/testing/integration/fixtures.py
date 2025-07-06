@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 import pytest
+from pytest import FixtureRequest, MonkeyPatch
 from pytest_httpserver import HTTPServer as PytestHTTPServer
 
 from apiconfig.auth.strategies.custom import CustomAuth
@@ -58,7 +59,7 @@ def file_provider(temp_config_file: Path) -> FileProvider:
 
 
 @pytest.fixture(scope="function")
-def env_provider(monkeypatch: pytest.MonkeyPatch) -> EnvProvider:
+def env_provider(monkeypatch: MonkeyPatch) -> EnvProvider:
     """Provide an EnvProvider with predefined environment variables."""
     monkeypatch.setenv("APICONFIG_API_HOSTNAME", "env.example.com")  # Hostname usually overridden by mock_api_url in tests
     monkeypatch.setenv("APICONFIG_AUTH_TYPE", "env_bearer")
@@ -74,7 +75,9 @@ def config_manager(file_provider: FileProvider, env_provider: EnvProvider) -> Co
 
 
 @pytest.fixture(scope="function")
-def custom_auth_strategy_factory() -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
+def custom_auth_strategy_factory(
+    _request: FixtureRequest,
+) -> Callable[[Optional[CustomAuthCallable]], CustomAuth]:
     """Provide a factory fixture to create CustomAuth instances for testing.
 
     This allows tests to easily define and inject specific custom authentication

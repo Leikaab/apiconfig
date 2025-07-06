@@ -6,7 +6,7 @@ temp_config_file, assert_provider_loads, BaseAuthStrategyTest, BaseConfigProvide
 """
 
 import os
-from typing import (  # pyright: ignore[reportShadowedImports]
+from typing import (
     Any,
     Dict,
     Optional,

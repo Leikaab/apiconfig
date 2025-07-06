@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional  # pyright: ignore[reportShadowedImports]
+from typing import Any, Dict, Optional
 
 import pytest
 

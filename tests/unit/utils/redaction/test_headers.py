@@ -1,5 +1,5 @@
-import re  # pyright: ignore[reportShadowedImports]
-from typing import (  # pyright: ignore[reportShadowedImports]
+import re
+from typing import (
     Dict,
     Optional,
     Pattern,

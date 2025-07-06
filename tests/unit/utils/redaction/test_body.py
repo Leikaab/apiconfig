@@ -1,6 +1,6 @@
 import json
 import re
-from typing import (  # pyright: ignore[reportShadowedImports]
+from typing import (
     Any,
     Optional,
     Pattern,

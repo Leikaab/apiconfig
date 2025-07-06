@@ -5,6 +5,7 @@
 import typing
 import uuid
 
+import httpx
 from httpx import Client as HttpxClient
 from httpx import Response as HttpxResponse
 from pytest_httpserver import HTTPServer

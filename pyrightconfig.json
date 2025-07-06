@@ -79,7 +79,6 @@
   "reportImplicitStringConcatenation": "warning",
   "reportUninitializedInstanceVariable": true,
   "reportImportCycles": true,
-  "reportShadowedImports": "warning",
   "reportUnnecessaryContains": true,
   "reportUnusedCoroutine": true,
   "pythonPlatform": "All",

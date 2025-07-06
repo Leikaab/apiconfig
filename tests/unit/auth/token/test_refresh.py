@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import json
 from unittest.mock import MagicMock
 
 import pytest
+from pytest import MonkeyPatch
 
-from apiconfig.auth.token.refresh import refresh_oauth2_token
+from apiconfig.auth.token.refresh import OAuthTokenData, refresh_oauth2_token
 from apiconfig.config.base import ClientConfig
 from apiconfig.exceptions.auth import (
     TokenRefreshError,
@@ -21,17 +24,18 @@ class TestRefreshOAuth2Token:
         """Create a mock HTTP response."""
         mock = MagicMock()
         mock.status_code = 200
-        mock.json.return_value = {
+        mock_json: OAuthTokenData = {
             "access_token": "new_access_token",
             "expires_in": 3600,
             "token_type": "Bearer",
         }
+        mock.json.return_value = mock_json
         return mock
 
     @pytest.fixture
-    def mock_http_client(self, mock_response: MagicMock) -> MagicMock:
+    def mock_http_client(self, mock_response: MagicMock, monkeypatch: MonkeyPatch) -> MagicMock:
         """Create a mock HTTP client."""
-        mock_client = MagicMock()
+        mock_client: MagicMock = MagicMock()
         mock_client.post.return_value = mock_response
         return mock_client
 

@@ -20,12 +20,14 @@ to avoid duplicating boilerplate code.
 - [logging](./logging/README.md) - configure redacted log output
 - [redaction](./redaction/README.md) - scrub secrets from requests and logs
 - [url](./url.py) - build and normalise URLs safely
+- [endpoint_builder](./endpoint_builder/README.md) - build resource paths for nested REST endpoints
 
 ## Contents
 - `http.py` – simple helpers for working with HTTP status codes and JSON payloads.
 - `url.py` – safe wrappers around `urllib.parse` for building URLs.
 - `redaction/` – functions for scrubbing secrets from bodies and headers.
 - `logging/` – custom formatters and setup helpers for the library's logging.
+- `endpoint_builder/` – declarative builder for resource paths such as `companies/acme/contacts/1`.
 - `__init__.py` – exposes the modules above for convenience.
 
 ## Usage Examples
@@ -54,6 +56,7 @@ print(redact_dict(data, {"token"}))
 | `url` | Build URLs and normalise query parameters with type safety. | `build_url`, `add_query_params` |
 | `redaction` | Remove sensitive data before logging or output. | `redact_body`, `redact_headers` |
 | `logging` | Formatters, handlers and setup utilities for clean log output. | `setup_logging`, `set_log_context` |
+| `endpoint_builder` | Build endpoint paths from a resource path, prefixes and parent resources. | `EndpointBuilder`, `join_path_segments` |
 
 ### Design
 Utility modules are kept lightweight and independent. Logging utilities compose
@@ -106,3 +109,4 @@ Stable – used throughout the project.
 ## See Also
 - [logging](./logging/README.md) – log utilities using redaction
 - [redaction](./redaction/README.md) – helpers for scrubbing secrets
+- [endpoint_builder](./endpoint_builder/README.md) – endpoint path construction
